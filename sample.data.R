@@ -23,20 +23,27 @@ sample.data = function(df,sampleSize,numSample=1,bootstrap=F){
   if(sampleSize*numSample>nrow(df)&!bootstrap){
     stop(paste0("Not enough rows in data to sample that many times."))
   }
+  colname = "num.sample"
+  if("num.sample"%in%colnames(df)){
+    count=1
+    while(paste0("num.sample",count)%in%colnames(df)){
+      count = count++
+    }
+    colname = paste0("num.sample",count)
+  }
   ret = NULL
   if(bootstrap){
     ret = do.call(rbind(lapply(1:numSample,function(index,d,size){
-      print(nrow(df))
-      cbind(d[sample(1:nrow(d),size),],num.sample=rep(index,size))
+      cbind(d[sample(1:nrow(d),size),],rep(index,size))
     },df,sampleSize)))
   }else{
     ret = do.call(rbind,lapply(1:numSample,function(index,d,size){
       s = sample(1:nrow(d),size)
-      temp = cbind(d[s,],num.sample=rep(index,size))
+      temp = cbind(d[s,],rep(index,size))
       df <<- df[-s,]
-      print(nrow(df))
       temp
     },data,sampleSize))
   }
+  colnames(ret)[ncol(ret)] = colname
   ret
 }

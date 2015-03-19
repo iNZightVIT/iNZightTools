@@ -26,8 +26,8 @@ sample.data = function(df,sampleSize,numSample=1,bootstrap=F){
   colname = "num.sample"
   if("num.sample"%in%colnames(df)){
     count=1
-    while(paste0("num.sample",count)%in%colnames(df)){
-      count = count++
+    while(paste0("num.sample",count%in%colnames(df))){
+      count = count+1
     }
     colname = paste0("num.sample",count)
   }

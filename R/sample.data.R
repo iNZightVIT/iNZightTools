@@ -26,23 +26,23 @@ sample.data = function(df,sampleSize,numSample=1,bootstrap=F){
   colname = "num.sample"
   if("num.sample"%in%colnames(df)){
     count=1
-    while(paste0("num.sample",count%in%colnames(df))){
+    while(paste0("num.sample",count)%in%colnames(df)){
       count = count+1
     }
     colname = paste0("num.sample",count)
   }
   ret = NULL
   if(bootstrap){
-    ret = do.call(rbind(lapply(1:numSample,function(index,d,size){
+    ret = do.call(rbind,lapply(1:numSample,function(index,d,size){
       cbind(d[sample(1:nrow(d),size),],rep(index,size))
-    },df,sampleSize)))
+    },df,sampleSize))
   }else{
     ret = do.call(rbind,lapply(1:numSample,function(index,d,size){
       s = sample(1:nrow(d),size)
       temp = cbind(d[s,],rep(index,size))
-      df <<- df[-s,]
+      d <<- d[-s,]
       temp
-    },data,sampleSize))
+    },df,sampleSize))
   }
   colnames(ret)[ncol(ret)] = colname
   ret

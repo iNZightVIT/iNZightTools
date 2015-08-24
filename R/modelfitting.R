@@ -67,7 +67,7 @@ fitDesign <-
     function(svydes, dataset.name) {
         if(all(svydes==""))
             return()
-        svy.des <- paste0('svydesign(',
+        svy.des <- paste0('survey::svydesign(',
                           paste(svydes, collapse = ', '),
                           ', data = ', dataset.name, ')') 
         

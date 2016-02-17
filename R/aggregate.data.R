@@ -10,7 +10,7 @@
 #' in data to aggregate over
 #' @param methods A set of methods which can be used to 
 #' aggregate.
-#' @param df A data.frame containing at least on factor 
+#' @param dafr A data.frame containing at least on factor 
 #' column and one numeric column.
 #' 
 #' @return A data.frame with the results of the aggregation.

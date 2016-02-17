@@ -1,7 +1,7 @@
 #' Searches a list recursivly for a name and
 #' returns the value associated with the name
 #' 
-#' @param list.seach A list to search
+#' @param list.search A list to search
 #' @param search.name A name to be found in a list. 
 #' If null, the whole simplified list is returned.
 #' 

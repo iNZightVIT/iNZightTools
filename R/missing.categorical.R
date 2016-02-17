@@ -2,7 +2,7 @@
 #' which get added to the input data.frame.
 #' 
 #' @param dafr The input data.frame.
-#' @param The column names or indexes to be converted.
+#' @param columns The column names or indexes to be converted.
 #' 
 #' @return A data.frame with the binary columns added.
 #' 
@@ -21,7 +21,7 @@ get.missing.categorical = function(dafr,columns){
 }
 
 #' Takes a data.frame as generated from the 
-#' \texttt(get.missing.categorical) function and converts it 
+#' \code{get.missing.categorical} function and converts it 
 #' into a data.frame of all unique rows and there counts in 
 #' the original data.
 #' 

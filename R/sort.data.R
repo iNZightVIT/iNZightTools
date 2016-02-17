@@ -9,7 +9,7 @@
 #' @param sort.type A logical vector of the same length as 
 #' vars. If the element in the vector is TRUE the corresponding 
 #' element in vars will be sorted in increasing order.
-#' @ param The data.fram or matrix to sort.
+#' @param df The data.frame or matrix to sort.
 #' 
 #' @return An ordered data.frame
 #' 
@@ -35,23 +35,30 @@ sort.data = function(vars,sort.type,df){
   df[order.overwrite(z),]
 }
 
-#' The iNZight version of the order function which lets you pass 
-#' in a list of vectors to order instead of the ... argument. It 
-#' is shortened and might be therefore not as stable as the 
-#' original order function.
-#' 
-#' @param z a sequence of numeric, complex, character or logical 
-#' vectors, all of the same length, or a classed R object.
-#' @param na.last for controlling the treatment of NAs. If TRUE, 
-#' missing values in the data are put last; if FALSE, they are 
-#' put first; if NA, they are removed (see ‘Note’.)
-#' @param decreasing logical. Should the sort order be increasing 
-#' or decreasing?
-#' 
-#' @note This function is only called in sort.data but needs to be 
-#' available to sort.data
-#' 
-#' @author Christoph Knapp
+
+
+##' The iNZight version of the order function which lets you pass
+##' in a list of vectors to order instead of the \code{...} argument.
+##' It is shortened and might therefore not be as stable as the original
+##' order function.
+##'
+##' @title Order vectors
+##' 
+##' @param z a sequence of numeric, complex, character, or logical vectors,
+##' all of the same length, or a classed R object.
+##' @param na.last for controlling the treatment of NAs. If \code{TRUE},
+##' missing values in the data are put last; otherwise they are put first.
+##' If \code{NA}, they are removed (see \code{Note}).
+##' @param decreasing logical; if \code{TRUE}, the order will be decreasing,
+##' otherwise increasing.
+##'
+##' @note This function is only called in \code{sort.data} but needs to be
+##' available to \code{sort.data}.
+##' 
+##' @return a numeric vector of orderings
+##' 
+##' @author Christoph Knapp
+##' 
 order.overwrite = function (z, na.last = TRUE, decreasing = FALSE) {
   if (any(diff(l.z <- vapply(z, length, 1L)) != 0L)) 
     stop("argument lengths differ")

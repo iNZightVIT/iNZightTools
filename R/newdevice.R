@@ -29,7 +29,7 @@ newdevice <- function(width = 7, height = 7, ...) {
         if (.Platform$OS.type == "windows") {
             ## Windows
             dev.new(width = width, height = height, ...)
-        } else if (Sys.info()["sysname"] != "Darwin") {
+        } else if (Sys.info()["sysname"] == "Darwin") {
             ## Mac
             dev.new(width = width, height = height, type = "nbcairo", ...)
         } else {

@@ -28,16 +28,16 @@ newdevice <- function(width = 7, height = 7, ...) {
     } else {
         if (.Platform$OS.type == "windows") {
             ## Windows
-            dev.new(width = width, height = height, ...)
+            grDevices::dev.new(width = width, height = height, ...)
         } else if (Sys.info()["sysname"] == "Darwin") {
             ## Mac
-            dev.new(width = width, height = height, type = "nbcairo", ...)
+            grDevices::dev.new(width = width, height = height, type = "nbcairo", ...)
         } else {
             ## Linux
             if (requireNamespace("cairoDevice", quietly = TRUE)) {
-              cairoDevice::Cairo(width = width, height = height, ...)
+                cairoDevice::Cairo(width = width, height = height, ...)
             } else {
-              dev.new(width = width, height = height, ...)
+                grDevices::dev.new(width = width, height = height, ...)
             }
         }
     }

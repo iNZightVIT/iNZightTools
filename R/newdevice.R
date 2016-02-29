@@ -19,7 +19,7 @@ newdevice <- function(width = 7, height = 7, ...) {
     # The windows device works fine (for now), only attempt to speed up
     # any other devices that we're going to be using.
     # We speed them up by getting rid of bufferring.
-    if (requireNamespace("Acinonyx") && FALSE) {
+    if (requireNamespace("Acinonyx", quietly = TRUE)) {
         # Acinonyx uses pixels rather than inches, convert inches to
         # pixels to determine dims. Assume 90 dpi.
         width.in <- round(width * 90)
@@ -34,7 +34,7 @@ newdevice <- function(width = 7, height = 7, ...) {
             dev.new(width = width, height = height, type = "nbcairo", ...)
         } else {
             ## Linux
-            if (requireNamespace("cairoDevice")) {
+            if (requireNamespace("cairoDevice", quietly = TRUE)) {
               cairoDevice::Cairo(width = width, height = height, ...)
             } else {
               dev.new(width = width, height = height, ...)

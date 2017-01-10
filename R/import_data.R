@@ -1,15 +1,13 @@
-
-
 convertSpssDetails <- function(user.data.frame, date.columns){
-
+  
   #Convert Dates column in spss.
   date.col2 <- lapply(date.columns, function(x){
-
+    
     user.data.frame[[x]] <- as.Date(user.data.frame[[x]]/86400,
                                     origin = "1582-10-14")
-
+    
   })
-
+  
   user.data.frame[date.columns] <- date.col2
   return(user.data.frame)
 }
@@ -21,7 +19,7 @@ makeLocale <- function(date.names,
                        grouping.mark,
                        time.zone,
                        encoding.style){
-
+  
   user.locale <- locale(date_names    = date.names,
                         date_format   = date.format,
                         time_format   = time.format,
@@ -29,7 +27,7 @@ makeLocale <- function(date.names,
                         grouping_mark = grouping.mark,
                         tz            = time.zone,
                         encoding      = encoding.style)
-
+  
   return(user.locale)
 }
 
@@ -79,9 +77,9 @@ makeLocale <- function(date.names,
 #'
 #' @export
 iNZread <- function(obj, ...){
-
+  
   UseMethod("iNZread")
-
+  
 }
 
 #' @rdname iNZread
@@ -92,63 +90,82 @@ iNZread <- function(obj, ...){
 #' possible.).
 #' @export
 iNZread.default <- function(path, extension = tools::file_ext(path), preview = FALSE, ...) {
-
+  
   obj <- structure(list(path = path, preview = preview), class = extension)
-
+  
   ## multi methods for some cases
   ## xls, xlsx = excel files
   ## txt, csv  = delim files
-
+  
   class(obj) <- switch(extension,
                        "txt"  = c("txt", "delim"),
                        "xlsx" = c("xslx", "excel"),
                        "xls"  = c("xls", "excel"),
                        "csv"  = c("csv", "delim"))
-
+  
   iNZread(obj, ...)
 }
 
+#' @rdname iNZread
 #' @export
 iNZread.csv <- function(obj, ...){
-
+  
   attr(obj, "delim") = ","
   NextMethod('iNZread', obj)
 }
 
+#' @rdname iNZread
 #' @export
 iNZread.txt <- function(obj, ...){
-
+  
   attr(obj, "delim") = "\t"
   NextMethod('iNZread', obj)
 }
 
+#' @rdname iNZread
 #' @export
 iNZread.xls <- function(obj, ...){
-
+  
   NextMethod('iNZread', obj)
 }
 
+#' @rdname iNZread
 #' @export
 iNZread.xlsx <- function(obj, ...){
-
+  
   NextMethod('iNZread', obj)
 }
 
+#' @rdname iNZread
 #' @export
 iNZread.sav <- function(obj, ...) {
-
+  
   # Factors are retained, levels can be found.
   # Should we include max.value.labels ?
-
+  
   temp.data.frame <- read.spss(obj$path, ..., to.data.frame = TRUE)
-
+  
   attr(temp.data.frame, "full.file") = TRUE
-
+  
   return(temp.data.frame)
 }
 
 #' @rdname iNZread
 #' @param number.of.rows number of rows to read
+#' @param col.names A logical scalar. Tells if the file 
+#' contains column names in the first row or not.
+#' @param col.types Specifies the class of each column. Null if 
+#' not specified.
+#' @param encoding.style The encoding style used to make the file.
+#' @param delim the delimiter used in the file.
+#' @param date.names The language used in the file to specift names 
+#' of months.
+#' @param time.format the format of time in the file.
+#' @param time.zone the timezone used while writing dates/time 
+#' in the file.
+#' @param date.format the format of date in the file.
+#' @param decimal.mark the symbol used as the decimal mark in the file.
+#' @param grouping.mark the symbol used as the grouping mark in the file.
 #' @export
 iNZread.delim <- function(obj,
                           ...,
@@ -163,7 +180,7 @@ iNZread.delim <- function(obj,
                           date.format    = "%Y-%m-%d",
                           decimal.mark   = (Sys.localeconv())["decimal_point"],
                           grouping.mark  = (Sys.localeconv())["grouping"]) {
-
+  
   new.locale <- makeLocale(date.names,
                            date.format,
                            time.format,
@@ -171,11 +188,11 @@ iNZread.delim <- function(obj,
                            grouping.mark,
                            time.zone,
                            encoding.style)
-
+  
   if (obj$preview == TRUE){
     number.of.rows = 100
   }
-
+  
   temp.data.frame <- read_delim(obj$path,
                                 ...,
                                 n_max     = number.of.rows,
@@ -183,40 +200,45 @@ iNZread.delim <- function(obj,
                                 col_types = col.types,
                                 delim     = delim,
                                 locale    = new.locale)
-
+  
   attr(temp.data.frame, "full.file") = !obj$preview
-
+  
   return(temp.data.frame)
 }
 
+#' @rdname iNZread
+#' @export
 iNZread.dta <- function(obj, ...) {
-
+  
   ##Converts stata value labels to create factors. Version 6.0 or later.
   ##Converts dates in stata to dates and POSIX in R.
-
+  
   temp.data.frame <- read.dta(obj$path,
                               ...,
                               convert.dates   = TRUE,
                               convert.factors = TRUE)
-
+  
   attr(temp.data.frame, "full.file") = TRUE
-
+  
   return(temp.data.frame)
 }
 
+#' @rdname iNZread
+#' @param sheet the number of the sheet which has to be read from the excel workbook.
+#' @export
 iNZread.excel <- function(obj,
                           ...,
                           sheet     = 1,
                           col.names = TRUE,
                           col.types = NULL) {
-
+  
   temp.data.frame <- read_excel(obj$path,
                                 ...,
                                 sheet     = sheet,
                                 col_names = col.names,
                                 col_types = col.types)
-
+  
   attr(temp.data.frame, "full.file") = TRUE
-
+  
   return(temp.data.frame)
 }

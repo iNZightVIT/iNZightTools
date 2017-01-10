@@ -26,6 +26,10 @@ in a list of vectors to order instead of the \code{...} argument.
 It is shortened and might therefore not be as stable as the original
 order function.
 }
+\note{
+This function is only called in \code{sort.data} but needs to be
+available to \code{sort.data}.
+}
 \author{
 Christoph Knapp
 }

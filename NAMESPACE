@@ -3,6 +3,8 @@
 S3method(iNZread,csv)
 S3method(iNZread,default)
 S3method(iNZread,delim)
+S3method(iNZread,dta)
+S3method(iNZread,excel)
 S3method(iNZread,sav)
 S3method(iNZread,txt)
 S3method(iNZread,xls)

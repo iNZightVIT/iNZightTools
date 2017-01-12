@@ -131,10 +131,6 @@ makeLocale <- function(date.names,
 #' @title iNZight Import Data
 #' @param ... additional arguments
 #' @return A dataframe.
-#' @import tools
-#' @import foreign
-#' @import readr
-#' @import readxl
 #'
 #' @author Akshay Gupta
 #'

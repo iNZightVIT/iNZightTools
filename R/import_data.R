@@ -1,3 +1,60 @@
+#' Checks if the entered column types are allowed or not.
+#' 
+#' \code{isColumnTypesCorrect} returns a logical scalar to tell if the 
+#' column types entered are valid. Returns TRUE if they are valid. 
+#' Returns FALSE if not valid. 
+#' 
+#' @param col.types a vector of datatypes of columns.
+#' @return a logical scalar.
+isColumnTypesCorrect <- function(col.types){
+  
+  allowed.column.types <- c("factor", "numeric", "date")
+  
+  checked.column.types <- lapply(col.types, function(x){
+    
+    "%in%"(x, allowed.column.types)
+  })
+  
+  if(FALSE %in% checked.column.types){
+    return(FALSE)
+  }
+  
+  else{
+    return(TRUE)
+  }
+}
+
+#' Checks if the complete file was read or not.
+#' 
+#' \code{isFullFile} returns a logical scalar after checking 
+#' the attributes of the dataframe sent as an argument. 
+#' Returns TRUE if it is the complete file. Returns FALSE if 
+#' it is a partial file read. 
+#' 
+#' @param user.data.frame the dataframe returned after reading the file
+#' @return A logical scalar
+isFullFile <- function(user.data.frame){
+  
+  if (attr(user.data.frame, "full.file") == TRUE){
+    return(TRUE)
+  }
+  
+  else{
+    return(FALSE)
+  }
+  
+}
+
+#' Converts the data type of columns specified from numeric to date.
+#' 
+#' \code{convertSpssDetails} converts the specified columns in 
+#' the dataframe returned after reading an SPSS file to datatype 
+#' Date from numeric.
+#' @param user.data.frame the dataframe returned after 
+#' reading an spss file.
+#' @param date.columns A numeric vector. Has the integer 
+#' values of the columns that have to be converted.
+#' @return A data frame
 convertSpssDetails <- function(user.data.frame, date.columns){
   
   #Convert Dates column in spss.
@@ -12,6 +69,21 @@ convertSpssDetails <- function(user.data.frame, date.columns){
   return(user.data.frame)
 }
 
+#' Creates a locale that cane be used with functions from readr package.
+#' 
+#' \code{makeLocale} returns an object of class locale that has 
+#' been created using the arguments passed. The class 
+#' locale is defined in the package readr.
+#' @param date.names The language used in the file to specift names 
+#' of months.
+#' @param date.format the format of date in the file.
+#' @param time.format the format of time in the file.
+#' @param decimal.mark the symbol used as the decimal mark in the file.
+#' @param grouping.mark the symbol used as the grouping mark in the file.
+#' @param time.zone the timezone used while writing dates/time 
+#' in the file.
+#' @param encoding.style The encoding style used to make the file.
+#' @return Zn object of class locale.
 makeLocale <- function(date.names,
                        date.format,
                        time.format,
@@ -20,7 +92,7 @@ makeLocale <- function(date.names,
                        time.zone,
                        encoding.style){
   
-  user.locale <- locale(date_names    = date.names,
+  user.locale <- readr::locale(date_names    = date.names,
                         date_format   = date.format,
                         time_format   = time.format,
                         decimal_mark  = decimal.mark,
@@ -58,22 +130,13 @@ makeLocale <- function(date.names,
 #'
 #' @title iNZight Import Data
 #' @param ... additional arguments
-#' @return A dataframe of length 100 or less if the file extension
-#' is "csv" or "txt" (if partial file reading is possible) or a
-#' dataframe of length equal to the file.
-#'
+#' @return A dataframe.
 #' @import tools
 #' @import foreign
 #' @import readr
 #' @import readxl
 #'
 #' @author Akshay Gupta
-#'
-#' @examples
-#' iNZread("\user\Akshay\datafile.txt")
-#' iNZread("\user\Akshay\datafile.txt", "csv")
-#' iNZread("\user\Akshay\datafile.csv", "csv", TRUE)
-#' iNZread("\user\Akshay\datafile.csv", col.names = FALSE)
 #'
 #' @export
 iNZread <- function(obj, ...){
@@ -88,10 +151,12 @@ iNZread <- function(obj, ...){
 #' @param preview A logical scalar. Should the whole data file be read
 #' or only a part of the file be read (100 lines by default where
 #' possible.).
+#' @param col.types Specifies the class of each column. Null if 
+#' not specified.
 #' @export
-iNZread.default <- function(path, extension = tools::file_ext(path), preview = FALSE, ...) {
+iNZread.default <- function(path, extension = tools::file_ext(path), preview = FALSE, col.types = NULL, ...) {
   
-  obj <- structure(list(path = path, preview = preview), class = extension)
+  obj <- structure(list(path = path, preview = preview, col.types = col.types), class = extension)
   
   ## multi methods for some cases
   ## xls, xlsx = excel files
@@ -143,7 +208,7 @@ iNZread.sav <- function(obj, ...) {
   # Factors are retained, levels can be found.
   # Should we include max.value.labels ?
   
-  temp.data.frame <- read.spss(obj$path, ..., to.data.frame = TRUE)
+  temp.data.frame <- foreign::read.spss(obj$path, ..., to.data.frame = TRUE)
   
   attr(temp.data.frame, "full.file") = TRUE
   
@@ -154,8 +219,6 @@ iNZread.sav <- function(obj, ...) {
 #' @param number.of.rows number of rows to read
 #' @param col.names A logical scalar. Tells if the file 
 #' contains column names in the first row or not.
-#' @param col.types Specifies the class of each column. Null if 
-#' not specified.
 #' @param encoding.style The encoding style used to make the file.
 #' @param delim the delimiter used in the file.
 #' @param date.names The language used in the file to specift names 
@@ -171,7 +234,6 @@ iNZread.delim <- function(obj,
                           ...,
                           number.of.rows = Inf,
                           col.names      = TRUE,
-                          col.types      = NULL,
                           encoding.style = "UTF8",
                           delim          = attr(obj, "delim"),
                           date.names     = "en",
@@ -193,11 +255,11 @@ iNZread.delim <- function(obj,
     number.of.rows = 100
   }
   
-  temp.data.frame <- read_delim(obj$path,
+  temp.data.frame <- readr::read_delim(obj$path,
                                 ...,
                                 n_max     = number.of.rows,
                                 col_names = col.names,
-                                col_types = col.types,
+                                col_types = obj$col.types,
                                 delim     = delim,
                                 locale    = new.locale)
   
@@ -224,19 +286,21 @@ iNZread.dta <- function(obj, ...) {
 }
 
 #' @rdname iNZread
-#' @param sheet the number of the sheet which has to be read from the excel workbook.
+#' @param sheet the number of the sheet which has to be 
+#' read from the excel workbook.
+#' @param col.names A logical scalar. Tells if the file 
+#' contains column names in the first row or not.
 #' @export
 iNZread.excel <- function(obj,
                           ...,
                           sheet     = 1,
-                          col.names = TRUE,
-                          col.types = NULL) {
+                          col.names = TRUE) {
   
-  temp.data.frame <- read_excel(obj$path,
+  temp.data.frame <- readxl::read_excel(obj$path,
                                 ...,
                                 sheet     = sheet,
                                 col_names = col.names,
-                                col_types = col.types)
+                                col_types = obj$col.types)
   
   attr(temp.data.frame, "full.file") = TRUE
   

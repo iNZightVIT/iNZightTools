@@ -131,10 +131,6 @@ makeLocale <- function(date.names,
 #' @title iNZight Import Data
 #' @param ... additional arguments
 #' @return A dataframe.
-#' @import tools
-#' @import foreign
-#' @import readr
-#' @import readxl
 #'
 #' @author Akshay Gupta
 #'
@@ -162,11 +158,12 @@ iNZread.default <- function(path, extension = tools::file_ext(path), preview = F
   ## xls, xlsx = excel files
   ## txt, csv  = delim files
   
-  class(obj) <- switch(extension,
+  class(obj) <- switch(extension[1],
                        "txt"  = c("txt", "delim"),
                        "xlsx" = c("xslx", "excel"),
                        "xls"  = c("xls", "excel"),
-                       "csv"  = c("csv", "delim"))
+                       "csv"  = c("csv", "delim"),
+                       extension)
   
   iNZread(obj, ...)
 }
@@ -275,10 +272,10 @@ iNZread.dta <- function(obj, ...) {
   ##Converts stata value labels to create factors. Version 6.0 or later.
   ##Converts dates in stata to dates and POSIX in R.
   
-  temp.data.frame <- read.dta(obj$path,
-                              ...,
-                              convert.dates   = TRUE,
-                              convert.factors = TRUE)
+  temp.data.frame <- foreign::read.dta(obj$path,
+                                       ...,
+                                       convert.dates   = TRUE,
+                                       convert.factors = TRUE)
   
   attr(temp.data.frame, "full.file") = TRUE
   
@@ -297,10 +294,10 @@ iNZread.excel <- function(obj,
                           col.names = TRUE) {
   
   temp.data.frame <- readxl::read_excel(obj$path,
-                                ...,
-                                sheet     = sheet,
-                                col_names = col.names,
-                                col_types = obj$col.types)
+                                        ...,
+                                        sheet     = sheet,
+                                        col_names = col.names,
+                                        col_types = obj$col.types)
   
   attr(temp.data.frame, "full.file") = TRUE
   

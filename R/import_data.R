@@ -26,16 +26,15 @@ isColumnTypesCorrect <- function(col.types){
 
 #' Checks if the complete file was read or not.
 #' 
-#' \code{isFullFile} returns a logical scalar after checking 
+#' \code{isPreview} returns a logical scalar after checking 
 #' the attributes of the dataframe sent as an argument. 
-#' Returns TRUE if it is the complete file. Returns FALSE if 
-#' it is a partial file read. 
+#' Returns TRUE if it was read as a preview. 
 #' 
 #' @param user.data.frame the dataframe returned after reading the file
 #' @return A logical scalar
-isFullFile <- function(user.data.frame){
+isPreview <- function(user.data.frame){
   
-  if (attr(user.data.frame, "full.file") == TRUE){
+  if (attr(user.data.frame, "preview") == TRUE){
     return(TRUE)
   }
   
@@ -207,7 +206,7 @@ iNZread.sav <- function(obj, ...) {
   
   temp.data.frame <- foreign::read.spss(obj$path, ..., to.data.frame = TRUE)
   
-  attr(temp.data.frame, "full.file") = TRUE
+  attr(temp.data.frame, "preview") = obj$preview
   
   return(temp.data.frame)
 }
@@ -260,7 +259,7 @@ iNZread.delim <- function(obj,
                                 delim     = delim,
                                 locale    = new.locale)
   
-  attr(temp.data.frame, "full.file") = !obj$preview
+  attr(temp.data.frame, "preview") = obj$preview
   
   return(temp.data.frame)
 }
@@ -277,7 +276,7 @@ iNZread.dta <- function(obj, ...) {
                                        convert.dates   = TRUE,
                                        convert.factors = TRUE)
   
-  attr(temp.data.frame, "full.file") = TRUE
+  attr(temp.data.frame, "preview") = obj$preview
   
   return(temp.data.frame)
 }
@@ -299,7 +298,7 @@ iNZread.excel <- function(obj,
                                         col_names = col.names,
                                         col_types = obj$col.types)
   
-  attr(temp.data.frame, "full.file") = TRUE
+  attr(temp.data.frame, "preview") = obj$preview
   
   return(temp.data.frame)
 }

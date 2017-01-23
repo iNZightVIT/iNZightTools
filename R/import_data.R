@@ -34,8 +34,14 @@ isColumnTypesCorrect <- function(col.types){
 #' @return A logical scalar
 isPreview <- function(user.data.frame){
   
-  if (attr(user.data.frame, "preview") == TRUE){
-    return(TRUE)
+  ## Both conditions in the same if are giving error. 
+  if (!is.null(attr(user.data.frame, "preview"))){
+    if(attr(user.data.frame, "preview") == TRUE){
+      return(TRUE)
+    }
+    else{
+      return(FALSE)
+    }
   }
   
   else{
@@ -206,7 +212,7 @@ iNZread.sav <- function(obj, ...) {
   
   temp.data.frame <- foreign::read.spss(obj$path, ..., to.data.frame = TRUE)
   
-  attr(temp.data.frame, "preview") = obj$preview
+  #attr(temp.data.frame, "preview") = obj$preview
   
   return(temp.data.frame)
 }
@@ -276,7 +282,7 @@ iNZread.dta <- function(obj, ...) {
                                        convert.dates   = TRUE,
                                        convert.factors = TRUE)
   
-  attr(temp.data.frame, "preview") = obj$preview
+  #attr(temp.data.frame, "preview") = obj$preview
   
   return(temp.data.frame)
 }
@@ -298,7 +304,7 @@ iNZread.excel <- function(obj,
                                         col_names = col.names,
                                         col_types = obj$col.types)
   
-  attr(temp.data.frame, "preview") = obj$preview
+  #attr(temp.data.frame, "preview") = obj$preview
   
   return(temp.data.frame)
 }

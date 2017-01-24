@@ -34,20 +34,121 @@ isColumnTypesCorrect <- function(col.types){
 #' @return A logical scalar
 isPreview <- function(user.data.frame){
   
-  ## Both conditions in the same if are giving error. 
-  if (!is.null(attr(user.data.frame, "preview"))){
-    if(attr(user.data.frame, "preview") == TRUE){
+  if("preview" %in% attributes(user.data.frame)){
+    return(TRUE)
+  }
+  else{
+    return(FALSE)
+  }
+  
+}
+
+##Don't give options that we can't handle. 
+##Referring to rightclick>options for converting data to.
+
+#' Changes the datatype of columns of dataframe to the specified datatypes. 
+#' 
+#' \code{changeColumnTypes} returns a data frame with changed datatypes of columns. 
+#' Returns the same data frame if column types are specified as NULL.
+#' 
+#' @param user.data.frame dataframe which needs the datatypes of columns changed.
+#' @param col.types a vector of datatypes of columns.
+#' @return a data frame.
+changeColumnTypes <- function(user.data.frame, col.types){
+  
+  check.result <- lapply(seq_along(names(user.data.frame)), function(x){
+    
+    if (class(user.data.frame[[x]]) == col.types[[x]]){
       return(TRUE)
     }
     else{
       return(FALSE)
     }
+    
+  })
+  
+  if (!all(check.result)) {
+    temp.return <- lapply(seq_along(names(user.data.frame)), function(x){
+      if(!check.result[[x]]){
+        changeToDatatype(user.data.frame, x, col.types)
+      }
+      else{
+        user.data.frame[x]
+      }
+    })
+    
+    #print(temp.return)
+    user.data.frame <- do.call("cbind", lapply(temp.return, data.frame))
+    ## convert incorrect columns only
   }
   
-  else{
-    return(FALSE)
-  }
+  return(user.data.frame)
+}
+
+#' Changes the datatype of a column of a dataframe to the specified datatype. 
+#' 
+#' \code{changeToDatatype} returns a data frame with 1 column 
+#' (just the column whose data type has been changed) with changed 
+#' datatypes of column. 
+#' 
+#' @param ... Other arguments.
+#' 
+#' @return a data frame.
+changeToDatatype <- function(obj, ...){
   
+  UseMethod("changeToDatatype")
+}
+
+#' @rdname changeToDatatype
+#' @param user.data.frame dataframe which needs the datatypes of columns changed.
+#' @param x column number of the column which needs the data type changed.
+#' @param col.types a vector of datatypes of columns.
+changeToDatatype.default <- function(user.data.frame, x = 0, col.types = NULL){
+  
+  obj <- "Column Change"
+  attr(obj, "user.data.frame") <- user.data.frame
+  attr(obj, "column.number") <- x
+  #print("Entered changeToDatatype")
+  #class(obj) <- col.types[x]
+  class(obj) <- paste("iNZclass", col.types[x], sep = '.')
+  #print(class(obj))
+  
+  changeToDatatype(obj)
+  
+}
+
+#' @rdname changeToDatatype
+changeToDatatype.iNZclass.numeric <- function(obj){
+  
+  #print("Entered numeric")
+  user.data.frame <- attr(obj, "user.data.frame")
+  column.number <- attr(obj, "column.number")
+  
+  user.data.frame[[column.number]] <- as.numeric(user.data.frame[[column.number]])
+  #print(head(user.data.frame))
+  return(user.data.frame[column.number])
+}
+
+#' @rdname changeToDatatype
+changeToDatatype.iNZclass.character <- function(obj){
+  
+  #print("Entered character")
+  user.data.frame <- attr(obj, "user.data.frame")
+  column.number <- attr(obj, "column.number")
+  
+  user.data.frame[[column.number]] <- as.character(user.data.frame[[column.number]])
+  return(user.data.frame[column.number])
+}
+
+#' @rdname changeToDatatype
+changeToDatatype.iNZclass.factor <- function(obj){
+  
+  #print("Entered factor")
+  user.data.frame <- attr(obj, "user.data.frame")
+  column.number <- attr(obj, "column.number")
+  
+  user.data.frame[[column.number]] <- as.factor(user.data.frame[[column.number]])
+  return(user.data.frame[column.number])
 }
 
 #' Converts the data type of columns specified from numeric to date.
@@ -108,6 +209,17 @@ makeLocale <- function(date.names,
   return(user.locale)
 }
 
+iNZread <- function(path, col.types = NULL, ...) {
+  user.data.frame <- .iNZread(path = path, col.types = col.types, ...)
+  
+  if(!is.null(col.types)){
+    user.data.frame <- changeColumnTypes(user.data.frame, col.types)
+  }
+  ## check col types are correct
+  
+  return(user.data.frame)
+}
+
 ##The optional valid arguments for iNZimport() are -
 ##              1. delim::col.names - TRUE or FALSE
 ##              2. delim::col.types - One of NULL, a cols specification,
@@ -130,23 +242,24 @@ makeLocale <- function(date.names,
 #' Reads the file and returns a dataframe according to the arguments
 #' passed.
 #'
-#' \code{iNZread} returns a dataframe by converting the data in the
+#' \code{.iNZread} returns a dataframe by converting the data in the
 #' file passed based on the arguments included while passing the file.
 #'
 #' @title iNZight Import Data
+#' @param path A string. Specifies the location of the file to be read.
 #' @param ... additional arguments
 #' @return A dataframe.
 #'
 #' @author Akshay Gupta
 #'
 #' @export
-iNZread <- function(obj, ...){
+.iNZread <- function(path, col.types, ...){
   
-  UseMethod("iNZread")
+  UseMethod(".iNZread")
   
 }
 
-#' @rdname iNZread
+#' @rdname .iNZread
 #' @param path A string. Specifies the location of the file to be read.
 #' @param extension A string. Specifies the extension of the file.
 #' @param preview A logical scalar. Should the whole data file be read
@@ -155,69 +268,70 @@ iNZread <- function(obj, ...){
 #' @param col.types Specifies the class of each column. Null if 
 #' not specified.
 #' @export
-iNZread.default <- function(path, extension = tools::file_ext(path), preview = FALSE, col.types = NULL, ...) {
+.iNZread.default <- function(path, extension = tools::file_ext(path), preview = FALSE, col.types, ...) {
   
-  obj <- structure(list(path = path, preview = preview, col.types = col.types), class = extension)
+  #obj <- structure(list(path = path, preview = preview, col.types = col.types), class = extension)
   
   ## multi methods for some cases
   ## xls, xlsx = excel files
   ## txt, csv  = delim files
+  print(col.types)
   
-  class(obj) <- switch(extension[1],
+  class(path) <- switch(extension[1],
                        "txt"  = c("txt", "delim"),
                        "xlsx" = c("xslx", "excel"),
                        "xls"  = c("xls", "excel"),
                        "csv"  = c("csv", "delim"),
                        extension)
   
-  iNZread(obj, ...)
+  .iNZread(path, preview = preview, col.types = col.types, ...)
 }
 
-#' @rdname iNZread
+#' @rdname .iNZread
 #' @export
-iNZread.csv <- function(obj, ...){
+.iNZread.csv <- function(path, ...){
   
-  attr(obj, "delim") = ","
-  NextMethod('iNZread', obj)
+  attr(path, "delim") = ","
+  NextMethod('.iNZread', path)
 }
 
-#' @rdname iNZread
+#' @rdname .iNZread
 #' @export
-iNZread.txt <- function(obj, ...){
+.iNZread.txt <- function(path, ...){
   
-  attr(obj, "delim") = "\t"
-  NextMethod('iNZread', obj)
+  attr(path, "delim") = "\t"
+  NextMethod('.iNZread', path)
 }
 
-#' @rdname iNZread
+#' @rdname .iNZread
 #' @export
-iNZread.xls <- function(obj, ...){
+.iNZread.xls <- function(path, ...){
   
-  NextMethod('iNZread', obj)
+  NextMethod('.iNZread', path)
 }
 
-#' @rdname iNZread
+#' @rdname .iNZread
 #' @export
-iNZread.xlsx <- function(obj, ...){
+.iNZread.xlsx <- function(path, ...){
   
-  NextMethod('iNZread', obj)
+  NextMethod('.iNZread', path)
 }
 
-#' @rdname iNZread
+#' @rdname .iNZread
 #' @export
-iNZread.sav <- function(obj, ...) {
+.iNZread.sav <- function(path, ...) {
   
   # Factors are retained, levels can be found.
   # Should we include max.value.labels ?
   
-  temp.data.frame <- foreign::read.spss(obj$path, ..., to.data.frame = TRUE)
+  temp.data.frame <- foreign::read.spss(path, to.data.frame = TRUE)
   
   #attr(temp.data.frame, "preview") = obj$preview
   
   return(temp.data.frame)
 }
 
-#' @rdname iNZread
+#' @rdname .iNZread
 #' @param number.of.rows number of rows to read
 #' @param col.names A logical scalar. Tells if the file 
 #' contains column names in the first row or not.
@@ -232,18 +346,21 @@ iNZread.sav <- function(obj, ...) {
 #' @param decimal.mark the symbol used as the decimal mark in the file.
 #' @param grouping.mark the symbol used as the grouping mark in the file.
 #' @export
-iNZread.delim <- function(obj,
-                          ...,
-                          number.of.rows = Inf,
-                          col.names      = TRUE,
-                          encoding.style = "UTF8",
-                          delim          = attr(obj, "delim"),
-                          date.names     = "en",
-                          time.format    = "%AT",
-                          time.zone      = Sys.timezone(),
-                          date.format    = "%Y-%m-%d",
-                          decimal.mark   = (Sys.localeconv())["decimal_point"],
-                          grouping.mark  = (Sys.localeconv())["grouping"]) {
+.iNZread.delim <- function(path, 
+                           col.types,
+                           preview,
+                           comment = "",
+                           number.of.rows = Inf,
+                           col.names      = TRUE,
+                           encoding.style = "UTF8",
+                           delim          = attr(path, "delim"),
+                           date.names     = "en",
+                           time.format    = "%AT",
+                           time.zone      = Sys.timezone(),
+                           date.format    = "%Y-%m-%d",
+                           decimal.mark   = (Sys.localeconv())["decimal_point"],
+                           grouping.mark  = (Sys.localeconv())["grouping"],
+                           ...) {
   
   new.locale <- makeLocale(date.names,
                            date.format,
@@ -253,32 +370,47 @@ iNZread.delim <- function(obj,
                            time.zone,
                            encoding.style)
   
-  if (obj$preview == TRUE){
+  if (preview == TRUE){
     number.of.rows = 100
   }
   
-  temp.data.frame <- readr::read_delim(obj$path,
-                                ...,
-                                n_max     = number.of.rows,
-                                col_names = col.names,
-                                col_types = obj$col.types,
-                                delim     = delim,
-                                locale    = new.locale)
+  if (!is.null(col.types)){
+
+    types.list <- lapply(col.types, function(x){
+      column.type.character <- switch(x,
+                                      "numeric"   = "n",
+                                      "character" = "c",
+                                      "factor"    = "c",
+                                      "date"      = "D",
+                                      "date-time" = "T")
+    })
+    
+    types.vector <- sapply(types.list, paste, collapse = ",")
+    col.types <- paste(types.vector, collapse = "")
+  }
   
-  attr(temp.data.frame, "preview") = obj$preview
+  temp.data.frame <- readr::read_delim(path,
+                                       col_types = col.types,
+                                       comment   = comment,
+                                       n_max     = number.of.rows,
+                                       col_names = col.names,
+                                       delim     = delim,
+                                       locale    = new.locale)
+  
+  if (preview)
+    attr(temp.data.frame, "preview") = 1
   
   return(temp.data.frame)
 }
 
-#' @rdname iNZread
+#' @rdname .iNZread
 #' @export
-iNZread.dta <- function(obj, ...) {
+.iNZread.dta <- function(path, ...) {
   
   ##Converts stata value labels to create factors. Version 6.0 or later.
   ##Converts dates in stata to dates and POSIX in R.
   
-  temp.data.frame <- foreign::read.dta(obj$path,
-                                       ...,
+  temp.data.frame <- foreign::read.dta(path,
                                        convert.dates   = TRUE,
                                        convert.factors = TRUE)
   
@@ -287,22 +419,22 @@ iNZread.dta <- function(obj, ...) {
   return(temp.data.frame)
 }
 
-#' @rdname iNZread
+#' @rdname .iNZread
 #' @param sheet the number of the sheet which has to be 
 #' read from the excel workbook.
 #' @param col.names A logical scalar. Tells if the file 
 #' contains column names in the first row or not.
 #' @export
-iNZread.excel <- function(obj,
-                          ...,
-                          sheet     = 1,
-                          col.names = TRUE) {
+.iNZread.excel <- function(path,
+                           col.types,
+                           sheet     = 1,
+                           col.names = TRUE,
+                           ...) {
   
-  temp.data.frame <- readxl::read_excel(obj$path,
-                                        ...,
+  temp.data.frame <- readxl::read_excel(path,
                                         sheet     = sheet,
                                         col_names = col.names,
-                                        col_types = obj$col.types)
+                                        col_types = col.types)
   
   #attr(temp.data.frame, "preview") = obj$preview
   

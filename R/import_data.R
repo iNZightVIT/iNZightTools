@@ -108,13 +108,19 @@ changeToDatatype.default <- function(user.data.frame, x = 0, col.types = NULL){
   obj <- "Column Change"
   attr(obj, "user.data.frame") <- user.data.frame
   attr(obj, "column.number") <- x
-  #print("Entered changeToDatatype")
-  #class(obj) <- col.types[x]
   class(obj) <- paste("iNZclass", col.types[x], sep = '.')
-  #print(class(obj))
-  
+
   changeToDatatype(obj)
   
+}
+
+#' @rdname changeToDatatype
+changeToDatatype.iNZclass.none <- function(obj){
+  
+  user.data.frame <- attr(obj, "user.data.frame")
+  column.number <- attr(obj, "column.number")
+  
+  return(user.data.frame[column.number])
 }
 
 #' @rdname changeToDatatype
@@ -143,11 +149,23 @@ changeToDatatype.iNZclass.character <- function(obj){
 #' @rdname changeToDatatype
 changeToDatatype.iNZclass.factor <- function(obj){
   
-  #print("Entered factor")
   user.data.frame <- attr(obj, "user.data.frame")
   column.number <- attr(obj, "column.number")
   
   user.data.frame[[column.number]] <- as.factor(user.data.frame[[column.number]])
+  
+  if ("metadata" %in% names(attributes(user.data.frame))){
+    
+    if (colnames(user.data.frame[column.number]) %in% 
+        attr(user.data.frame, "metadata")){
+      
+      if (attr(test.meta[test.meta == "height"][[1]], "datatype") == "factor"){
+        
+        ##Set levels and do other stuff. 
+      }
+    }
+  }
+
   return(user.data.frame[column.number])
 }
 
@@ -209,16 +227,62 @@ makeLocale <- function(date.names,
   return(user.locale)
 }
 
+#' Reads the file and returns a dataframe according to the arguments
+#' passed.
+#'
+#' \code{iNZread} returns a dataframe by converting the data in the
+#' file passed based on the arguments included while passing the file.
+#'
+#' @title iNZight Import Data
+#' @param path A string. Specifies the location of the file to be read.
+#' @param col.types A character vector specifying the datatypes of columns.
+#' @param ... additional arguments
+#' @return A dataframe.
+#'
+#' @author Akshay Gupta
+#'
+#' @export
 iNZread <- function(path, col.types = NULL, ...) {
   user.data.frame <- .iNZread(path = path, col.types = col.types, ...)
   
-  if(!is.null(col.types)){
-    user.data.frame <- changeColumnTypes(user.data.frame, col.types)
-  }
-  ## check col types are correct
+  #print(attributes(user.data.frame))
+  #print("metadata" %in% names(attributes(user.data.frame)))
   
+    
+  if(is.null(col.types)){
+    
+    print("Null col.types checked")
+    
+    if ("metadata" %in% names(attributes(user.data.frame))){
+      
+      #print("entered checking of metadata and it is available.")
+      metadata.list <- attr(user.data.frame, "metadata")  
+      #print(metadata.list)
+      
+      columns.types.list <- lapply(colnames(user.data.frame), function(x){
+        
+        if (x %in% metadata.list){
+          
+          attr(metadata.list[metadata.list == x][[1]], "datatype")
+        }
+        else{
+          
+          "none"
+        }
+      })
+      
+      col.types <- sapply(columns.types.list, paste, collapse = ",")
+    }
+    else{
+      
+      return(user.data.frame)
+    }
+  }
+  
+  user.data.frame <- changeColumnTypes(user.data.frame, col.types)
   return(user.data.frame)
 }
+
 
 ##The optional valid arguments for iNZimport() are -
 ##              1. delim::col.names - TRUE or FALSE
@@ -239,18 +303,12 @@ iNZread <- function(path, col.types = NULL, ...) {
 ##                                    vector containing "blank", "numeric",
 ##                                    "date" or "text".
 
-#' Reads the file and returns a dataframe according to the arguments
-#' passed.
-#'
+
 #' \code{.iNZread} returns a dataframe by converting the data in the
 #' file passed based on the arguments included while passing the file.
-#'
-#' @title iNZight Import Data
 #' @param path A string. Specifies the location of the file to be read.
 #' @param ... additional arguments
 #' @return A dataframe.
-#'
-#' @author Akshay Gupta
 #'
 #' @export
 .iNZread <- function(path, col.types, ...){
@@ -275,7 +333,7 @@ iNZread <- function(path, col.types = NULL, ...) {
   ## multi methods for some cases
   ## xls, xlsx = excel files
   ## txt, csv  = delim files
-  print(col.types)
+  #print(col.types)
   
   class(path) <- switch(extension[1],
                        "txt"  = c("txt", "delim"),
@@ -349,7 +407,7 @@ iNZread <- function(path, col.types = NULL, ...) {
 .iNZread.delim <- function(path, 
                            col.types,
                            preview,
-                           comment = "",
+                           comment = "#",
                            number.of.rows = Inf,
                            col.names      = TRUE,
                            encoding.style = "UTF8",
@@ -361,6 +419,12 @@ iNZread <- function(path, col.types = NULL, ...) {
                            decimal.mark   = (Sys.localeconv())["decimal_point"],
                            grouping.mark  = (Sys.localeconv())["grouping"],
                            ...) {
+  
+  ##Source the file which contains code for evaluating metadata. 
+  source("read_metadataV4.R")
+  
+  ##Source the file which contains code to convert types to char.
+  source("column_types_to_char.R")
   
   new.locale <- makeLocale(date.names,
                            date.format,
@@ -374,21 +438,37 @@ iNZread <- function(path, col.types = NULL, ...) {
     number.of.rows = 100
   }
   
-  if (!is.null(col.types)){
-
-    types.list <- lapply(col.types, function(x){
-      column.type.character <- switch(x,
-                                      "numeric"   = "n",
-                                      "character" = "c",
-                                      "factor"    = "c",
-                                      "date"      = "D",
-                                      "date-time" = "T")
-    })
+  metadata.available <- isMetadataAvailable(path)
+  
+  if(metadata.available){
     
-    types.vector <- sapply(types.list, paste, collapse = ",")
-    col.types <- paste(types.vector, collapse = "")
+    metadata.list <- readMetadata(path = path)
   }
   
+  if (!is.null(col.types)){
+    
+    col.types <- makeDatatypeChar(col.types)
+  }
+  else{
+    
+    if(metadata.available){
+      
+      column.names.line <- findColumnNames(path)
+      
+      ##Check if metadata(column.names) match returned column names.
+      check.column.names <- checkForColumnNames(metadata.list, column.names.line)
+
+      if(check.column.names){
+        
+        ##Get a vector of column names from columns.names.line
+        column.names.list <- strsplit(column.names.line, split = ",")
+        
+        ##Use metadata to form the column types and attach metadatalist to the userdataframe.
+        col.types <- makeDatatypeChar(metadata.list, column.names.list[[1]])
+      }
+    }
+  }
+    
   temp.data.frame <- readr::read_delim(path,
                                        col_types = col.types,
                                        comment   = comment,
@@ -397,8 +477,14 @@ iNZread <- function(path, col.types = NULL, ...) {
                                        delim     = delim,
                                        locale    = new.locale)
   
-  if (preview)
+  if (metadata.available){
+    
+    attr(temp.data.frame, "metadata") <- metadata.list
+  }
+  
+  if (preview){
     attr(temp.data.frame, "preview") = 1
+  }
   
   return(temp.data.frame)
 }

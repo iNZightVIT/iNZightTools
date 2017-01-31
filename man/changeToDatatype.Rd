@@ -5,12 +5,15 @@
 \alias{changeToDatatype.default}
 \alias{changeToDatatype.iNZclass.character}
 \alias{changeToDatatype.iNZclass.factor}
+\alias{changeToDatatype.iNZclass.none}
 \alias{changeToDatatype.iNZclass.numeric}
 \title{Changes the datatype of a column of a dataframe to the specified datatype.}
 \usage{
 changeToDatatype(obj, ...)
 
 \method{changeToDatatype}{default}(user.data.frame, x = 0, col.types = NULL)
+
+\method{changeToDatatype}{iNZclass.none}(obj)
 
 \method{changeToDatatype}{iNZclass.numeric}(obj)
 

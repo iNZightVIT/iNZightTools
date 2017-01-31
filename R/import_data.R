@@ -154,7 +154,7 @@ changeToDatatype.iNZclass.factor <- function(obj){
   
   user.data.frame[[column.number]] <- as.factor(user.data.frame[[column.number]])
   
-  if ("metadata" %in% attributes(user.data.frame)){
+  if ("metadata" %in% names(attributes(user.data.frame))){
     
     if (colnames(user.data.frame[column.number]) %in% 
         attr(user.data.frame, "metadata")){

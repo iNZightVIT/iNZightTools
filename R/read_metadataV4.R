@@ -10,6 +10,18 @@ remDoubleSpaces <- function(string){
   return(formatted.string)
 }
 
+#' Reads the file and returns a dataframe according to the arguments
+#' passed.
+#'
+#' \code{.remSpacesAroundOperators} returns a dataframe by converting the data in the
+#' file passed based on the arguments included while passing the file.
+#'
+#' @title iNZight Import Data
+#' @param path A string. Specifies the location of the file to be read.
+#' @param ... additional arguments
+#' @return A dataframe.
+#'
+#' @author Akshay Gupta
 remSpacesAroundOperators <- function(string){
   
   formatted.string <- gsub('\\s*([,\\[\\=\\+\\-\\\\])\\s*','\\1', string, perl =TRUE)
@@ -144,19 +156,15 @@ findColumnNames <- function(path){
   
   while(con){
     
-    tmp <- readLines(con, n=1)
-    words <- returnWords(tmp)
+    tmp <- readLines(con, n = 1)
     
-    variable.name <- solveFirstWord(words[[1]])
+    check <- grepl("[#]", tmp)
     
-    if(is.logical(variable.name)){
-      
+    if(!check){
+      print(tmp)
       return(tmp)
     }
-    else{
-      
-      return("No_Data_Available")
-    }
+    
   }
 }
 

@@ -152,18 +152,56 @@ changeToDatatype.iNZclass.factor <- function(obj){
   user.data.frame <- attr(obj, "user.data.frame")
   column.number <- attr(obj, "column.number")
   
-  user.data.frame[[column.number]] <- as.factor(user.data.frame[[column.number]])
-  
   if ("metadata" %in% names(attributes(user.data.frame))){
     
-    if (colnames(user.data.frame[column.number]) %in% 
-        attr(user.data.frame, "metadata")){
+    metadata.list <- attr(user.data.frame, "metadata")
+    column.name <- colnames(user.data.frame)[column.number]
+    
+    if (column.name %in% metadata.list){
       
-      if (attr(test.meta[test.meta == "height"][[1]], "datatype") == "factor"){
+      datatype.specified.in.metadata <- attr(metadata.list[metadata.list == 
+                                                             column.name][[1]], "datatype")
+      
+      if (datatype.specified.in.metadata == "factor"){
         
-        ##Set levels and do other stuff. 
+        if("values" %in% names(attributes(metadata.list[metadata.list == column.name][[1]]))){
+          
+          ##Set levels and do other stuff.
+          column.values.from.metadata <- attr(metadata.list[metadata.list == column.name][[1]], "values")[[1]]
+          
+          #source("read_metadata.R")
+          column.values.and.labels <- convertToLevelsAndLabels(column.values.from.metadata)
+          labels.vector <- column.values.and.labels[["labels.vector"]]
+          levels.vector <- column.values.and.labels[["levels.vector"]]
+          
+          if(length(labels.vector) == length(levels.vector)){
+            
+            #print(levels.vector)
+            #print(labels.vector)
+            user.data.frame[[column.number]] <- factor(user.data.frame[[column.number]], levels = levels.vector, labels = labels.vector)
+          }
+          else{
+            user.data.frame[[column.number]] <- factor(user.data.frame[[column.number]], levels = labels.vector )
+          }
+        }
+        else{
+          
+          user.data.frame[[column.number]] <- as.factor(user.data.frame[[column.number]])
+        }
+      }
+      else{
+        
+        user.data.frame[[column.number]] <- as.factor(user.data.frame[[column.number]])
       }
     }
+    else{
+      
+      user.data.frame[[column.number]] <- as.factor(user.data.frame[[column.number]])
+    }
+  }
+  else{
+    
+    user.data.frame[[column.number]] <- as.factor(user.data.frame[[column.number]])
   }
 
   return(user.data.frame[column.number])
@@ -244,14 +282,10 @@ makeLocale <- function(date.names,
 #' @export
 iNZread <- function(path, col.types = NULL, ...) {
   user.data.frame <- .iNZread(path = path, col.types = col.types, ...)
-  
-  #print(attributes(user.data.frame))
-  #print("metadata" %in% names(attributes(user.data.frame)))
-  
     
   if(is.null(col.types)){
     
-    print("Null col.types checked")
+    #print("Null col.types checked")
     
     if ("metadata" %in% names(attributes(user.data.frame))){
       
@@ -278,6 +312,8 @@ iNZread <- function(path, col.types = NULL, ...) {
       return(user.data.frame)
     }
   }
+  
+  #print("out of if and else, read file. ")
   
   user.data.frame <- changeColumnTypes(user.data.frame, col.types)
   return(user.data.frame)
@@ -421,10 +457,10 @@ iNZread <- function(path, col.types = NULL, ...) {
                            ...) {
   
   ##Source the file which contains code for evaluating metadata. 
-  source("read_metadataV4.R")
+  #source("read_metadataV4.R")
   
   ##Source the file which contains code to convert types to char.
-  source("column_types_to_char.R")
+  #source("column_types_to_char.R")
   
   new.locale <- makeLocale(date.names,
                            date.format,

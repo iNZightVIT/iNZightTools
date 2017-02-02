@@ -1,8 +1,85 @@
 ## Run the script and use the function readMetadata. Takes the argument path. 
 ## Returns a list. 
+## Author - Akshay Gupta
 
 pattern.vector <- c("[#@]", "factor|numeric|date")
 variable.specs <- list()
+
+convertToLevelsAndLabels <- function(obj){
+  
+  labels.vector <- c()
+  levels.vector <- c()
+  
+  # solved.values.and.labels <- lapply(obj, function(x){
+  #   
+  #   solveForValues(x)
+  # })
+  
+  for (i in 1:length(obj)){
+    
+    value.vector <- solveForValues(obj[i])
+
+    if(length(value.vector) != 1){
+      
+      value.labels <- rep(value.vector[1], length(value.vector) - 1)
+      labels.vector <- c(labels.vector, value.labels)
+      levels.vector <- c(levels.vector, value.vector[-1])
+    }
+    else{
+      
+      labels.vector <- c(labels.vector, value.vector[1])
+    }
+  }
+  
+  values.list <-  list(levels.vector = levels.vector, labels.vector = labels.vector)
+  return(values.list)
+  
+}
+
+solveForValues <- function(obj){
+  
+  UseMethod("solveForValues")
+}
+
+solveForValues.default <- function(obj){
+  
+  check <- grepl("(([a-z]|[A-Z]|[1-9])*)=(([a-z]|[A-Z]|[1-9])*)", obj)
+  #print(check)
+  
+  if(check){
+    
+    class(obj) <- "with.levels"
+  }
+  else{
+    
+    class(obj) <- "without.levels"
+  }
+  
+  solveForValues(obj)
+}
+
+solveForValues.with.levels <- function(obj){
+  
+  #formatted.string <- gsub('(\\(([a-z]|[A-Z]|[1-9])*),(([a-z]|[A-Z]|[1-9])*\\))', '\\1?\\3', string )
+  values.vector <- unlist(strsplit(obj, split = "="))
+  values.levels <- values.vector[2]
+  
+  check <- grepl("(\\(([a-z]|[A-Z]|[1-9])*)?(([a-z]|[A-Z]|[1-9])*\\))", values.levels)
+  
+  if(check){
+    
+    formatted.values.levels <- substr(values.levels, 2, nchar(values.levels) - 1)
+    formatted.values.levels.vector <- unlist(strsplit(formatted.values.levels, split = "\\?"))
+    values.vector <- c(values.vector[1], formatted.values.levels.vector)
+  }
+  
+  return(values.vector)
+}
+
+solveForValues.without.levels <- function(obj){
+  
+  return(obj)
+}
 
 remDoubleSpaces <- function(string){
   

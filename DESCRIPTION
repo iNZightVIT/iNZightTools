@@ -1,7 +1,7 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for iNZight
-Version: 1.2
+Version: 1.2.1
 Imports:
     survey,
     grDevices
@@ -9,7 +9,7 @@ Suggests:
     iNZight,
     Acinonyx,
     cairoDevice
-Date: 2016-TBA
+Date: 2017-02-03
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "inzight_support@stat.auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"))

@@ -18,6 +18,9 @@ Opens a new graphics device
 }
 \details{
 Depending on the system, difference devices are better.
+The windows device works fine (for now), only attempt to speed up
+any other devices that we're going to be using.
+We speed them up by getting rid of bufferring.
 }
 \author{
 Tom Elliott

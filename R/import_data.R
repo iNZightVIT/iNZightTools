@@ -282,7 +282,7 @@ makeLocale <- function(date.names,
 #' @export
 iNZread <- function(path, col.types = NULL, ...) {
   user.data.frame <- .iNZread(path = path, col.types = col.types, ...)
-    
+
   if(is.null(col.types)){
     
     #print("Null col.types checked")
@@ -505,13 +505,13 @@ iNZread <- function(path, col.types = NULL, ...) {
     }
   }
     
-  temp.data.frame <- readr::read_delim(path,
+  temp.data.frame <- as.data.frame(readr::read_delim(path,
                                        col_types = col.types,
                                        comment   = comment,
                                        n_max     = number.of.rows,
                                        col_names = col.names,
                                        delim     = delim,
-                                       locale    = new.locale)
+                                       locale    = new.locale))
   
   if (metadata.available){
     

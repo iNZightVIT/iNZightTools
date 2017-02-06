@@ -36,11 +36,18 @@ convertToLevelsAndLabels <- function(obj){
   
 }
 
+#' Extracts the levels and labels to be used when converting a column to factor.
+#'
+#' \code{readMetadata} Returns a vector with label and levels. 
+#'
+#' @param obj A string.
+#' @return A character vector.
 solveForValues <- function(obj){
   
   UseMethod("solveForValues")
 }
 
+#' @rdname solveForValues
 solveForValues.default <- function(obj){
   
   check <- grepl("(([a-z]|[A-Z]|[1-9])*)=(([a-z]|[A-Z]|[1-9])*)", obj)
@@ -58,6 +65,7 @@ solveForValues.default <- function(obj){
   solveForValues(obj)
 }
 
+#' @rdname solveForValues
 solveForValues.with.levels <- function(obj){
   
   #formatted.string <- gsub('(\\(([a-z]|[A-Z]|[1-9])*),(([a-z]|[A-Z]|[1-9])*\\))', '\\1?\\3', string )
@@ -76,6 +84,7 @@ solveForValues.with.levels <- function(obj){
   return(values.vector)
 }
 
+#' @rdname solveForValues
 solveForValues.without.levels <- function(obj){
   
   return(obj)
@@ -87,18 +96,6 @@ remDoubleSpaces <- function(string){
   return(formatted.string)
 }
 
-#' Reads the file and returns a dataframe according to the arguments
-#' passed.
-#'
-#' \code{.remSpacesAroundOperators} returns a dataframe by converting the data in the
-#' file passed based on the arguments included while passing the file.
-#'
-#' @title iNZight Import Data
-#' @param path A string. Specifies the location of the file to be read.
-#' @param ... additional arguments
-#' @return A dataframe.
-#'
-#' @author Akshay Gupta
 remSpacesAroundOperators <- function(string){
   
   formatted.string <- gsub('\\s*([,\\[\\=\\+\\-\\\\])\\s*','\\1', string, perl =TRUE)
@@ -238,13 +235,22 @@ findColumnNames <- function(path){
     check <- grepl("[#]", tmp)
     
     if(!check){
-      print(tmp)
+      #print(tmp)
       return(tmp)
     }
     
   }
 }
 
+#' Reads a file and checks for metadata if available. 
+#'
+#' \code{readMetadata} Returns the metadata if available in the file as a list.
+#'
+#' @title iNZight Metadata Reader
+#' @param path A string. Specifies the location of the file to be read.
+#' @return A list.
+#'
+#' @author Akshay Gupta
 readMetadata <- function(path){
   
   variable.specs <- list()

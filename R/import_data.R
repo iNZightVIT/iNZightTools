@@ -169,7 +169,7 @@ changeToDatatype.iNZclass.factor <- function(obj){
           ##Set levels and do other stuff.
           column.values.from.metadata <- attr(metadata.list[metadata.list == column.name][[1]], "values")[[1]]
           
-          #source("read_metadata.R")
+          source("read_metadata.R")
           column.values.and.labels <- convertToLevelsAndLabels(column.values.from.metadata)
           labels.vector <- column.values.and.labels[["labels.vector"]]
           levels.vector <- column.values.and.labels[["levels.vector"]]
@@ -457,10 +457,10 @@ iNZread <- function(path, col.types = NULL, ...) {
                            ...) {
   
   ##Source the file which contains code for evaluating metadata. 
-  #source("read_metadataV4.R")
+  source("read_metadataV4.R")
   
   ##Source the file which contains code to convert types to char.
-  #source("column_types_to_char.R")
+  source("column_types_to_char.R")
   
   new.locale <- makeLocale(date.names,
                            date.format,

@@ -43,9 +43,6 @@ isPreview <- function(user.data.frame){
   
 }
 
-##Don't give options that we can't handle. 
-##Referring to rightclick>options for converting data to.
-
 #' Changes the datatype of columns of dataframe to the specified datatypes. 
 #' 
 #' \code{changeColumnTypes} returns a data frame with changed datatypes of columns. 
@@ -77,9 +74,7 @@ changeColumnTypes <- function(user.data.frame, col.types){
       }
     })
     
-    #print(temp.return)
     user.data.frame <- do.call("cbind", lapply(temp.return, data.frame))
-    ## convert incorrect columns only
   }
   
   return(user.data.frame)
@@ -126,19 +121,16 @@ changeToDatatype.iNZclass.none <- function(obj){
 #' @rdname changeToDatatype
 changeToDatatype.iNZclass.numeric <- function(obj){
   
-  #print("Entered numeric")
   user.data.frame <- attr(obj, "user.data.frame")
   column.number <- attr(obj, "column.number")
   
   user.data.frame[[column.number]] <- as.numeric(user.data.frame[[column.number]])
-  #print(head(user.data.frame))
   return(user.data.frame[column.number])
 }
 
 #' @rdname changeToDatatype
 changeToDatatype.iNZclass.character <- function(obj){
   
-  #print("Entered character")
   user.data.frame <- attr(obj, "user.data.frame")
   column.number <- attr(obj, "column.number")
   
@@ -176,8 +168,6 @@ changeToDatatype.iNZclass.factor <- function(obj){
           
           if(length(labels.vector) == length(levels.vector)){
             
-            #print(levels.vector)
-            #print(labels.vector)
             user.data.frame[[column.number]] <- factor(user.data.frame[[column.number]], levels = levels.vector, labels = labels.vector)
           }
           else{
@@ -285,14 +275,9 @@ iNZread <- function(path, col.types = NULL, ...) {
 
   if(is.null(col.types)){
     
-    #print("Null col.types checked")
-    
     if ("metadata" %in% names(attributes(user.data.frame))){
       
-      #print("entered checking of metadata and it is available.")
       metadata.list <- attr(user.data.frame, "metadata")  
-      #print(metadata.list)
-      
       columns.types.list <- lapply(colnames(user.data.frame), function(x){
         
         if (x %in% metadata.list){
@@ -312,8 +297,6 @@ iNZread <- function(path, col.types = NULL, ...) {
       return(user.data.frame)
     }
   }
-  
-  #print("out of if and else, read file. ")
   
   user.data.frame <- changeColumnTypes(user.data.frame, col.types)
   return(user.data.frame)
@@ -339,7 +322,6 @@ iNZread <- function(path, col.types = NULL, ...) {
 ##                                    vector containing "blank", "numeric",
 ##                                    "date" or "text".
 
-
 #' \code{.iNZread} returns a dataframe by converting the data in the
 #' file passed based on the arguments included while passing the file.
 #' @param path A string. Specifies the location of the file to be read.
@@ -363,13 +345,6 @@ iNZread <- function(path, col.types = NULL, ...) {
 #' not specified.
 #' @export
 .iNZread.default <- function(path, extension = tools::file_ext(path), preview = FALSE, col.types, ...) {
-  
-  #obj <- structure(list(path = path, preview = preview, col.types = col.types), class = extension)
-  
-  ## multi methods for some cases
-  ## xls, xlsx = excel files
-  ## txt, csv  = delim files
-  #print(col.types)
   
   class(path) <- switch(extension[1],
                        "txt"  = c("txt", "delim"),
@@ -415,13 +390,7 @@ iNZread <- function(path, col.types = NULL, ...) {
 #' @export
 .iNZread.sav <- function(path, ...) {
   
-  # Factors are retained, levels can be found.
-  # Should we include max.value.labels ?
-  
   temp.data.frame <- foreign::read.spss(path, to.data.frame = TRUE)
-  
-  #attr(temp.data.frame, "preview") = obj$preview
-  
   return(temp.data.frame)
 }
 

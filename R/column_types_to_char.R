@@ -1,14 +1,11 @@
-
-#' Reads the file and returns a dataframe according to the arguments
-#' passed.
+#' Converts the column datatypes to a single word or string which can be 
+#' passed to readr::read_csv as an argument.
 #'
-#' \code{.makeDatatypeChar} returns a dataframe by converting the data in the
-#' file passed based on the arguments included while passing the file.
+#' \code{makeDatatypeChar} returns a word (string) specifiying the datatype 
+#' of each column with a single character.
 #'
-#' @title iNZight Import Data
-#' @param path A string. Specifies the location of the file to be read.
-#' @param ... additional arguments
-#' @return A dataframe.
+#' @param obj A character vector or a list. 
+#' @return A character vector of length 1. 
 #'
 #' @author Akshay Gupta
 makeDatatypeChar <- function(obj, col.names = NULL){

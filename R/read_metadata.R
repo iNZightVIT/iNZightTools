@@ -2,7 +2,7 @@
 ## Returns a list. 
 ## Author - Akshay Gupta
 
-pattern.vector <- c("[#@]", "factor|numeric|date")
+pattern.vector <- c("^#@", "factor|numeric|date")
 variable.specs <- list()
 
 #' Extracts the levels and labels to be used when converting a column to factor.
@@ -172,6 +172,7 @@ returnWords <- function(string){
 solveFirstWord <- function(first.word){
   
   check <- grepl(pattern.vector[1], first.word)
+  #print(check)
   
   if(check == TRUE)
   {
@@ -208,6 +209,7 @@ solveSecondWord <- function(second.word, variable.specs){
 solveSecondWord.default <- function(second.word, variable.specs){
   
   #Do something here. (query not supported)
+  #print(second.word)
   print("ENTERED DEFAULT")
 }
 
@@ -337,8 +339,10 @@ readMetadata <- function(path){
     
     tmp <- readLines(con, n = 1)
     words <- returnWords(tmp)
+    #print(words)
     
     variable.name <- solveFirstWord(words[[1]])
+    #print(variable.name)
 
     if(is.logical(variable.name)){
       break
@@ -347,6 +351,8 @@ readMetadata <- function(path){
       variable.specs[length(variable.specs) + 1] <- variable.name
     }
     
+    ##An error can be given here that words, subscript out of bounds.
+    ##This happens when the metadata isn't properly written (second word missing).
     new.variable.specs <- solveSecondWord(words[[2]], variable.specs)
     variable.specs <- new.variable.specs
   }

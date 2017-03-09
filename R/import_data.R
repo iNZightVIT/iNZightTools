@@ -32,16 +32,17 @@ isColumnTypesCorrect <- function(col.types){
 #'
 #' @param user.data.frame the dataframe returned after reading the file
 #' @return A logical scalar
-isPreview <- function(user.data.frame){
+#' @export
+isPreview <- function(user.data.frame) "preview" %in% names(attributes(user.data.frame))
 
-  if("preview" %in% attributes(user.data.frame)){
-    return(TRUE)
-  }
-  else{
-    return(FALSE)
-  }
-
-}
+#   if("preview" %in% attributes(user.data.frame)){
+#     return(TRUE)
+#   }
+#   else{
+#     return(FALSE)
+#   }
+#
+# }
 
 #' Changes the datatype of columns of dataframe to the specified datatypes.
 #'
@@ -53,7 +54,7 @@ isPreview <- function(user.data.frame){
 #' @return a data frame.
 changeColumnTypes <- function(user.data.frame, col.types){
 
-  check.result <- lapply(seq_along(names(user.data.frame)), function(x){
+  check.result <- sapply(seq_along(names(user.data.frame)), function(x){
 
     if (class(user.data.frame[[x]]) == col.types[[x]]){
       return(TRUE)
@@ -80,6 +81,12 @@ changeColumnTypes <- function(user.data.frame, col.types){
   return(user.data.frame)
 }
 
+# changeToDatatype <- function(obj, ...){
+#
+#   UseMethod("changeToDatatype")
+# }
+
+
 #' Changes the datatype of a column of a dataframe to the specified datatype.
 #'
 #' \code{changeToDatatype} returns a data frame with 1 column
@@ -89,28 +96,25 @@ changeColumnTypes <- function(user.data.frame, col.types){
 #' @param ... Other arguments.
 #'
 #' @return a data frame.
-changeToDatatype <- function(obj, ...){
-
-  UseMethod("changeToDatatype")
-}
-
 #' @rdname changeToDatatype
 #' @param user.data.frame dataframe which needs the datatypes of columns changed.
 #' @param x column number of the column which needs the data type changed.
 #' @param col.types a vector of datatypes of columns.
-changeToDatatype.default <- function(user.data.frame, x = 0, col.types = NULL){
+changeToDatatype <- function(user.data.frame, x = 0, col.types = NULL){
 
   obj <- "Column Change"
   attr(obj, "user.data.frame") <- user.data.frame
   attr(obj, "column.number") <- x
   class(obj) <- paste("iNZclass", col.types[x], sep = '.')
 
-  changeToDatatype(obj)
+  .changeToDatatype(obj)
 
 }
 
-#' @rdname changeToDatatype
-changeToDatatype.iNZclass.none <- function(obj){
+.changeToDatatype <- function(obj) UseMethod(".changeToDatatype")
+
+# #' @rdname changeToDatatype
+.changeToDatatype.default <- function(obj){
 
   user.data.frame <- attr(obj, "user.data.frame")
   column.number <- attr(obj, "column.number")
@@ -118,8 +122,8 @@ changeToDatatype.iNZclass.none <- function(obj){
   return(user.data.frame[column.number])
 }
 
-#' @rdname changeToDatatype
-changeToDatatype.iNZclass.numeric <- function(obj){
+# #' @rdname changeToDatatype
+.changeToDatatype.iNZclass.numeric <- function(obj){
 
   user.data.frame <- attr(obj, "user.data.frame")
   column.number <- attr(obj, "column.number")
@@ -128,8 +132,8 @@ changeToDatatype.iNZclass.numeric <- function(obj){
   return(user.data.frame[column.number])
 }
 
-#' @rdname changeToDatatype
-changeToDatatype.iNZclass.character <- function(obj){
+# #' @rdname changeToDatatype
+.changeToDatatype.iNZclass.character <- function(obj){
 
   user.data.frame <- attr(obj, "user.data.frame")
   column.number <- attr(obj, "column.number")
@@ -138,8 +142,8 @@ changeToDatatype.iNZclass.character <- function(obj){
   return(user.data.frame[column.number])
 }
 
-#' @rdname changeToDatatype
-changeToDatatype.iNZclass.factor <- function(obj){
+# #' @rdname changeToDatatype
+.changeToDatatype.iNZclass.factor <- function(obj){
 
   user.data.frame <- attr(obj, "user.data.frame")
   column.number <- attr(obj, "column.number")
@@ -298,8 +302,11 @@ iNZread <- function(path, col.types = NULL, ...) {
     }
   }
 
-  user.data.frame <- changeColumnTypes(user.data.frame, col.types)
-  return(user.data.frame)
+  newdf <- changeColumnTypes(user.data.frame, col.types)
+  if (isPreview(user.data.frame))
+      attr(newdf, "preview") <- attr(user.data.frame, "preview")
+
+  newdf
 }
 
 
@@ -451,7 +458,6 @@ iNZread <- function(path, col.types = NULL, ...) {
   }
 
   if (!is.null(col.types)){
-
     col.types <- makeDatatypeChar(col.types)
   }
   else{

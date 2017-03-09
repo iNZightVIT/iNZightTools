@@ -8,7 +8,7 @@ makeLocale(date.names, date.format, time.format, decimal.mark, grouping.mark,
   time.zone, encoding.style)
 }
 \arguments{
-\item{date.names}{The language used in the file to specift names 
+\item{date.names}{The language used in the file to specift names
 of months.}
 
 \item{date.format}{the format of date in the file.}
@@ -19,7 +19,7 @@ of months.}
 
 \item{grouping.mark}{the symbol used as the grouping mark in the file.}
 
-\item{time.zone}{the timezone used while writing dates/time 
+\item{time.zone}{the timezone used while writing dates/time
 in the file.}
 
 \item{encoding.style}{The encoding style used to make the file.}
@@ -28,8 +28,8 @@ in the file.}
 Zn object of class locale.
 }
 \description{
-\code{makeLocale} returns an object of class locale that has 
-been created using the arguments passed. The class 
+\code{makeLocale} returns an object of class locale that has
+been created using the arguments passed. The class
 locale is defined in the package readr.
 }
 

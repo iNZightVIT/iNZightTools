@@ -13,8 +13,8 @@ isColumnTypesCorrect(col.types)
 a logical scalar.
 }
 \description{
-\code{isColumnTypesCorrect} returns a logical scalar to tell if the 
-column types entered are valid. Returns TRUE if they are valid. 
+\code{isColumnTypesCorrect} returns a logical scalar to tell if the
+column types entered are valid. Returns TRUE if they are valid.
 Returns FALSE if not valid.
 }
 

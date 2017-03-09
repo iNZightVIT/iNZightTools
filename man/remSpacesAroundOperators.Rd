@@ -2,27 +2,18 @@
 % Please edit documentation in R/read_metadata.R
 \name{remSpacesAroundOperators}
 \alias{remSpacesAroundOperators}
-\title{iNZight Import Data}
+\title{Remove spaces around operators like '=','+','-', and back-slash.}
 \usage{
 remSpacesAroundOperators(string)
 }
 \arguments{
-\item{path}{A string. Specifies the location of the file to be read.}
-
-\item{...}{additional arguments}
+\item{string}{A string. A line in the metadata.}
 }
 \value{
-A dataframe.
+A string.
 }
 \description{
-Reads the file and returns a dataframe according to the arguments
-passed.
-}
-\details{
-\code{.remSpacesAroundOperators} returns a dataframe by converting the data in the
-file passed based on the arguments included while passing the file.
-}
-\author{
-Akshay Gupta
+\code{remSpacesAroundOperators} Returns a formatted string with 
+spaces around operators listed removed.
 }
 

@@ -13,8 +13,8 @@ isPreview(user.data.frame)
 A logical scalar
 }
 \description{
-\code{isPreview} returns a logical scalar after checking 
-the attributes of the dataframe sent as an argument. 
+\code{isPreview} returns a logical scalar after checking
+the attributes of the dataframe sent as an argument.
 Returns TRUE if it was read as a preview.
 }
 

@@ -2,40 +2,25 @@
 % Please edit documentation in R/import_data.R
 \name{changeToDatatype}
 \alias{changeToDatatype}
-\alias{changeToDatatype.default}
-\alias{changeToDatatype.iNZclass.character}
-\alias{changeToDatatype.iNZclass.factor}
-\alias{changeToDatatype.iNZclass.none}
-\alias{changeToDatatype.iNZclass.numeric}
 \title{Changes the datatype of a column of a dataframe to the specified datatype.}
 \usage{
-changeToDatatype(obj, ...)
-
-\method{changeToDatatype}{default}(user.data.frame, x = 0, col.types = NULL)
-
-\method{changeToDatatype}{iNZclass.none}(obj)
-
-\method{changeToDatatype}{iNZclass.numeric}(obj)
-
-\method{changeToDatatype}{iNZclass.character}(obj)
-
-\method{changeToDatatype}{iNZclass.factor}(obj)
+changeToDatatype(user.data.frame, x = 0, col.types = NULL)
 }
 \arguments{
-\item{...}{Other arguments.}
-
 \item{user.data.frame}{dataframe which needs the datatypes of columns changed.}
 
 \item{x}{column number of the column which needs the data type changed.}
 
 \item{col.types}{a vector of datatypes of columns.}
+
+\item{...}{Other arguments.}
 }
 \value{
 a data frame.
 }
 \description{
-\code{changeToDatatype} returns a data frame with 1 column 
-(just the column whose data type has been changed) with changed 
+\code{changeToDatatype} returns a data frame with 1 column
+(just the column whose data type has been changed) with changed
 datatypes of column.
 }
 

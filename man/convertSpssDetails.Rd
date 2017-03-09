@@ -7,18 +7,18 @@
 convertSpssDetails(user.data.frame, date.columns)
 }
 \arguments{
-\item{user.data.frame}{the dataframe returned after 
+\item{user.data.frame}{the dataframe returned after
 reading an spss file.}
 
-\item{date.columns}{A numeric vector. Has the integer 
+\item{date.columns}{A numeric vector. Has the integer
 values of the columns that have to be converted.}
 }
 \value{
 A data frame
 }
 \description{
-\code{convertSpssDetails} converts the specified columns in 
-the dataframe returned after reading an SPSS file to datatype 
+\code{convertSpssDetails} converts the specified columns in
+the dataframe returned after reading an SPSS file to datatype
 Date from numeric.
 }
 

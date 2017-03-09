@@ -4,7 +4,8 @@
 \alias{makeDatatypeChar}
 \alias{makeDatatypeChar.character}
 \alias{makeDatatypeChar.list}
-\title{iNZight Import Data}
+\title{Converts the column datatypes to a single word or string which can be
+passed to readr::read_csv as an argument.}
 \usage{
 makeDatatypeChar(obj, col.names = NULL)
 
@@ -13,20 +14,14 @@ makeDatatypeChar(obj, col.names = NULL)
 \method{makeDatatypeChar}{list}(obj, col.names)
 }
 \arguments{
-\item{path}{A string. Specifies the location of the file to be read.}
-
-\item{...}{additional arguments}
+\item{obj}{A character vector or a list.}
 }
 \value{
-A dataframe.
+A character vector of length 1.
 }
 \description{
-Reads the file and returns a dataframe according to the arguments
-passed.
-}
-\details{
-\code{.makeDatatypeChar} returns a dataframe by converting the data in the
-file passed based on the arguments included while passing the file.
+\code{makeDatatypeChar} returns a word (string) specifiying the datatype
+of each column with a single character.
 }
 \author{
 Akshay Gupta

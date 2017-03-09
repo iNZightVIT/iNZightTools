@@ -15,7 +15,7 @@ changeColumnTypes(user.data.frame, col.types)
 a data frame.
 }
 \description{
-\code{changeColumnTypes} returns a data frame with changed datatypes of columns. 
+\code{changeColumnTypes} returns a data frame with changed datatypes of columns.
 Returns the same data frame if column types are specified as NULL.
 }
 

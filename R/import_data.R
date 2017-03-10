@@ -329,28 +329,21 @@ iNZread <- function(path, col.types = NULL, ...) {
 ##                                    vector containing "blank", "numeric",
 ##                                    "date" or "text".
 
-#' \code{.iNZread} returns a dataframe by converting the data in the
-#' file passed based on the arguments included while passing the file.
-#' @param path A string. Specifies the location of the file to be read.
-#' @param ... additional arguments
-#' @return A dataframe.
-#'
-#' @export
 .iNZread <- function(path, col.types, ...){
 
   UseMethod(".iNZread")
 
 }
 
-#' @rdname .iNZread
-#' @param path A string. Specifies the location of the file to be read.
-#' @param extension A string. Specifies the extension of the file.
-#' @param preview A logical scalar. Should the whole data file be read
-#' or only a part of the file be read (100 lines by default where
-#' possible.).
-#' @param col.types Specifies the class of each column. Null if
-#' not specified.
-#' @export
+# #' @rdname .iNZread
+# #' @param path A string. Specifies the location of the file to be read.
+# #' @param extension A string. Specifies the extension of the file.
+# #' @param preview A logical scalar. Should the whole data file be read
+# #' or only a part of the file be read (100 lines by default where
+# #' possible.).
+# #' @param col.types Specifies the class of each column. Null if
+# #' not specified.
+# #' @export
 .iNZread.default <- function(path, extension = tools::file_ext(path), preview = FALSE, col.types, ...) {
 
   class(path) <- switch(extension[1],
@@ -363,59 +356,59 @@ iNZread <- function(path, col.types = NULL, ...) {
   .iNZread(path, preview = preview, col.types = col.types, ...)
 }
 
-#' @rdname .iNZread
-#' @export
+# #' @rdname .iNZread
+# #' @export
 .iNZread.csv <- function(path, ...){
 
   attr(path, "delim") = ","
   NextMethod('.iNZread', path)
 }
 
-#' @rdname .iNZread
-#' @export
+# #' @rdname .iNZread
+# #' @export
 .iNZread.txt <- function(path, ...){
 
   attr(path, "delim") = "\t"
   NextMethod('.iNZread', path)
 }
 
-#' @rdname .iNZread
-#' @export
+# #' @rdname .iNZread
+# #' @export
 .iNZread.xls <- function(path, ...){
 
   NextMethod('.iNZread', path)
 }
 
-#' @rdname .iNZread
-#' @export
+# #' @rdname .iNZread
+# #' @export
 .iNZread.xlsx <- function(path, ...){
 
   NextMethod('.iNZread', path)
 }
 
-#' @rdname .iNZread
-#' @export
+# #' @rdname .iNZread
+# #' @export
 .iNZread.sav <- function(path, ...) {
 
   temp.data.frame <- foreign::read.spss(path, to.data.frame = TRUE)
   return(temp.data.frame)
 }
 
-#' @rdname .iNZread
-#' @param number.of.rows number of rows to read
-#' @param col.names A logical scalar. Tells if the file
-#' contains column names in the first row or not.
-#' @param encoding.style The encoding style used to make the file.
-#' @param delim the delimiter used in the file.
-#' @param date.names The language used in the file to specift names
-#' of months.
-#' @param time.format the format of time in the file.
-#' @param time.zone the timezone used while writing dates/time
-#' in the file.
-#' @param date.format the format of date in the file.
-#' @param decimal.mark the symbol used as the decimal mark in the file.
-#' @param grouping.mark the symbol used as the grouping mark in the file.
-#' @export
+# #' @rdname .iNZread
+# #' @param number.of.rows number of rows to read
+# #' @param col.names A logical scalar. Tells if the file
+# #' contains column names in the first row or not.
+# #' @param encoding.style The encoding style used to make the file.
+# #' @param delim the delimiter used in the file.
+# #' @param date.names The language used in the file to specift names
+# #' of months.
+# #' @param time.format the format of time in the file.
+# #' @param time.zone the timezone used while writing dates/time
+# #' in the file.
+# #' @param date.format the format of date in the file.
+# #' @param decimal.mark the symbol used as the decimal mark in the file.
+# #' @param grouping.mark the symbol used as the grouping mark in the file.
+# #' @export
 .iNZread.delim <- function(path,
                            col.types,
                            preview,
@@ -431,12 +424,6 @@ iNZread <- function(path, col.types = NULL, ...) {
                            decimal.mark   = (Sys.localeconv())["decimal_point"],
                            grouping.mark  = (Sys.localeconv())["grouping"],
                            ...) {
-
-  ##Source the file which contains code for evaluating metadata.
-  #source("read_metadataV4.R")
-
-  ##Source the file which contains code to convert types to char.
-  #source("column_types_to_char.R")
 
   new.locale <- makeLocale(date.names,
                            date.format,
@@ -500,8 +487,8 @@ iNZread <- function(path, col.types = NULL, ...) {
   return(temp.data.frame)
 }
 
-#' @rdname .iNZread
-#' @export
+# #' @rdname .iNZread
+# #' @export
 .iNZread.dta <- function(path, ...) {
 
   ##Converts stata value labels to create factors. Version 6.0 or later.
@@ -516,12 +503,12 @@ iNZread <- function(path, col.types = NULL, ...) {
   return(temp.data.frame)
 }
 
-#' @rdname .iNZread
-#' @param sheet the number of the sheet which has to be
-#' read from the excel workbook.
-#' @param col.names A logical scalar. Tells if the file
-#' contains column names in the first row or not.
-#' @export
+# #' @rdname .iNZread
+# #' @param sheet the number of the sheet which has to be
+# #' read from the excel workbook.
+# #' @param col.names A logical scalar. Tells if the file
+# #' contains column names in the first row or not.
+# #' @export
 .iNZread.excel <- function(path,
                            col.types,
                            sheet     = 1,

@@ -10,7 +10,7 @@ iNZexport(obj)
 \item{obj}{The object whose metadata has to be written.}
 }
 \description{
-Takes an object (list or a dataframe) and converts it to metadata. 
+Takes an object (list or a dataframe) and converts it to metadata.
 Stores it in a text file "output.txt".
 }
 \details{

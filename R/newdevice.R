@@ -29,7 +29,7 @@ newdevice <- function(width = 7, height = 7, ...) {
             height.in <- round(height * 90)
             Acinonyx::idev(width = width.in, height = height.in, ...)
         } else {
-            grDevices::dev.new(width = width, height = height, type = "nbcairo", ...)
+            grDevices::dev.new(width = width, height = height, ...)
         }
     } else {
         ## Linux - prefer cairoDevice over default

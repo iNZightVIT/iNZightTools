@@ -1,9 +1,9 @@
-##' Fit models 
+##' Fit models
 ##'
 ##' wrapper function
-##' 
+##'
 ##' @title Fit a Model
-##' 
+##'
 ##' @param y character string representing the response,
 ##' @param x character string of the explanatory variables,
 ##' @param data name of the object containing the data.
@@ -11,11 +11,11 @@
 ##' @param design data design specification. one of 'simple', 'survey' or 'experiment'
 ##' @param svydes  a vector of arguments to be passed to the svydesign function, excluding data (defined above)
 ##' @param ... further arguments to be passed to lm, glm, svyglm, such as offset, etc.
-##' 
+##'
 ##' @return A fit object (lm, glm, or svyglm)
-##' 
+##'
 ##' @author Tom Elliott
-##' 
+##'
 ##' @export
 fitModel <-
   function(y, x, data, family = 'gaussian',
@@ -42,7 +42,7 @@ fitModel <-
     # Details:
     ##################################################################
 
-
+      if (missing(x) || length(x) == 0 || x == "") x <- 1
       Formula <- paste(y, x, sep = ' ~ ')
       dat <- paste("data", data, sep = ' = ')
       fam <- paste("family", family, sep = ' = ')
@@ -86,14 +86,14 @@ fitModel <-
 ##' Fit a survey design
 ##'
 ##' Fit a survey design to an object
-##' 
+##'
 ##' @title Fit Survey Design
-##' 
+##'
 ##' @param svydes a design
 ##' @param dataset.name a dataset name
-##' 
+##'
 ##' @return a survey object
-##' 
+##'
 ##' @author Tom Elliott
 ##'
 ##' @export

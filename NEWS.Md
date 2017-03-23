@@ -1,3 +1,10 @@
+# Version 1.3
+__Release date__: 23 March 2017
+
+- __NEW__ import data function, as well as support for metadata at the top of text files
+- Various bug fixes
+
+***
 # Version 1.2
 __Release date__: 5 September, 2016
 

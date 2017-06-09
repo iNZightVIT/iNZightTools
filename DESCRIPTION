@@ -5,11 +5,13 @@ Version: 1.3
 Date: 2017-03-23
 Imports:
     survey,
-    grDevices
+    grDevices,
+	foreign,
+	readr,
+	readxl
 Suggests:
-    iNZight,
     Acinonyx,
-    cairoDevice
+	cairoDevice
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "inzight_support@stat.auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),

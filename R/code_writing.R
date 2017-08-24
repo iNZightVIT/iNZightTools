@@ -10,7 +10,8 @@ as_call <- function(x) {
 }
 
 
-interpolate <- function(code, ..., `_env` = parent.frame()) {
+interpolate <- function(code, ..., comment = character(),
+                        `_env` = parent.frame()) {
     if (length(list(...)) > 0) {
         args <- lapply(list(...), as_call)
         expr <- methods::substituteDirect(as_call(code), args)
@@ -18,7 +19,9 @@ interpolate <- function(code, ..., `_env` = parent.frame()) {
         expr <- as_call(code)
     }
     res <- eval(expr, `_env`)
-    attr(res, "code") <- capture.output(expr)
+    if (length(comment) > 0)
+        comment <- paste("##", comment)
+    attr(res, "code") <- c(comment, capture.output(expr))
     res
 }
 

@@ -7,14 +7,15 @@ Imports:
 	utils,
 	stats,
 	methods,
-    survey,
-    grDevices,
+	survey,
+	grDevices,
 	foreign,
 	readr,
 	readxl,
-	magrittr
+	magrittr,
+	tibble
 Suggests:
-    Acinonyx,
+	Acinonyx,
 	cairoDevice
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "inzight_support@stat.auckland.ac.nz"),

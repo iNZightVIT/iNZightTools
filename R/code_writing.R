@@ -9,7 +9,7 @@ as_call <- function(x) {
     }
 }
 
-
+##' @importFrom methods substituteDirect
 interpolate <- function(code, ..., comment = character(),
                         `_env` = parent.frame()) {
     if (length(list(...)) > 0) {

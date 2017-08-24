@@ -13,6 +13,8 @@
 ##' @seealso \code{iNZight}
 ##'
 ##' @import magrittr
+##' @importFrom stats aggregate as.formula quantile
+##' @importFrom utils capture.output
 ##'
 ##' @name iNZightTools
 NULL

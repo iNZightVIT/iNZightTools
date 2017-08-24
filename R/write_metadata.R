@@ -28,6 +28,7 @@ convertToMetadata <- function(obj){
   UseMethod("convertToMetadata")
 }
 
+#' @param user.data.frame the dataframe to be converted
 #' @rdname convertToMetadata
 convertToMetadata.data.frame <- function(user.data.frame){
 
@@ -81,6 +82,7 @@ extractFromFrame.iNZclass.character <- function(obj, metadata.list){
   return(metadata.list)
 }
 
+#' @param metadata.list list of metadata information
 #' @rdname convertToMetadata
 convertToMetadata.list <- function(metadata.list){
 

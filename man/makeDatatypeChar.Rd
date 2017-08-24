@@ -15,6 +15,8 @@ makeDatatypeChar(obj, col.names = NULL)
 }
 \arguments{
 \item{obj}{A character vector or a list.}
+
+\item{col.names}{names of columns, optional}
 }
 \value{
 A character vector of length 1.

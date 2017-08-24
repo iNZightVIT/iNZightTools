@@ -14,6 +14,10 @@ convertToMetadata(obj)
 }
 \arguments{
 \item{obj}{The object whose metadata has to be returned.}
+
+\item{user.data.frame}{the dataframe to be converted}
+
+\item{metadata.list}{list of metadata information}
 }
 \value{
 A string - metadata.

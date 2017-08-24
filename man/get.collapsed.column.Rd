@@ -22,4 +22,3 @@ will be ignored.
 \author{
 Christoph Knapp
 }
-

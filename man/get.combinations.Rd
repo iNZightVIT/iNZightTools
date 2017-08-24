@@ -25,4 +25,3 @@ the original data.
 \author{
 Christoph Knapp
 }
-

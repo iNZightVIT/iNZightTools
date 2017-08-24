@@ -19,4 +19,3 @@ Stores it in a text file "output.txt".
 \author{
 Akshay Gupta
 }
-

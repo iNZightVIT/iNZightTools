@@ -22,4 +22,3 @@ which get added to the input data.frame.
 \author{
 Christoph Knapp
 }
-

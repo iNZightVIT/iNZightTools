@@ -27,4 +27,3 @@ sort. See \code{?sort} for more information.
 \author{
 Christoph Knapp
 }
-

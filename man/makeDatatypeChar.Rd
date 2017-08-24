@@ -26,4 +26,3 @@ of each column with a single character.
 \author{
 Akshay Gupta
 }
-

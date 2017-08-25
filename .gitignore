@@ -8,3 +8,5 @@
 *.tar.gz
 revdep
 
+*~
+/revdep/.cache.rds

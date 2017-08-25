@@ -26,4 +26,3 @@ This function changes the order of levels in the data.
 \author{
 Christoph Knapp
 }
-

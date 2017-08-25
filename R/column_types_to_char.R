@@ -5,6 +5,7 @@
 #' of each column with a single character.
 #'
 #' @param obj A character vector or a list.
+#' @param col.names names of columns, optional
 #' @return A character vector of length 1.
 #'
 #' @author Akshay Gupta

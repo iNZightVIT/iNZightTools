@@ -3,3 +3,4 @@
 ^Makefile$
 ^.*\.Md$
 ^\.travis\.yml$
+^revdep$

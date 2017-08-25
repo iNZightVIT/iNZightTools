@@ -25,4 +25,3 @@ Renames the levels of a factor.
 \author{
 Christoph Knapp
 }
-

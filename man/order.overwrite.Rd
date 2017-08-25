@@ -33,4 +33,3 @@ available to \code{sort.data}.
 \author{
 Christoph Knapp
 }
-

@@ -17,4 +17,3 @@ a logical scalar.
 column types entered are valid. Returns TRUE if they are valid.
 Returns FALSE if not valid.
 }
-

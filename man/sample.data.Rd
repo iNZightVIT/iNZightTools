@@ -28,4 +28,3 @@ without replacment.
 \author{
 Christoph Knapp
 }
-

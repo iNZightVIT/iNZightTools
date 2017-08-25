@@ -19,4 +19,3 @@ onto each other and added as an additional column
 \author{
 Christoph Knapp
 }
-

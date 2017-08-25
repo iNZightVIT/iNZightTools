@@ -50,4 +50,3 @@ This is a wrapper for the cut function. See \code{?cut}.
 \author{
 Christoph Knapp
 }
-

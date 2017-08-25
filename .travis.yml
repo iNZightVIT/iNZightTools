@@ -11,3 +11,4 @@ r:
 
 repos:
   docker: http://r.docker.stat.auckland.ac.nz/R
+  rforge: https://r-forge.r-project.org/

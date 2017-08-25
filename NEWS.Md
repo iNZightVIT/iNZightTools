@@ -1,3 +1,11 @@
+# Version 1.4
+__Release date__: 25 August 2017
+
+- Code history features: interpolate code
+- Redocument package; pass CRAN checks
+- start converting data modification functions to tidyverse
+
+***
 # Version 1.3
 __Release date__: 23 March 2017
 

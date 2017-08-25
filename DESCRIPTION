@@ -23,5 +23,5 @@ Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
              person("Akshay", "Gupta", role = "ctb"))
 Description: Compatibility functions used for multiple packages and
     distributions of iNZight, including Lite.
-License: GPL-2
+License: GPL-3 | LICENSE
 RoxygenNote: 6.0.1

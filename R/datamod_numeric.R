@@ -15,3 +15,19 @@ numToCat <- function(.dataset, var, name = sprintf("%s.cat", var)) {
     interpolate(exp, var = var,
                 comment = sprintf("Convert %s to categorical", var))
 }
+
+
+##' @export
+transform <- function(.dataset, var, fn, name = sprintf("%s.%s", fn, var)) {
+    x <- switch(fn,
+                "square" = .dataset[[var]]^2,
+                "recip" = 1 / .dataset[[var]],
+                do.call(fn, list(.dataset[[var]])))
+    w <- which(names(.dataset) == var)
+    data<- .dataset[, 1:w]
+    data[[name]] <- round(x, 3)
+    if (w < ncol(.dataset))
+        data <- cbind(data, .dataset[, -(1:w)])
+                      
+    data
+}

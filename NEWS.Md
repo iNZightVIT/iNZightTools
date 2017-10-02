@@ -5,6 +5,12 @@ __Release date__: 25 August 2017
 - Redocument package; pass CRAN checks
 - start converting data modification functions to tidyverse
 
+## Patches
+
+### Version 1.4-1, 02/10/2017
+- fixes to pass CRAN checks
+
+
 ***
 # Version 1.3
 __Release date__: 23 March 2017

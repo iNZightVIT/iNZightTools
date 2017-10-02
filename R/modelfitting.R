@@ -16,6 +16,7 @@
 ##'
 ##' @author Tom Elliott
 ##'
+##' @import survey
 ##' @export
 fitModel <-
   function(y, x, data, family = 'gaussian',

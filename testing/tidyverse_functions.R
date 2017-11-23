@@ -15,7 +15,16 @@ filtered.DEGREE <- stats20x.df %>%
     droplevels()
 ###
 
+## things to check:
+# 1. any OTHER factors keep empty levels - add some arbitrary level to a factor
+levels(stats20x.df$GENDER) <- c(levels(stats20x.df$GENDER), "other")
+# do the filtering
+"other" %in% levels(stats20x.df$GENDER) 
 
+# 2. factor levels retain order
+levels(stats20x.df$GENDER) <- rev(levels(stats20x.df$GENDER))
+# do filtering
+all(levels(stats20x.df$GENDER) == c("other", "male", "female"))
 
 ###---------------------------------------------------------
 

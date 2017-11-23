@@ -4,7 +4,8 @@ library(magrittr)
 
 setwd("D:/OneDrive/University of Auckland/Summer Research Scholarship/iNZight work")
 
-stats20x.df <- read.csv("stats20x.csv", header = TRUE)
+stats20x.df <- read.csv("stats20x.csv", header = TRUE,  
+                        na.strings = c("NULL","NA", "N/A","#N/A","","<NA>"))
 
 # DATASET -> FILTER DATASET -> LEVELS OF A CATEGORICAL VARIABLE
 ###---------------------------------------------------------
@@ -157,6 +158,15 @@ aggregated.2CATS.2NUM <- stats20x.df %>%
                     TEST.iqr = IQR(TEST, na.rm = TRUE))
 ###
 
+summarize_vars <- function(.data, vars, 
+                           summary = c("mean", "sum", "sd", "median", "count", "iqr"), 
+                           return.tidy.code = FALSE) {
+  ## ... ## 
+}
+data %>% summarize_vars(c("ASSIGN", "TEST"), c("mean", "sum", "sd"))
+
+## notes - we'll figure out later. ..
+# - keep track of missing counts
 
 dataset_aggregate <- function(dataset, vars, summaries){
   

@@ -16,25 +16,7 @@ filtered.DEGREE <- stats20x.df %>%
 ###
 
 
-# nse function
-datasetFilterCat <- function(dataset, var, levels){
-  levels <- stringr::str_c('"', levels, '"')
-  eval <- stringr::str_c(var, 
-                        "%in% c(", 
-                        stringr::str_c(levels, 
-                                       collapse = ", "), 
-                        ")", 
-                        sep = " ")
-  dataset %>% 
-    dplyr::filter_(eval)
-}
 
-# Change these varaibles for the nse function
-dataset <- stats20x.df
-var <- "DEGREE"
-levels <- c("BCom", "BA", "Other")
-
-datasetFilterCat.test <- datasetFilterCat(dataset, var, levels)
 ###---------------------------------------------------------
 
 
@@ -228,3 +210,26 @@ stack_var <- c("EXAM", "ASSIGN")
 
 dataset_stackVars.test <- dataset_stackVars(dataset, stack_var)
 ###---------------------------------------------------------
+
+
+# OLD CODE
+
+# nse function
+datasetFilterCat <- function(dataset, var, levels){
+  levels <- stringr::str_c('"', levels, '"')
+  eval <- stringr::str_c(var, 
+                         "%in% c(", 
+                         stringr::str_c(levels, 
+                                        collapse = ", "), 
+                         ")", 
+                         sep = " ")
+  dataset %>% 
+    dplyr::filter_(eval)
+}
+
+# Change these varaibles for the nse function
+dataset <- stats20x.df
+var <- "DEGREE"
+levels <- c("BCom", "BA", "Other")
+
+datasetFilterCat.test <- datasetFilterCat(dataset, var, levels)

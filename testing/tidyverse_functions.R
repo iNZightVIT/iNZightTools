@@ -12,8 +12,10 @@ stats20x.df <- read.csv("stats20x.csv", header = TRUE,
 
 # example : filtering for column "DEGREE" for only obs with "BCom", "BA" or "Other"
 filtered.DEGREE <- stats20x.df %>% 
-  dplyr::filter(DEGREE %in% c("BCom", "BA", "Other")) %>% 
-    droplevels()
+  dplyr::filter(DEGREE %in% c("BCom", "BA", "Other"))
+
+# remove unwanted factors
+filtered.DEGREE = filtered.DEGREE %>% dplyr::mutate(DEGREE = factor(DEGREE, levels = c("BCom", "BA", "Other")))
 ###
 
 ## things to check:

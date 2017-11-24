@@ -15,7 +15,8 @@ filtered.DEGREE <- stats20x.df %>%
   dplyr::filter(DEGREE %in% c("BCom", "BA", "Other"))
 
 # remove unwanted factors
-filtered.DEGREE = filtered.DEGREE %>% dplyr::mutate(DEGREE = factor(DEGREE, levels = c("BCom", "BA", "Other")))
+filtered.DEGREE = filtered.DEGREE %>% 
+  dplyr::mutate(DEGREE = factor(DEGREE, levels = c("BCom", "BA", "Other")))
 ###
 
 ## things to check:
@@ -40,6 +41,113 @@ filtered.EXAM <- stats20x.df %>%
   dplyr::filter(EXAM >= 80)
 ###
 
+###---------------------------------------------------------
+
+
+# DATASET -> FILTER DATASET -> ROW NUMBER
+###---------------------------------------------------------
+
+# example : removing obs with row numbers 1, 2, 3, 4, 6, 7, 8, and 9
+filtered.ROW <- stats20x.df %>%
+  dplyr::slice(-c(1,2,3,4,6,7,8,9))
+###
+
+###---------------------------------------------------------
+
+
+# DATASET -> FILTER DATASET -> RANDOMLY
+###---------------------------------------------------------
+
+# example : take a 5 random samples each of size 3 without replacement
+filtered.RANDOM <- stats20x.df %>%
+  dplyr::sample_n(3 * 5, replace = FALSE) %>%
+    dplyr::mutate(Sample.Number = rep(1:5, each = 3))
+###
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# DATASET -> SORT DATA BY VARIABLES
+
+# example : sort data in the following order - "EXAM" (descending), "YEARSSIN" (ascending) and "DEGREE" (descending); NB. categorical variables will be sorted based on their factor levels
+sorted.3VARS <- stats20x.df %>% 
+  dplyr::arrange(desc(EXAM), YEARSSIN, desc(DEGREE))
+### 
+
+###---------------------------------------------------------
+
+
+# DATASET -> AGREEGATE DATA
+###---------------------------------------------------------
+
+# example : get the mean, sum and sd for "ASSIGN" and median, iqr and count for "TEST" of the all unique combinations of "PASS" and "GENDER" 
+aggregated.2CATS.2NUM <- stats20x.df %>% 
+  dplyr::group_by(PASS, GENDER) %>%
+    dplyr::summarize(ASSIGN.mean = mean(ASSIGN, na.rm = TRUE), 
+                    ASSIGN.sum = sum(ASSIGN, na.rm = TRUE),
+                    ASSIGN.sd = sd(ASSIGN, na.rm = TRUE),
+                    TEST.median = median(TEST, na.rm = TRUE),
+                    TEST.count = n(),
+                    TEST.iqr = IQR(TEST, na.rm = TRUE))
+###
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# DATA OPTIONS -> STACK VARIABLES
+
+# example : stack the "EXAM" and "ASSIGN" columns
+stacked.2VARS <- stats20x.df %>% 
+  tidyr::gather(key = stack.variable, value = stack.value, EXAM, ASSIGN)
+###
+
+###---------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# OLD CODE
+
+# DATASET -> FILTER DATASET -> LEVELS OF A CATEGORICAL VARIABLE
+###---------------------------------------------------------
+
+# nse function
+datasetFilterCat <- function(dataset, var, levels){
+  levels <- stringr::str_c('"', levels, '"')
+  eval <- stringr::str_c(var, 
+                         "%in% c(", 
+                         stringr::str_c(levels, 
+                                        collapse = ", "), 
+                         ")", 
+                         sep = " ")
+  dataset %>% 
+    dplyr::filter_(eval)
+}
+
+# Change these varaibles for the nse function
+dataset <- stats20x.df
+var <- "DEGREE"
+levels <- c("BCom", "BA", "Other")
+
+datasetFilterCat.test <- datasetFilterCat(dataset, var, levels)
+###---------------------------------------------------------
+
+
+# DATASET -> FILTER DATASET -> NUMERIC CONDITION
+###---------------------------------------------------------
 
 # nse function
 datasetFilterNum <- function(dataset, var, op, value){
@@ -61,23 +169,14 @@ datasetFilterNum.test <- datasetFilterNum(dataset, var, op, value)
 # DATASET -> FILTER DATASET -> ROW NUMBER
 ###---------------------------------------------------------
 
-# example : removing obs with row numbers 1, 2, 3, 4, 6, 7, 8, and 9
-filtered.ROW <- stats20x.df %>%
-  dplyr::slice((1:n())[-c(1,2,3,4,6,7,8,9)])
-# or...
-filtered.ROW <- stats20x.df %>% 
-  filter(!(row_number() %in% c(1,2,3,4,6,7,8,9)))
-###
-
-
 # nse function
 datasetFilterRow <- function(dataset, row_num){
   
   eval <- stringr::str_c("c(", 
-                        stringr::str_c((1:nrow(dataset))[-row_num], 
-                                       collapse = ", "), 
-                        ")", 
-                        sep = " ")
+                         stringr::str_c((1:nrow(dataset))[-row_num], 
+                                        collapse = ", "), 
+                         ")", 
+                         sep = " ")
   
   dataset %>% 
     dplyr::slice_(eval)
@@ -93,19 +192,11 @@ datasetFilterRow.test <- datasetFilterRow(dataset, row_num)
 
 # DATASET -> FILTER DATASET -> RANDOMLY
 ###---------------------------------------------------------
-
-# example : take a 5 random samples each of size 3 without replacement
-filtered.RANDOM <- stats20x.df %>%
-  dplyr::sample_n(3 * 5, replace = FALSE) %>%
-    dplyr::mutate(Sample.Number = rep(1:5, each = 3))
-###
-
-
 datasetFilterRandom <- function(dataset, sample_size, n){
   dataset %>%
     # dplyr::mutate(row.num = 1:nrow(dataset)) %>% # uncomment this to show this is sampling without replacement
     dplyr::sample_n(sample_size * n, replace = FALSE) %>%
-      dplyr::mutate(Sample.Number = rep(1:n, each=3))
+    dplyr::mutate(Sample.Number = rep(1:n, each=3))
 }
 
 # Change these varaibles for the nse function
@@ -117,15 +208,8 @@ datasetFilterRandom.test <- datasetFilterRandom(dataset, sample_size, n)
 ###---------------------------------------------------------
 
 
+# DATASET -> FILTER DATASET -> RANDOMLY
 ###---------------------------------------------------------
-# DATASET -> SORT DATA BY VARIABLES
-
-# example : sort data in the following order - "EXAM" (descending), "YEARSSIN" (ascending) and "DEGREE" (descending); NB. categorical variables will be sorted based on their factor levels
-sorted.3VARS <- stats20x.df %>% 
-  dplyr::arrange(desc(EXAM), YEARSSIN, desc(DEGREE))
-### 
-
- 
 # nse function
 datasetSortVars <- function(dataset, vars, increasing = c(TRUE, TRUE, TRUE, TRUE)){
   eval <- ifelse(increasing, 
@@ -146,20 +230,31 @@ datasetSortVars.test <- datasetSortVars(dataset, vars, increasing)
 ###---------------------------------------------------------
 
 
+# DATASET -> SORT DATA BY VARIABLES
 ###---------------------------------------------------------
+
+# nse function
+datasetSortVars <- function(dataset, vars, increasing = c(TRUE, TRUE, TRUE, TRUE)){
+  eval <- ifelse(increasing, 
+                 vars, 
+                 stringr::str_c("desc("
+                                , vars, 
+                                ")"))
+  dataset %>% 
+    dplyr::arrange_(.dots = as.list(eval))
+}
+
+# Change these varaibles for the nse function
+dataset <- stats20x.df 
+vars <- c("EXAM", "YEARSSIN", "DEGREE")
+increasing <- c(FALSE, TRUE, FALSE)
+
+datasetSortVars.test <- datasetSortVars(dataset, vars, increasing)
+###---------------------------------------------------------
+
+
 # DATASET -> AGREEGATE DATA
-
-# example : get the mean, sum and sd for "ASSIGN" and median, iqr and count for "TEST" of the all unique combinations of "PASS" and "GENDER" 
-aggregated.2CATS.2NUM <- stats20x.df %>% 
-  dplyr::group_by(PASS, GENDER) %>%
-    dplyr::summarize(ASSIGN.mean = mean(ASSIGN, na.rm = TRUE), 
-                    ASSIGN.sum = sum(ASSIGN, na.rm = TRUE),
-                    ASSIGN.sd = sd(ASSIGN, na.rm = TRUE),
-                    TEST.median = median(TEST, na.rm = TRUE),
-                    TEST.count = n(),
-                    TEST.iqr = IQR(TEST, na.rm = TRUE))
-###
-
+###---------------------------------------------------------
 summarize_vars <- function(.data, vars, 
                            summary = c("mean", "sum", "sd", "median", "count", "iqr"), 
                            return.tidy.code = FALSE) {
@@ -205,19 +300,14 @@ eval <- numeric_cols %>%
 
 dataset_aggregate.test <- dataset %>% 
   dplyr::group_by_(.dots = as.list(vars)) %>%
-    dplyr::summarise_(.dots = set_names(eval, numeric_cols))
+  dplyr::summarise_(.dots = set_names(eval, numeric_cols))
 ###---------------------------------------------------------
 
 
+# DATA OPTIONS -> STACK VARIABLES
 ###---------------------------------------------------------
-#DATA OPTIONS -> STACK VARIABLES
 
-# example : stack the "EXAM" and "ASSIGN" columns
-stacked.2VARS <- stats20x.df %>% 
-  tidyr::gather(key = stack.variable, value = stack.value, EXAM, ASSIGN)
-###
-
-
+# nse function
 dataset_stackVars <- function(dataset, stack_var){
   dataset %>% 
     tidyr::gather_(key_col = "stack.variable", 
@@ -231,26 +321,3 @@ stack_var <- c("EXAM", "ASSIGN")
 
 dataset_stackVars.test <- dataset_stackVars(dataset, stack_var)
 ###---------------------------------------------------------
-
-
-# OLD CODE
-
-# nse function
-datasetFilterCat <- function(dataset, var, levels){
-  levels <- stringr::str_c('"', levels, '"')
-  eval <- stringr::str_c(var, 
-                         "%in% c(", 
-                         stringr::str_c(levels, 
-                                        collapse = ", "), 
-                         ")", 
-                         sep = " ")
-  dataset %>% 
-    dplyr::filter_(eval)
-}
-
-# Change these varaibles for the nse function
-dataset <- stats20x.df
-var <- "DEGREE"
-levels <- c("BCom", "BA", "Other")
-
-datasetFilterCat.test <- datasetFilterCat(dataset, var, levels)

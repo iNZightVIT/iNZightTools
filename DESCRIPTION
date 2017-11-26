@@ -15,8 +15,9 @@ Imports:
 	magrittr,
 	tibble
 Suggests:
-	Acinonyx,
-	cairoDevice
+    Acinonyx,
+    cairoDevice,
+    testthat
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "inzight_support@stat.auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),

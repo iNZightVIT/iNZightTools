@@ -24,6 +24,29 @@ dat <- dat %>% numToCat("age")
 cat(sep="\n", code(dat))
 
 
+### DATASET > FILTER LEVELS OF A CATEGORICAL
+# filter travel = walk, bike
+var <- "travel"
+levels <- c("bike", "walk")
+
+dat.filtered <- dat %>% 
+  dplyr::filter(travel %in% levels) %>% 
+  dplyr::mutate(travel = factor(travel, levels = levels))
+
+filterLevels <- function(.data, var, levels) {
+    ## ... code ...
+}
+
+## example 
+# dat.filtered <- filterLevels(dat, "travel", c("bike", "walk"))
+head(dat.filtered)
+all(levels(dat.filtered$travel) == c("bike", "walk"))
+
+
+
+
+
+
 ## I've also started some tests, which can be run using
 test()
 

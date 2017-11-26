@@ -3,6 +3,8 @@ context("Convert numeric to factor")
 
 data <- data %>% numToCat("x")
 test_that("result is a dataframe with the correct dimensions", {
+    expect_is(data, "data.frame")
+    expect_equal(dim(data), c(5, 2))
 })
 
 test_that("result has code attribute", {

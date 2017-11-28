@@ -6,7 +6,7 @@
 library(devtools)
 library(magrittr)
 
-setwd("C:/Users/Owen/Documents/GitHub/iNZightTools")
+# setwd("C:/Users/Owen/Documents/GitHub/iNZightTools")
 
 ## use the census at school data (this is our "primary example")
 # install_github('iNZightVIT/FutureLearnData')  ## -- install this once, directly from github
@@ -24,6 +24,29 @@ load_all()  ## Rstudio has a shortcut for this, probably.
 ## e.g., one function already written in tidyverse is the `convert to categorical` function:
 dat <- dat %>% numToCat("age")
 cat(sep="\n", code(dat))
+
+
+# ==========================================================================
+# NOTES
+# ==========================================================================
+# - learn about "expressions"; i.e., ~x + 2
+# - create an EXPRESSION for each of the examples - in most cases,
+#   this will simply involve adding a ~ before it;
+# - then run "interpolate()" on the expression, and see what happens.
+exp <- ~mean(1:10)
+x <- interpolate(exp)
+x
+
+# - next, how to pass variables?
+exp <- ~mean(y)
+x <- interpolate(exp, y = 1:10)
+x
+
+# - how about NAMES variables?
+y <- 1:10
+exp <- ~mean(.values)
+x <- interpolate(exp, .values = y)
+x
 
 
 ### DATASET > FILTER LEVELS OF A CATEGORICAL

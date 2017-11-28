@@ -30,10 +30,15 @@ cat(sep="\n", code(dat))
 # NOTES
 # ==========================================================================
 # - learn about "expressions"; i.e., ~x + 2
-# - create an EXPRESSION for each of the examples - in most cases,
+# - create an FORMULA for each of the examples - in most cases,
 #   this will simply involve adding a ~ before it;
 # - then run "interpolate()" on the expression, and see what happens.
-exp <- ~mean(1:10)
+exp <- ~(1:10 + 5) %>% mean()
+x <- interpolate(exp)
+x
+
+y <- 1:10
+exp <- ~mean(y)
 x <- interpolate(exp)
 x
 
@@ -48,6 +53,12 @@ exp <- ~mean(.values)
 x <- interpolate(exp, .values = y)
 x
 
+exp <- ~nchar(.var)
+cat(code(interpolate(exp, .var = "string")), "\n")
+
+
+
+
 
 ### DATASET > FILTER LEVELS OF A CATEGORICAL
 # filter travel = walk, bike
@@ -60,13 +71,20 @@ dat.filtered <- dat %>%
   dplyr::mutate(travel = factor(travel, levels = levels))
 
 filterLevels <- function(.data, var, levels) {
-    ## ... code ...
+  dat <- .data
+  exp <- 
+    ~dat %>% 
+      dplyr::filter(travel %in% .levels) %>% 
+      dplyr::mutate(travel = factor(travel, levels = .levels))
+
+  interpolate(exp, .levels = levels)
 }
 
 ## example 
-# dat.filtered <- filterLevels(dat, "travel", c("bike", "walk"))
+dat.filtered <- filterLevels(dat, "travel", c("bike", "walk", "bus"))
 head(dat.filtered)
-all(levels(dat.filtered$travel) == c("bike", "walk"))
+all(levels(dat.filtered$travel) %in% c("bike", "walk"))
+cat(sep = "\n", code(dat.filtered), "\n")
 
 
 # CHECK FOR 1 LEVEL
@@ -205,8 +223,8 @@ head(filtered.RANDOM)
 # DATASET -> SORT DATA BY VARIABLES
 ###---------------------------------------------------------
 
-sortVars = function(){
-  
+sortVars = function(.data, vars, asc = rep(TRUE, length(vars))) {
+  ## leave this one.
 }
 
 # SORT 1 VAR
@@ -242,7 +260,7 @@ head(sorted.4VARS, n = 15)
 # not sure how to check this is correct
 
 aggregateData = function(dat, col, summaries){
-  
+  ### leave this till later too.
 }
 
 aggregated.3CATS <- dat %>% 
@@ -492,7 +510,8 @@ all(c(
 # DATA OPTIONS -> STACK VARIABLES
 ###---------------------------------------------------------
 
-stackVars = function(dat, vars){
+stackVars = function(dat, vars, 
+    key = "stack.variable", value = "stack.value"){
   
 }
 

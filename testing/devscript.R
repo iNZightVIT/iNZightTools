@@ -116,14 +116,18 @@ all(levels(filtered.3LVL$getlunch) == c("home", "tuckshop", "friend"))
 # DATASET -> FILTER DATASET -> NUMERIC CONDITION
 ###---------------------------------------------------------
 
-filterNumeric <- function(dat, col, op, num){
+# function for "<"
+filterNumeric <- function(data, col, op, num){
+  exp <- ~ data %>% dplyr::filter(rightfoot < .num)
   
+  interpolate(exp, .num = num)
 }
 
 # TEST FOR "<"
-filtered.L <- dat %>% 
-  dplyr::filter(rightfoot < 15)
-# filtered.L <- filterNumeric(dat, "rightfoot", "<", 15)
+#filtered.L <- dat %>% 
+#  dplyr::filter(rightfoot < 15)
+filtered.L <- filterNumeric(dat, "rightfoot", "<", 15)
+cat(code(filtered.L))
 all(filtered.L$rightfoot < 15)
 head(filtered.L)
 
@@ -173,15 +177,20 @@ head(filtered.NE)
 # DATASET -> FILTER DATASET -> ROW NUMBER
 ###---------------------------------------------------------
 
-filterRow <- function(dat, rows){
+filterRow <- function(data, rows){
+  exp <- ~ data %>% 
+    dplyr::mutate(row.num = 1:nrow(data)) %>% # this line is to show the row slicing was correct
+      dplyr::slice(-.rows)
   
+  interpolate(exp, .rows = rows)
 }
 
-filtered.ROW <- dat %>%
-  dplyr::mutate(row.num = 1:nrow(dat)) %>%
-    dplyr::slice(-c(1,2,3,4,6,7,8,9))
+#filtered.ROW <- dat %>%
+#  dplyr::mutate(row.num = 1:nrow(dat)) %>%
+#    dplyr::slice(-c(1,2,3,4,6,7,8,9))
   
-# filtered.ROW <- filterRow(dat, c(1,2,3,4,6,7,8,9))
+filtered.ROW <- filterRow(dat, c(1,2,3,4,6,7,8,9))
+cat(code(filtered.ROW))
 
 # TEST CORRECT NUMBER OF ROWS
 nrow(filtered.ROW) == nrow(dat) - length(c(1,2,3,4,6,7,8,9))
@@ -197,17 +206,23 @@ head(filtered.ROW)
 # DATASET -> FILTER DATASET -> RANDOMLY
 ###---------------------------------------------------------
 
-filterRandom <- function(dat, sample_size, n){
+filterRandom <- function(data, sample_size, n){
+  exp <- ~ data %>% 
+    dplyr::mutate(row.num = 1:nrow(data)) %>% # this line is to show that that the sampling was correct
+      dplyr::sample_n(.sample_size * .n, replace = FALSE) %>%
+        dplyr::mutate(Sample.Number = rep(1:.n, each=.sample_size))
   
+  interpolate(exp, .sample_size = sample_size, .n = n)
 }
 
-sample_size = 100
+sample_size = 5
 n = 4
-filtered.RANDOM <- dat %>%
-  dplyr::mutate(row.num = 1:nrow(dat)) %>% 
-    dplyr::sample_n(sample_size * n, replace = FALSE) %>%
-      dplyr::mutate(Sample.Number = rep(1:n, each=sample_size))
-# filtered.RANDOM <- filterRandom(dat, sample_size, n)
+#filtered.RANDOM <- dat %>%
+#  dplyr::mutate(row.num = 1:nrow(dat)) %>% 
+#    dplyr::sample_n(sample_size * n, replace = FALSE) %>%
+#      dplyr::mutate(Sample.Number = rep(1:n, each=sample_size))
+filtered.RANDOM <- filterRandom(dat, sample_size, n)
+cat(code(filtered.RANDOM))
 
 # CHECK CORRECT NUMBER OF SAMPLES TAKEN
 nrow(filtered.RANDOM) == sample_size * n
@@ -510,36 +525,41 @@ all(c(
 # DATA OPTIONS -> STACK VARIABLES
 ###---------------------------------------------------------
 
-stackVars = function(dat, vars, 
+# function just for stacking 1 variable
+stackVars = function(data, vars, 
     key = "stack.variable", value = "stack.value"){
+  exp <- ~ data %>% 
+    tidyr::gather(key = .key, value = .value, cellsource)
   
+  interpolate(exp, .key = key, .value = value)  
 }
 
 # 1 VAR
-stacked.1VARS <- dat %>% 
-  tidyr::gather(key = stack.variable, value = stack.value, cellsource)
-# stacked.1VARS = stackVars(dat, var)
+#stacked.1VARS <- dat %>% 
+#  tidyr::gather(key = stack.variable, value = stack.value, cellsource)
+stacked.1VARS = stackVars(dat, c("cellsource"))
+cat(code(stacked.1VARS))
 head(stacked.1VARS)
 
 
 # 2 VAR
 stacked.2VARS <- dat %>% 
   tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel)
-# stacked.2VARS = stackVars(dat, var)
+# stacked.2VARS = stackVars(dat, vars)
 head(stacked.2VARS)
 
 
 # 3 VAR
 stacked.3VARS <- dat %>% 
   tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel, getlunch)
-# stacked.3VARS = stackVars(dat, var)
+# stacked.3VARS = stackVars(dat, vars)
 head(stacked.3VARS)
 
 
 # 4 VAR
 stacked.4VARS <- dat %>% 
   tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel, getlunch, gender)
-# stacked.4VARS = stackVars(dat, var)
+# stacked.4VARS = stackVars(dat, vars)
 head(stacked.4VARS)
 
 

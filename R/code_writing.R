@@ -37,3 +37,11 @@ interpolate <- function(code, ..., comment = character(),
 ##' @author Tom Elliott
 ##' @export
 code <- function(data) return(attr(data, "code"))
+
+
+
+
+replaceVars <- function(x, ...) {
+    dots <- list(...)
+    print(dots)
+}

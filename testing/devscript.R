@@ -87,7 +87,7 @@ filterLevels <- function(.data, var, levels) {
   exp <- as.formula(str)
 
   ## do the above using a function ...
-  ## exp <- replaceVars(exp, ...)
+  # exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname)
 
   interpolate(exp, .levels = levels)
 }
@@ -98,6 +98,7 @@ dat.filtered <- filterLevels(dat, "travel", c("bike", "walk"))
 d2 <- filterLevels(somedata, "travel", c("bike", "walk"))
 head(dat.filtered)
 all(levels(dat.filtered$travel) %in% c("bike", "walk"))
+
 formatR::tidy_source(text = code(dat.filtered), width.cutoff = 50) 
 formatR::tidy_source(text = code(d2), width.cutoff = 50) 
 

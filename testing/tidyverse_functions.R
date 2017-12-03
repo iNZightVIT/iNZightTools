@@ -107,12 +107,14 @@ stacked.2VARS <- stats20x.df %>%
 
 
 ###---------------------------------------------------------
-# VARIABLES -> CONVERT TO CATEGORICAL
+# VARIABLES -> CONVERT TO CATEGORICAL (allow a vector)
 
 # example : converting the column "EXAM" into a categorical variable called "EXAM.cat"
 converted.CAT <- stats20x.df %>% 
+  tibble::add_column(EXAM.cat = factor(stats20x.df$EXAM), .after = "EXAM") %>%
   tibble::add_column(EXAM.cat = factor(stats20x.df$EXAM), .after = "EXAM")
 ###
+
 
 ###---------------------------------------------------------
 
@@ -141,6 +143,8 @@ cat.COLLPASE <- stats20x.df %>%
   tibble::add_column(DEGREE.coll = forcats::fct_collapse(stats20x.df$DEGREE, BA_BCom_Other = c("BA", "BCom", "Other")), .after = "DEGREE")
 ###
 ###---------------------------------------------------------
+
+# note = have arugment to specify name
 
 
 ###---------------------------------------------------------
@@ -185,8 +189,14 @@ num.TRANSFORM <- stats20x.df %>%
 num.STANDARDIZE <- stats20x.df %>%
   dplyr::mutate(TEST.std = (TEST - mean(TEST, na.rm = TRUE)) / sd(TEST, na.rm = TRUE))
 ###
+## or just use `scale()`? - check NAs work
 
 ###---------------------------------------------------------
+
+
+# form class intervals
+
+
 
 
 ###---------------------------------------------------------

@@ -71,20 +71,35 @@ dat.filtered <- dat %>%
   dplyr::mutate(travel = factor(travel, levels = levels))
 
 filterLevels <- function(.data, var, levels) {
-  dat <- .data
+  ## allows us to get the NAME as passed into the function call
+  ## e.g., filterLevels(mydata, ...), we get the STRING "mydata"
+  mc <- match.call()
+  dataname <- mc$.data
+
   exp <- 
-    ~dat %>% 
-      dplyr::filter(travel %in% .levels) %>% 
-      dplyr::mutate(travel = factor(travel, levels = .levels))
+    ~.DATA %>% 
+      dplyr::filter(.VARNAME %in% .levels) %>% 
+      dplyr::mutate(.VARNAME = factor(.VARNAME, levels = .levels))
+
+  str <- as.character(exp)
+  str <- gsub(".VARNAME", var, str, fixed = TRUE)
+  str <- gsub(".DATA", dataname, str, fixed = TRUE)
+  exp <- as.formula(str)
+
+  ## do the above using a function ...
+  ## exp <- replaceVars(exp, ...)
 
   interpolate(exp, .levels = levels)
 }
 
 ## example 
-dat.filtered <- filterLevels(dat, "travel", c("bike", "walk", "bus"))
+somedata <- dat
+dat.filtered <- filterLevels(dat, "travel", c("bike", "walk"))
+d2 <- filterLevels(somedata, "travel", c("bike", "walk"))
 head(dat.filtered)
 all(levels(dat.filtered$travel) %in% c("bike", "walk"))
-cat(sep = "\n", code(dat.filtered), "\n")
+formatR::tidy_source(text = code(dat.filtered), width.cutoff = 50) 
+formatR::tidy_source(text = code(d2), width.cutoff = 50) 
 
 
 # CHECK FOR 1 LEVEL

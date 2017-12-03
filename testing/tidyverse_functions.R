@@ -106,6 +106,168 @@ stacked.2VARS <- stats20x.df %>%
 ###---------------------------------------------------------
 
 
+###---------------------------------------------------------
+# VARIABLES -> CONVERT TO CATEGORICAL
+
+# example : converting the column "EXAM" into a categorical variable called "EXAM.cat"
+converted.CAT <- stats20x.df %>% 
+  tibble::add_column(EXAM.cat = factor(stats20x.df$EXAM), .after = "EXAM")
+###
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> CATEGORICAL VARIABLES -> REORDER LEVELS
+
+# example : manually reordering the factors in "GRADE" to reverse order; ie. D, C, B, A into a new variable called "GRADE.reord"
+cat.REORDER.MANUAL <- stats20x.df %>%
+  tibble::add_column(GRADE.reord = factor(stats20x.df$GRADE, levels = c("D", "C", "B", "A")), .after = "GRADE")
+###
+
+# example : automatically reordering the factors in "GRADE" based off their frequency (descending order) into a new variable called "GRADE.reord"
+cat.REORDER.FREQ <- stats20x.df %>%
+  tibble::add_column(GRADE.reord = forcats::fct_infreq(stats20x.df$GRADE), .after = "GRADE")
+###
+  
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> CATEGORICAL VARIABLES -> COLLAPSE LEVELS
+
+# example : collapse values "BA" and "BCom" and "Other" in the column "DEGREE" to one value called "BA_BCom_Other" into a new variable called "DEGREE.coll"
+cat.COLLPASE <- stats20x.df %>%
+  tibble::add_column(DEGREE.coll = forcats::fct_collapse(stats20x.df$DEGREE, BA_BCom_Other = c("BA", "BCom", "Other")), .after = "DEGREE")
+###
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> CATEOGIRCAL VARIABLES -> RENAME LEVELS
+
+# example : rename "Male" to "Boy" and "Female" to "Girl" in the column "GENDER" into a new variable valled "GENDER.rename"
+cat.RENAME <- stats20x.df %>%
+  tibble::add_column(GENDER.rename = forcats::fct_recode(stats20x.df$GENDER, Boy = "Male", Girl = "Female"), .after = "GENDER")
+###
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> CATEOGIRCAL VARIABLES -> COMBINE CATEGORICAL VARIABLES
+
+# example : combine the columns "ATTEND" and "STAGE1" into a new column called ATTEND.STAGE1
+cat.COMBINE <- stats20x.df %>%
+  dplyr::mutate(ATTEND.STAGE1 = stringr::str_c(ATTEND, ".", STAGE1, sep = ""))
+###
+
+###---------------------------------------------------------
+
+
+
+###---------------------------------------------------------
+# VARIABLES -> NUMERIC VARIABLES -> TRANSFORM VARIABLES
+
+# example : log (base 10) the "ASSIGN" column into a new column called log.10.ASSIGN
+num.TRANSFORM <- stats20x.df %>% 
+  tibble::add_column(log.10.ASSIGN = log10(stats20x.df$ASSIGN), .after = "ASSIGN")
+###
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> NUMERIC VARIABLES -> STANDARDIZE VARIABLES
+
+# example : standardize the "TEST" column into a new column called TEST.std
+
+num.STANDARDIZE <- stats20x.df %>%
+  dplyr::mutate(TEST.std = (TEST - mean(TEST, na.rm = TRUE)) / sd(TEST, na.rm = TRUE))
+###
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> NUMERIC VARIABLES -> RANK NUMERIC VARIABLES
+
+# example : rank the "YEARSSIN" column in ascending order into a new column called "YEARSSIN.rank
+num.RANK <- stats20x.df %>% 
+  dplyr::mutate(YEARSSIN.rank = dplyr::min_rank(YEARSSIN))
+###
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> NUMERIC VARIABLES -> CONVERT TO CATEGORICAL
+
+# already a function to do this = VARIABLES -> CONVERT TO CATEGORICAL
+
+###---------------------------------------------------------
+
+
+
+###---------------------------------------------------------
+# VARIABLES -> RENAME VARIABLES 
+
+# example : suppose I want to rename the column "GENDER" to "SEX" and "STAGE1" to "STATS10X"
+var.RENAME <- stats20x.df %>%
+  dplyr::rename(SEX = GENDER, STATS10X = STAGE1)
+###
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> CREATE NEW VARIABLES 
+
+# example : create a new variable called "PERCENT.DIFF" by subtracting 5 x TEST off EXAM 
+var.NEW <- stats20x.df %>% 
+  dplyr::mutate(PERCENT.DIFF = EXAM - 5 * TEST)
+###
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> MISSING TO CATEGORICAL 
+
+# example : convert the columns "ASSIGN" and "DEGREE" to cateogrical variables with numeric values converted to "observed" and NA's converted to "missing" into new columns called "ASSIGN_miss" and "DEGREE_miss" respectively 
+var.MISS <- stats20x.df %>% 
+  dplyr::mutate(ASSIGN_miss = ifelse(is.na(ASSIGN),"missing", "observed"),
+                DEGREE_miss = forcats::fct_explicit_na(DEGREE, na_level = "missing"))
+###
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> RESHAPE DATASET
+
+# example : stack all the columns
+var.RESHAPE <- stats20x.df %>%
+  tidyr::gather(key = "group", value = "value")
+###
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> DELETE VARIABLES
+
+# example : delete the "GENDER" and "YEARSSIN" column
+var.DELETE <- stats20x.df %>%
+  dplyr::select(-c(GENDER, YEARSSIN))
+###
+
+###---------------------------------------------------------
+
+
+
+
+
 
 
 

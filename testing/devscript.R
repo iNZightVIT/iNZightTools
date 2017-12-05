@@ -333,50 +333,80 @@ head(sorted.4VARS, n = 15)
 
 # not sure how to check this is correct
 
-aggregateData = function(dat, col, summaries){
-  ### leave this till later too.
+aggregateData = function(.data, vars, summaries){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  sumamries = sort(summaries)
+  summaries_functionCall = ifelse(summaries == "iqr", "IQR", ifelse(summaries == "count", "n", summaries))
+  
+  numeric_vars <- colnames(dplyr::select_if(.data, is.numeric)) %>%
+    sort()
+   
+  groupby_str <- stringr::str_c(vars, collapse = ", ")
+  summarize_str <- stringr::str_c(rep(sort(numeric_vars), 
+                                    each = length(summaries)), 
+                                  ".", 
+                                  rep(summaries, 
+                                      length(numeric_vars)), 
+                                  " = ",
+                                  rep(summaries_functionCall, 
+                                      length(numeric_vars)), 
+                                  "(", rep(sort(numeric_vars), 
+                                           each = length(summaries)), 
+                                  ", na.rm = TRUE)", collapse = ", ")
+    
+  exp <- ~dat %>%
+    dplyr::group_by(.EVAL_GROUPBY) %>%
+      dplyr::summarize(.EVAL_SUMMARIZE)
+  
+  exp <- replaceVars(exp, .EVAL_GROUPBY = groupby_str, .EVAL_SUMMARIZE = summarize_str)
+  
+  interpolate(exp)
 }
 
-aggregated.3CATS <- dat %>% 
-  dplyr::group_by(cellsource, travel, getlunch) %>%
-    dplyr::summarize(rightfoot.mean = mean(rightfoot, na.rm = TRUE),
-                     rightfoot.median = median(rightfoot, na.rm = TRUE),
-                     rightfoot.sum = sum(rightfoot, na.rm = TRUE),
-                     rightfoot.sd = sd(rightfoot, na.rm = TRUE),
-                     rightfoot.iqr = IQR(rightfoot, na.rm = TRUE),
-                     
-                     height.mean = mean(height, na.rm = TRUE),
-                     height.median = median(height, na.rm = TRUE),
-                     height.sum = sum(height, na.rm = TRUE),
-                     height.sd = sd(height, na.rm = TRUE),
-                     height.iqr = IQR(height, na.rm = TRUE),
-                     
-                     age.mean = mean(age, na.rm = TRUE),
-                     age.median = median(age, na.rm = TRUE),
-                     age.sum = sum(age, na.rm = TRUE),
-                     age.sd = sd(age, na.rm = TRUE),
-                     age.iqr = IQR(age, na.rm = TRUE),
-                     
-                     year.mean = mean(year, na.rm = TRUE),
-                     year.median = median(year, na.rm = TRUE),
-                     year.sum = sum(year, na.rm = TRUE),
-                     year.sd = sd(year, na.rm = TRUE),
-                     year.iqr = IQR(year, na.rm = TRUE),
-                     
-                     armspan.mean = mean(armspan, na.rm = TRUE),
-                     armspan.median = median(armspan, na.rm = TRUE),
-                     armspan.sum = sum(armspan, na.rm = TRUE),
-                     armspan.sd = sd(armspan, na.rm = TRUE),
-                     armspan.iqr = IQR(armspan, na.rm = TRUE),
-                     
-                     cellcost.mean = mean(cellcost, na.rm = TRUE),
-                     cellcost.median = median(cellcost, na.rm = TRUE),
-                     cellcost.sum = sum(cellcost, na.rm = TRUE),
-                     cellcost.sd = sd(cellcost, na.rm = TRUE),
-                     cellcost.iqr = IQR(cellcost, na.rm = TRUE),
-                     
-                     # Only one column for count makes sense
-                     count = n()
+aggregated.3CATS = aggregateData(dat, c("cellsource", "travel", "getlunch"), c("sd", "count", "mean", "median", "sum", "IQR"))
+
+# aggregated.3CATS <- dat %>% 
+#   dplyr::group_by(cellsource, travel, getlunch) %>%
+#     dplyr::summarize(rightfoot.mean = mean(rightfoot, na.rm = TRUE),
+#                      rightfoot.median = median(rightfoot, na.rm = TRUE),
+#                      rightfoot.sum = sum(rightfoot, na.rm = TRUE),
+#                      rightfoot.sd = sd(rightfoot, na.rm = TRUE),
+#                      rightfoot.iqr = IQR(rightfoot, na.rm = TRUE),
+#                      
+#                      height.mean = mean(height, na.rm = TRUE),
+#                      height.median = median(height, na.rm = TRUE),
+#                      height.sum = sum(height, na.rm = TRUE),
+#                      height.sd = sd(height, na.rm = TRUE),
+#                      height.iqr = IQR(height, na.rm = TRUE),
+#                      
+#                      age.mean = mean(age, na.rm = TRUE),
+#                      age.median = median(age, na.rm = TRUE),
+#                      age.sum = sum(age, na.rm = TRUE),
+#                      age.sd = sd(age, na.rm = TRUE),
+#                      age.iqr = IQR(age, na.rm = TRUE),
+#                      
+#                      year.mean = mean(year, na.rm = TRUE),
+#                      year.median = median(year, na.rm = TRUE),
+#                      year.sum = sum(year, na.rm = TRUE),
+#                      year.sd = sd(year, na.rm = TRUE),
+#                      year.iqr = IQR(year, na.rm = TRUE),
+#                      
+#                      armspan.mean = mean(armspan, na.rm = TRUE),
+#                      armspan.median = median(armspan, na.rm = TRUE),
+#                      armspan.sum = sum(armspan, na.rm = TRUE),
+#                      armspan.sd = sd(armspan, na.rm = TRUE),
+#                      armspan.iqr = IQR(armspan, na.rm = TRUE),
+#                      
+#                      cellcost.mean = mean(cellcost, na.rm = TRUE),
+#                      cellcost.median = median(cellcost, na.rm = TRUE),
+#                      cellcost.sum = sum(cellcost, na.rm = TRUE),
+#                      cellcost.sd = sd(cellcost, na.rm = TRUE),
+#                      cellcost.iqr = IQR(cellcost, na.rm = TRUE),
+#                      
+#                      # Only one column for count makes sense
+#                      count = n()
                      )
 head(aggregated.3CATS)
 

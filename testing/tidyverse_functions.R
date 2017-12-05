@@ -187,7 +187,7 @@ num.TRANSFORM <- stats20x.df %>%
 # example : standardize the "TEST" column into a new column called TEST.std
 
 num.STANDARDIZE <- stats20x.df %>%
-  dplyr::mutate(TEST.std = (TEST - mean(TEST, na.rm = TRUE)) / sd(TEST, na.rm = TRUE))
+  dplyr::mutate(TEST.std = scale(TEST))
 ###
 ## or just use `scale()`? - check NAs work
 
@@ -246,7 +246,7 @@ var.NEW <- stats20x.df %>%
 
 # example : convert the columns "ASSIGN" and "DEGREE" to cateogrical variables with numeric values converted to "observed" and NA's converted to "missing" into new columns called "ASSIGN_miss" and "DEGREE_miss" respectively 
 var.MISS <- stats20x.df %>% 
-  dplyr::mutate(ASSIGN_miss = ifelse(is.na(ASSIGN),"missing", "observed"),
+  dplyr::mutate(ASSIGN_miss = factor(ifelse(is.na(ASSIGN),"missing", "observed")),
                 DEGREE_miss = forcats::fct_explicit_na(DEGREE, na_level = "missing"))
 ###
 

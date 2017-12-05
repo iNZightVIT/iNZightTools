@@ -142,6 +142,10 @@ filterNumeric <- function(.data, var, op, num){
   
   eval_str <- stringr::str_c(".VARNAME .OP", num, sep = " ")
   
+  ## NOTE: in this case, I'd rather see the values in the 
+  #  function call; e.g., filter(.VARNAME .OP .value)
+  #  then replaceVars for .VARNAME and .OP,
+  #  then pass .value via interpolate.
   exp <- ~.DATA %>% dplyr::filter(.EVAL)
   exp <- replaceVars(exp, 
                      .EVAL = eval_str, 

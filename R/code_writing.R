@@ -41,7 +41,14 @@ code <- function(data) return(attr(data, "code"))
 
 
 
-replaceVars <- function(x, ...) {
-    dots <- list(...)
-    print(dots)
-}
+replaceVars = function(exp, ...){
+  toBeSubbed <- list(...)
+  exp_str <- as.character(exp)
+  for (i in 1:length(toBeSubbed)){
+    exp_str <- gsub(names(toBeSubbed)[i], 
+                    toBeSubbed[i], 
+                    exp_str, 
+                    fixed = TRUE)
+  }
+  exp <- as.formula(exp_str)
+}    

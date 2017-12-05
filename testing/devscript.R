@@ -6,7 +6,7 @@
 library(devtools)
 library(magrittr)
 
-# setwd("C:/Users/Owen/Documents/GitHub/iNZightTools")
+setwd("C:/Users/Owen/Documents/GitHub/iNZightTools")
 
 ## use the census at school data (this is our "primary example")
 # install_github('iNZightVIT/FutureLearnData')  ## -- install this once, directly from github
@@ -73,6 +73,7 @@ dat.filtered <- dat %>%
 filterLevels <- function(.data, var, levels) {
   ## allows us to get the NAME as passed into the function call
   ## e.g., filterLevels(mydata, ...), we get the STRING "mydata"
+  
   mc <- match.call()
   dataname <- mc$.data
 
@@ -80,11 +81,13 @@ filterLevels <- function(.data, var, levels) {
     ~.DATA %>% 
       dplyr::filter(.VARNAME %in% .levels) %>% 
       dplyr::mutate(.VARNAME = factor(.VARNAME, levels = .levels))
+  
+  exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname)
 
-  str <- as.character(exp)
-  str <- gsub(".VARNAME", var, str, fixed = TRUE)
-  str <- gsub(".DATA", dataname, str, fixed = TRUE)
-  exp <- as.formula(str)
+  #str <- as.character(exp)
+  #str <- gsub(".VARNAME", var, str, fixed = TRUE)
+  #str <- gsub(".DATA", dataname, str, fixed = TRUE)
+  #exp <- as.formula(str)
 
   ## do the above using a function ...
   # exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname)
@@ -131,59 +134,73 @@ all(levels(filtered.3LVL$getlunch) == c("home", "tuckshop", "friend"))
 
 # DATASET -> FILTER DATASET -> NUMERIC CONDITION
 ###---------------------------------------------------------
-
+    
 # function for "<"
-filterNumeric <- function(data, col, op, num){
-  exp <- ~ data %>% dplyr::filter(rightfoot < .num)
+filterNumeric <- function(.data, var, op, num){
+  mc <- match.call()
+  dataname <- mc$.data
   
-  interpolate(exp, .num = num)
+  eval_str <- stringr::str_c(".VARNAME .OP", num, sep = " ")
+  
+  exp <- ~.DATA %>% dplyr::filter(.EVAL)
+  exp <- replaceVars(exp, 
+                     .EVAL = eval_str, 
+                     .VARNAME = var, 
+                     .OP = op, 
+                     .DATA = dataname)
+  interpolate(exp)
 }
 
 # TEST FOR "<"
 #filtered.L <- dat %>% 
 #  dplyr::filter(rightfoot < 15)
 filtered.L <- filterNumeric(dat, "rightfoot", "<", 15)
-cat(code(filtered.L))
+formatR::tidy_source(text = code(filtered.L), width.cutoff = 50) 
 all(filtered.L$rightfoot < 15)
 head(filtered.L)
 
 
 # TEST FOR "<="
-filtered.LE <- dat %>% 
-  dplyr::filter(height <= 120)
-# filtered.L <- filterNumeric(dat, "height", "<=", 120)
+#filtered.LE <- dat %>% 
+#  dplyr::filter(height <= 120)
+filtered.LE <- filterNumeric(dat, "height", "<=", 120)
+formatR::tidy_source(text = code(filtered.LE), width.cutoff = 50) 
 all(filtered.LE$height <= 120)
 head(filtered.LE)
 
 
 # TEST FOR ">"
-filtered.G <- dat %>% 
-  dplyr::filter(age > 17)
-# filtered.G <- filterNumeric(dat, "age", ">", 17)
+#filtered.G <- dat %>% 
+#  dplyr::filter(age > 17)
+filtered.G <- filterNumeric(dat, "age", ">", 17)
+formatR::tidy_source(text = code(filtered.G), width.cutoff = 50) 
 all(filtered.G$age > 17)
 head(filtered.G)
 
 
 # TEST FOR ">="
-filtered.GE <- dat %>% 
-  dplyr::filter(year >= 10)
-# filtered.GE <- filterNumeric(dat, "year", ">=", 10)
+#filtered.GE <- dat %>% 
+#  dplyr::filter(year >= 10)
+filtered.GE <- filterNumeric(dat, "year", ">=", 10)
+formatR::tidy_source(text = code(filtered.GE), width.cutoff = 50) 
 all(filtered.GE$year >= 10)
 head(filtered.GE)
 
 
 # TEST FOR "=="
-filtered.E <- dat %>% 
-  dplyr::filter(armspan == 140)
-# filtered.E <- filterNumeric(dat, "armspan", "==", 140)
+#filtered.E <- dat %>% 
+#  dplyr::filter(armspan == 140)
+filtered.E <- filterNumeric(dat, "armspan", "==", 140)
+formatR::tidy_source(text = code(filtered.E), width.cutoff = 50) 
 all(filtered.E$armspan == 140)
 head(filtered.E)
 
 
 # TEST FOR "!="
-filtered.NE <- dat %>% 
-  dplyr::filter(cellcost != 0)
-# filtered.NE <- filterNumeric(dat, "cellcost", "!=", 0)
+#filtered.NE <- dat %>% 
+#  dplyr::filter(cellcost != 0)
+filtered.NE <- filterNumeric(dat, "cellcost", "!=", 0)
+formatR::tidy_source(text = code(filtered.NE), width.cutoff = 50) 
 all(filtered.NE$cellcost != 0)
 head(filtered.NE)
 
@@ -193,11 +210,14 @@ head(filtered.NE)
 # DATASET -> FILTER DATASET -> ROW NUMBER
 ###---------------------------------------------------------
 
-filterRow <- function(data, rows){
-  exp <- ~ data %>% 
-    dplyr::mutate(row.num = 1:nrow(data)) %>% # this line is to show the row slicing was correct
-      dplyr::slice(-.rows)
+filterRow <- function(.data, rows){
+  mc <- match.call()
+  dataname <- mc$.data
   
+  exp <- ~ .DATA %>% 
+    dplyr::mutate(row.num = 1:nrow(.DATA)) %>% # this line is to show the row slicing was correct
+      dplyr::slice(-.rows)
+  exp <- replaceVars(exp, .DATA = dataname)
   interpolate(exp, .rows = rows)
 }
 
@@ -206,7 +226,7 @@ filterRow <- function(data, rows){
 #    dplyr::slice(-c(1,2,3,4,6,7,8,9))
   
 filtered.ROW <- filterRow(dat, c(1,2,3,4,6,7,8,9))
-cat(code(filtered.ROW))
+formatR::tidy_source(text = code(filtered.ROW), width.cutoff = 50) 
 
 # TEST CORRECT NUMBER OF ROWS
 nrow(filtered.ROW) == nrow(dat) - length(c(1,2,3,4,6,7,8,9))
@@ -222,11 +242,16 @@ head(filtered.ROW)
 # DATASET -> FILTER DATASET -> RANDOMLY
 ###---------------------------------------------------------
 
-filterRandom <- function(data, sample_size, n){
-  exp <- ~ data %>% 
-    dplyr::mutate(row.num = 1:nrow(data)) %>% # this line is to show that that the sampling was correct
+filterRandom <- function(.data, sample_size, n){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  exp <- ~ .DATA %>% 
+    dplyr::mutate(row.num = 1:nrow(.DATA)) %>% # this line is to show that that the sampling was correct
       dplyr::sample_n(.sample_size * .n, replace = FALSE) %>%
         dplyr::mutate(Sample.Number = rep(1:.n, each=.sample_size))
+  
+  exp <- replaceVars(exp, .DATA = dataname)
   
   interpolate(exp, .sample_size = sample_size, .n = n)
 }
@@ -238,7 +263,7 @@ n = 4
 #    dplyr::sample_n(sample_size * n, replace = FALSE) %>%
 #      dplyr::mutate(Sample.Number = rep(1:n, each=sample_size))
 filtered.RANDOM <- filterRandom(dat, sample_size, n)
-cat(code(filtered.RANDOM))
+formatR::tidy_source(text = code(filtered.RANDOM), width.cutoff = 50) 
 
 # CHECK CORRECT NUMBER OF SAMPLES TAKEN
 nrow(filtered.RANDOM) == sample_size * n
@@ -255,31 +280,49 @@ head(filtered.RANDOM)
 ###---------------------------------------------------------
 
 sortVars = function(.data, vars, asc = rep(TRUE, length(vars))) {
-  ## leave this one.
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  eval_str <- ifelse(asc, vars, stringr::str_c("desc(", vars, ")", sep = "")) %>%
+    stringr::str_c(collapse = ", ")
+  
+  exp <- ~.DATA %>% 
+    dplyr::arrange(.EVAL)
+  exp <- replaceVars(exp, .DATA = dataname, .EVAL = eval_str)
+  
+  interpolate(exp)
 }
 
 # SORT 1 VAR
-sorted.1VARS <- dat %>% 
-  dplyr::arrange(cellsource)
+#sorted.1VARS <- dat %>% 
+# dplyr::arrange(cellsource)
 
+sorted.1VARS <- sortVars(dat, c("cellsource"))
+formatR::tidy_source(text = code(sorted.1VARS), width.cutoff = 50) 
 head(sorted.1VARS, n= 15)
 
 # SORT 2 VAR
-sorted.2VARS <- dat %>% 
-  dplyr::arrange(desc(rightfoot), travel)
+#sorted.2VARS <- dat %>% 
+#  dplyr::arrange(desc(rightfoot), travel)
 
+sorted.2VARS <- sortVars(dat, c("rightfoot", "travel"), asc = c(FALSE, TRUE))
+formatR::tidy_source(text = code(sorted.2VARS), width.cutoff = 50) 
 head(sorted.2VARS, n = 15)
 
 # SORT 3 VAR
-sorted.3VARS <- dat %>% 
-  dplyr::arrange(getlunch, desc(height), age)
+#sorted.3VARS <- dat %>% 
+#  dplyr::arrange(getlunch, desc(height), age)
 
+sorted.3VARS <- sortVars(dat, c("getlunch", "height", "age"), asc = c(TRUE, FALSE, TRUE))
+formatR::tidy_source(text = code(sorted.3VARS), width.cutoff = 50) 
 head(sorted.3VARS, n = 15)
 
 # SORT 4 VAR
-sorted.4VARS <- dat %>% 
-  dplyr::arrange(desc(year), armspan, desc(cellcost), gender)
+#sorted.4VARS <- dat %>% 
+#  dplyr::arrange(desc(year), armspan, desc(cellcost), gender)
 
+sorted.4VARS <- sortVars(dat, c("year", "armspan", "cellcost", "gender"), asc = c(FALSE, TRUE, FALSE, TRUE))
+formatR::tidy_source(text = code(sorted.4VARS), width.cutoff = 50) 
 head(sorted.4VARS, n = 15)
 
 ###---------------------------------------------------------

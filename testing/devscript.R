@@ -147,7 +147,6 @@ filterNumeric <- function(.data, var, op, num){
   
   # updated to start with a string instead of a formula
   exp <- "~.DATA %>% dplyr::filter(.VARNAME.OP.NUM)"
-  exp <- as.formula(exp)
   exp <- replaceVars(exp, 
                      .VARNAME = var, 
                      .OP = op,
@@ -696,6 +695,47 @@ all(c(table(stacked.1VARS$stack.variable) == nrow(dat),
 
 ###---------------------------------------------------------
 
+
+###---------------------------------------------------------
+# VARIABLES -> CONVERT TO CATEGORICAL (allow a vector)
+
+# WIP...
+convertToCat <- function(.data, .vars){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  exp_str = c()
+  
+  for (i in 1:length(.vars)){
+    exp_str[i] <- stringr::str_c("tibble::add_column(", .vars[i], ".CAT = factor(.DATA$", .vars[i], ", .after = ", .vars[i], ")",sep = "")
+  }
+  exp_str <- stringr::str_c(exp_str, collapse = " %>% \n ")
+  exp_str <- stringr::str_c("tibble::add_column(".vars, ".CAT = factor(.DATA$", .vars, ")", collapse = ", ")
+  
+  exp <- ~.DATA %>%
+    tibble::add_column(EXAM.cat = factor(stats20x.df$EXAM), .after = "EXAM")   
+}
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> CATEGORICAL VARIABLES -> REORDER LEVELS
+
+reorderLevels <- function(.data, var, new_levels, freq = FALSE){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  if (freq){
+    exp <- .DATA %>%
+      tibble::add_column(.VARNAME.reord = forcats::fct_infreq(.DATA$.VARNAME), .after = ".VARNAME") 
+  }
+  else{
+    exp <- ~.DATA %>%
+      tibble::add_column(.VARNAME.reord = factor(.DATA$.VARNAME, levels = new_levels), .after = ".VARNAME") 
+  }
+  exp <- replaceVars(exp, .VARNAME = var)
+}
 
 ## I've also started some tests, which can be run using
 test()

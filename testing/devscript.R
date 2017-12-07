@@ -140,17 +140,18 @@ filterNumeric <- function(.data, var, op, num){
   mc <- match.call()
   dataname <- mc$.data
   
-  eval_str <- stringr::str_c(".VARNAME .OP", num, sep = " ")
-  
   ## NOTE: in this case, I'd rather see the values in the 
   #  function call; e.g., filter(.VARNAME .OP .value)
   #  then replaceVars for .VARNAME and .OP,
   #  then pass .value via interpolate.
-  exp <- ~.DATA %>% dplyr::filter(.EVAL)
+  
+  # updated to start with a string instead of a formula
+  exp <- "~.DATA %>% dplyr::filter(.VARNAME.OP.NUM)"
+  exp <- as.formula(exp)
   exp <- replaceVars(exp, 
-                     .EVAL = eval_str, 
                      .VARNAME = var, 
-                     .OP = op, 
+                     .OP = op,
+                     .NUM = num,
                      .DATA = dataname)
   interpolate(exp)
 }
@@ -287,11 +288,12 @@ sortVars = function(.data, vars, asc = rep(TRUE, length(vars))) {
   mc <- match.call()
   dataname <- mc$.data
   
+  # paste together variables names adding desc() where needed
   eval_str <- ifelse(asc, vars, stringr::str_c("desc(", vars, ")", sep = "")) %>%
     stringr::str_c(collapse = ", ")
   
-  exp <- ~.DATA %>% 
-    dplyr::arrange(.EVAL)
+  exp <- "~.DATA %>% 
+    dplyr::arrange(.EVAL)"
   exp <- replaceVars(exp, .DATA = dataname, .EVAL = eval_str)
   
   interpolate(exp)
@@ -337,39 +339,56 @@ head(sorted.4VARS, n = 15)
 
 # not sure how to check this is correct
 
-aggregateData = function(.data, vars, summaries){
+# FUnction doesn't work for count yet
+aggregateData = function(.data, .vars, .summaries){
   mc <- match.call()
   dataname <- mc$.data
   
-  sumamries = sort(summaries)
-  summaries_functionCall = ifelse(summaries == "iqr", "IQR", ifelse(summaries == "count", "n", summaries))
+  add_count = FALSE
+  if("count" %in% .summaries){
+    .summaries <- .summaries[.summaries != "count"]
+    add_count = TRUE
+  }
+  
+  sumamries = sort(.summaries)
+  summaries_functionCall = ifelse(.summaries == "iqr", "IQR",.summaries)
   
   numeric_vars <- colnames(dplyr::select_if(.data, is.numeric)) %>%
     sort()
-   
-  groupby_str <- stringr::str_c(vars, collapse = ", ")
+  
+  # paste together the categorical variables for the group_by() statement
+  groupby_str <- stringr::str_c(.vars, collapse = ", ")
+  # paste together all the numeric variables and what summaries are requested for the summarize
   summarize_str <- stringr::str_c(rep(sort(numeric_vars), 
-                                    each = length(summaries)), 
+                                    each = length(.summaries)), 
                                   ".", 
-                                  rep(summaries, 
+                                  rep(.summaries, 
                                       length(numeric_vars)), 
                                   " = ",
                                   rep(summaries_functionCall, 
                                       length(numeric_vars)), 
                                   "(", rep(sort(numeric_vars), 
-                                           each = length(summaries)), 
+                                           each = length(.summaries)), 
                                   ", na.rm = TRUE)", collapse = ", ")
-    
-  exp <- ~dat %>%
+  
+  if(add_count == TRUE){
+    summarize_str <- stringr::str_c(summarize_str, "count = n()", sep = ", ")
+  }
+  
+  exp <- ~.data %>%
     dplyr::group_by(.EVAL_GROUPBY) %>%
       dplyr::summarize(.EVAL_SUMMARIZE)
   
   exp <- replaceVars(exp, .EVAL_GROUPBY = groupby_str, .EVAL_SUMMARIZE = summarize_str)
   
-  interpolate(exp)
+  output <- interpolate(exp)
+  
+  return(output)
+  
 }
 
-aggregated.3CATS = aggregateData(dat, c("cellsource", "travel", "getlunch"), c("sd", "count", "mean", "median", "sum", "IQR"))
+aggregated.3CATS = aggregateData(dat, c("cellsource", "travel", "getlunch"), c("sd", "mean", "median", "sum", "IQR"))
+formatR::tidy_source(text = code(aggregated.3CATS), width.cutoff = 50) 
 
 # aggregated.3CATS <- dat %>% 
 #   dplyr::group_by(cellsource, travel, getlunch) %>%
@@ -411,7 +430,7 @@ aggregated.3CATS = aggregateData(dat, c("cellsource", "travel", "getlunch"), c("
 #                      
 #                      # Only one column for count makes sense
 #                      count = n()
-                     )
+#                     )
 head(aggregated.3CATS)
 
 #aggregated.3CATS = aggregateData(dat, c(cellsource, travel, getlunch), c("mean", "median", "sum", "sd", "iqr", "count"))
@@ -618,41 +637,48 @@ all(c(
 # DATA OPTIONS -> STACK VARIABLES
 ###---------------------------------------------------------
 
-# function just for stacking 1 variable
-stackVars = function(data, vars, 
-    key = "stack.variable", value = "stack.value"){
-  exp <- ~ data %>% 
-    tidyr::gather(key = .key, value = .value, cellsource)
+stackVars = function(.data, .vars, 
+    .key = "stack.variable", .value = "stack.value"){
   
-  interpolate(exp, .key = key, .value = value)  
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  # paste together the variables to be stacked into a string
+  to_be_stacked = stringr::str_c(.vars, collapse = ", ")
+  
+  exp <- ~.DATA %>% 
+    tidyr::gather(key = .KEY, value = .VALUE, .VARNAMES)
+  exp <- replaceVars(exp, .VARNAMES = to_be_stacked, .DATA = dataname)
+  
+  interpolate(exp, .KEY = .key, .VALUE = .value)  
 }
 
 # 1 VAR
 #stacked.1VARS <- dat %>% 
 #  tidyr::gather(key = stack.variable, value = stack.value, cellsource)
 stacked.1VARS = stackVars(dat, c("cellsource"))
-cat(code(stacked.1VARS))
+formatR::tidy_source(text = code(stacked.1VARS), width.cutoff = 50) 
 head(stacked.1VARS)
 
 
 # 2 VAR
-stacked.2VARS <- dat %>% 
-  tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel)
-# stacked.2VARS = stackVars(dat, vars)
+#stacked.2VARS <- dat %>% 
+#  tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel)
+stacked.2VARS = stackVars(dat, c("cellsource", "travel"))
 head(stacked.2VARS)
 
 
 # 3 VAR
-stacked.3VARS <- dat %>% 
-  tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel, getlunch)
-# stacked.3VARS = stackVars(dat, vars)
+#stacked.3VARS <- dat %>% 
+#  tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel, getlunch)
+stacked.3VARS = stackVars(dat, c("cellsource", "travel", "getlunch"))
 head(stacked.3VARS)
 
 
 # 4 VAR
-stacked.4VARS <- dat %>% 
-  tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel, getlunch, gender)
-# stacked.4VARS = stackVars(dat, vars)
+#stacked.4VARS <- dat %>% 
+#  tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel, getlunch, gender)
+stacked.4VARS = stackVars(dat, c("cellsource", "travel", "getlunch", "gender"))
 head(stacked.4VARS)
 
 

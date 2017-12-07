@@ -56,4 +56,5 @@ replaceVars = function(exp, ...){
   #    1. remove assignment (so last line is simply `as.formula(exp_str)`)
   # or 2. write `exp` on the last line (see `interpolate` fn above)
   exp <- as.formula(exp_str)
+  exp
 } 

@@ -146,7 +146,7 @@ filterNumeric <- function(.data, var, op, num){
   #  then pass .value via interpolate.
   
   # updated to start with a string instead of a formula
-  exp <- "~.DATA %>% dplyr::filter(.VARNAME.OP.NUM)"
+  exp <- ~.DATA %>% dplyr::filter(.VARNAME.OP.NUM)
   exp <- replaceVars(exp, 
                      .VARNAME = var, 
                      .OP = op,
@@ -291,8 +291,8 @@ sortVars = function(.data, vars, asc = rep(TRUE, length(vars))) {
   eval_str <- ifelse(asc, vars, stringr::str_c("desc(", vars, ")", sep = "")) %>%
     stringr::str_c(collapse = ", ")
   
-  exp <- "~.DATA %>% 
-    dplyr::arrange(.EVAL)"
+  exp <- ~.DATA %>% 
+    dplyr::arrange(.EVAL)
   exp <- replaceVars(exp, .DATA = dataname, .EVAL = eval_str)
   
   interpolate(exp)
@@ -343,12 +343,6 @@ aggregateData = function(.data, .vars, .summaries){
   mc <- match.call()
   dataname <- mc$.data
   
-  add_count = FALSE
-  if("count" %in% .summaries){
-    .summaries <- .summaries[.summaries != "count"]
-    add_count = TRUE
-  }
-  
   sumamries = sort(.summaries)
   summaries_functionCall = ifelse(.summaries == "iqr", "IQR",.summaries)
   
@@ -386,7 +380,7 @@ aggregateData = function(.data, .vars, .summaries){
   
 }
 
-aggregated.3CATS = aggregateData(dat, c("cellsource", "travel", "getlunch"), c("sd", "mean", "median", "sum", "IQR"))
+aggregated.3CATS = aggregateData(dat, c("cellsource", "gender"), c("sd", "mean", "median", "sum", "IQR", "count"))
 formatR::tidy_source(text = code(aggregated.3CATS), width.cutoff = 50) 
 
 # aggregated.3CATS <- dat %>% 
@@ -705,6 +699,16 @@ convertToCat <- function(.data, .vars){
   dataname <- mc$.data
   
   exp_str = c()
+  
+  exp <- lapply(.vars, function(x) {
+    ## do stuff with x to create ~tibble::add_column(...)
+    z <- ~tibble::add_column(.varn = factor(.var), .after = .var)
+    
+  })
+  
+  # do.call(pasteFormula, c(list(~.Data <= .DATA, ), exp, list(sep = "%>%")))
+  
+  exp <- pasteFormula(~.DATA <- .DATA, exp, sep = "%>%")
   
   for (i in 1:length(.vars)){
     exp_str[i] <- stringr::str_c("tibble::add_column(", .vars[i], ".CAT = factor(.DATA$", .vars[i], ", .after = ", .vars[i], ")",sep = "")

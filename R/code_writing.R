@@ -50,11 +50,6 @@ replaceVars = function(exp, ...){
                     exp_str, 
                     fixed = TRUE)
   }
-  ## NOTE: though we typically don't use return() in R,
-  #  it's still good practice 'return' what you want to:
-  #  e.g., in this case, either
-  #    1. remove assignment (so last line is simply `as.formula(exp_str)`)
-  # or 2. write `exp` on the last line (see `interpolate` fn above)
   exp <- as.formula(exp_str)
   exp
 } 

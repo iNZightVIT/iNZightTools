@@ -15,6 +15,8 @@
 #' 
 #' @author Christoph Knapp  
 sort.data = function(vars,sort.type,df){
+  # old args: vars, sort.type, df
+  
   if(any(!vars%in%colnames(df))){
     warning("sort.data : Not all variables in vars could be 
             matched to column names in df.")

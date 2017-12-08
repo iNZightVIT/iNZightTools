@@ -141,11 +141,6 @@ filterNumeric <- function(.data, var, op, num){
   mc <- match.call()
   dataname <- mc$.data
   
-  ## NOTE: in this case, I'd rather see the values in the 
-  #  function call; e.g., filter(.VARNAME .OP .value)
-  #  then replaceVars for .VARNAME and .OP,
-  #  then pass .value via interpolate.
-  
   # updated to start with a string instead of a formula
   exp <- ~.DATA %>% dplyr::filter(.VARNAME.OP.NUM)
   exp <- replaceVars(exp, 
@@ -772,17 +767,60 @@ collapseLevels <- function(.data, var, levels){
   dataname <- mc$.data
   
   exp <- ~.DATA %>%
-    tibble::add_column(.VARNAME.coll = forcats::fct_collapse(.DATA$.VARNAME, str_c(levels, collapse = "_"), .after = ".VARNAME"))
-  exp <- replaceVars(exp, .VARNAME = var)
+    tibble::add_column(.VARNAME.coll = forcats::fct_collapse(.DATA$.VARNAME, .COLLAPSENAME = .LEVELS), .after = ".VARNAME")
+  exp <- replaceVars(exp, .VARNAME = var, .COLLAPSENAME = str_c(levels, collapse = "_"), .LEVELS = levels)
   
   interpolate(exp)
 }
 
-cat.COLLPASE <- collapseLevels(dat, "cellsource", c("job", "parent", "pocket"))
+cat.COLLAPSE <- collapseLevels(dat, "cellsource", c("job", "parent", "pocket"))
 formatR::tidy_source(text = code(cat.COLLAPSE), width.cutoff = 50) 
 ###---------------------------------------------------------
 
 
+###---------------------------------------------------------
+# VARIABLES -> CATEGORICAL VARIABLES -> RENAME LEVELS
+
+renameLevels <- function(.data, var, to_be_renamed){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  # paste together the new and old factor levels names to be renamed
+  to_be_renamed <- str_c(names(to_be_renamed), ' = "', to_be_renamed, '"', collapse = ", ")
+  
+  exp <- ~.DATA %>%
+    tibble::add_column(.VARNAME.rename = forcats::fct_recode(.DATA$.VARNAME, .EVAL), .after = ".VARNAME")
+  exp <- replaceVars(exp, .EVAL = to_be_renamed, .VARNAME = var)
+  
+  interpolate(exp)
+}
+
+cat.RENAME <- renameLevels(dat, "travel", list(public = "bus", private = "motor"))
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> CATEOGIRCAL VARIABLES -> COMBINE CATEGORICAL VARIABLES
+
+combineCatVars <- function(.data, vars, sep = "."){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  # paste together the new variable made from the old variable names 
+  new_var_name <- str_c(vars, collapse = sep)
+  to_be_combined <- str_c(vars, collapse =", ")
+  
+  exp <- ~.DATA %>%
+      dplyr::mutate(.NEWVAR = str_c(.VARS, sep = ".SEP"))
+  exp <- replaceVars(exp, .NEWVAR = new_var_name, .VARS = to_be_combined, .SEP = sep)
+  
+  interpolate(exp)
+}
+
+cat.COMBINE <- combineCatVars(dat, c("travel", "getlunch", "gender"), "_")
+
+###---------------------------------------------------------
 
 ## I've also started some tests, which can be run using
 test()

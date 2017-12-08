@@ -5,6 +5,7 @@
 ## Ideally, you won't import any other libraries this way ...
 library(devtools)
 library(magrittr)
+library(stringr)
 
 setwd("C:/Users/Owen/Documents/GitHub/iNZightTools")
 
@@ -288,8 +289,8 @@ sortVars = function(.data, vars, asc = rep(TRUE, length(vars))) {
   dataname <- mc$.data
   
   # paste together variables names adding desc() where needed
-  eval_str <- ifelse(asc, vars, stringr::str_c("desc(", vars, ")", sep = "")) %>%
-    stringr::str_c(collapse = ", ")
+  eval_str <- ifelse(asc, vars, str_c("desc(", vars, ")", sep = "")) %>%
+    str_c(collapse = ", ")
   
   exp <- ~.DATA %>% 
     dplyr::arrange(.EVAL)
@@ -338,35 +339,42 @@ head(sorted.4VARS, n = 15)
 
 # not sure how to check this is correct
 
-# FUnction doesn't work for count yet
+# function for counting the number of NA's; the na.rm argument does nothing, it's just there to make the function work when called in the aggregateData() function
+countMissing <- function(var, na.rm = FALSE){
+  sum(is.na(var))
+}
+
 aggregateData = function(.data, .vars, .summaries){
   mc <- match.call()
   dataname <- mc$.data
   
-  sumamries = sort(.summaries)
-  summaries_functionCall = ifelse(.summaries == "iqr", "IQR",.summaries)
+  summary_names <- .summaries %>% 
+    sort() %>%
+      c("missing")
+
+  summaries_functionCall <- ifelse(.summaries == "iqr", "IQR", .summaries) %>%
+    sort() %>%
+      c("countMissing")
   
   numeric_vars <- colnames(dplyr::select_if(.data, is.numeric)) %>%
     sort()
   
   # paste together the categorical variables for the group_by() statement
-  groupby_str <- stringr::str_c(.vars, collapse = ", ")
+  groupby_str <- str_c(.vars, collapse = ", ")
   # paste together all the numeric variables and what summaries are requested for the summarize
-  summarize_str <- stringr::str_c(rep(sort(numeric_vars), 
-                                    each = length(.summaries)), 
+  summarize_str <- str_c(rep(sort(numeric_vars), 
+                                  each = length(summary_names)), 
                                   ".", 
-                                  rep(.summaries, 
+                                  rep(summary_names, 
                                       length(numeric_vars)), 
                                   " = ",
                                   rep(summaries_functionCall, 
                                       length(numeric_vars)), 
                                   "(", rep(sort(numeric_vars), 
-                                           each = length(.summaries)), 
+                                           each = length(summary_names)), 
                                   ", na.rm = TRUE)", collapse = ", ")
   
-  if(add_count == TRUE){
-    summarize_str <- stringr::str_c(summarize_str, "count = n()", sep = ", ")
-  }
+  summarize_str <- str_c("count = n(), ", summarize_str)
   
   exp <- ~.data %>%
     dplyr::group_by(.EVAL_GROUPBY) %>%
@@ -380,7 +388,7 @@ aggregateData = function(.data, .vars, .summaries){
   
 }
 
-aggregated.3CATS = aggregateData(dat, c("cellsource", "gender"), c("sd", "mean", "median", "sum", "IQR", "count"))
+aggregated.3CATS = aggregateData(dat, c("cellsource", "gender", "travel"), c("sd", "mean", "median", "sum", "IQR"))
 formatR::tidy_source(text = code(aggregated.3CATS), width.cutoff = 50) 
 
 # aggregated.3CATS <- dat %>% 
@@ -637,7 +645,7 @@ stackVars = function(.data, .vars,
   dataname <- mc$.data
   
   # paste together the variables to be stacked into a string
-  to_be_stacked = stringr::str_c(.vars, collapse = ", ")
+  to_be_stacked = str_c(.vars, collapse = ", ")
   
   exp <- ~.DATA %>% 
     tidyr::gather(key = .KEY, value = .VALUE, .VARNAMES)
@@ -658,6 +666,7 @@ head(stacked.1VARS)
 #stacked.2VARS <- dat %>% 
 #  tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel)
 stacked.2VARS = stackVars(dat, c("cellsource", "travel"))
+formatR::tidy_source(text = code(stacked.2VARS), width.cutoff = 50) 
 head(stacked.2VARS)
 
 
@@ -665,6 +674,7 @@ head(stacked.2VARS)
 #stacked.3VARS <- dat %>% 
 #  tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel, getlunch)
 stacked.3VARS = stackVars(dat, c("cellsource", "travel", "getlunch"))
+formatR::tidy_source(text = code(stacked.3VARS), width.cutoff = 50) 
 head(stacked.3VARS)
 
 
@@ -672,6 +682,7 @@ head(stacked.3VARS)
 #stacked.4VARS <- dat %>% 
 #  tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel, getlunch, gender)
 stacked.4VARS = stackVars(dat, c("cellsource", "travel", "getlunch", "gender"))
+formatR::tidy_source(text = code(stacked.4VARS), width.cutoff = 50) 
 head(stacked.4VARS)
 
 
@@ -711,10 +722,10 @@ convertToCat <- function(.data, .vars){
   exp <- pasteFormula(~.DATA <- .DATA, exp, sep = "%>%")
   
   for (i in 1:length(.vars)){
-    exp_str[i] <- stringr::str_c("tibble::add_column(", .vars[i], ".CAT = factor(.DATA$", .vars[i], ", .after = ", .vars[i], ")",sep = "")
+    exp_str[i] <- str_c("tibble::add_column(", .vars[i], ".CAT = factor(.DATA$", .vars[i], ", .after = ", .vars[i], ")",sep = "")
   }
-  exp_str <- stringr::str_c(exp_str, collapse = " %>% \n ")
-  exp_str <- stringr::str_c("tibble::add_column(".vars, ".CAT = factor(.DATA$", .vars, ")", collapse = ", ")
+  exp_str <- str_c(exp_str, collapse = " %>% \n ")
+  exp_str <- str_c("tibble::add_column(".vars, ".CAT = factor(.DATA$", .vars, ")", collapse = ", ")
   
   exp <- ~.DATA %>%
     tibble::add_column(EXAM.cat = factor(stats20x.df$EXAM), .after = "EXAM")   
@@ -726,20 +737,52 @@ convertToCat <- function(.data, .vars){
 ###---------------------------------------------------------
 # VARIABLES -> CATEGORICAL VARIABLES -> REORDER LEVELS
 
-reorderLevels <- function(.data, var, new_levels, freq = FALSE){
+reorderLevels <- function(.data, var, new_levels = NULL, freq = FALSE){
   mc <- match.call()
   dataname <- mc$.data
   
-  if (freq){
-    exp <- .DATA %>%
+  if(freq){
+    exp <- ~.DATA %>%
       tibble::add_column(.VARNAME.reord = forcats::fct_infreq(.DATA$.VARNAME), .after = ".VARNAME") 
   }
   else{
     exp <- ~.DATA %>%
       tibble::add_column(.VARNAME.reord = factor(.DATA$.VARNAME, levels = new_levels), .after = ".VARNAME") 
   }
-  exp <- replaceVars(exp, .VARNAME = var)
+  exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname)
+  
+  interpolate(exp)
 }
+
+
+cat.REORDER.MANUAL <- reorderLevels(dat, "cellsource", c("parent", "pocket", "job", "other"))
+formatR::tidy_source(text = code(cat.REORDER.MANUAL), width.cutoff = 50) 
+
+cat.REORDER.FREQ <- reorderLevels(dat, "cellsource", freq = TRUE)
+formatR::tidy_source(text = code(cat.REORDER.FREQ), width.cutoff = 50) 
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> CATEGORICAL VARIABLES -> COLLAPSE LEVELS
+
+collapseLevels <- function(.data, var, levels){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  exp <- ~.DATA %>%
+    tibble::add_column(.VARNAME.coll = forcats::fct_collapse(.DATA$.VARNAME, str_c(levels, collapse = "_"), .after = ".VARNAME"))
+  exp <- replaceVars(exp, .VARNAME = var)
+  
+  interpolate(exp)
+}
+
+cat.COLLPASE <- collapseLevels(dat, "cellsource", c("job", "parent", "pocket"))
+formatR::tidy_source(text = code(cat.COLLAPSE), width.cutoff = 50) 
+###---------------------------------------------------------
+
+
 
 ## I've also started some tests, which can be run using
 test()

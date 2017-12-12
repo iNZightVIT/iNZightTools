@@ -53,3 +53,13 @@ replaceVars = function(exp, ...){
   exp <- as.formula(exp_str)
   exp
 } 
+
+
+pasteFormulae <- function(formulae, sep = "%>%"){
+  combined_formulae <- c()
+  for (i in 1:length(formulae)){
+    combined_formulae[i] <- as.character(formulae[[i]])[2]
+  }
+  output_formula <- as.formula(paste("~", paste(combined_formulae, collapse = paste(sep, "\n"))))
+  output_formula
+}

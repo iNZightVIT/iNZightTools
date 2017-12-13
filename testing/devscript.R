@@ -879,6 +879,52 @@ formatR::tidy_source(text = code(num.STANDARDIZE), width.cutoff = 50)
 
 
 ###---------------------------------------------------------
+# VARIABLES -> NUMERIC VARIABLES -> FORM CLASS INTERVALS
+
+formClassIntervals <- function(.data, var, new_var, nlevels, new_level, method){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  min <- .data %>% dplyr::select(var) %>% min(na.rm = TRUE) %>% floor()
+  max <- .data %>% dplyr::select(var) %>% max(na.rm = TRUE) %>% ceiling()
+  
+  width = (max - min) / nlevels
+  
+  intervals = seq(min, max, width)
+  intervals_rounded = round(intervals, 2)
+    
+  if(new_level = "open left closed right"){
+    interval_names = str_c("(", intervals_rounded[-length(intervals_rounded)], ", ", intervals_rounded[-1], "]")
+    interval_allocation <- .data %>% 
+        dplyr::select(var) %>%
+          unlist() %>%
+            as.numeric() %>%
+              findInterval(intervals, left.open = TRUE)
+    
+  }
+  else{
+    interval_names = str_c("[", intervals_rounded[-length(intervals_rounded)], ", ", intervals_rounded[-1], ")")
+    interval_allocation <- .data %>% 
+      dplyr::select(var) %>%
+        unlist() %>%
+          as.numeric() %>%
+            findInterval(intervals, rightmost.closed, left.open = FALSE)
+  }
+  
+  vlookup.df = data.frame(group = 1:nlevels, interval = interval_names)
+  allocated_intervals.df = merge(data.frame(group = interval_allocation), vlookup.df, by = "group")
+  
+  
+}
+
+
+###---------------------------------------------------------
+
+
+
+
+
+###---------------------------------------------------------
 # VARIABLES -> NUMERIC VARIABLES -> RANK NUMERICAL VARIABLES
 
 rankVars <- function(.data, vars){

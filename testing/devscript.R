@@ -700,31 +700,28 @@ all(c(table(stacked.1VARS$stack.variable) == nrow(dat),
 # VARIABLES -> CONVERT TO CATEGORICAL (allow a vector)
 
 # WIP...
-convertToCat <- function(.data, .vars){
+convertToCat <- function(.data, vars){
   mc <- match.call()
   dataname <- mc$.data
   
-  exp_str = c()
+  formulae = list(~.DATA)
   
-  exp <- lapply(.vars, function(x) {
-    ## do stuff with x to create ~tibble::add_column(...)
-    z <- ~tibble::add_column(.varn = factor(.var), .after = .var)
-    
-  })
+  for (i in 1:length(vars)){
+    formula <- ~tibble::add_column(.VARNAME.cat = factor(.DATA$.VARNAME), .after = ".VARNAME")
+    formula <- replaceVars(formula, .VARNAME = vars[i])
+    formulae[[i+1]] <- formula
+  }
+  
+  exp <- pasteFormulae(formulae)
+  exp <- replaceVars(exp, .DATA = dataname)
+  
+  interpolate(exp)
+
   
   # do.call(pasteFormula, c(list(~.Data <= .DATA, ), exp, list(sep = "%>%")))
-  
-  exp <- pasteFormula(~.DATA <- .DATA, exp, sep = "%>%")
-  
-  for (i in 1:length(.vars)){
-    exp_str[i] <- str_c("tibble::add_column(", .vars[i], ".CAT = factor(.DATA$", .vars[i], ", .after = ", .vars[i], ")",sep = "")
-  }
-  exp_str <- str_c(exp_str, collapse = " %>% \n ")
-  exp_str <- str_c("tibble::add_column(".vars, ".CAT = factor(.DATA$", .vars, ")", collapse = ", ")
-  
-  exp <- ~.DATA %>%
-    tibble::add_column(EXAM.cat = factor(stats20x.df$EXAM), .after = "EXAM")   
 }
+
+var.CAT <- convertToCat(dat, c("armspan", "height", "age"))
 
 ###---------------------------------------------------------
 
@@ -789,13 +786,14 @@ renameLevels <- function(.data, var, to_be_renamed){
   to_be_renamed <- str_c(names(to_be_renamed), ' = "', to_be_renamed, '"', collapse = ", ")
   
   exp <- ~.DATA %>%
-    tibble::add_column(.VARNAME.rename = forcats::fct_recode(.DATA$.VARNAME, .EVAL), .after = ".VARNAME")
-  exp <- replaceVars(exp, .EVAL = to_be_renamed, .VARNAME = var)
+    tibble::add_column(.VARNAME.rename = forcats::fct_recode(.DATA$.VARNAME, .RENAME), .after = ".VARNAME")
+  exp <- replaceVars(exp, .DATA = dataname ,.RENAME = to_be_renamed, .VARNAME = var)
   
   interpolate(exp)
 }
 
 cat.RENAME <- renameLevels(dat, "travel", list(public = "bus", private = "motor"))
+formatR::tidy_source(text = code(cat.RENAME), width.cutoff = 50) 
 
 ###---------------------------------------------------------
 
@@ -813,14 +811,190 @@ combineCatVars <- function(.data, vars, sep = "."){
   
   exp <- ~.DATA %>%
       dplyr::mutate(.NEWVAR = str_c(.VARS, sep = ".SEP"))
-  exp <- replaceVars(exp, .NEWVAR = new_var_name, .VARS = to_be_combined, .SEP = sep)
+  exp <- replaceVars(exp, .DATA = dataname, .NEWVAR = new_var_name, .VARS = to_be_combined, .SEP = sep)
   
   interpolate(exp)
 }
 
-cat.COMBINE <- combineCatVars(dat, c("travel", "getlunch", "gender"), "_")
+cat.COMBINE <- combineCatVars(dat, c("travel", "getlunch", "gender"), ".0.")
+formatR::tidy_source(text = code(cat.COMBINE), width.cutoff = 50) 
 
 ###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> NUMERIC VARIABLES -> TRANSFORM VARIABLES
+
+# this function should work with all the variable transformations in iNZight provided the name given is correct
+
+transformVar <- function(.data, var ,transformation){
+  
+  # Below are custom functions for transform variables
+  
+  reciprocal <- function(x){
+    return(1/x)
+  }
+  square <- function(x){
+    return (x ^ 2)
+  }
+  
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  exp <- ~.DATA %>%
+    tibble::add_column(.VARNAME..F = lapply(.DATA$.VARNAME, .F), .after = ".VARNAME")
+  exp <- replaceVars(exp, .DATA = dataname, .VARNAME = var, .F = transformation)
+  
+  interpolate(exp)
+}
+
+num.TRANSFORM <- transformVar(dat, "armspan", "exp")
+formatR::tidy_source(text = code(num.TRANSFORM), width.cutoff = 50) 
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> NUMERIC VARIABLES -> STANDARDIZE VARIABLES
+
+standardizeVars <- function(.data, vars){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  formulae <- list(~.DATA)
+    
+  for (i in 1:length(vars)){
+    formula <- ~ tibble::add_column(.VARNAME.std = scale(.DATA$.VARNAME)[,1], .after = ".VARNAME")
+    formulae[[i+1]] <- replaceVars(formula, .VARNAME = vars[i])
+  }
+  
+  exp <- pasteFormulae(formulae)
+  exp <- replaceVars(exp, .DATA = dataname)
+  
+  interpolate(exp)
+}
+
+num.STANDARDIZE <- standardizeVars(dat, c("cellcost", "height", "year"))
+formatR::tidy_source(text = code(num.STANDARDIZE), width.cutoff = 50) 
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> NUMERIC VARIABLES -> RANK NUMERICAL VARIABLES
+
+rankVars <- function(.data, vars){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  formulae <- list(~.DATA)
+  
+  for (i in 1:length(vars)){
+    formula <- ~ tibble::add_column(.VARNAME.rank = dplyr::min_rank(.DATA$.VARNAME), .after = ".VARNAME")
+    formulae[[i+1]] <- replaceVars(formula, .VARNAME = vars[i])
+  }
+  
+  exp <- pasteFormulae(formulae)
+  exp <- replaceVars(exp, .DATA = dataname)
+  
+  interpolate(exp)
+}
+
+num.RANK <- rankVars(dat, c("armspan", "year"))
+formatR::tidy_source(text = code(num.RANK), width.cutoff = 50) 
+###---------------------------------------------------------
+
+
+
+
+###---------------------------------------------------------
+# VARIABLES -> NUMERIC VARIABLES -> CONVERT TO CATEGORICAL (MULTIPLE VARIABLES)
+
+# see VARIABLES -> NUMERIC VARIABLES -> CONVERT TO CATEGORICAL
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> RENAME VARIABLES 
+
+renameVars <- function(.data, to_be_renamed_list){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  # paste together the variables to be renamed into one string
+  to_be_renamed <- str_c(to_be_renamed_list, "=", names(to_be_renamed_list), collapse = ", ")
+  
+  exp <- ~.DATA %>%
+    dplyr::rename(.RENAME)
+  exp <- replaceVars(exp, .RENAME = to_be_renamed, .DATA = dataname)
+  
+  interpolate(exp)
+}
+
+var.RENAME <- renameVars(dat, list(gender = "SEX", getlunch = "LUNCH_SOURCE", travel = "TRANSPORTATION"))
+formatR::tidy_source(text = code(var.RENAME), width.cutoff = 50) 
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> CREATE NEW VARIABLES 
+
+createNewVar <- function(.data, new_var = "new.variable", R_exp){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  exp <- ~.DATA %>%
+    dplyr::mutate(.VARNAME = .EVAL)
+  exp <- replaceVars(exp, .VARNAME = new_var, .EVAL = R_exp)#, DATA = dataname)
+  
+  interpolate(exp)
+  
+}
+
+var.NEW = createNewVar(dat, new_var = "EVEN_OR_ODD_AGE", '(year +5) / 3')
+formatR::tidy_source(text = code(var.NEW), width.cutoff = 50) 
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> MISSING TO CATEGORICAL 
+
+missingToCat <- function(.data, vars){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  formulae <- list(~.DATA)
+  
+  for (i in 1:length(vars)){
+    if(is.numeric(dplyr::select(.data, vars[i])[,1])){
+      formula <- ~tibble::add_column(.VARNAME_miss = factor(ifelse(is.na(.DATA$.VARNAME),"missing", "observed")), .after = ".VARNAME")  
+    }
+    else{
+      formula <- ~ tibble::add_column(.VARNAME_miss = forcats::fct_explicit_na(.DATA$.VARNAME, na_level = "missing"), .after = ".VARNAME")
+    }
+    formula <- replaceVars(formula, .VARNAME = vars[i])
+    formulae[[i+1]] = formula
+  }
+  
+  exp <- pasteFormulae(formulae)
+  exp <- replaceVars(exp, .DATA = dataname)
+  
+  interpolate(exp)
+}
+
+var.MISSING <- missingToCat(dat, c("getlunch", "age", "year", "travel"))
+
+###---------------------------------------------------------
+
+
+###---------------------------------------------------------
+# VARIABLES -> RESHAPE DATASET
+
+# already a function to do this - see DATASET -> STACK VARIABLES
+
+###---------------------------------------------------------
+
+
 
 ## I've also started some tests, which can be run using
 test()

@@ -6,6 +6,7 @@
 library(devtools)
 library(magrittr)
 library(stringr)
+library(testthat)
 
 setwd("C:/Users/Owen/Documents/GitHub/iNZightTools")
 
@@ -62,18 +63,8 @@ cat(code(interpolate(exp, .var = "string")), "\n")
 
 
 ### DATASET > FILTER LEVELS OF A CATEGORICAL
-# filter travel = walk, bike
-
-var <- "travel"
-levels <- c("bike", "walk")
-
-dat.filtered <- dat %>% 
-  dplyr::filter(travel %in% levels) %>% 
-  dplyr::mutate(travel = factor(travel, levels = levels))
 
 filterLevels <- function(.data, var, levels) {
-  ## allows us to get the NAME as passed into the function call
-  ## e.g., filterLevels(mydata, ...), we get the STRING "mydata"
   
   mc <- match.call()
   dataname <- mc$.data
@@ -85,63 +76,47 @@ filterLevels <- function(.data, var, levels) {
   
   exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname)
 
-  #str <- as.character(exp)
-  #str <- gsub(".VARNAME", var, str, fixed = TRUE)
-  #str <- gsub(".DATA", dataname, str, fixed = TRUE)
-  #exp <- as.formula(str)
-
-  ## do the above using a function ...
-  # exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname)
-
   interpolate(exp, .levels = levels)
 }
 
-## example 
-somedata <- dat
-dat.filtered <- filterLevels(dat, "travel", c("bike", "walk"))
-d2 <- filterLevels(somedata, "travel", c("bike", "walk"))
-head(dat.filtered)
-all(levels(dat.filtered$travel) %in% c("bike", "walk"))
-
-formatR::tidy_source(text = code(dat.filtered), width.cutoff = 50) 
-formatR::tidy_source(text = code(d2), width.cutoff = 50) 
-
-
-# CHECK FOR 1 LEVEL
+# 1 LEVEL
 filtered.1LVL <- dat %>% 
   dplyr::filter(cellsource %in% c("job")) %>% 
     dplyr::mutate(cellsource = factor(cellsource, levels = c("job")))
+formatR::tidy_source(text = code(filtered.1LVL), width.cutoff = 50) 
 
-# filtered.1LVL <- filterLevels(dat, "cellsource", c("job))
-all(levels(filtered.1LVL$cellsource) == c("job"))
-head(filtered.1LVL)
-
-    # CHECK THAT OTHER CATEGORICAL COLUMNS RETAIN THEIR FACTORS
-      all(c(levels(filtered.1LVL$travel) == levels(dat$travel), 
-            levels(filtered.1LVL$getlunch) == levels(dat$getlunch), 
-            levels(filtered.1LVL$gender) == levels(dat$gender)))
-
-# CHECK FOR 3 LEVELS
+# 3 LEVELS
 filtered.3LVL <- dat %>% 
   dplyr::filter(getlunch %in% c("home", "tuckshop")) %>% 
-    dplyr::mutate(getlunch = factor(getlunch, levels = c("home", "tuckshop", "friend")))    
-all(levels(filtered.3LVL$getlunch) == c("home", "tuckshop", "friend"))
+    dplyr::mutate(getlunch = factor(getlunch, levels = c("home", "tuckshop", "friend")))
+formatR::tidy_source(text = code(filtered.3LVL), width.cutoff = 50) 
 
-    # CHECK THAT OTHER CATEGORICAL COLUMNS RETAIN THEIR FACTORS
-    all(c(levels(filtered.3LVL$cellsource) == levels(dat$cellsource), 
-          levels(filtered.3LVL$travel) == levels(dat$travel), 
-          levels(filtered.3LVL$gender) == levels(dat$gender)))
+# TEST_THAT'S
+test_that("Result is only those with the filtered variable remains", {
+  expect_true(all(levels(filtered.1LVL$cellsource) == c("job")))
+  expect_true(all(levels(filtered.3LVL$getlunch) == c("home", "tuckshop", "friend")))
+  
+})
+
+test_that("Result is the other categorical variables remain", {
+  expect_true(levels(filtered.1LVL$travel) == levels(dat$travel)) 
+  expect_true(levels(filtered.1LVL$getlunch) == levels(dat$getlunch))
+  expect_true(levels(filtered.1LVL$gender) == levels(dat$gender))
+  expect_true(levels(filtered.3LVL$cellsource) == levels(dat$cellsource)) 
+  expect_true(levels(filtered.3LVL$travel) == levels(dat$travel))
+  expect_true(levels(filtered.3LVL$gender) == levels(dat$gender))
+  
+})
+###---------------------------------------------------------
 
 
 # DATASET -> FILTER DATASET -> NUMERIC CONDITION
 ###---------------------------------------------------------
     
-# function for "<"
 filterNumeric <- function(.data, var, op, num){
   mc <- match.call()
   dataname <- mc$.data
   
-  # updated to start with a string instead of a formula
   exp <- ~.DATA %>% dplyr::filter(.VARNAME.OP.NUM)
   exp <- replaceVars(exp, 
                      .VARNAME = var, 
@@ -151,58 +126,41 @@ filterNumeric <- function(.data, var, op, num){
   interpolate(exp)
 }
 
-# TEST FOR "<"
-#filtered.L <- dat %>% 
-#  dplyr::filter(rightfoot < 15)
+# FOR "<"
 filtered.L <- filterNumeric(dat, "rightfoot", "<", 15)
 formatR::tidy_source(text = code(filtered.L), width.cutoff = 50) 
-all(filtered.L$rightfoot < 15)
-head(filtered.L)
 
-
-# TEST FOR "<="
-#filtered.LE <- dat %>% 
-#  dplyr::filter(height <= 120)
+# FOR "<="
 filtered.LE <- filterNumeric(dat, "height", "<=", 120)
 formatR::tidy_source(text = code(filtered.LE), width.cutoff = 50) 
-all(filtered.LE$height <= 120)
-head(filtered.LE)
 
-
-# TEST FOR ">"
-#filtered.G <- dat %>% 
-#  dplyr::filter(age > 17)
+# FOR ">"
 filtered.G <- filterNumeric(dat, "age", ">", 17)
 formatR::tidy_source(text = code(filtered.G), width.cutoff = 50) 
-all(filtered.G$age > 17)
-head(filtered.G)
 
-
-# TEST FOR ">="
-#filtered.GE <- dat %>% 
-#  dplyr::filter(year >= 10)
+# FOR ">="
 filtered.GE <- filterNumeric(dat, "year", ">=", 10)
 formatR::tidy_source(text = code(filtered.GE), width.cutoff = 50) 
-all(filtered.GE$year >= 10)
-head(filtered.GE)
 
-
-# TEST FOR "=="
-#filtered.E <- dat %>% 
-#  dplyr::filter(armspan == 140)
+# FOR "=="
 filtered.E <- filterNumeric(dat, "armspan", "==", 140)
 formatR::tidy_source(text = code(filtered.E), width.cutoff = 50) 
-all(filtered.E$armspan == 140)
-head(filtered.E)
 
-
-# TEST FOR "!="
-#filtered.NE <- dat %>% 
-#  dplyr::filter(cellcost != 0)
+# FOR "!="
 filtered.NE <- filterNumeric(dat, "cellcost", "!=", 0)
 formatR::tidy_source(text = code(filtered.NE), width.cutoff = 50) 
-all(filtered.NE$cellcost != 0)
-head(filtered.NE)
+
+
+# TEST_THAT'S
+test_that("Result is that only those that meet the logical condition remain", {
+  expect_true(all(filtered.L$rightfoot < 15))
+  expect_true(all(filtered.LE$height <= 120))
+  expect_true(all(filtered.G$age > 17))
+  expect_true(all(filtered.GE$year >= 10))
+  expect_true(all(filtered.E$armspan == 140))
+  expect_true(all(filtered.NE$cellcost != 0))
+})
+
 
 ###---------------------------------------------------------
 
@@ -220,21 +178,19 @@ filterRow <- function(.data, rows){
   exp <- replaceVars(exp, .DATA = dataname)
   interpolate(exp, .rows = rows)
 }
-
-#filtered.ROW <- dat %>%
-#  dplyr::mutate(row.num = 1:nrow(dat)) %>%
-#    dplyr::slice(-c(1,2,3,4,6,7,8,9))
   
 filtered.ROW <- filterRow(dat, c(1,2,3,4,6,7,8,9))
 formatR::tidy_source(text = code(filtered.ROW), width.cutoff = 50) 
 
-# TEST CORRECT NUMBER OF ROWS
-nrow(filtered.ROW) == nrow(dat) - length(c(1,2,3,4,6,7,8,9))
 
+# TEST_THAT'S
+test_that("Result is the number of rows are reduced by the rows sliced", {
+  expect_equal(nrow(filtered.ROW), nrow(dat) - length(c(1,2,3,4,6,7,8,9)))
+})
 
-# TEST THAT ONLY ROW NUMBERS NOT REMOVED ARE KEPT
-all(!(filtered.ROW$row.num %in% c(1,2,3,4,6,7,8,9)))
-head(filtered.ROW)
+test_that("Result is that the rows not sliced are kept", {
+  expect_true(all(!(filtered.ROW$row.num %in% c(1,2,3,4,6,7,8,9))))
+})
 
 ###---------------------------------------------------------
 
@@ -258,21 +214,17 @@ filterRandom <- function(.data, sample_size, n){
 
 sample_size = 5
 n = 4
-#filtered.RANDOM <- dat %>%
-#  dplyr::mutate(row.num = 1:nrow(dat)) %>% 
-#    dplyr::sample_n(sample_size * n, replace = FALSE) %>%
-#      dplyr::mutate(Sample.Number = rep(1:n, each=sample_size))
 filtered.RANDOM <- filterRandom(dat, sample_size, n)
 formatR::tidy_source(text = code(filtered.RANDOM), width.cutoff = 50) 
 
-# CHECK CORRECT NUMBER OF SAMPLES TAKEN
-nrow(filtered.RANDOM) == sample_size * n
+# TEST_THAT'S
+test_that("Result is that all samples taken are unique", {
+  expect_equal(nrow(filtered.RANDOM), sample_size * n)
+})
 
-# CHECK ALL SAMPLES TAKEN ARE UNIQUE (ie.without replacement)
-all(table(filtered.RANDOM$row.num) == 1)
-head(filtered.RANDOM)
-
-
+test_that("Result is that the correct number of samples are taken for each group", {
+  expect_true(all(table(filtered.RANDOM$row.num) == 1))
+})
 ###---------------------------------------------------------
 
 
@@ -332,14 +284,13 @@ head(sorted.4VARS, n = 15)
 # DATASET -> AGGREGATE DATA
 ###---------------------------------------------------------
 
-# not sure how to check this is correct
-
-# function for counting the number of NA's; the na.rm argument does nothing, it's just there to make the function work when called in the aggregateData() function
-countMissing <- function(var, na.rm = FALSE){
-  sum(is.na(var))
-}
-
 aggregateData = function(.data, .vars, .summaries){
+  
+  # function for counting the missing values
+  countMissing <- function(var, na.rm = FALSE){
+    sum(is.na(var))
+  }
+  
   mc <- match.call()
   dataname <- mc$.data
   
@@ -380,253 +331,219 @@ aggregateData = function(.data, .vars, .summaries){
   output <- interpolate(exp)
   
   return(output)
-  
 }
 
-aggregated.3CATS = aggregateData(dat, c("cellsource", "gender", "travel"), c("sd", "mean", "median", "sum", "IQR"))
+aggregated.3CATS = aggregateData(dat, c("cellsource", "travel", "getlunch"), c("sd", "mean", "median", "sum", "iqr"))
 formatR::tidy_source(text = code(aggregated.3CATS), width.cutoff = 50) 
 
-# aggregated.3CATS <- dat %>% 
-#   dplyr::group_by(cellsource, travel, getlunch) %>%
-#     dplyr::summarize(rightfoot.mean = mean(rightfoot, na.rm = TRUE),
-#                      rightfoot.median = median(rightfoot, na.rm = TRUE),
-#                      rightfoot.sum = sum(rightfoot, na.rm = TRUE),
-#                      rightfoot.sd = sd(rightfoot, na.rm = TRUE),
-#                      rightfoot.iqr = IQR(rightfoot, na.rm = TRUE),
-#                      
-#                      height.mean = mean(height, na.rm = TRUE),
-#                      height.median = median(height, na.rm = TRUE),
-#                      height.sum = sum(height, na.rm = TRUE),
-#                      height.sd = sd(height, na.rm = TRUE),
-#                      height.iqr = IQR(height, na.rm = TRUE),
-#                      
-#                      age.mean = mean(age, na.rm = TRUE),
-#                      age.median = median(age, na.rm = TRUE),
-#                      age.sum = sum(age, na.rm = TRUE),
-#                      age.sd = sd(age, na.rm = TRUE),
-#                      age.iqr = IQR(age, na.rm = TRUE),
-#                      
-#                      year.mean = mean(year, na.rm = TRUE),
-#                      year.median = median(year, na.rm = TRUE),
-#                      year.sum = sum(year, na.rm = TRUE),
-#                      year.sd = sd(year, na.rm = TRUE),
-#                      year.iqr = IQR(year, na.rm = TRUE),
-#                      
-#                      armspan.mean = mean(armspan, na.rm = TRUE),
-#                      armspan.median = median(armspan, na.rm = TRUE),
-#                      armspan.sum = sum(armspan, na.rm = TRUE),
-#                      armspan.sd = sd(armspan, na.rm = TRUE),
-#                      armspan.iqr = IQR(armspan, na.rm = TRUE),
-#                      
-#                      cellcost.mean = mean(cellcost, na.rm = TRUE),
-#                      cellcost.median = median(cellcost, na.rm = TRUE),
-#                      cellcost.sum = sum(cellcost, na.rm = TRUE),
-#                      cellcost.sd = sd(cellcost, na.rm = TRUE),
-#                      cellcost.iqr = IQR(cellcost, na.rm = TRUE),
-#                      
-#                      # Only one column for count makes sense
-#                      count = n()
-#                     )
-head(aggregated.3CATS)
 
-#aggregated.3CATS = aggregateData(dat, c(cellsource, travel, getlunch), c("mean", "median", "sum", "sd", "iqr", "count"))
+# TEST_THAT'S
+test_that("Spot check for the mean values", {
+  expect_true(mean(dplyr::filter(dat, 
+                                 cellsource == "job", 
+                                 travel == "walk", 
+                                 getlunch == "none")$rightfoot, 
+                   na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              cellsource == "job", 
+                              travel == "walk", 
+                              getlunch == "none")$rightfoot.mean)
+  expect_true(mean(dplyr::filter(dat, 
+                                 cellsource == "parent", 
+                                 travel == "other", 
+                                 getlunch == "tuckshop")$cellcost, 
+                   na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              cellsource == "parent", 
+                              travel == "other", 
+                              getlunch == "tuckshop")$cellcost.mean)
+  expect_true(mean(dplyr::filter(dat, 
+                                 is.na(cellsource), 
+                                 travel == "motor", 
+                                 getlunch == "home")$age, 
+                   na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              is.na(cellsource), 
+                              travel == "motor", 
+                              getlunch == "home")$age.mean)
+})
 
-# MEAN CHECK
-all(c(
-  mean(dplyr::filter(dat, 
-                     cellsource == "job", 
-                     travel == "walk", 
-                     getlunch == "home")$rightfoot, 
-       na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  cellsource == "job", 
-                  travel == "walk", 
-                  getlunch == "home")$rightfoot.mean,
-  
-  mean(dplyr::filter(dat, 
-                     cellsource == "parent", 
-                     travel == "other", 
-                     getlunch == "tuckshop")$rightfoot, 
-       na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  cellsource == "parent", 
-                  travel == "other", 
-                  getlunch == "tuckshop")$rightfoot.mean,
-  
-  mean(dplyr::filter(dat, 
-                     is.na(cellsource), 
-                     travel == "motor", 
-                     is.na(getlunch))$rightfoot, 
-       na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  is.na(cellsource), 
-                  travel == "motor", 
-                  is.na(getlunch))$rightfoot.mean
-  
-))
+test_that("Spot check for the median values", {
+  expect_true(median(dplyr::filter(dat, 
+                                   cellsource == "job", 
+                                   travel == "walk", 
+                                   getlunch == "none")$rightfoot, 
+                     na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              cellsource == "job", 
+                              travel == "walk", 
+                              getlunch == "none")$rightfoot.median)
+  expect_true(median(dplyr::filter(dat, 
+                                   cellsource == "parent", 
+                                   travel == "other", 
+                                   getlunch == "tuckshop")$cellcost, 
+                     na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              cellsource == "parent", 
+                              travel == "other", 
+                              getlunch == "tuckshop")$cellcost.median)
+  expect_true(median(dplyr::filter(dat, 
+                                   is.na(cellsource), 
+                                   travel == "motor", 
+                                   getlunch == "home")$age, 
+                     na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              is.na(cellsource), 
+                              travel == "motor", 
+                              getlunch == "home")$age.median)
+})
 
-# MEDIAN CHECK
-all(c(
-  median(dplyr::filter(dat, 
-                       cellsource == "job", 
-                       travel == "walk", 
-                       getlunch == "home")$rightfoot, 
-         na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  cellsource == "job", 
-                  travel == "walk", 
-                  getlunch == "home")$rightfoot.median,
-  
-  median(dplyr::filter(dat, 
-                       cellsource == "parent", 
-                       travel == "other", 
-                       getlunch == "tuckshop")$rightfoot, 
-         na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  cellsource == "parent", 
-                  travel == "other", 
-                  getlunch == "tuckshop")$rightfoot.median,
-  
-  median(dplyr::filter(dat, 
-                       is.na(cellsource), 
-                       travel == "motor", 
-                       is.na(getlunch))$rightfoot, 
-         na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  is.na(cellsource), 
-                  travel == "motor", 
-                  is.na(getlunch))$rightfoot.median
-))
+test_that("Spot check for the sum values", {
+  expect_true(sum(dplyr::filter(dat, 
+                                cellsource == "job", 
+                                travel == "walk", 
+                                getlunch == "none")$rightfoot, 
+                  na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              cellsource == "job", 
+                              travel == "walk", 
+                              getlunch == "none")$rightfoot.sum)
+  expect_true(sum(dplyr::filter(dat, 
+                                cellsource == "parent", 
+                                travel == "other", 
+                                getlunch == "tuckshop")$cellcost, 
+                  na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              cellsource == "parent", 
+                              travel == "other", 
+                              getlunch == "tuckshop")$cellcost.sum)
+  expect_true(sum(dplyr::filter(dat, 
+                                is.na(cellsource), 
+                                travel == "motor", 
+                                getlunch == "home")$age, 
+                  na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              is.na(cellsource), 
+                              travel == "motor", 
+                              getlunch == "home")$age.sum)
+})
 
-# SUM CHECK
-all(c(
-  sum(dplyr::filter(dat, 
-                    cellsource == "job", 
-                    travel == "walk", 
-                    getlunch == "home")$rightfoot, 
-      na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  cellsource == "job", 
-                  travel == "walk", 
-                  getlunch == "home")$rightfoot.sum,
-  
-  sum(dplyr::filter(dat, 
-                    cellsource == "parent", 
-                    travel == "other", 
-                    getlunch == "tuckshop")$rightfoot, 
-      na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  cellsource == "parent", 
-                  travel == "other", 
-                  getlunch == "tuckshop")$rightfoot.sum,
-  
-  sum(dplyr::filter(dat, 
-                    is.na(cellsource), 
-                    travel == "motor", 
-                    is.na(getlunch))$rightfoot, 
-      na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  is.na(cellsource), 
-                  travel == "motor", 
-                  is.na(getlunch))$rightfoot.sum
-))
 
-# SD CHECK
-all(c(
-  sd(dplyr::filter(dat, 
-                   cellsource == "job", 
-                   travel == "walk", 
-                   getlunch == "home")$rightfoot, 
-     na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  cellsource == "job", 
-                  travel == "walk", 
-                  getlunch == "home")$rightfoot.sd,
-  
-  sd(dplyr::filter(dat, 
-                   cellsource == "parent", 
-                   travel == "other", 
-                   getlunch == "tuckshop")$rightfoot, 
-     na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  cellsource == "parent", 
-                  travel == "other", 
-                  getlunch == "tuckshop")$rightfoot.sd,
-  
-  sd(dplyr::filter(dat, 
-                   is.na(cellsource), 
-                   travel == "motor", 
-                   is.na(getlunch))$rightfoot, 
-     na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  is.na(cellsource), 
-                  travel == "motor", 
-                  is.na(getlunch))$rightfoot.sd
-))
+test_that("Spot check for the sd values", {
+  expect_true(sd(dplyr::filter(dat, 
+                               cellsource == "job", 
+                               travel == "walk", 
+                               getlunch == "none")$rightfoot, 
+                 na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              cellsource == "job", 
+                              travel == "walk", 
+                              getlunch == "none")$rightfoot.sd)
+  expect_true(sd(dplyr::filter(dat, 
+                                cellsource == "parent", 
+                                travel == "other", 
+                                getlunch == "tuckshop")$cellcost, 
+                  na.rm = TRUE) ==  
+                 dplyr::filter(aggregated.3CATS, 
+                               cellsource == "parent", 
+                               travel == "other", 
+                               getlunch == "tuckshop")$cellcost.sd)
+  expect_true(sd(dplyr::filter(dat, 
+                               is.na(cellsource), 
+                               travel == "motor", 
+                               getlunch == "home")$age, 
+                 na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              is.na(cellsource), 
+                              travel == "motor", 
+                              getlunch == "home")$age.sd)
+})
 
-# IQR CHECK
-all(c(
-  IQR(dplyr::filter(dat, 
-                    cellsource == "job", 
-                    travel == "walk", 
-                    getlunch == "home")$rightfoot, 
-      na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  cellsource == "job", 
-                  travel == "walk", 
-                  getlunch == "home")$rightfoot.iqr,
-  
-  IQR(dplyr::filter(dat, 
-                    cellsource == "parent", 
-                    travel == "other", 
-                    getlunch == "tuckshop")$rightfoot, 
-      na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  cellsource == "parent", 
-                  travel == "other", 
-                  getlunch == "tuckshop")$rightfoot.iqr,
-  
-  IQR(dplyr::filter(dat, 
-                    is.na(cellsource), 
-                    travel == "motor", 
-                    is.na(getlunch))$rightfoot, 
-      na.rm = TRUE) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  is.na(cellsource), 
-                  travel == "motor", 
-                  is.na(getlunch))$rightfoot.iqr
-))
 
-# COUNT CHECK
-all(c(
-  length(dplyr::filter(dat, 
-                  cellsource == "job", 
-                  travel == "walk", 
-                  getlunch == "home")$rightfoot) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  cellsource == "job", 
-                  travel == "walk", 
-                  getlunch == "home")$count,
-  
-  length(dplyr::filter(dat, 
-                  cellsource == "parent", 
-                  travel == "other", 
-                  getlunch == "tuckshop")$rightfoot) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  cellsource == "parent", 
-                  travel == "other", 
-                  getlunch == "tuckshop")$count,
-  
-  length(dplyr::filter(dat, 
-                  is.na(cellsource), 
-                  travel == "motor", 
-                  is.na(getlunch))$rightfoot) ==  
-    dplyr::filter(aggregated.3CATS, 
-                  is.na(cellsource), 
-                  travel == "motor", 
-                  is.na(getlunch))$count
-))
+test_that("Spot check for the IQR values", {
+  expect_true(IQR(dplyr::filter(dat, 
+                                cellsource == "job", 
+                                travel == "walk", 
+                                getlunch == "none")$rightfoot, 
+                  na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              cellsource == "job", 
+                              travel == "walk", 
+                              getlunch == "none")$rightfoot.iqr)
+  expect_true(IQR(dplyr::filter(dat, 
+                                cellsource == "parent", 
+                                travel == "other", 
+                                getlunch == "tuckshop")$cellcost, 
+                  na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              cellsource == "parent", 
+                              travel == "other", 
+                              getlunch == "tuckshop")$cellcost.iqr)
+  expect_true(IQR(dplyr::filter(dat, 
+                                is.na(cellsource), 
+                                travel == "motor", 
+                                getlunch == "home")$age, 
+                  na.rm = TRUE) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              is.na(cellsource), 
+                              travel == "motor", 
+                              getlunch == "home")$age.iqr)
+})
 
+
+test_that("Spot check for the total count values", {
+  expect_true(length(dplyr::filter(dat, 
+                                   cellsource == "job", 
+                                   travel == "walk", 
+                                   getlunch == "none")$rightfoot) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              cellsource == "job", 
+                              travel == "walk", 
+                              getlunch == "none")$count)
+  expect_true(length(dplyr::filter(dat, 
+                                   cellsource == "parent", 
+                                   travel == "other", 
+                                   getlunch == "tuckshop")$cellcost) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              cellsource == "parent", 
+                              travel == "other", 
+                              getlunch == "tuckshop")$count)
+  expect_true(length(dplyr::filter(dat, 
+                                   is.na(cellsource), 
+                                   travel == "motor", 
+                                   getlunch == "home")$age) ==  
+                dplyr::filter(aggregated.3CATS, 
+                              is.na(cellsource), 
+                              travel == "motor", 
+                              getlunch == "home")$count)
+})
+
+test_that("Spot check for the missing count values", {
+  expect_true(sum(is.na(dplyr::filter(dat, 
+                                      cellsource == "job", 
+                                      travel == "walk", 
+                                      getlunch == "none")$rightfoot)) ==
+                    dplyr::filter(aggregated.3CATS, 
+                                  cellsource == "job", 
+                                  travel == "walk", 
+                                  getlunch == "none")$rightfoot.missing)
+  expect_true(sum(is.na(dplyr::filter(dat, 
+                                      cellsource == "parent", 
+                                      travel == "other", 
+                                      getlunch == "tuckshop")$cellcost)) ==
+                dplyr::filter(aggregated.3CATS, 
+                              cellsource == "parent", 
+                              travel == "other", 
+                              getlunch == "tuckshop")$cellcost.missing)
+  expect_true(sum(is.na(dplyr::filter(dat, 
+                                      is.na(cellsource), 
+                                      travel == "motor", 
+                                      getlunch == "home")$age)) ==
+                dplyr::filter(aggregated.3CATS, 
+                              is.na(cellsource), 
+                              travel == "motor", 
+                              getlunch == "home")$age.missing)
+})
 ###---------------------------------------------------------
 
 
@@ -650,42 +567,21 @@ stackVars = function(.data, .vars,
 }
 
 # 1 VAR
-#stacked.1VARS <- dat %>% 
-#  tidyr::gather(key = stack.variable, value = stack.value, cellsource)
 stacked.1VARS = stackVars(dat, c("cellsource"))
 formatR::tidy_source(text = code(stacked.1VARS), width.cutoff = 50) 
-head(stacked.1VARS)
-
 
 # 2 VAR
-#stacked.2VARS <- dat %>% 
-#  tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel)
 stacked.2VARS = stackVars(dat, c("cellsource", "travel"))
 formatR::tidy_source(text = code(stacked.2VARS), width.cutoff = 50) 
-head(stacked.2VARS)
-
 
 # 3 VAR
-#stacked.3VARS <- dat %>% 
-#  tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel, getlunch)
 stacked.3VARS = stackVars(dat, c("cellsource", "travel", "getlunch"))
 formatR::tidy_source(text = code(stacked.3VARS), width.cutoff = 50) 
-head(stacked.3VARS)
-
 
 # 4 VAR
-#stacked.4VARS <- dat %>% 
-#  tidyr::gather(key = stack.variable, value = stack.value, cellsource, travel, getlunch, gender)
 stacked.4VARS = stackVars(dat, c("cellsource", "travel", "getlunch", "gender"))
 formatR::tidy_source(text = code(stacked.4VARS), width.cutoff = 50) 
-head(stacked.4VARS)
 
-
-# TEST CORRECT NUMBER OF ROWS
-all(c(nrow(stacked.1VARS) == 1 * nrow(dat), 
-      nrow(stacked.2VARS) == 2 * nrow(dat), 
-      nrow(stacked.3VARS) == 3 * nrow(dat), 
-      nrow(stacked.4VARS) == 4 * nrow(dat)))
 
 # TEST CORRECT NUMBER OF ROWS PER STACKED VARIABLE
 all(c(table(stacked.1VARS$stack.variable) == nrow(dat),
@@ -693,13 +589,28 @@ all(c(table(stacked.1VARS$stack.variable) == nrow(dat),
       table(stacked.3VARS$stack.variable) == nrow(dat),
       table(stacked.4VARS$stack.variable) == nrow(dat)))
 
+
+# TEST_THAT'S
+test_that("Result is the number of rows is correct", {
+  expect_equal(nrow(stacked.1VARS), 1 * nrow(dat))
+  expect_equal(nrow(stacked.2VARS), 2 * nrow(dat))
+  expect_equal(nrow(stacked.3VARS), 3 * nrow(dat))
+  expect_equal(nrow(stacked.4VARS), 4 * nrow(dat))
+})
+
+test_that("Result is the number of rows per stacked variable is correct", {
+  expect_true(all(table(stacked.1VARS$stack.variable) == nrow(dat)))
+  expect_true(all(table(stacked.2VARS$stack.variable) == nrow(dat)))
+  expect_true(all(table(stacked.3VARS$stack.variable) == nrow(dat)))
+  expect_true(all(table(stacked.4VARS$stack.variable) == nrow(dat)))
+})
+
+
 ###---------------------------------------------------------
 
 
 ###---------------------------------------------------------
 # VARIABLES -> CONVERT TO CATEGORICAL (allow a vector)
-
-# WIP...
 convertToCat <- function(.data, vars){
   mc <- match.call()
   dataname <- mc$.data
@@ -716,12 +627,10 @@ convertToCat <- function(.data, vars){
   exp <- replaceVars(exp, .DATA = dataname)
   
   interpolate(exp)
-
-  
-  # do.call(pasteFormula, c(list(~.Data <= .DATA, ), exp, list(sep = "%>%")))
 }
 
 var.CAT <- convertToCat(dat, c("armspan", "height", "age"))
+
 
 ###---------------------------------------------------------
 

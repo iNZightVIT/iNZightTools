@@ -632,6 +632,40 @@ convertToCat <- function(.data, vars){
 var.CAT <- convertToCat(dat, c("armspan", "height", "age"))
 
 
+# TEST_THAT'S
+test_that("Result is the new categorical variables are factors", {
+  expect_type(levels(var.CAT$armspan.cat),"character")
+  expect_type(levels(var.CAT$height.cat), "character")
+  expect_type(levels(var.CAT$age.cat), "character")
+})
+
+test_that("Result is the factor levels of the new categorical variables are correct", {
+  expect_true(all(var.CAT$armspan.cat %>%
+                    levels() %>%
+                      as.numeric() ==
+                    var.CAT$armspan %>%
+                      unique() %>%
+                        sort()))
+  expect_true(all(var.CAT$height.cat %>%
+                    levels() %>%
+                      as.numeric() ==
+                    var.CAT$height %>%
+                      unique() %>%
+                        sort()))
+  expect_true(all(var.CAT$age.cat %>%
+                    levels() %>%
+                      as.numeric() ==
+                    var.CAT$age %>%
+                      unique() %>%
+                        sort()))
+})
+
+test_that("Result is the original numeric variables are not factors", {
+  expect_null(levels(var.CAT$armspan))
+  expect_null(levels(var.CAT$height))
+  expect_null(levels(var.CAT$age))
+})
+
 ###---------------------------------------------------------
 
 
@@ -656,11 +690,26 @@ reorderLevels <- function(.data, var, new_levels = NULL, freq = FALSE){
 }
 
 
-cat.REORDER.MANUAL <- reorderLevels(dat, "cellsource", c("parent", "pocket", "job", "other"))
-formatR::tidy_source(text = code(cat.REORDER.MANUAL), width.cutoff = 50) 
+cat.REORDER.MANUAL1 <- reorderLevels(dat, "cellsource", c("parent", "pocket", "job", "other"))
+formatR::tidy_source(text = code(cat.REORDER.MANUAL1), width.cutoff = 50) 
 
-cat.REORDER.FREQ <- reorderLevels(dat, "cellsource", freq = TRUE)
-formatR::tidy_source(text = code(cat.REORDER.FREQ), width.cutoff = 50) 
+cat.REORDER.MANUAL2 <- reorderLevels(dat, "travel", c("other", "train", "motor", "bus", "walk", "bike"))
+
+cat.REORDER.FREQ1 <- reorderLevels(dat, "cellsource", freq = TRUE)
+formatR::tidy_source(text = code(cat.REORDER.FREQ1), width.cutoff = 50)
+
+cat.REORDER.FREQ2 <- reorderLevels(dat, "travel", freq = TRUE)
+
+
+# TEST_THAT'S
+test_that("Check that the reordered factor levels are correct", {
+  expect_true(all(levels(cat.REORDER.MANUAL1$cellsource.reord) == 
+                     c("parent", "pocket", "job", "other")))
+  expect_true(all(levels(cat.REORDER.MANUAL2$travel.reord) ==
+                    c("other", "train", "motor", "bus", "walk", "bike")))
+  expect_true(all(diff(table(cat.REORDER.FREQ1$cellsource.reord)) <= 0))
+  expect_true(all(diff(table(cat.REORDER.FREQ2$travel.reord)) <= 0))
+})
 
 ###---------------------------------------------------------
 
@@ -674,13 +723,36 @@ collapseLevels <- function(.data, var, levels){
   
   exp <- ~.DATA %>%
     tibble::add_column(.VARNAME.coll = forcats::fct_collapse(.DATA$.VARNAME, .COLLAPSENAME = .LEVELS), .after = ".VARNAME")
-  exp <- replaceVars(exp, .VARNAME = var, .COLLAPSENAME = str_c(levels, collapse = "_"), .LEVELS = levels)
+  exp <- replaceVars(exp, .VARNAME = var, .COLLAPSENAME = str_c(levels, collapse = "_"), .LEVELS = levels, .DATA = dataname)
   
   interpolate(exp)
 }
 
-cat.COLLAPSE <- collapseLevels(dat, "cellsource", c("job", "parent", "pocket"))
-formatR::tidy_source(text = code(cat.COLLAPSE), width.cutoff = 50) 
+cat.COLLAPSE1 <- collapseLevels(dat, "getlunch", c("dairy", "school", "tuckshop"))
+formatR::tidy_source(text = code(cat.COLLAPSE1), width.cutoff = 50) 
+
+cat.COLLAPSE2 <- collapseLevels(dat, "gender", c("female", "male"))
+
+
+# TEST_THAT'S
+test_that("Result is that the factor levels in the new collpased variable contains the collapsed values", {
+  expect_true("dairy_school_tuckshop" %in% levels(cat.COLLAPSE1$getlunch.coll))
+  expect_true("female_male" %in% levels(cat.COLLAPSE2$gender.coll))
+})
+
+test_that("Result is that the old factors used to be combined are removed", {
+  expect_false("dairy" %in% levels(cat.COLLAPSE1$getlunch.coll))
+  expect_false("school" %in% levels(cat.COLLAPSE1$getlunch.coll))
+  expect_false("tuckshop" %in% levels(cat.COLLAPSE1$getlunch.coll))
+  expect_false("female" %in% levels(cat.COLLAPSE2$gender.coll))
+  expect_false("male" %in% levels(cat.COLLAPSE2$gender.coll))
+})
+
+test_that("Result is that levels not mentioned remain unchanged"{
+  expect_true("friend" %in% levels(cat.COLLAPSE1$getlunch.coll))
+  expect_true("home" %in% levels(cat.COLLAPSE1$getlunch.coll))
+  expect_true("none" %in% levels(cat.COLLAPSE1$getlunch.coll))
+})
 ###---------------------------------------------------------
 
 

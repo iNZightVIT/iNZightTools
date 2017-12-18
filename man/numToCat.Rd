@@ -22,3 +22,4 @@ Convert a numeric variable to Categorical (factor)
 \author{
 Tom Elliott
 }
+

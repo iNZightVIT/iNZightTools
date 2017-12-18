@@ -1,3 +1,20 @@
+# Notes 19/12/17
+
+- move functions to R
+  - move the actual code (delete old code, but keep commented initial declaration)
+  - re-write docs to match (+ returns the code)
+  - remember @export!
+  
+devtools::document()
+?function
+  
+- start moving tests to test/testthat
+
+
+
+
+
+
 # Notes 8/12/17
 
 - remove "NOTE" comments once fixed

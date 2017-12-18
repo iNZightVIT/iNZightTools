@@ -39,8 +39,6 @@ interpolate <- function(code, ..., comment = character(),
 code <- function(data) return(attr(data, "code"))
 
 
-
-
 replaceVars = function(exp, ...){
   toBeSubbed <- list(...)
   exp_str <- as.character(exp)

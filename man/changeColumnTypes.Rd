@@ -18,3 +18,4 @@ a data frame.
 \code{changeColumnTypes} returns a data frame with changed datatypes of columns.
 Returns the same data frame if column types are specified as NULL.
 }
+

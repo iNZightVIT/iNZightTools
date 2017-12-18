@@ -4,16 +4,16 @@ Title: Tools for iNZight
 Version: 1.4-1
 Date: 2017-10-02
 Imports:
-	utils,
-	stats,
-	methods,
-	survey,
-	grDevices,
-	foreign,
-	readr,
-	readxl,
-	magrittr,
-	tibble
+    utils,
+    stats,
+    methods,
+    survey,
+    grDevices,
+    foreign,
+    readr,
+    readxl,
+    magrittr,
+    tibble
 Suggests:
     Acinonyx,
     cairoDevice,
@@ -25,4 +25,4 @@ Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
 Description: Compatibility functions used for multiple packages and
     distributions of iNZight, including Lite.
 License: GPL-3 | file LICENSE
-RoxygenNote: 6.0.1
+RoxygenNote: 5.0.1

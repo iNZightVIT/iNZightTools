@@ -336,6 +336,11 @@ aggregateData = function(.data, .vars, .summaries){
 aggregated.3CATS = aggregateData(dat, c("cellsource", "travel", "getlunch"), c("sd", "mean", "median", "sum", "iqr"))
 formatR::tidy_source(text = code(aggregated.3CATS), width.cutoff = 50) 
 
+# .data %>% dplyr::group_by(cellsource, travel, getlunch) %>% 
+#   dplyr::summarize(count = n(),
+#                    age.iqr = IQR(age, na.rm = TRUE),
+#                    
+
 
 # TEST_THAT'S
 test_that("Spot check for the mean values", {
@@ -689,6 +694,7 @@ reorderLevels <- function(.data, var, new_levels = NULL, freq = FALSE){
   interpolate(exp)
 }
 
+## new_levels -> c(...)
 
 cat.REORDER.MANUAL1 <- reorderLevels(dat, "cellsource", c("parent", "pocket", "job", "other"))
 formatR::tidy_source(text = code(cat.REORDER.MANUAL1), width.cutoff = 50) 
@@ -783,6 +789,15 @@ formatR::tidy_source(text = code(cat.RENAME), width.cutoff = 50)
 # VARIABLES -> CATEOGIRCAL VARIABLES -> COMBINE CATEGORICAL VARIABLES
 
 combineCatVars <- function(.data, vars, sep = "."){
+  if (length(sep) > 1) {
+    warning("only one separator allowed")
+    sep <- sep[1]
+  }
+  if (!all(sapply(sep, function(x) 
+      all(grepl("[.]|_|[a-zA-Z0-9]", strsplit(x, "")[[1]]))))) {
+    warning("You can only use dots (.), underscores (_), or alphanumeric characters for the separator. Using . instead.")
+    sep <- "."
+  }
   mc <- match.call()
   dataname <- mc$.data
   
@@ -797,7 +812,9 @@ combineCatVars <- function(.data, vars, sep = "."){
   interpolate(exp)
 }
 
-cat.COMBINE <- combineCatVars(dat, c("travel", "getlunch", "gender"), ".0.")
+sep = "_AND_"; all(grepl("[.]|_|[a-zA-Z0-9]", strsplit(sep[1], "")[[1]]))
+
+cat.COMBINE <- combineCatVars(dat, c("travel", "getlunch", "gender"), sep = c("_", "."))
 formatR::tidy_source(text = code(cat.COMBINE), width.cutoff = 50) 
 
 ###---------------------------------------------------------
@@ -822,14 +839,23 @@ transformVar <- function(.data, var ,transformation){
   mc <- match.call()
   dataname <- mc$.data
   
+  funexp <- switch(transformation,
+         reciprocal = "1 / .DATA$.VARNAME",
+         square = ".DATA$.VARNAME^2",
+         ".FUNNAME(.DATA$.VARNAME)"
+         )
+  ## run replaceVars (or just use sprintf() above...) first
+  
+  
   exp <- ~.DATA %>%
-    tibble::add_column(.VARNAME..F = lapply(.DATA$.VARNAME, .F), .after = ".VARNAME")
-  exp <- replaceVars(exp, .DATA = dataname, .VARNAME = var, .F = transformation)
+    tibble::add_column(.VARNAME..FUNNAME = .FUNEXP, .after = ".VARNAME")
+  #tibble::add_column(.VARNAME..F = .F(.DATA$.VARNAME), .after = ".VARNAME")
+  exp <- replaceVars(exp, .FUNEXP = funexp, .DATA = dataname, .VARNAME = var, .FUNNAME = transformation)
   
   interpolate(exp)
 }
 
-num.TRANSFORM <- transformVar(dat, "armspan", "exp")
+num.TRANSFORM <- transformVar(dat, "armspan", "reciprocal")
 formatR::tidy_source(text = code(num.TRANSFORM), width.cutoff = 50) 
 ###---------------------------------------------------------
 
@@ -971,7 +997,7 @@ createNewVar <- function(.data, new_var = "new.variable", R_exp){
   
   exp <- ~.DATA %>%
     dplyr::mutate(.VARNAME = .EVAL)
-  exp <- replaceVars(exp, .VARNAME = new_var, .EVAL = R_exp)#, DATA = dataname)
+  exp <- replaceVars(exp, .VARNAME = new_var, .EVAL = R_exp, .DATA = dataname)
   
   interpolate(exp)
   
@@ -992,8 +1018,12 @@ missingToCat <- function(.data, vars){
   
   formulae <- list(~.DATA)
   
+  numCols = sapply(.data[, vars], is.numeric)
+  
   for (i in 1:length(vars)){
-    if(is.numeric(dplyr::select(.data, vars[i])[,1])){
+    #if(is.numeric(dplyr::select(.data, vars[i])[,1])){
+    if (numCols[i]) {
+      ## it's a number
       formula <- ~tibble::add_column(.VARNAME_miss = factor(ifelse(is.na(.DATA$.VARNAME),"missing", "observed")), .after = ".VARNAME")  
     }
     else{

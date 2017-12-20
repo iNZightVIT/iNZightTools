@@ -2,7 +2,7 @@ library(magrittr)
 #library(dplyr)
 #library(stringr)
 
-setwd("D:/OneDrive/University of Auckland/Summer Research Scholarship/iNZight work")
+setwd("C:/Users/Owen/Documents/iNZightVIT")
 
 stats20x.df <- read.csv("stats20x.csv", header = TRUE,  
                         na.strings = c("NULL","NA", "N/A","#N/A","","<NA>"))

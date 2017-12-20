@@ -69,26 +69,21 @@ filterLevels <- function(.data, var, levels) {
   mc <- match.call()
   dataname <- mc$.data
 
-  exp <- 
-    ~.DATA %>% 
-      dplyr::filter(.VARNAME %in% .levels) %>% 
-      dplyr::mutate(.VARNAME = factor(.VARNAME, levels = .levels))
-  
-  exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname)
+  exp <- ~.DATA %>% 
+      dplyr::filter(.VARNAME %in% .LEVELS) %>% 
+        dplyr::mutate(.VARNAME = factor(.VARNAME, levels = .LEVELS))
+  exp <- replaceVars(exp, .VARNAME = var, .LEVELS = as.list(levels), .DATA = dataname)
 
-  interpolate(exp, .levels = levels)
+  interpolate(exp)
 }
 
+
 # 1 LEVEL
-filtered.1LVL <- dat %>% 
-  dplyr::filter(cellsource %in% c("job")) %>% 
-    dplyr::mutate(cellsource = factor(cellsource, levels = c("job")))
+filtered.1LVL <- filterLevels(dat, "cellsource", c("job"))
 formatR::tidy_source(text = code(filtered.1LVL), width.cutoff = 50) 
 
 # 3 LEVELS
-filtered.3LVL <- dat %>% 
-  dplyr::filter(getlunch %in% c("home", "tuckshop")) %>% 
-    dplyr::mutate(getlunch = factor(getlunch, levels = c("home", "tuckshop", "friend")))
+filtered.3LVL <- filterLevels(dat, "getlunch", c("home", "tuckshop", "friend"))
 formatR::tidy_source(text = code(filtered.3LVL), width.cutoff = 50) 
 
 # TEST_THAT'S

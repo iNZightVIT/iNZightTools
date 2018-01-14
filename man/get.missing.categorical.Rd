@@ -2,24 +2,37 @@
 % Please edit documentation in R/missing_categorical.R
 \name{get.missing.categorical}
 \alias{get.missing.categorical}
-\title{Converts specified columns into binary factor variables 
-which get added to the input data.frame.}
+\title{Convert missing values to categorical variables}
 \usage{
-get.missing.categorical(dafr, columns)
+get.missing.categorical(.data, vars)
 }
 \arguments{
-\item{dafr}{The input data.frame.}
+\item{.data}{a dataframe with the columns to convert 
+its missing values into categorical}
 
-\item{columns}{The column names or indexes to be converted.}
+\item{vars}{a character vector of the variables in \code{.data} 
+for conversion of missing values to categorical}
 }
 \value{
-A data.frame with the binary columns added.
+original dataframe containing new columns of the converted variables 
+for the missing values
+with tidyverse code attached
 }
 \description{
-Converts specified columns into binary factor variables 
-which get added to the input data.frame.
+Turn <NA>'s into a "missing" character; 
+hence numeric variables will be converted to categorical variables
+with any numeric values will be converted to "observed",
+and returns the result along with tidyverse code used to generate it.
+}
+\examples{
+converted <- get.missing.categorical(iris, vars = c("Species", "Sepal.Length"))
+code(converted)
+head(converted)
+
+}
+\seealso{
+\code{\link{code}}
 }
 \author{
-Christoph Knapp
+Owen Jin
 }
-

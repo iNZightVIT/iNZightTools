@@ -2,28 +2,34 @@
 % Please edit documentation in R/reorder_levels.R
 \name{reorder.levels}
 \alias{reorder.levels}
-\title{This function changes the order of levels in the data.}
+\title{Reorder a categorical}
 \usage{
-\method{reorder}{levels}(dafr, column, levels.new)
+\method{reorder}{levels}(.data, var, new_levels = NULL, freq = FALSE)
 }
 \arguments{
-\item{dafr}{The data to be changed}
+\item{.data}{a dataframe to reorder}
 
-\item{column}{the factor column where the order of 
-levels should be changed.}
+\item{var}{a categorical variable to reorder}
 
-\item{levels.new}{A vector of all levels in the column 
-specified by column in the order they should be 
-ordered.}
+\item{new_levels}{a character vector of the new factor order. Only specify if \code{freq} = FALSE}
+
+\item{freq}{logical, If \code{freq} = \code{FALSE} (default), will manually reorder using \code{new_levels}. If \code{freq} = \code{TRUE}, will reorder based of descending frequency of the factor levels}
 }
 \value{
-A data.frame with the levels of one column 
-reordered
+original dataframe containing a new column of the reordered categorical variable with tidyverse code attached
 }
 \description{
-This function changes the order of levels in the data.
+Reorder the factors of a categorical variable either manually or frequeny
+}
+\examples{
+reordered <- reorder.levels(iris, vars = c("Species"), frew = TRUE)
+code(reordered)
+head(reordered)
+
+}
+\seealso{
+\code{\link{code}}
 }
 \author{
-Christoph Knapp
+Owen Jin
 }
-

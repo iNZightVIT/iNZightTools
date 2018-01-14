@@ -2,9 +2,9 @@
 % Please edit documentation in R/write_metadata.R
 \name{extractFromFrame}
 \alias{extractFromFrame}
-\alias{extractFromFrame.iNZclass.character}
 \alias{extractFromFrame.iNZclass.factor}
 \alias{extractFromFrame.iNZclass.numeric}
+\alias{extractFromFrame.iNZclass.character}
 \title{Extracts more information from the dataframe (obj).}
 \usage{
 extractFromFrame(obj, metadata.list)
@@ -26,4 +26,3 @@ A list.
 \description{
 \code{extractFromFrame} Returns a list.
 }
-

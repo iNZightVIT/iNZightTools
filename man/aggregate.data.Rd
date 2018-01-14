@@ -2,32 +2,35 @@
 % Please edit documentation in R/aggregate_data.R
 \name{aggregate.data}
 \alias{aggregate.data}
-\title{aggregates the data over selected factor columns}
+\title{Aggregate data by categorical variables}
 \usage{
-\method{aggregate}{data}(aggregate.over, methods = c("mean", "median", "sum",
-  "sd", "IQR", "count"), dafr)
+\method{aggregate}{data}(.data, vars, summaries)
 }
 \arguments{
-\item{aggregate.over}{column names of factor variables 
-in data to aggregate over}
+\item{.data}{a dataframe to aggregate}
 
-\item{methods}{A set of methods which can be used to 
-aggregate.}
+\item{vars}{a character vector of categorical variables in \code{.data} 
+to group by}
 
-\item{dafr}{A data.frame containing at least on factor 
-column and one numeric column.}
+\item{summaries}{summaries to generate for the groups generated in \code{vars}. Valid summaries are "iqr" , mean", "median", "sd", "sum"}
 }
 \value{
-A data.frame with the results of the aggregation.
+aggregated dataframe containing the summaries with tidyverse code attached
 }
 \description{
-The dimensions of the df data frame will change so that 
-all possible combinations of factors selected will be 
-the number of rows and the number of all selected factor 
-columns + a column for all methods selected will be the 
-number of columns in the return data.frame.
+Aggregate a dataframe into summaries of all numeric variables by grouping
+them by specified categorical variables
+and returns the result along with tidyverse code used to generate it.
+}
+\examples{
+aggregated <- aggregate.data(iris, vars = c("Species"), summaries =  ("mean", "sd", "iqr"))
+code(aggregated)
+head(aggregated)
+
+}
+\seealso{
+\code{\link{code}}
 }
 \author{
-Christoph Knapp
+Owen Jin
 }
-

@@ -17,4 +17,3 @@ A logical scalar
 the attributes of the dataframe sent as an argument.
 Returns TRUE if it was read as a preview.
 }
-

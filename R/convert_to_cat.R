@@ -1,0 +1,37 @@
+#' Convert numeric variables to categorical 
+#' 
+#' Convert specified numeric variables into factors
+#' 
+#' @param .data a dataframe with the categorical column to convert
+#' 
+#' @param vars  a character vector of numeric column names to convert
+#' 
+#' @return original dataframe containing a new column of the converted numeric variable with tidyverse code attached
+#' @seealso \code{\link{code}} 
+#' 
+#' @examples
+#' converted <- convertToCat(iris, vars = c("Species"))
+#' code(converted)
+#' head(converted)
+#' 
+#' @author Owen Jin
+#' @export
+#' 
+
+convertToCat <- function(.data, vars){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  formulae = list(~.DATA)
+  
+  for (i in 1:length(vars)){
+    formula <- ~tibble::add_column(.VARNAME.cat = factor(.DATA$.VARNAME), .after = ".VARNAME")
+    formula <- replaceVars(formula, .VARNAME = vars[i])
+    formulae[[i+1]] <- formula
+  }
+  
+  exp <- pasteFormulae(formulae)
+  exp <- replaceVars(exp, .DATA = dataname)
+  
+  interpolate(exp)
+}

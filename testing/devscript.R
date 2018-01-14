@@ -163,18 +163,18 @@ test_that("Result is that only those that meet the logical condition remain", {
 # DATASET -> FILTER DATASET -> ROW NUMBER
 ###---------------------------------------------------------
 
-filterRow <- function(.data, rows){
+filterRows <- function(.data, rows){
   mc <- match.call()
   dataname <- mc$.data
   
   exp <- ~ .DATA %>% 
     dplyr::mutate(row.num = 1:nrow(.DATA)) %>% # this line is to show the row slicing was correct
-      dplyr::slice(-.rows)
-  exp <- replaceVars(exp, .DATA = dataname)
-  interpolate(exp, .rows = rows)
+      dplyr::slice(-.ROWS)
+  exp <- replaceVars(exp, .DATA = dataname, .ROWS = rows)
+  interpolate(exp)
 }
   
-filtered.ROW <- filterRow(dat, c(1,2,3,4,6,7,8,9))
+filtered.ROW <- filterRows(dat, c(1,2,3,4,6,7,8,9))
 formatR::tidy_source(text = code(filtered.ROW), width.cutoff = 50) 
 
 
@@ -199,12 +199,12 @@ filterRandom <- function(.data, sample_size, n){
   
   exp <- ~ .DATA %>% 
     dplyr::mutate(row.num = 1:nrow(.DATA)) %>% # this line is to show that that the sampling was correct
-      dplyr::sample_n(.sample_size * .n, replace = FALSE) %>%
-        dplyr::mutate(Sample.Number = rep(1:.n, each=.sample_size))
-  
-  exp <- replaceVars(exp, .DATA = dataname)
-  
-  interpolate(exp, .sample_size = sample_size, .n = n)
+    dplyr::sample_n(.SAMPLE_SIZE * .N, replace = FALSE) %>%
+    dplyr::mutate(Sample.Number = rep(1:.N, each=.SAMPLE_SIZE))
+                  
+                  exp <- replaceVars(exp, .DATA = dataname, .SAMPLE_SIZE = sample_size, .N = n)
+                  
+                  interpolate(exp)
 }
 
 sample_size = 5
@@ -279,7 +279,7 @@ head(sorted.4VARS, n = 15)
 # DATASET -> AGGREGATE DATA
 ###---------------------------------------------------------
 
-aggregateData = function(.data, .vars, .summaries){
+aggregateData = function(.data, vars, summaries){
   
   # function for counting the missing values
   countMissing <- function(var, na.rm = FALSE){
@@ -289,37 +289,37 @@ aggregateData = function(.data, .vars, .summaries){
   mc <- match.call()
   dataname <- mc$.data
   
-  summary_names <- .summaries %>% 
+  summary_names <- summaries %>% 
     sort() %>%
-      c("missing")
-
-  summaries_functionCall <- ifelse(.summaries == "iqr", "IQR", .summaries) %>%
+    c("missing")
+  
+  summaries_functionCall <- ifelse(summaries == "iqr", "IQR", summaries) %>%
     sort() %>%
-      c("countMissing")
+    c("countMissing")
   
   numeric_vars <- colnames(dplyr::select_if(.data, is.numeric)) %>%
     sort()
   
   # paste together the categorical variables for the group_by() statement
-  groupby_str <- str_c(.vars, collapse = ", ")
+  groupby_str <- str_c(vars, collapse = ", ")
   # paste together all the numeric variables and what summaries are requested for the summarize
   summarize_str <- str_c(rep(sort(numeric_vars), 
+                             each = length(summary_names)), 
+                         ".", 
+                         rep(summary_names, 
+                             length(numeric_vars)), 
+                         " = ",
+                         rep(summaries_functionCall, 
+                             length(numeric_vars)), 
+                         "(", rep(sort(numeric_vars), 
                                   each = length(summary_names)), 
-                                  ".", 
-                                  rep(summary_names, 
-                                      length(numeric_vars)), 
-                                  " = ",
-                                  rep(summaries_functionCall, 
-                                      length(numeric_vars)), 
-                                  "(", rep(sort(numeric_vars), 
-                                           each = length(summary_names)), 
-                                  ", na.rm = TRUE)", collapse = ", ")
+                         ", na.rm = TRUE)", collapse = ", ")
   
   summarize_str <- str_c("count = n(), ", summarize_str)
   
   exp <- ~.data %>%
     dplyr::group_by(.EVAL_GROUPBY) %>%
-      dplyr::summarize(.EVAL_SUMMARIZE)
+    dplyr::summarize(.EVAL_SUMMARIZE)
   
   exp <- replaceVars(exp, .EVAL_GROUPBY = groupby_str, .EVAL_SUMMARIZE = summarize_str)
   
@@ -550,20 +550,20 @@ test_that("Spot check for the missing count values", {
 # DATA OPTIONS -> STACK VARIABLES
 ###---------------------------------------------------------
 
-stackVars = function(.data, .vars, 
-    .key = "stack.variable", .value = "stack.value"){
+stackVars = function(.data, vars, 
+                     key = "stack.variable", value = "stack.value"){
   
   mc <- match.call()
   dataname <- mc$.data
   
   # paste together the variables to be stacked into a string
-  to_be_stacked = str_c(.vars, collapse = ", ")
+  to_be_stacked = str_c(vars, collapse = ", ")
   
   exp <- ~.DATA %>% 
     tidyr::gather(key = .KEY, value = .VALUE, .VARNAMES)
   exp <- replaceVars(exp, .VARNAMES = to_be_stacked, .DATA = dataname)
   
-  interpolate(exp, .KEY = .key, .VALUE = .value)  
+  interpolate(exp, .KEY = key, .VALUE = value)  
 }
 
 # 1 VAR

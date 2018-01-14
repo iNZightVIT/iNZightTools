@@ -35,4 +35,3 @@ the nested list structure of the plot output.
 \author{
 Christoph Knapp
 }
-

@@ -1,54 +1,53 @@
-#' Converts specified columns into binary factor variables 
-#' which get added to the input data.frame.
+#' Convert missing values to categorical variables
 #' 
-#' @param dafr The input data.frame.
-#' @param columns The column names or indexes to be converted.
+#' Turn <NA>'s into a "missing" character; 
+#' hence numeric variables will be converted to categorical variables
+#' with any numeric values will be converted to "observed",
+#' and returns the result along with tidyverse code used to generate it.
 #' 
-#' @return A data.frame with the binary columns added.
+#' @param .data a dataframe with the columns to convert 
+#' its missing values into categorical
 #' 
-#' @author Christoph Knapp  
-get.missing.categorical = function(dafr,columns){
-  temp = as.data.frame(dafr[,columns])
-  colnames(temp) = columns
-  new.dafr = data.frame(do.call(cbind,lapply(1:length(columns),
-                                  function(index,d,c){
-                                    te = rep("observed",nrow(d))
-                                    te[is.na(d[,index])] = "missing"
-                                    te
-                                  },temp,columns)))
-  colnames(new.dafr) = paste("missing",columns,sep=".")
-  cbind(dafr,new.dafr)
-}
-
-#' Takes a data.frame as generated from the 
-#' \code{get.missing.categorical} function and converts it 
-#' into a data.frame of all unique rows and there counts in 
-#' the original data.
+#' @param vars  a character vector of the variables in \code{.data} 
+#' for conversion of missing values to categorical
 #' 
-#' @param dafr A data.frmae to convert
+#' @return original dataframe containing new columns of the converted variables 
+#' for the missing values
+#' with tidyverse code attached
+#' @seealso \code{\link{code}} 
 #' 
-#' @return A data.frame with all unique rows from dafr and 
-#' their counts in the last column.
+#' @examples
+#' converted <- get.missing.categorical(iris, vars = c("Species", "Sepal.Length"))
+#' code(converted)
+#' head(converted)
 #' 
-#' @author Christoph Knapp
-get.combinations = function(dafr){
-  ret = data.frame(matrix(ncol=ncol(dafr)+1,nrow=0))
-  for(i in 1:nrow(dafr)){
-    if(i==1){
-      ret = rbind(ret,cbind(as.data.frame(as.matrix(dafr[i,],nrow=1)),1))
-    }else{
-      is.counted = rep(F,nrow(ret))
-      for(j in 1:nrow(ret)){
-        if(identical(as.character(unlist(ret[j,1:ncol(dafr)])),as.character(unlist(dafr[i,])))){
-          ret[j,ncol(ret)] = ret[j,ncol(ret)]+1
-          is.counted[j] = T
-        }
-      }
-      if(all(!is.counted)){
-        ret = rbind(ret,cbind(as.data.frame(as.matrix(dafr[i,],nrow=1)),1))
-      }
+#' @author Owen Jin
+#' @export
+#' 
+# get.missing.categorical = function(dafr,columns){
+get.missing.categorical <- function(.data, vars){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  formulae <- list(~.DATA)
+  
+  numCols = sapply(.data[, vars], is.numeric)
+  
+  for (i in 1:length(vars)){
+    #if(is.numeric(dplyr::select(.data, vars[i])[,1])){
+    if (numCols[i]) {
+      ## it's a number
+      formula <- ~tibble::add_column(.VARNAME_miss = factor(ifelse(is.na(.DATA$.VARNAME),"missing", "observed")), .after = ".VARNAME")  
     }
+    else{
+      formula <- ~ tibble::add_column(.VARNAME_miss = forcats::fct_explicit_na(.DATA$.VARNAME, na_level = "missing"), .after = ".VARNAME")
+    }
+    formula <- replaceVars(formula, .VARNAME = vars[i])
+    formulae[[i+1]] = formula
   }
-  colnames(ret) = c(colnames(dafr),"counts")
-  ret[order(ret$count,decreasing=T),]
+  
+  exp <- pasteFormulae(formulae)
+  exp <- replaceVars(exp, .DATA = dataname)
+  
+  interpolate(exp)
 }

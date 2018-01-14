@@ -1,17 +1,40 @@
-#' This function changes the order of levels in the data.
+#' Reorder a categorical
 #' 
-#' @param dafr The data to be changed
-#' @param column the factor column where the order of 
-#' levels should be changed.
-#' @param levels.new A vector of all levels in the column 
-#' specified by column in the order they should be 
-#' ordered.
+#' Reorder the factors of a categorical variable either manually or frequeny
 #' 
-#' @return A data.frame with the levels of one column 
-#' reordered
+#' @param .data a dataframe to reorder
 #' 
-#' @author Christoph Knapp
-reorder.levels = function(dafr,column,levels.new){
-  dafr[,column] = factor(dafr[,column],levels=levels.new)
-  dafr
+#' @param var a categorical variable to reorder
+#' 
+#' @param  new_levels a character vector of the new factor order. Only specify if \code{freq} = FALSE
+#' 
+#' @param freq logical, If \code{freq} = \code{FALSE} (default), will manually reorder using \code{new_levels}. If \code{freq} = \code{TRUE}, will reorder based of descending frequency of the factor levels
+#' 
+#' @return original dataframe containing a new column of the reordered categorical variable with tidyverse code attached
+#' @seealso \code{\link{code}} 
+#' 
+#' @examples
+#' reordered <- reorder.levels(iris, vars = c("Species"), frew = TRUE)
+#' code(reordered)
+#' head(reordered)
+#' 
+#' @author Owen Jin
+#' @export
+#' 
+#reorder.levels = function(dafr,column,levels.new){
+reorder.levels <- function(.data, var, new_levels = NULL, freq = FALSE){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  if(freq){
+    exp <- ~.DATA %>%
+      tibble::add_column(.VARNAME.reord = forcats::fct_infreq(.DATA$.VARNAME), .after = ".VARNAME") 
+  }
+  else{
+    exp <- ~.DATA %>%
+      tibble::add_column(.VARNAME.reord = factor(.DATA$.VARNAME, levels = new_levels), .after = ".VARNAME") 
+  }
+  exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname)
+  
+  interpolate(exp)
 }

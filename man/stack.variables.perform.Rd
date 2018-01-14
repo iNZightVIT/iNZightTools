@@ -2,21 +2,36 @@
 % Please edit documentation in R/stack_variables.R
 \name{stack.variables.perform}
 \alias{stack.variables.perform}
-\title{Stacks the selected columns onto the data.}
+\title{Stack variables}
 \usage{
-\method{stack}{variables.perform}(columns, dafr)
+\method{stack}{variables.perform}(.data, vars, key = "stack.variable",
+  value = "stack.value")
 }
 \arguments{
-\item{columns}{The columns to stack.}
+\item{.data}{a dataframe to stack}
 
-\item{dafr}{a dataframe the stacking is performed on.}
+\item{vars}{a character vector of variables to stack}
+
+\item{key}{name of the new column for the stacked variables. "stack.variable" by default}
+
+\item{value}{name of the new column for the stacked values of the stacked. "stack.value" by default}
+}
+\value{
+stacked dataframe with tidyverse code attached
 }
 \description{
-Multiplies the data.set by adding rows to the data for 
-every selected column. The selected columns are stacked
-onto each other and added as an additional column
+Collpase columns by converting from a long format to a tall format
+and returns the result along with tidyverse code used to generate it.
+}
+\examples{
+aggregated <- stack.variables.perform(iris, vars = c("Species", "Sepal.Width"), key = "Variable", value = "Value")
+code(sorted)
+head(sorted)
+
+}
+\seealso{
+\code{\link{code}}
 }
 \author{
-Christoph Knapp
+Owen Jin
 }
-

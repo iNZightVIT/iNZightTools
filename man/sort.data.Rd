@@ -28,10 +28,9 @@ code(sorted)
 head(sorted)
 
 }
-\author{
-Owen Jin
-}
 \seealso{
 \code{\link{code}}
 }
-
+\author{
+Owen Jin
+}

@@ -2,24 +2,32 @@
 % Please edit documentation in R/collapse_levels.R
 \name{get.collapsed.column}
 \alias{get.collapsed.column}
-\title{Collapses selected levels in factor vector}
+\title{Collapse data by values of a categorical variable}
 \usage{
-get.collapsed.column(column, to.collapse)
+get.collapsed.column(.data, var, levels)
 }
 \arguments{
-\item{column}{the vector where levels should be 
-collapsed into one.}
+\item{.data}{a dataframe to collapse}
 
-\item{to.collapse}{Vector of levels to collapse.}
+\item{var}{a character of the name of the catgorical variable to collapse}
+
+\item{levels}{a character vector of the levels to be collapsed}
+}
+\value{
+the original dataframe containing a new column of the collapsed variable with tidyverse code attached
 }
 \description{
-Collapses selected levels in factor vector
+Collapse several values in a categorical variable into one level
 }
-\note{
-Levels in to.collapse which are not in column 
-will be ignored.
+\examples{
+collapsed <- get.collapsed.column(iris, vars = "Species", levels = ("versicolor", "virginica")
+code(collapsed)
+head(collapsed)
+
+}
+\seealso{
+\code{\link{code}}
 }
 \author{
-Christoph Knapp
+Owen Jin
 }
-

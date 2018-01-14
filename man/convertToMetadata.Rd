@@ -25,4 +25,3 @@ A string - metadata.
 \description{
 \code{convertToMetadata} Returns the metadata for the object passed.
 }
-

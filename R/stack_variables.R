@@ -1,19 +1,43 @@
-#' Stacks the selected columns onto the data.
+#' Stack variables
+#' 
+#' Collpase columns by converting from a long format to a tall format
+#' and returns the result along with tidyverse code used to generate it.
+#' 
+#' @param .data a dataframe to stack
+#' 
+#' @param vars  a character vector of variables to stack
 #'
-#' Multiplies the data.set by adding rows to the data for 
-#' every selected column. The selected columns are stacked
-#' onto each other and added as an additional column 
+#' @param key name of the new column for the stacked variables. "stack.variable" by default
 #' 
-#' @param columns The columns to stack.
-#' @param dafr a dataframe the stacking is performed on.
+#' @param value name of the new column for the stacked values of the stacked. "stack.value" by default
 #' 
-#' @author Christoph Knapp
-stack.variables.perform = function(columns,dafr){
-  stack = unlist(lapply(1:length(columns),function(index,d,c){
-    d[,which(colnames(d)%in%c[index])]
-  },dafr,columns))
-  colstack = unlist(lapply(1:length(columns),function(index,d,c){
-    rep(c[index],nrow(d))
-  },dafr,columns))
-  cbind(dafr,stack.columns=colstack,stack.variables=stack)
+#' @return stacked dataframe with tidyverse code attached
+#' @seealso \code{\link{code}} 
+#' 
+#' @examples
+#' aggregated <- stack.variables.perform(iris, vars = c("Species", "Sepal.Width"), key = "Variable", value = "Value")
+#' code(sorted)
+#' head(sorted)
+#' 
+#' @author Owen Jin
+#' @export
+#' 
+#' 
+#' 
+#stack.variables.perform = function(columns,dafr){
+
+stack.variables.perform = function(.data, vars, 
+                     key = "stack.variable", value = "stack.value"){
+  
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  # paste together the variables to be stacked into a string
+  to_be_stacked = str_c(vars, collapse = ", ")
+  
+  exp <- ~.DATA %>% 
+    tidyr::gather(key = .KEY, value = .VALUE, .VARNAMES)
+  exp <- replaceVars(exp, .VARNAMES = to_be_stacked, .DATA = dataname)
+  
+  interpolate(exp, .KEY = key, .VALUE = value)  
 }

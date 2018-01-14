@@ -1,19 +1,33 @@
-#' Collapses selected levels in factor vector
+#' Collapse data by values of a categorical variable
 #' 
-#' @param column the vector where levels should be 
-#' collapsed into one.
-#' @param to.collapse Vector of levels to collapse.
+#' Collapse several values in a categorical variable into one level
 #' 
-#' @note Levels in to.collapse which are not in column 
-#' will be ignored.
+#' @param .data a dataframe to collapse
 #' 
-#' @author Christoph Knapp
-get.collapsed.column = function(column,to.collapse){
-  column = as.character(column)
-  new.level = paste(to.collapse,collapse=".")
-  indices = which(column%in%to.collapse)
-  if(length(indices)>0){
-    column[indices] = new.level
-  }
-  as.factor(column)
+#' @param var  a character of the name of the catgorical variable to collapse
+#'
+#' @param levels  a character vector of the levels to be collapsed
+#' 
+#' @return the original dataframe containing a new column of the collapsed variable with tidyverse code attached
+#' @seealso \code{\link{code}} 
+#' 
+#' @examples
+#' collapsed <- get.collapsed.column(iris, vars = "Species", levels = ("versicolor", "virginica")
+#' code(collapsed)
+#' head(collapsed)
+#' 
+#' @author Owen Jin
+#' @export
+#' 
+#' 
+#get.collapsed.column = function(column,to.collapse){
+get.collapsed.column <- function(.data, var, levels){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  exp <- ~.DATA %>%
+    tibble::add_column(.VARNAME.coll = forcats::fct_collapse(.DATA$.VARNAME, .COLLAPSENAME = .LEVELS), .after = ".VARNAME")
+  exp <- replaceVars(exp, .VARNAME = var, .COLLAPSENAME = str_c(levels, collapse = "_"), .LEVELS = levels, .DATA = dataname)
+  
+  interpolate(exp)
 }

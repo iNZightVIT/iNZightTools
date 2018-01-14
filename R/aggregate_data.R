@@ -1,67 +1,78 @@
-#' aggregates the data over selected factor columns
+#' Aggregate data by categorical variables
 #' 
-#' The dimensions of the df data frame will change so that 
-#' all possible combinations of factors selected will be 
-#' the number of rows and the number of all selected factor 
-#' columns + a column for all methods selected will be the 
-#' number of columns in the return data.frame. 
+#' Aggregate a dataframe into summaries of all numeric variables by grouping
+#' them by specified categorical variables
+#' and returns the result along with tidyverse code used to generate it.
 #' 
-#' @param aggregate.over column names of factor variables 
-#' in data to aggregate over
-#' @param methods A set of methods which can be used to 
-#' aggregate.
-#' @param dafr A data.frame containing at least on factor 
-#' column and one numeric column.
+#' @param .data a dataframe to aggregate
 #' 
-#' @return A data.frame with the results of the aggregation.
-#' 
-#' @author Christoph Knapp
+#' @param vars  a character vector of categorical variables in \code{.data} 
+#' to group by
 #'
+#' @param summaries summaries to generate for the groups generated in \code{vars}. Valid summaries are "iqr" , mean", "median", "sd", "sum"
 #' 
-aggregate.data= function(aggregate.over,
-               methods=c("mean","median","sum","sd","IQR","count"),
-               dafr){
-  if(is.null(aggregate.over)|is.null(methods)|length(methods)==0|
-       length(aggregate.over)==0|is.numeric(aggregate.over)){
-    stop("aggregate.data : Wrong input")
-  }
-  if(any(!as.character(aggregate.over)%in%colnames(dafr))){
-    warning("aggregate.data : Some columns in aggregate.over are 
-            not in the column names for df. They will be ignored.")
-  }
-  if(is.character(aggregate.over)){
-    aggregate.over = as.factor(aggregate.over)
-  }
-  bys = lapply(1:length(aggregate.over),
-               function(i,d,v){
-                 d[,which(colnames(d)%in%v[i])]
-               },dafr,aggregate.over)
-  names(bys) = aggregate.over
-  sets = lapply(1:length(methods),function(i,d,b,m){
-    if("count"%in%m[i]){
-      m[i] = "length"
-      temp = aggregate(d[,unlist(lapply(1:ncol(d),
-                                        function(j,da){
-                                          is.numeric(da[,j])
-                                        },d))], 
-                       by=b, FUN=m[i],simplify = FALSE)
-    }else{
-      temp = aggregate(d[,unlist(lapply(1:ncol(d),
-                                        function(j,da){
-                                          is.numeric(da[,j])
-                                        },d))], 
-                       by=b, FUN=m[i],na.rm=T,simplify = FALSE)
-    }
-    
-    colnames(temp)[(length(b)+1):ncol(temp)] = paste(m[i],
-                                                     colnames(temp)[(length(b)+1):ncol(temp)],sep=".")
-    temp
-    },dafr,bys,methods)
-  temp = sets[[1]]
-  if(length(sets)>1){
-    for(i in 2:length(sets)){
-      temp = merge(temp,sets[[i]])
-    }
-  }
-  temp
+#' @return aggregated dataframe containing the summaries with tidyverse code attached
+#' @seealso \code{\link{code}} 
+#' 
+#' @examples
+#' aggregated <- aggregate.data(iris, vars = c("Species"), summaries =  ("mean", "sd", "iqr"))
+#' code(aggregated)
+#' head(aggregated)
+#' 
+#' @author Owen Jin
+#' @export
+#' 
+#' 
+                                            
+#aggregate.data= function(aggregate.over,
+#               methods=c("mean","median","sum","sd","IQR","count"),
+#               dafr){
+
+aggregate.data = function(.data, vars, summaries){
+  
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  summary_names <- summaries %>% 
+    sort() %>%
+    c("missing")
+  
+  summaries_functionCall <- ifelse(summaries == "iqr", "IQR", summaries) %>%
+    sort() %>%
+    c("countMissing")
+  
+  numeric_vars <- colnames(dplyr::select_if(.data, is.numeric)) %>%
+    sort()
+  
+  # paste together the categorical variables for the group_by() statement
+  groupby_str <- str_c(vars, collapse = ", ")
+  # paste together all the numeric variables and what summaries are requested for the summarize
+  summarize_str <- str_c(rep(sort(numeric_vars), 
+                             each = length(summary_names)), 
+                         ".", 
+                         rep(summary_names, 
+                             length(numeric_vars)), 
+                         " = ",
+                         rep(summaries_functionCall, 
+                             length(numeric_vars)), 
+                         "(", rep(sort(numeric_vars), 
+                                  each = length(summary_names)), 
+                         ", na.rm = TRUE)", collapse = ", ")
+  
+  summarize_str <- str_c("count = n(), ", summarize_str)
+  
+  exp <- ~.data %>%
+    dplyr::group_by(.EVAL_GROUPBY) %>%
+    dplyr::summarize(.EVAL_SUMMARIZE)
+  
+  exp <- replaceVars(exp, .EVAL_GROUPBY = groupby_str, .EVAL_SUMMARIZE = summarize_str)
+  
+  output <- interpolate(exp)
+  
+  return(output)
+}
+
+# helper function for counting the missing values - used for aggregateData() function
+countMissing <- function(var, na.rm = FALSE){
+  sum(is.na(var))
 }

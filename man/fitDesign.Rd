@@ -23,4 +23,3 @@ Fit a survey design to an object
 \author{
 Tom Elliott
 }
-

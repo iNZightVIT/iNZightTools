@@ -15,7 +15,7 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' aggregated <- stack.variables.perform(iris, vars = c("Species", "Sepal.Width"), key = "Variable", value = "Value")
+#' aggregated <- stackVars(iris, vars = c("Species", "Sepal.Width"), key = "Variable", value = "Value")
 #' code(sorted)
 #' head(sorted)
 #' 
@@ -26,7 +26,7 @@
 #' 
 #stack.variables.perform = function(columns,dafr){
 
-stack.variables.perform = function(.data, vars, 
+stackVars = function(.data, vars, 
                      key = "stack.variable", value = "stack.value"){
   
   mc <- match.call()

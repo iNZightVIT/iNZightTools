@@ -3,8 +3,6 @@ library(magrittr)
 library(stringr)
 library(testthat)
 
-setwd("C:/Users/Owen/Documents/GitHub/iNZightTools")
-
 data('census.at.school.500', package = 'FutureLearnData')
 dat <- census.at.school.500 ## - give it a shorter name
 

@@ -15,7 +15,8 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' aggregated <- aggregate.data(iris, vars = c("Species"), summaries =  ("mean", "sd", "iqr"))
+#' aggregated <- aggregateData(iris, vars = c("Species"), 
+#'                             summaries = c("mean", "sd", "iqr"))
 #' code(aggregated)
 #' head(aggregated)
 #' 
@@ -28,7 +29,7 @@
 #               methods=c("mean","median","sum","sd","IQR","count"),
 #               dafr){
 
-aggregate.data = function(.data, vars, summaries){
+aggregateData = function(.data, vars, summaries){
   
   mc <- match.call()
   dataname <- mc$.data

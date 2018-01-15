@@ -14,7 +14,7 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' reordered <- reorder.levels(iris, vars = c("Species"), frew = TRUE)
+#' reordered <- reorderLevels(iris, vars = c("Species"), frew = TRUE)
 #' code(reordered)
 #' head(reordered)
 #' 
@@ -22,7 +22,7 @@
 #' @export
 #' 
 #reorder.levels = function(dafr,column,levels.new){
-reorder.levels <- function(.data, var, new_levels = NULL, freq = FALSE){
+reorderLevels <- function(.data, var, new_levels = NULL, freq = FALSE){
   mc <- match.call()
   dataname <- mc$.data
   

@@ -13,7 +13,6 @@
 #' 
 #' @return original dataframe containing a new column of the renamed categorical variable with tidyverse code attached
 #' 
-#' @seealso \code{\link{combine_levels}} ###### 
 #' 
 #' @examples
 #' combined <- combineCatVars(warpbreaks, vars = c("wool", "tension"), sep = "_")

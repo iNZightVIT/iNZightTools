@@ -28,9 +28,6 @@ code(combined)
 head(combined)
 
 }
-\seealso{
-\code{\link{combine_levels}} ######
-}
 \author{
 Owen Jin
 }

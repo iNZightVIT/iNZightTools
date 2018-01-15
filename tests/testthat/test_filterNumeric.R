@@ -3,7 +3,6 @@ library(magrittr)
 library(stringr)
 library(testthat)
 
-setwd("C:/Users/Owen/Documents/GitHub/iNZightTools")
 
 ## use the census at school data (this is our "primary example")
 # install_github('iNZightVIT/FutureLearnData')  ## -- install this once, directly from github

@@ -11,7 +11,7 @@ as_call <- function(x) {
 
 ##' @importFrom methods substituteDirect
 interpolate <- function(code, ..., comment = character(),
-                        `_env` = parent.frame()) {
+                        `_env` = parent.frame(2)) {
     if (length(list(...)) > 0) {
         args <- lapply(list(...), as_call)
         expr <- methods::substituteDirect(as_call(code), args)

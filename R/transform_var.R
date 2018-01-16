@@ -8,6 +8,8 @@
 #'
 #' @param transformation  a name of a valid mathematical function that can be applied to numeric values, eg. "log", "exp", "sqrt". For squaring - use "square", for inversing - use "reciprocal"
 #' 
+#' @param name the name of the new variable
+#'
 #' @return the original dataframe containing a new column of the transformed variable with tidyverse code attached
 #' @seealso \code{\link{code}} 
 #' 
@@ -21,7 +23,7 @@
 #' 
 #' 
 
-transformVar <- function(.data, var, transformation){
+transformVar <- function(.data, var, transformation, name = sprintf("%s.%s", transformation, var)){
   
   # Below are custom functions for transform variables
   
@@ -42,11 +44,13 @@ transformVar <- function(.data, var, transformation){
   )
   ## run replaceVars (or just use sprintf() above...) first
   
-  
   exp <- ~.DATA %>%
-    tibble::add_column(.VARNAME..FUNNAME = .FUNEXP, .after = ".VARNAME")
-  #tibble::add_column(.VARNAME..F = .F(.DATA$.VARNAME), .after = ".VARNAME")
-  exp <- replaceVars(exp, .FUNEXP = funexp, .DATA = dataname, .VARNAME = var, .FUNNAME = transformation)
+    tibble::add_column(.NAME = .FUNEXP, .after = ".VARNAME")
+
+  exp <- replaceVars(exp, 
+      .FUNEXP = funexp, 
+      .DATA = dataname, .NAME = name, .VARNAME = var,
+      .FUNNAME = transformation)
   
   interpolate(exp)
 }

@@ -5,6 +5,8 @@
 #' @param .data a dataframe with the categorical column to convert
 #' 
 #' @param vars  a character vector of numeric column names to convert
+#'
+#' @param names a charactor vector of names for the created variable(s)
 #' 
 #' @return original dataframe containing a new column of the converted numeric variable with tidyverse code attached
 #' @seealso \code{\link{code}} 
@@ -16,17 +18,15 @@
 #' 
 #' @author Owen Jin
 #' @export
-#' 
-
-convertToCat <- function(.data, vars){
+convertToCat <- function(.data, vars, names = paste(vars, "cat", sep = ".")) {
   mc <- match.call()
   dataname <- mc$.data
   
   formulae = list(~.DATA)
   
   for (i in 1:length(vars)){
-    formula <- ~tibble::add_column(.VARNAME.cat = factor(.DATA$.VARNAME), .after = ".VARNAME")
-    formula <- replaceVars(formula, .VARNAME = vars[i])
+    formula <- ~tibble::add_column(.NAME = factor(.DATA$.VARNAME), .after = ".VARNAME")
+    formula <- replaceVars(formula, .VARNAME = vars[i], .NAME = names[i])
     formulae[[i+1]] <- formula
   }
   

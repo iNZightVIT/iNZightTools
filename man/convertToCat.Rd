@@ -4,7 +4,7 @@
 \alias{convertToCat}
 \title{Convert numeric variables to categorical}
 \usage{
-convertToCat(.data, vars)
+convertToCat(.data, vars, names = paste(vars, "cat", sep = "."))
 }
 \arguments{
 \item{.data}{a dataframe with the categorical column to convert}

@@ -4,7 +4,8 @@
 \alias{transformVar}
 \title{Transform data of a numeric variable}
 \usage{
-transformVar(.data, var, transformation)
+transformVar(.data, var, transformation, name = sprintf("\%s.\%s",
+  transformation, var))
 }
 \arguments{
 \item{.data}{a dataframe with the variables to transform}
@@ -12,6 +13,8 @@ transformVar(.data, var, transformation)
 \item{var}{a character of the numeric variable in \code{.data} to transform}
 
 \item{transformation}{a name of a valid mathematical function that can be applied to numeric values, eg. "log", "exp", "sqrt". For squaring - use "square", for inversing - use "reciprocal"}
+
+\item{name}{the name of the new variable}
 }
 \value{
 the original dataframe containing a new column of the transformed variable with tidyverse code attached

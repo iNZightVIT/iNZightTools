@@ -9,6 +9,8 @@
 #' @param  new_levels a character vector of the new factor order. Only specify if \code{freq} = FALSE
 #' 
 #' @param freq logical, If \code{freq} = \code{FALSE} (default), will manually reorder using \code{new_levels}. If \code{freq} = \code{TRUE}, will reorder based of descending frequency of the factor levels
+#'
+#' @param name name for the new variable
 #' 
 #' @return original dataframe containing a new column of the reordered categorical variable with tidyverse code attached
 #' @seealso \code{\link{code}} 
@@ -22,19 +24,19 @@
 #' @export
 #' 
 #reorder.levels = function(dafr,column,levels.new){
-reorderLevels <- function(.data, var, new_levels = NULL, freq = FALSE){
+reorderLevels <- function(.data, var, new_levels = NULL, freq = FALSE, 
+                          name = sprintf("%s.reord", var)) {
   mc <- match.call()
   dataname <- mc$.data
   
-  if(freq){
+  if (freq) {
     exp <- ~.DATA %>%
-      tibble::add_column(.VARNAME.reord = forcats::fct_infreq(.DATA$.VARNAME), .after = ".VARNAME") 
-  }
-  else{
+      tibble::add_column(.NAME = forcats::fct_infreq(.DATA$.VARNAME), .after = ".VARNAME") 
+  } else {
     exp <- ~.DATA %>%
-      tibble::add_column(.VARNAME.reord = factor(.DATA$.VARNAME, levels = new_levels), .after = ".VARNAME") 
+      tibble::add_column(.NAME = factor(.DATA$.VARNAME, levels = .NEWLEVELS), .after = ".VARNAME") 
   }
-  exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname)
+  exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname, .NAME = name)
   
-  interpolate(exp)
+  interpolate(exp, .NEWLEVELS = new_levels)
 }

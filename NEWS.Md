@@ -1,3 +1,15 @@
+# Version 1.5
+__Release date__: 18 January 2018
+
+
+## Tidyverse and Code Writing
+
+- data manipulation functions rewritten using tidyverse functions/workflow
+- functions written such that the code is generated and evaluated, allowing the code history to be obtained
+
+
+***
+
 # Version 1.4
 __Release date__: 25 August 2017
 

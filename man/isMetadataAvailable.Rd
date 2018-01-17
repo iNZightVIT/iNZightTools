@@ -15,3 +15,4 @@ A logical vector of length 1.
 \description{
 \code{isMetadataAvailable} Returns TRUE if metadata is available.
 }
+

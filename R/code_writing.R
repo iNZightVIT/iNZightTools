@@ -37,3 +37,27 @@ interpolate <- function(code, ..., comment = character(),
 ##' @author Tom Elliott
 ##' @export
 code <- function(data) return(attr(data, "code"))
+
+
+replaceVars = function(exp, ...){
+  toBeSubbed <- list(...)
+  exp_str <- as.character(exp)
+  for (i in 1:length(toBeSubbed)){
+    exp_str <- gsub(names(toBeSubbed)[i], 
+                    toBeSubbed[i], 
+                    exp_str, 
+                    fixed = TRUE)
+  }
+  exp <- as.formula(exp_str)
+  exp
+} 
+
+
+pasteFormulae <- function(formulae, sep = "%>%"){
+  combined_formulae <- c()
+  for (i in 1:length(formulae)){
+    combined_formulae[i] <- as.character(formulae[[i]])[2]
+  }
+  output_formula <- as.formula(paste("~", paste(combined_formulae, collapse = paste(sep, "\n"))))
+  output_formula
+}

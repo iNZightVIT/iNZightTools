@@ -30,4 +30,3 @@ number of columns in the return data.frame.
 \author{
 Christoph Knapp
 }
-

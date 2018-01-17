@@ -21,4 +21,3 @@ Reads a file and checks for metadata if available.
 \author{
 Akshay Gupta
 }
-

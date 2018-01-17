@@ -23,4 +23,3 @@ Combine the levels of factor variables.
 \author{
 Christoph Knapp
 }
-

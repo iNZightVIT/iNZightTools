@@ -10,11 +10,10 @@ The iNZightTools package contains a suite of helper functions
 for iNZight, mostly to make GUI developement easier to provide
 some type of consistency across desktop and shiny versions.
 }
-\author{
-Tom Elliott et al.
-}
 \seealso{
 \code{iNZight}
 }
+\author{
+Tom Elliott et al.
+}
 \keyword{iNZight}
-

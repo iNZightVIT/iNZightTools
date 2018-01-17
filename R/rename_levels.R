@@ -1,20 +1,38 @@
-#' Renames the levels of a factor.
-#'
-#' @param dafr A data.frame of the data to change.
-#' @param column The column name of the column to change.
-#' @param new.levels A character variable of the length of 
-#' the number of factors of the column to change. This 
-#' vector contains the new levels.
-#'
-#' @return A data.frame where the levels of the specified 
-#' columns are changed.
+#' Rename the levels of a categorical variable
 #' 
-#' @author Christoph Knapp
-rename.levels = function(dafr,column,new.levels){
-  temp = as.character(dafr[,column])
-  for(i in 1:length(levels(dafr[,column]))){
-    temp[which(dafr[,column]%in%levels(dafr[,column])[i])] = new.levels[i]
-  }
-  dafr[,column] = factor(temp,levels=new.levels)
-  dafr
+#' Rename the levels of a categorical variables, and returns the result
+#' along with tidyverse code used to generate it.
+#'
+#' @param .data a dataframe with the column to be renamed
+#' 
+#' @param var  a character of the categorical variable to rename
+#' 
+#' @param to_be_renamed a list of the old level name assigned to the new level name;
+#' ie. list('new level name' = 'old level name')
+#' 
+#' @return original dataframe containing a new column of the renamed categorical variable with tidyverse code attached
+#' 
+#' @seealso \code{\link{code}} 
+#' 
+#' @examples
+#' renamed <- rename.levels(iris, var = "Species", to_be_renamed = list(set = "setosa", ver = "versicolor"))
+#' code(renamed)
+#' head(renamed)
+#' 
+#' @author Owen Jin
+#' @export
+#' 
+#rename.levels = function(dafr,column,new.levels){
+rename.levels <- function(.data, var, to_be_renamed){
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  # paste together the new and old factor levels names to be renamed
+  to_be_renamed <- str_c(names(to_be_renamed), ' = "', to_be_renamed, '"', collapse = ", ")
+  
+  exp <- ~.DATA %>%
+    tibble::add_column(.VARNAME.rename = forcats::fct_recode(.DATA$.VARNAME, .RENAME), .after = ".VARNAME")
+  exp <- replaceVars(exp, .DATA = dataname ,.RENAME = to_be_renamed, .VARNAME = var)
+  
+  interpolate(exp)
 }

@@ -2,26 +2,34 @@
 % Please edit documentation in R/rename_levels.R
 \name{rename.levels}
 \alias{rename.levels}
-\title{Renames the levels of a factor.}
+\title{Rename the levels of a categorical variable}
 \usage{
-rename.levels(dafr, column, new.levels)
+rename.levels(.data, var, to_be_renamed)
 }
 \arguments{
-\item{dafr}{A data.frame of the data to change.}
+\item{.data}{a dataframe with the column to be renamed}
 
-\item{column}{The column name of the column to change.}
+\item{var}{a character of the categorical variable to rename}
 
-\item{new.levels}{A character variable of the length of 
-the number of factors of the column to change. This 
-vector contains the new levels.}
+\item{to_be_renamed}{a list of the old level name assigned to the new level name;
+ie. list('new level name' = 'old level name')}
 }
 \value{
-A data.frame where the levels of the specified 
-columns are changed.
+original dataframe containing a new column of the renamed categorical variable with tidyverse code attached
 }
 \description{
-Renames the levels of a factor.
+Rename the levels of a categorical variables, and returns the result
+along with tidyverse code used to generate it.
+}
+\examples{
+renamed <- rename.levels(iris, var = "Species", to_be_renamed = list(set = "setosa", ver = "versicolor"))
+code(renamed)
+head(renamed)
+
+}
+\seealso{
+\code{\link{code}}
 }
 \author{
-Christoph Knapp
+Owen Jin
 }

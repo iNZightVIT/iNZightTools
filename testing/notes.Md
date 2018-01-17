@@ -1,3 +1,10 @@
+16/01/18
+
+- Clean up documentation
+- Change "." to capitals
+- test_that()'s
+- Check code produced works
+
 # Notes 19/12/17
 
 - move functions to R

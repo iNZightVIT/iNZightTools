@@ -14,7 +14,7 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' transformed <- transformVar(iris, var = "Petal.Length", transformation = "log"))
+#' transformed <- transformVar(iris, var = "Petal.Length", transformation = "log")
 #' code(transformed)
 #' head(transformed)
 #' 

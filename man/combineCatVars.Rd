@@ -9,12 +9,12 @@ combineCatVars(.data, vars, sep = ".", name = paste(vars, collapse = sep))
 \arguments{
 \item{.data}{a dataframe with the columns to be combined}
 
+\item{vars}{a character vector of the categorical variables to be combined}
+
 \item{sep}{the seperator to combine the values of the variables in \code{var} by.
 "." by default}
 
 \item{name}{a name for the new variable}
-
-\item{var}{a character vector of the categorical variables to be combined}
 }
 \value{
 original dataframe containing a new column of the renamed categorical variable with tidyverse code attached

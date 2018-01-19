@@ -6,7 +6,7 @@
 #'
 #' @param .data a dataframe with the columns to be combined
 #' 
-#' @param var  a character vector of the categorical variables to be combined
+#' @param vars  a character vector of the categorical variables to be combined
 #' 
 #' @param sep the seperator to combine the values of the variables in \code{var} by.
 #' "." by default

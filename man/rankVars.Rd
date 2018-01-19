@@ -22,7 +22,7 @@ and returns the result along with tidyverse code used to generate it.
 Ties are broken as such: eg. values = 5, 6, 6, 7 ; rank = 1, 2, 2, 3
 }
 \examples{
-ranked <- ranked(iris, vars = c("Sepal.Length", "Petal.Length"))
+ranked <- rankVars(iris, vars = c("Sepal.Length", "Petal.Length"))
 code(ranked)
 head(ranked)
 

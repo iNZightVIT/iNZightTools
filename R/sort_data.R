@@ -15,14 +15,14 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' sorted <- sort.data(iris, c("Sepal.Width", "Sepal.Length"), asc = c(TRUE, FALSE))
+#' sorted <- sortVars(iris, vars = c("Sepal.Width", "Sepal.Length"), asc = c(TRUE, FALSE))
 #' code(sorted)
 #' head(sorted)
 #' 
 #' @author Owen Jin
 #' @export
 #sort.data = function(vars,sort.type,df){
-sort.data = function(.data, vars, asc = rep(TRUE, length(vars))) {
+sortVars = function(.data, vars, asc = rep(TRUE, length(vars))) {
   mc <- match.call()
   dataname <- mc$.data
   

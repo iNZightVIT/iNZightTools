@@ -14,7 +14,7 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' ranked <- ranked(iris, vars = c("Sepal.Length", "Petal.Length"))
+#' ranked <- rankVars(iris, vars = c("Sepal.Length", "Petal.Length"))
 #' code(ranked)
 #' head(ranked)
 #' 

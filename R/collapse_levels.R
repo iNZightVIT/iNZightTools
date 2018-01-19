@@ -16,7 +16,7 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' collapsed <- get.collapsed.column(iris, vars = "Species", levels = ("versicolor", "virginica")
+#' collapsed <- collapseLevels(iris, var = "Species", levels = c("versicolor", "virginica"))
 #' code(collapsed)
 #' head(collapsed)
 #' 

@@ -16,7 +16,8 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' created <- createNewVar(iris, new_var = "Sepal.Length_less_Sepal.Width", "Sepal.Length - Sepal.Width")
+#' created <- createNewVar(iris, new_var = "Sepal.Length_less_Sepal.Width",
+#'  "Sepal.Length - Sepal.Width")
 #' code(created)
 #' head(created)
 #' 

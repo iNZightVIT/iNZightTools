@@ -61,3 +61,4 @@ pasteFormulae <- function(formulae, sep = " %>% "){
   output_formula <- as.formula(paste("~", paste(combined_formulae, collapse = sep)))
   output_formula
 }
+

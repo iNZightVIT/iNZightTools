@@ -4,13 +4,15 @@
 \alias{standardizeVars}
 \title{Transform data of a numeric variable}
 \usage{
-standardizeVars(.data, vars)
+standardizeVars(.data, vars, names = paste(sep = ".", vars, "std"))
 }
 \arguments{
 \item{.data}{a dataframe with the columns to standarize}
 
 \item{vars}{a character vector of the numeric variables in \code{.data} 
 to standardize}
+
+\item{names}{names for the created variables}
 }
 \value{
 the original dataframe containing new columns of the standardized variables with tidyverse code attached

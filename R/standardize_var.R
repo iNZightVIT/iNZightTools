@@ -7,6 +7,8 @@
 #' @param vars  a character vector of the numeric variables in \code{.data} 
 #' to standardize
 #' 
+#' @param names names for the created variables
+#' 
 #' @return the original dataframe containing new columns of the standardized variables with tidyverse code attached
 #' @seealso \code{\link{code}} 
 #' 
@@ -20,15 +22,15 @@
 #' 
 #' 
 #' 
-standardizeVars <- function(.data, vars){
+standardizeVars <- function(.data, vars, names = paste(sep = ".", vars, "std")) {
   mc <- match.call()
   dataname <- mc$.data
   
   formulae <- list(~.DATA)
   
   for (i in 1:length(vars)){
-    formula <- ~ tibble::add_column(.VARNAME.std = scale(.DATA$.VARNAME)[,1], .after = ".VARNAME")
-    formulae[[i+1]] <- replaceVars(formula, .VARNAME = vars[i])
+    formula <- ~ tibble::add_column(.NAME = scale(.DATA$.VARNAME)[,1], .after = ".VARNAME")
+    formulae[[i+1]] <- replaceVars(formula, .VARNAME = vars[i], .NAME = names[i])
   }
   
   exp <- pasteFormulae(formulae)

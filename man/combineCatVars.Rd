@@ -4,13 +4,15 @@
 \alias{combineCatVars}
 \title{Combine categorical variables into one}
 \usage{
-combineCatVars(.data, vars, sep = ".")
+combineCatVars(.data, vars, sep = ".", name = paste(vars, collapse = sep))
 }
 \arguments{
 \item{.data}{a dataframe with the columns to be combined}
 
 \item{sep}{the seperator to combine the values of the variables in \code{var} by.
 "." by default}
+
+\item{name}{a name for the new variable}
 
 \item{var}{a character vector of the categorical variables to be combined}
 }

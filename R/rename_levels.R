@@ -10,6 +10,8 @@
 #' @param to_be_renamed a list of the old level name assigned to the new level name;
 #' ie. list('new level name' = 'old level name')
 #' 
+#' @param name a name for the new variable
+#' 
 #' @return original dataframe containing a new column of the renamed categorical variable with tidyverse code attached
 #' 
 #' @seealso \code{\link{code}} 
@@ -23,7 +25,7 @@
 #' @export
 #' 
 #rename.levels = function(dafr,column,new.levels){
-rename.levels <- function(.data, var, to_be_renamed){
+renameLevels <- function(.data, var, to_be_renamed, name = sprintf("%s.rename", var)) {
   mc <- match.call()
   dataname <- mc$.data
   
@@ -31,8 +33,8 @@ rename.levels <- function(.data, var, to_be_renamed){
   to_be_renamed <- str_c(names(to_be_renamed), ' = "', to_be_renamed, '"', collapse = ", ")
   
   exp <- ~.DATA %>%
-    tibble::add_column(.VARNAME.rename = forcats::fct_recode(.DATA$.VARNAME, .RENAME), .after = ".VARNAME")
-  exp <- replaceVars(exp, .DATA = dataname ,.RENAME = to_be_renamed, .VARNAME = var)
+    tibble::add_column(.NAME = forcats::fct_recode(.DATA$.VARNAME, .RENAME), .after = ".VARNAME")
+  exp <- replaceVars(exp, .DATA = dataname ,.RENAME = to_be_renamed, .VARNAME = var, .NAME = name)
   
   interpolate(exp)
 }

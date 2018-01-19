@@ -34,7 +34,8 @@ reorderLevels <- function(.data, var, new_levels = NULL, freq = FALSE,
       tibble::add_column(.NAME = forcats::fct_infreq(.DATA$.VARNAME), .after = ".VARNAME") 
   } else {
     exp <- ~.DATA %>%
-      tibble::add_column(.NAME = factor(.DATA$.VARNAME, levels = .NEWLEVELS), .after = ".VARNAME") 
+      tibble::add_column(.NAME = factor(.DATA$.VARNAME, levels = .NEWLEVELS), 
+          .after = ".VARNAME") 
   }
   exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname, .NAME = name)
   

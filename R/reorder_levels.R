@@ -16,7 +16,7 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' reordered <- reorderLevels(iris, vars = c("Species"), frew = TRUE)
+#' reordered <- reorderLevels(iris, var = c("Species"), freq = TRUE)
 #' code(reordered)
 #' head(reordered)
 #' 

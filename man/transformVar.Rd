@@ -23,7 +23,7 @@ the original dataframe containing a new column of the transformed variable with 
 Transform the values of a numeric variable by applying a mathematical function
 }
 \examples{
-transformed <- transformVar(iris, var = "Petal.Length", transformation = "log"))
+transformed <- transformVar(iris, var = "Petal.Length", transformation = "log")
 code(transformed)
 head(transformed)
 

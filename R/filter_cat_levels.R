@@ -21,14 +21,13 @@
 #' @export
 #' 
 filterLevels <- function(.data, var, levels) {
-
-mc <- match.call()
-dataname <- mc$.data
-
-exp <- ~.DATA %>% 
-  dplyr::filter(.VARNAME %in% .LEVELS) %>% 
-  dplyr::mutate(.VARNAME = factor(.VARNAME, levels = .LEVELS))
-exp <- replaceVars(exp, .VARNAME = var, .LEVELS = as.list(levels), .DATA = dataname)
-
-interpolate(exp)
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  exp <- ~.DATA %>% 
+    dplyr::filter(.VARNAME %in% .LEVELS) %>% 
+    dplyr::mutate(.VARNAME = factor(.VARNAME, levels = .LEVELS))
+  exp <- replaceVars(exp, .VARNAME = var, .LEVELS = as.list(levels), .DATA = dataname)
+  
+  interpolate(exp)
 }

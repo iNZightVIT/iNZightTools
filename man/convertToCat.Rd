@@ -10,6 +10,8 @@ convertToCat(.data, vars, names = paste(vars, "cat", sep = "."))
 \item{.data}{a dataframe with the categorical column to convert}
 
 \item{vars}{a character vector of numeric column names to convert}
+
+\item{names}{a charactor vector of names for the created variable(s)}
 }
 \value{
 original dataframe containing a new column of the converted numeric variable with tidyverse code attached

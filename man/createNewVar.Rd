@@ -24,7 +24,8 @@ Create a new variable by using a valid R expression
 and returns the result along with tidyverse code used to generate it.
 }
 \examples{
-created <- createNewVar(iris, new_var = "Sepal.Length_less_Sepal.Width", "Sepal.Length - Sepal.Width")
+created <- createNewVar(iris, new_var = "Sepal.Length_less_Sepal.Width",
+ "Sepal.Length - Sepal.Width")
 code(created)
 head(created)
 

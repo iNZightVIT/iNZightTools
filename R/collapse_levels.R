@@ -12,7 +12,7 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' collapsed <- get.collapsed.column(iris, vars = "Species", levels = ("versicolor", "virginica")
+#' collapsed <- collapseLevels(iris, var = "Species", levels = c("versicolor", "virginica"))
 #' code(collapsed)
 #' head(collapsed)
 #' 
@@ -21,7 +21,7 @@
 #' 
 #' 
 #get.collapsed.column = function(column,to.collapse){
-get.collapsed.column <- function(.data, var, levels){
+collapseLevels <- function(.data, var, levels){
   mc <- match.call()
   dataname <- mc$.data
   

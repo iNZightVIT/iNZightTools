@@ -17,7 +17,7 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' converted <- get.missing.categorical(iris, vars = c("Species", "Sepal.Length"))
+#' converted <- missingToCat(iris, vars = c("Species", "Sepal.Length"))
 #' code(converted)
 #' head(converted)
 #' 
@@ -25,7 +25,7 @@
 #' @export
 #' 
 # get.missing.categorical = function(dafr,columns){
-get.missing.categorical <- function(.data, vars){
+missingToCat <- function(.data, vars){
   mc <- match.call()
   dataname <- mc$.data
   

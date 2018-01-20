@@ -10,6 +10,8 @@
 #' 
 #' @param vars  a character vector of the variables in \code{.data} 
 #' for conversion of missing values to categorical
+#'
+#' @param names a vector of names for the new variables
 #' 
 #' @return original dataframe containing new columns of the converted variables 
 #' for the missing values
@@ -25,7 +27,7 @@
 #' @export
 #' 
 # get.missing.categorical = function(dafr,columns){
-missingToCat <- function(.data, vars){
+missingToCat <- function(.data, vars, names = paste0(vars, "_miss")) {
   mc <- match.call()
   dataname <- mc$.data
   
@@ -37,12 +39,12 @@ missingToCat <- function(.data, vars){
     #if(is.numeric(dplyr::select(.data, vars[i])[,1])){
     if (numCols[i]) {
       ## it's a number
-      formula <- ~tibble::add_column(.VARNAME_miss = factor(ifelse(is.na(.DATA$.VARNAME),"missing", "observed")), .after = ".VARNAME")  
+      formula <- ~tibble::add_column(.NAME = factor(ifelse(is.na(.DATA$.VARNAME),"missing", "observed")), .after = ".VARNAME")  
     }
-    else{
-      formula <- ~ tibble::add_column(.VARNAME_miss = forcats::fct_explicit_na(.DATA$.VARNAME, na_level = "missing"), .after = ".VARNAME")
+    else {
+      formula <- ~ tibble::add_column(.NAME = forcats::fct_explicit_na(.DATA$.VARNAME, na_level = "missing"), .after = ".VARNAME")
     }
-    formula <- replaceVars(formula, .VARNAME = vars[i])
+    formula <- replaceVars(formula, .VARNAME = vars[i], .NAME = names[i])
     formulae[[i+1]] = formula
   }
   

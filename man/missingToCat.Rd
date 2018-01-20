@@ -4,7 +4,7 @@
 \alias{missingToCat}
 \title{Convert missing values to categorical variables}
 \usage{
-missingToCat(.data, vars)
+missingToCat(.data, vars, names = paste0(vars, "_miss"))
 }
 \arguments{
 \item{.data}{a dataframe with the columns to convert 
@@ -12,6 +12,8 @@ its missing values into categorical}
 
 \item{vars}{a character vector of the variables in \code{.data} 
 for conversion of missing values to categorical}
+
+\item{names}{a vector of names for the new variables}
 }
 \value{
 original dataframe containing new columns of the converted variables 

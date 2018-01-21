@@ -21,7 +21,8 @@ Imports:
 Suggests:
     Acinonyx,
     cairoDevice,
-    testthat
+    testthat,
+    FutureLearnData
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "inzight_support@stat.auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),

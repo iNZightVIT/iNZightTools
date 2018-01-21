@@ -24,8 +24,8 @@ and returns the result along with tidyverse code used to generate it.
 }
 \examples{
 aggregated <- stackVars(iris, vars = c("Species", "Sepal.Width"), key = "Variable", value = "Value")
-code(sorted)
-head(sorted)
+code(aggregated)
+head(aggregated)
 
 }
 \seealso{

@@ -16,8 +16,8 @@
 #' 
 #' @examples
 #' aggregated <- stackVars(iris, vars = c("Species", "Sepal.Width"), key = "Variable", value = "Value")
-#' code(sorted)
-#' head(sorted)
+#' code(aggregated)
+#' head(aggregated)
 #' 
 #' @author Owen Jin
 #' @export

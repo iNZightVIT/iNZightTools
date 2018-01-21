@@ -13,7 +13,7 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' standardized <- standardizeVar(iris, var = c("Sepal.Width", "Petal.Width"))
+#' standardized <- standardizeVars(iris, var = c("Sepal.Width", "Petal.Width"))
 #' code(standardized)
 #' head(standardized)
 #' 

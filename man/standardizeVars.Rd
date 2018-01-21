@@ -21,7 +21,7 @@ the original dataframe containing new columns of the standardized variables with
 Transform the values of a numeric variable by applying a mathematical function
 }
 \examples{
-standardized <- standardizeVar(iris, var = c("Sepal.Width", "Petal.Width"))
+standardized <- standardizeVars(iris, var = c("Sepal.Width", "Petal.Width"))
 code(standardized)
 head(standardized)
 

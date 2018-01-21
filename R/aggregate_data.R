@@ -12,7 +12,8 @@
 #' @param summaries summaries to generate for the groups generated in \code{vars}. Valid summaries are "iqr" , mean", "median", "sd", "sum"
 #' 
 #' @return aggregated dataframe containing the summaries with tidyverse code attached
-#' @seealso \code{\link{code}} 
+#' @seealso \code{\link{code}}
+#' @seealso \code{\link{count_missing}} 
 #' 
 #' @examples
 #' aggregated <- aggregateData(iris, vars = c("Species"), 
@@ -28,6 +29,7 @@
 #aggregate.data= function(aggregate.over,
 #               methods=c("mean","median","sum","sd","IQR","count"),
 #               dafr){
+
 
 aggregateData = function(.data, vars, summaries){
   
@@ -66,14 +68,11 @@ aggregateData = function(.data, vars, summaries){
     dplyr::group_by(.EVAL_GROUPBY) %>%
     dplyr::summarize(.EVAL_SUMMARIZE)
   
-  exp <- replaceVars(exp, .EVAL_GROUPBY = groupby_str, .EVAL_SUMMARIZE = summarize_str)
+  exp <- replaceVars(exp, .EVAL_GROUPBY = groupby_str, .EVAL_SUMMARIZE = summarize_str, .data = dataname)
   
   output <- interpolate(exp)
   
   return(output)
 }
 
-# helper function for counting the missing values - used for aggregateData() function
-countMissing <- function(var, na.rm = FALSE){
-  sum(is.na(var))
-}
+

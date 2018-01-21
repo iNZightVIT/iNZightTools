@@ -36,6 +36,8 @@ aggregateData = function(.data, vars, summaries){
   mc <- match.call()
   dataname <- mc$.data
   
+  summaries <- tolower(summaries)
+
   summary_names <- summaries %>% 
     sort() %>%
     c("missing")
@@ -46,7 +48,7 @@ aggregateData = function(.data, vars, summaries){
   
   numeric_vars <- colnames(dplyr::select_if(.data, is.numeric)) %>%
     sort()
-  
+  print(summary_names)
   # paste together the categorical variables for the group_by() statement
   groupby_str <- str_c(vars, collapse = ", ")
   # paste together all the numeric variables and what summaries are requested for the summarize
@@ -70,9 +72,7 @@ aggregateData = function(.data, vars, summaries){
   
   exp <- replaceVars(exp, .EVAL_GROUPBY = groupby_str, .EVAL_SUMMARIZE = summarize_str, .data = dataname)
   
-  output <- interpolate(exp)
-  
-  return(output)
+  interpolate(exp)
 }
 
 

@@ -28,10 +28,10 @@ filterRandom <- function(.data, n, sample_size){
   dataname <- mc$.data
   
   exp <- ~ .DATA %>% 
-    dplyr::sample_n(.SAMPLE_SIZE * .N, replace = FALSE) %>%
-    dplyr::mutate(Sample.Number = rep(1:.N, each=.SAMPLE_SIZE))
+    dplyr::sample_n(.SAMPLE_SIZE * .Nx, replace = FALSE) %>%
+    dplyr::mutate(Sample.Number = factor(rep(1:.Nx, each=.SAMPLE_SIZE)))
   
-  exp <- replaceVars(exp, .DATA = dataname, .SAMPLE_SIZE = sample_size, .N = n)
+  exp <- replaceVars(exp, .DATA = dataname, .SAMPLE_SIZE = sample_size, .Nx = n)
   
   interpolate(exp)
 }

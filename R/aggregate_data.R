@@ -13,7 +13,7 @@
 #' 
 #' @return aggregated dataframe containing the summaries with tidyverse code attached
 #' @seealso \code{\link{code}}
-#' @seealso \code{\link{count_missing}} 
+#' @seealso \code{\link{countMissing}} 
 #' 
 #' @examples
 #' aggregated <- aggregateData(iris, vars = c("Species"), 

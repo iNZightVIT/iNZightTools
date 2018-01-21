@@ -24,7 +24,7 @@ Rename the levels of a categorical variables, and returns the result
 along with tidyverse code used to generate it.
 }
 \examples{
-renamed <- rename.levels(iris, var = "Species", to_be_renamed = 
+renamed <- renameLevels(iris, var = "Species", to_be_renamed = 
 list(set = "setosa", ver = "versicolor"))
 code(renamed)
 head(renamed)

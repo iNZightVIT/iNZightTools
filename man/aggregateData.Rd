@@ -32,7 +32,7 @@ head(aggregated)
 \seealso{
 \code{\link{code}}
 
-\code{\link{count_missing}}
+\code{\link{countMissing}}
 }
 \author{
 Owen Jin

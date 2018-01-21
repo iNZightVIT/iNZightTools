@@ -17,7 +17,7 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' renamed <- rename.levels(iris, var = "Species", to_be_renamed = 
+#' renamed <- renameLevels(iris, var = "Species", to_be_renamed = 
 #' list(set = "setosa", ver = "versicolor"))
 #' code(renamed)
 #' head(renamed)

@@ -48,7 +48,7 @@ aggregateData = function(.data, vars, summaries){
   
   numeric_vars <- colnames(dplyr::select_if(.data, is.numeric)) %>%
     sort()
-  print(summary_names)
+  
   # paste together the categorical variables for the group_by() statement
   groupby_str <- str_c(vars, collapse = ", ")
   # paste together all the numeric variables and what summaries are requested for the summarize

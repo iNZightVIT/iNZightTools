@@ -7,11 +7,11 @@ context("Filtering a dataset by levels of a categorical variables")
 
 # 1 LEVEL
 filtered.1LVL <- filterLevels(dat, "cellsource", c("job"))
-formatR::tidy_source(text = code(filtered.1LVL), width.cutoff = 50) 
+# formatR::tidy_source(text = code(filtered.1LVL), width.cutoff = 50) 
 
 # 3 LEVELS
 filtered.3LVL <- filterLevels(dat, "getlunch", c("home", "tuckshop", "friend"))
-formatR::tidy_source(text = code(filtered.3LVL), width.cutoff = 50)
+# formatR::tidy_source(text = code(filtered.3LVL), width.cutoff = 50)
 
 
 

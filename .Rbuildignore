@@ -4,3 +4,4 @@
 ^.*\.Md$
 ^\.travis\.yml$
 ^revdep$
+^testing$

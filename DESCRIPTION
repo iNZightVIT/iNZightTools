@@ -1,22 +1,28 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for iNZight
-Version: 1.4-1
-Date: 2017-10-02
+Version: 1.5
+Date: 2018-01-23
 Imports:
-	utils,
-	stats,
-	methods,
-	survey,
-	grDevices,
-	foreign,
-	readr,
-	readxl,
-	magrittr,
-	tibble
+    utils,
+    stats,
+    methods,
+    survey,
+    grDevices,
+    foreign,
+    readr,
+    readxl,
+    magrittr,
+    tibble,
+    dplyr,
+    forcats,
+    tidyr,
+    stringr
 Suggests:
-	Acinonyx,
-	cairoDevice
+    Acinonyx,
+    cairoDevice,
+    testthat,
+    FutureLearnData
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "inzight_support@stat.auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),

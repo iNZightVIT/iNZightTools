@@ -15,7 +15,7 @@
 #' 
 #' @examples
 #' ranked <- rankVars(iris, vars = c("Sepal.Length", "Petal.Length"))
-#' code(ranked)
+#' cat(code(ranked))
 #' head(ranked)
 #' 
 #' @author Owen Jin

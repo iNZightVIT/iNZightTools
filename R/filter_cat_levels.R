@@ -13,8 +13,8 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' filtered <- filterLevels(iris, var = "Species", levels = c("setosa", "virginica"))
-#' code(filtered)
+#' filtered <- filterLevels(iris, var = "Species", levels = c("versicolor", "virginica"))
+#' cat(code(filtered))
 #' head(filtered)
 #' 
 #' @author Owen Jin

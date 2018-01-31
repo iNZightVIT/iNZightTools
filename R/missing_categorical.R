@@ -19,9 +19,9 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' converted <- missingToCat(iris, vars = c("Species", "Sepal.Length"))
-#' code(converted)
-#' head(converted)
+#' missing <- missingToCat(iris, vars = c("Species", "Sepal.Length"))
+#' cat(code(missing))
+#' head(missing)
 #' 
 #' @author Owen Jin
 #' @export

@@ -16,8 +16,8 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' collapsed <- collapseLevels(iris, var = "Species", levels = c("versicolor", "virginica"))
-#' code(collapsed)
+#' collapsed <- collapseLevels(iris, var = "Species", levels = c("setosa", "virginica"))
+#' cat(code(collapsed))
 #' head(collapsed)
 #' 
 #' @author Owen Jin

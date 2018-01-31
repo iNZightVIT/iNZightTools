@@ -15,7 +15,7 @@
 #' 
 #' @examples
 #' filtered <- filterRandom(iris, n = 5, sample_size = 3)
-#' code(filtered)
+#' cat(code(filtered))
 #' head(filtered)
 #' 
 #' @author Owen Jin

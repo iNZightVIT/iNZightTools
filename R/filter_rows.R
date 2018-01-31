@@ -12,7 +12,7 @@
 #' 
 #' @examples
 #' filtered <- filterRows(iris, rows = c(1,4,5))
-#' code(filtered)
+#' cat(code(filtered))
 #' head(filtered)
 #' 
 #' @author Owen Jin

@@ -17,7 +17,7 @@
 #' 
 #' @examples
 #' filtered <- filterNumeric(iris, var = "Sepal.Length", op = "<=", num = 5)
-#' code(filtered)
+#' cat(code(filtered))
 #' head(filtered)
 #' 
 #' @author Owen Jin

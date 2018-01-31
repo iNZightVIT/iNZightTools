@@ -15,7 +15,7 @@
 #' 
 #' @examples
 #' transformed <- transformVar(iris, var = "Petal.Length", transformation = "log")
-#' code(transformed)
+#' cat(code(transformed))
 #' head(transformed)
 #' 
 #' @author Owen Jin

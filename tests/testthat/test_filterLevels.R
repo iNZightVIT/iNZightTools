@@ -3,7 +3,7 @@ library(testthat)
 data('census.at.school.500', package = 'FutureLearnData')
 dat <- census.at.school.500 ## - give it a shorter name
 
-context("Filtering a dataset by levels of a categorical variables")
+context("filterLevels")
 
 # 1 LEVEL
 filtered.1LVL <- filterLevels(dat, "cellsource", c("job"))

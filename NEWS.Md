@@ -7,6 +7,10 @@ __Release date__: 23 January 2018
 - data manipulation functions rewritten using tidyverse functions/workflow
 - functions written such that the code is generated and evaluated, allowing the code history to be obtained
 
+## Patches
+
+### Patch 1.5.1 - 21/02/2018
+- fix tiny bug in encoding default that prevented non-UTF-8 files from reading
 
 ***
 

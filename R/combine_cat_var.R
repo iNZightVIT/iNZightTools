@@ -18,7 +18,7 @@
 #' 
 #' @examples
 #' combined <- combineCatVars(warpbreaks, vars = c("wool", "tension"), sep = "_")
-#' code(combined)
+#' cat(code(combined))
 #' head(combined)
 #' 
 #' @author Owen Jin

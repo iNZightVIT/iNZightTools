@@ -682,9 +682,9 @@ reorderLevels <- function(.data, var, new_levels = NULL, freq = FALSE){
   }
   else{
     exp <- ~.DATA %>%
-      tibble::add_column(.VARNAME.reord = factor(.DATA$.VARNAME, levels = new_levels), .after = ".VARNAME") 
+      tibble::add_column(.VARNAME.reord = factor(.DATA$.VARNAME, levels = .NEWLEVELS), .after = ".VARNAME") 
   }
-  exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname)
+  exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname, .NEWLEVELS = new_levels)
   
   interpolate(exp)
 }

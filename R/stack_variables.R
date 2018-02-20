@@ -15,9 +15,9 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' aggregated <- stackVars(iris, vars = c("Species", "Sepal.Width"), key = "Variable", value = "Value")
-#' code(aggregated)
-#' head(aggregated)
+#' stacked <- stackVars(iris, vars = c("Species", "Sepal.Width"), key = "Variable", value = "Value")
+#' cat(code(stacked))
+#' head(stacked)
 #' 
 #' @author Owen Jin
 #' @export

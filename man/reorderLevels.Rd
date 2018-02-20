@@ -25,8 +25,9 @@ original dataframe containing a new column of the reordered categorical variable
 Reorder the factors of a categorical variable either manually or frequeny
 }
 \examples{
-reordered <- reorderLevels(iris, var = c("Species"), freq = TRUE)
-code(reordered)
+reordered <- reorderLevels(iris, var = "Species", 
+                           new_levels = c("versicolor", "virginica", "setosa"))
+cat(code(reordered))
 head(reordered)
 
 }

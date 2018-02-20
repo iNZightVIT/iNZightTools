@@ -24,7 +24,7 @@ Transform the values of a numeric variable by applying a mathematical function
 }
 \examples{
 transformed <- transformVar(iris, var = "Petal.Length", transformation = "log")
-code(transformed)
+cat(code(transformed))
 head(transformed)
 
 }

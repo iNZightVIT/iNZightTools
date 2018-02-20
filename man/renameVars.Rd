@@ -23,7 +23,7 @@ and returns the result along with tidyverse code used to generate it.
 }
 \examples{
 renamed <- renameVars(iris, to_be_renamed_list = list(Species = "Type", Petal.Width = "P.W"))
-code(renamed)
+cat(code(renamed))
 head(renamed)
 
 }

@@ -21,8 +21,8 @@ Filter a dataframe by some levels of one categorical variable
 and returns the result along with tidyverse code used to generate it.
 }
 \examples{
-filtered <- filterLevels(iris, var = "Species", levels = c("setosa", "virginica"))
-code(filtered)
+filtered <- filterLevels(iris, var = "Species", levels = c("versicolor", "virginica"))
+cat(code(filtered))
 head(filtered)
 
 }

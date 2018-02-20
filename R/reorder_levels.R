@@ -16,7 +16,8 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' reordered <- reorderLevels(iris, var = "Species", new_levels = c("versicolor", "virginica", "setosa"))
+#' reordered <- reorderLevels(iris, var = "Species", 
+#'                            new_levels = c("versicolor", "virginica", "setosa"))
 #' cat(code(reordered))
 #' head(reordered)
 #' 

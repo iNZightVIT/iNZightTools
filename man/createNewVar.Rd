@@ -26,7 +26,7 @@ and returns the result along with tidyverse code used to generate it.
 \examples{
 created <- createNewVar(iris, new_var = "Sepal.Length_less_Sepal.Width",
  "Sepal.Length - Sepal.Width")
-code(created)
+cat(code(created))
 head(created)
 
 }

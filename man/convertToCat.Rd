@@ -20,8 +20,8 @@ original dataframe containing a new column of the converted numeric variable wit
 Convert specified numeric variables into factors
 }
 \examples{
-converted <- convertToCat(iris, vars = c("Species"))
-code(converted)
+converted <- convertToCat(iris, vars = c("Petal.Width"))
+cat(code(converted))
 head(converted)
 
 }

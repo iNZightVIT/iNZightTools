@@ -20,7 +20,7 @@ and returns the result along with tidyverse code used to generate it.
 }
 \examples{
 filtered <- filterRows(iris, rows = c(1,4,5))
-code(filtered)
+cat(code(filtered))
 head(filtered)
 
 }

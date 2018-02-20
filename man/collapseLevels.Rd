@@ -25,8 +25,8 @@ the original dataframe containing a new column of the collapsed variable with ti
 Collapse several values in a categorical variable into one level
 }
 \examples{
-collapsed <- collapseLevels(iris, var = "Species", levels = c("versicolor", "virginica"))
-code(collapsed)
+collapsed <- collapseLevels(iris, var = "Species", levels = c("setosa", "virginica"))
+cat(code(collapsed))
 head(collapsed)
 
 }

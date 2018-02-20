@@ -23,7 +23,7 @@ and returns the result along with tidyverse code used to generate it.
 }
 \examples{
 filtered <- filterRandom(iris, n = 5, sample_size = 3)
-code(filtered)
+cat(code(filtered))
 head(filtered)
 
 }

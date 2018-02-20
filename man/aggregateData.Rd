@@ -25,7 +25,7 @@ and returns the result along with tidyverse code used to generate it.
 \examples{
 aggregated <- aggregateData(iris, vars = c("Species"), 
                             summaries = c("mean", "sd", "iqr"))
-code(aggregated)
+cat(code(aggregated))
 head(aggregated)
 
 }

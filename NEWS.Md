@@ -12,6 +12,9 @@ __Release date__: 23 January 2018
 ### Patch 1.5.1 - 21/02/2018
 - fix tiny bug in encoding default that prevented non-UTF-8 files from reading
 
+### Patch 1.5.2 - 22/02/2018
+- fix a bug where timezone NA on macs prevented reading data
+
 ***
 
 # Version 1.4

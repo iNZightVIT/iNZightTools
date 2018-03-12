@@ -15,6 +15,9 @@ __Release date__: 23 January 2018
 ### Patch 1.5.2 - 22/02/2018
 - fix a bug where timezone NA on macs prevented reading data
 
+### Patch 1.5.3 - 12/03/2018
+- fix a bug in csv reading on macos
+
 ***
 
 # Version 1.4

@@ -420,7 +420,7 @@ iNZread <- function(path, col.types = NULL, ...) {
                            date.names     = "en",
                            time.format    = "%AT",
                            time.zone      = 
-                              ifelse(is.na(Sys.timezone()), 'Auckland/Pacific', Sys.timezone()),
+                              ifelse(is.na(Sys.timezone()), 'NZ', Sys.timezone()),
                            date.format    = "%Y-%m-%d",
                            decimal.mark   = (Sys.localeconv())["decimal_point"],
                            grouping.mark  = (Sys.localeconv())["grouping"],

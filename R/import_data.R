@@ -404,7 +404,7 @@ iNZread <- function(path, col.types = NULL, ...) {
 # #' of months.
 # #' @param time.format the format of time in the file.
 # #' @param time.zone the timezone used while writing dates/time
-# #' in the file.
+# #' in the file
 # #' @param date.format the format of date in the file.
 # #' @param decimal.mark the symbol used as the decimal mark in the file.
 # #' @param grouping.mark the symbol used as the grouping mark in the file.
@@ -415,11 +415,12 @@ iNZread <- function(path, col.types = NULL, ...) {
                            comment = "#",
                            number.of.rows = Inf,
                            col.names      = TRUE,
-                           encoding.style = "UTF8",
+                           encoding.style = "UTF-8",
                            delim          = attr(path, "delim"),
                            date.names     = "en",
                            time.format    = "%AT",
-                           time.zone      = Sys.timezone(),
+                           time.zone      = 
+                              ifelse(is.na(Sys.timezone()), 'NZ', Sys.timezone()),
                            date.format    = "%Y-%m-%d",
                            decimal.mark   = (Sys.localeconv())["decimal_point"],
                            grouping.mark  = (Sys.localeconv())["grouping"],

@@ -3,6 +3,8 @@ library(testthat)
 data('census.at.school.500', package = 'FutureLearnData')
 dat <- census.at.school.500 ## - give it a shorter name
 
+context("filterNumeric")
+
 # FOR "<"
 filtered.L <- filterNumeric(dat, "rightfoot", "<", 15)
 # formatR::tidy_source(text = code(filtered.L), width.cutoff = 50) 

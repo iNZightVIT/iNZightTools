@@ -16,8 +16,9 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' reordered <- reorderLevels(iris, var = c("Species"), freq = TRUE)
-#' code(reordered)
+#' reordered <- reorderLevels(iris, var = "Species", 
+#'                            new_levels = c("versicolor", "virginica", "setosa"))
+#' cat(code(reordered))
 #' head(reordered)
 #' 
 #' @author Owen Jin
@@ -29,15 +30,15 @@ reorderLevels <- function(.data, var, new_levels = NULL, freq = FALSE,
   mc <- match.call()
   dataname <- mc$.data
   
-  if (freq) {
+  if(freq){
     exp <- ~.DATA %>%
-      tibble::add_column(.NAME = forcats::fct_infreq(.DATA$.VARNAME), .after = ".VARNAME") 
-  } else {
-    exp <- ~.DATA %>%
-      tibble::add_column(.NAME = factor(.DATA$.VARNAME, levels = .NEWLEVELS), 
-          .after = ".VARNAME") 
+      tibble::add_column(.VARNAME.reord = forcats::fct_infreq(.DATA$.VARNAME), .after = ".VARNAME") 
   }
-  exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname, .NAME = name)
+  else{
+    exp <- ~.DATA %>%
+      tibble::add_column(.VARNAME.reord = factor(.DATA$.VARNAME, levels = .NEWLEVELS), .after = ".VARNAME") 
+  }
+  exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname, .NEWLEVELS = new_levels)
   
-  interpolate(exp, .NEWLEVELS = new_levels)
+  interpolate(exp)
 }

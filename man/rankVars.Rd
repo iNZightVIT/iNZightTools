@@ -23,7 +23,7 @@ Ties are broken as such: eg. values = 5, 6, 6, 7 ; rank = 1, 2, 2, 3
 }
 \examples{
 ranked <- rankVars(iris, vars = c("Sepal.Length", "Petal.Length"))
-code(ranked)
+cat(code(ranked))
 head(ranked)
 
 }

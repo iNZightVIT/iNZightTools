@@ -16,7 +16,7 @@
 #' 
 #' @examples
 #' sorted <- sortVars(iris, vars = c("Sepal.Width", "Sepal.Length"), asc = c(TRUE, FALSE))
-#' code(sorted)
+#' cat(code(sorted))
 #' head(sorted)
 #' 
 #' @author Owen Jin

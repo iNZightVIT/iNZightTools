@@ -23,9 +23,9 @@ Collpase columns by converting from a long format to a tall format
 and returns the result along with tidyverse code used to generate it.
 }
 \examples{
-aggregated <- stackVars(iris, vars = c("Species", "Sepal.Width"), key = "Variable", value = "Value")
-code(aggregated)
-head(aggregated)
+stacked <- stackVars(iris, vars = c("Species", "Sepal.Width"), key = "Variable", value = "Value")
+cat(code(stacked))
+head(stacked)
 
 }
 \seealso{

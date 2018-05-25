@@ -26,7 +26,7 @@ along with tidyverse code used to generate it.
 \examples{
 renamed <- renameLevels(iris, var = "Species", to_be_renamed = 
 list(set = "setosa", ver = "versicolor"))
-code(renamed)
+cat(code(renamed))
 head(renamed)
 
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/standardize_var.R
 \name{standardizeVars}
 \alias{standardizeVars}
-\title{Transform data of a numeric variable}
+\title{Standardize the data of a numeric variable}
 \usage{
 standardizeVars(.data, vars, names = paste(sep = ".", vars, "std"))
 }
@@ -18,11 +18,11 @@ to standardize}
 the original dataframe containing new columns of the standardized variables with tidyverse code attached
 }
 \description{
-Transform the values of a numeric variable by applying a mathematical function
+Centre then divide by the standard error of the values in a numeric variable
 }
 \examples{
 standardized <- standardizeVars(iris, var = c("Sepal.Width", "Petal.Width"))
-code(standardized)
+cat(code(standardized))
 head(standardized)
 
 }

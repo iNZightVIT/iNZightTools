@@ -1,6 +1,6 @@
-#' Transform data of a numeric variable
+#' Standardize the data of a numeric variable
 #' 
-#' Transform the values of a numeric variable by applying a mathematical function 
+#' Centre then divide by the standard error of the values in a numeric variable 
 #' 
 #' @param .data a dataframe with the columns to standarize
 #' 
@@ -14,7 +14,7 @@
 #' 
 #' @examples
 #' standardized <- standardizeVars(iris, var = c("Sepal.Width", "Petal.Width"))
-#' code(standardized)
+#' cat(code(standardized))
 #' head(standardized)
 #' 
 #' @author Owen Jin

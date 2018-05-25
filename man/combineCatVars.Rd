@@ -26,7 +26,7 @@ along with tidyverse code used to generate it.
 }
 \examples{
 combined <- combineCatVars(warpbreaks, vars = c("wool", "tension"), sep = "_")
-code(combined)
+cat(code(combined))
 head(combined)
 
 }

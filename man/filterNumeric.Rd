@@ -25,7 +25,7 @@ and returns the result along with tidyverse code used to generate it.
 }
 \examples{
 filtered <- filterNumeric(iris, var = "Sepal.Length", op = "<=", num = 5)
-code(filtered)
+cat(code(filtered))
 head(filtered)
 
 }

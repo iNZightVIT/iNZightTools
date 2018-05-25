@@ -12,8 +12,8 @@
 #' @seealso \code{\link{code}} 
 #' 
 #' @examples
-#' converted <- convertToCat(iris, vars = c("Species"))
-#' code(converted)
+#' converted <- convertToCat(iris, vars = c("Petal.Width"))
+#' cat(code(converted))
 #' head(converted)
 #' 
 #' @author Owen Jin

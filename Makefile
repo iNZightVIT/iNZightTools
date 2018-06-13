@@ -10,6 +10,9 @@ endif
 document:
 	@$(RCMD) -e "devtools::document()"
 
+test:
+	@$(RCMD) -e "devtools::test()"
+
 check:
 	@$(RCMD) -e "devtools::check()"
 

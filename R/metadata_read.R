@@ -17,9 +17,45 @@ readMetadata2 <- function(file, tibble = TRUE) {
     ## fetch the metadata
     meta <- readMetaComments(file)
     
-    return(meta)
+    ## fetch the first few rows of the data ... 
+    suppressMessages({
+        dtop <- readr::read_csv(file, comment = '#', n_max = 5, progress = FALSE)
+    })
+    
+    ## columns in meta not in dataset:
+    mvars <- sapply(meta$columns, getname)
+    dvars <- names(dtop)
+    if (any(!mvars %in% dvars)) {
+        stop('Some variables defined in metadata not in dataset: ',
+            paste(mvars[!mvars %in% dvars], collapse = ', '))
+    }
 
-    readr::read_csv(file)
+    ## use metadata to determine column types
+    mtypes <- sapply(meta$columns, gettype, abbr = TRUE)
+    names(mtypes) <- mvars
+    ctypes <- paste(ifelse(dvars %in% mvars, mtypes[dvars], '?'), collapse = "")
+    
+    ## read the data (strings remain as strings)
+    data <- readr::read_csv(file, col_types = ctypes, comment = '#')
+
+    ## convert factors appropriately
+    lapply(meta$columns, function(c) {
+        switch(gettype(c),
+            'factor' = {
+                n <- getname(c)
+                data[[n]] <<- c$fun(data[[n]])
+            },
+            {
+                ## do nothing otherwise (for now?)
+            })
+    })
+
+    ## convert any remaining character columns to factors
+    lapply(names(data)[sapply(data, is.character)], function(vn) {
+        data[[vn]] <<- as.factor(data[[vn]])
+    })
+
+    as.data.frame(data)
 }
 
 
@@ -66,7 +102,6 @@ readMetaComments <- function(file) {
     }
 
     ## process each column
-    print(meta)
     md$columns <- processCols(meta)
 
     md
@@ -120,13 +155,14 @@ cleanstring <- function(x) {
     ## some other calculations? perhaps ...
     
     ## and return a meta object
-    metaFun(type = 'numeric', name = vname, fun = function(x) numeric(x))
+    metaFun(type = 'numeric', name = vname, 
+        fun = numeric)
 }
 
 .processCol.inz.meta.factor <- function(x) {
     vname <- x[1]
 
-    ## extract levels=labels
+    ## extract levels=labels (level in output, label in dataset)
     if (grepl('\\[', vname)) {
         f <- strsplit(vname, '\\[')[[1]]
         vname <- f[1]
@@ -136,10 +172,24 @@ cleanstring <- function(x) {
             lvl <- strsplit(lvlstr[i], '=')[[1]]
             levels[i] <- lvl[1]
             labels[i] <- lvl[length(lvl)]
-        }
+        }        
     } else {
         levels <- labels <- NULL
     }
-    
-    metaFun(type = 'factor', name = vname, fun = function(x) factor(x, levels = levels, labels = labels))
+    if (is.null(levels)) {
+        fun <- "factor"
+    } else {
+        fun = sprintf("function(x) { 
+                lvls <- %s
+                labs <- %s
+                for (i in 1:length(lvls)) {
+                    if (lvls[i] != labs[i]) {
+                        x[ x %s strsplit(labs[i], '|', fixed = TRUE)[[1]] ] <- lvls[i]
+                    }
+                }
+                factor(x, levels = lvls)
+            }", deparse(levels), deparse(labels), "%in%")
+    }
+    metaFun(type = 'factor', name = vname, fun = eval(parse(text = fun)))
+        
 }

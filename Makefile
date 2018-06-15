@@ -20,7 +20,7 @@ revcheck:
 	@$(RCMD) -e "devtools::use_revdep()"
 	@$(RCMD) -f "revdep/check.R"
 
-crancheck:
+crancheck: documet
 	@$(Rdev) CMD build .
 	@$(Rdev) CMD check *.tar.gz
 

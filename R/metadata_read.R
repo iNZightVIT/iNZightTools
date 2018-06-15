@@ -10,7 +10,7 @@
 #' @return a data frame
 #' @author Tom Elliott
 #' @export
-readMetadata2 <- function(file, tibble = TRUE) {
+readMetadata2 <- function(file) {
     if (!is.character(file)) stop('file must be a string')
     if (!file.exists(file)) stop('That file doesn\'t seem to exists.')
 

@@ -2,17 +2,17 @@
 #' 
 #' A dataset collected from students in schools around New Zealand.
 #'
-#' To-do next: @factor school=year[primary=5|6,intermediate=7|8,high=9|10|11]
 #'
 #' @factor gender[male,female]
 #' @numeric age
 #' @numeric year
+#' @factor school=year[primary=5|6,intermediate=7|8,high=9|10|11]
 #' @numeric height
 #' @numeric armspan
 #' @numeric rightfoot
 #' @factor travel[walk,bike,car=motor,public=bus|train,other]
 #' @factor cellsource
-#' @numeric cellcost
+#' @numeric phonebill=cellcost
 cellsource,rightfoot,travel,getlunch,height,gender,age,year,armspan,cellcost
 pocket,20,walk,home,152,male,12,7,150,30
 parent,25,other,friend,153,female,11,6,152,50

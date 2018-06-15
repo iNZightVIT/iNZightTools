@@ -42,11 +42,11 @@ readMetadata2 <- function(file) {
     lapply(meta$columns, function(c) {
         switch(gettype(c),
             'factor' = {
-                n <- getname(c)
-                data[[n]] <<- c$fun(data[[n]])
+                data[[getname(c, original = FALSE)]] <<- c$fun(data[[getname(c)]])
             },
             {
-                ## do nothing otherwise (for now?)
+                if (rename(c))
+                    data[[getname(c, origin = FALSE)]] <<- data[[getname(c)]]
             })
     })
 
@@ -142,7 +142,6 @@ cleanstring <- function(x) {
 
 .processCol <- function(x) UseMethod('.processCol')
 
-#' unknown, guess it
 .processCol.default <- function(x) {
     warning('Unknown type: ', class(x))
     return(NULL)
@@ -190,6 +189,7 @@ cleanstring <- function(x) {
                 factor(x, levels = lvls)
             }", deparse(levels), deparse(labels), "%in%")
     }
+
     metaFun(type = 'factor', name = vname, fun = eval(parse(text = fun)))
         
 }

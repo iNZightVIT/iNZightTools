@@ -55,7 +55,11 @@ readMetadata2 <- function(file) {
         data[[vn]] <<- as.factor(data[[vn]])
     })
 
-    as.data.frame(data)
+    data <- as.data.frame(data)
+    attr(data, 'name') <- meta$title
+    attr(data, 'description') <- meta$desc
+
+    data
 }
 
 
@@ -102,16 +106,16 @@ readMetaComments <- function(file) {
     }
 
     ## process each column
-    md$columns <- processCols(meta)
+    md$columns <- processLines(meta)
 
     md
 }
 
-processCols <- function(metadata) {
-    lapply(metadata, processCol)
+processLines <- function(metadata) {
+    lapply(metadata, processLine)
 }
 
-processCol <- function(x) {
+processLine <- function(x) {
     txt <- cleanstring(x)
     txt <- strsplit(x, ' ')[[1]]
 
@@ -125,7 +129,7 @@ processCol <- function(x) {
     ## use s3 methods to provide extensible method for processing metadata
     ## drop the type as its redundant from here ...
     class(txt) <- sprintf('inz.meta.%s', gsub('^@', '', type))
-    .processCol(txt)
+    .processLine(txt)
 }
 
 cleanstring <- function(x) {
@@ -140,14 +144,14 @@ cleanstring <- function(x) {
 }
 
 
-.processCol <- function(x) UseMethod('.processCol')
+.processLine <- function(x) UseMethod('.processLine')
 
-.processCol.default <- function(x) {
+.processLine.default <- function(x) {
     warning('Unknown type: ', class(x))
     return(NULL)
 }
 
-.processCol.inz.meta.numeric <- function(x) {
+.processLine.inz.meta.numeric <- function(x) {
     ## The name of the variable
     vname <- x[1]
 
@@ -158,7 +162,7 @@ cleanstring <- function(x) {
         fun = numeric)
 }
 
-.processCol.inz.meta.factor <- function(x) {
+.processLine.inz.meta.factor <- function(x) {
     vname <- x[1]
 
     ## extract levels=labels (level in output, label in dataset)

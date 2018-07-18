@@ -63,7 +63,7 @@ read_dlm <- function(file, preview = FALSE, column_types,
         locale$decimal_mark <- escape_string(decimal_mark)
     
     if (!missing(grouping_mark))
-        locale$grouping_mark <- excape_string(grouping_mark)
+        locale$grouping_mark <- escape_string(grouping_mark)
 
     ## quote character arguments (x = z -> x = "z")
     named.args <- lapply(named.args,
@@ -84,9 +84,10 @@ read_dlm <- function(file, preview = FALSE, column_types,
     else
         args <- "file"
 
-    exp <- ~readr::read_DELIM(ARGS)
+    exp <- ~FUN(ARGS)
     exp <- replaceVars(exp,
-                       DELIM = ifelse(ext == "csv", "csv", "delim"),
+                       FUN = sprintf("readr::read_%s",
+                                       ifelse(ext == "csv", "csv", "delim")),
                        ARGS = args)
 
     interpolate(exp, file = file)

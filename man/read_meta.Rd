@@ -8,6 +8,12 @@ read_meta(file, preview = FALSE, column_types, ...)
 }
 \arguments{
 \item{file}{the plain text file with metadata}
+
+\item{preview}{logical, if \code{TRUE} only the first 10 rows are returned}
+
+\item{column_types}{optional column types}
+
+\item{...}{more arguments}
 }
 \value{
 a data frame

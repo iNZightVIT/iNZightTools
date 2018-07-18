@@ -7,6 +7,9 @@
 #' The main example is to define factor levels for an integer variable in large data sets.
 #' 
 #' @param file the plain text file with metadata 
+#' @param preview logical, if \code{TRUE} only the first 10 rows are returned
+#' @param column_types optional column types
+#' @param ... more arguments
 #' @return a data frame
 #' @author Tom Elliott
 #' @export
@@ -50,7 +53,7 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
             },
             {
                 if (rename(c))
-                    data[[getname(c, origin = FALSE)]] <<- data[[getname(c)]]
+                    data[[getname(c, original = FALSE)]] <<- data[[getname(c)]]
             })
     })
 

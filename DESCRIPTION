@@ -24,7 +24,8 @@ Suggests:
     Acinonyx,
     cairoDevice,
     testthat,
-    FutureLearnData
+    FutureLearnData,
+    covr
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "inzight_support@stat.auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),

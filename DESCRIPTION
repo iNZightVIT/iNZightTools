@@ -17,7 +17,9 @@ Imports:
     dplyr,
     forcats,
     tidyr,
-    stringr
+    stringr,
+    sas7bdat,
+    tools
 Suggests:
     Acinonyx,
     cairoDevice,

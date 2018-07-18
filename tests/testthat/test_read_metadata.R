@@ -1,7 +1,7 @@
 context('Metadata - read')
 
 test_that('Metadata is read correctly', {
-    data <- readMetadata2('meta.csv')
+    data <- smart_read('meta.csv')
     expect_is(data, 'data.frame')
     expect_equal(names(data),
         c('cellsource', 'rightfoot', 'travel', 'getlunch', 'height',

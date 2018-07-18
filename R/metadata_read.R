@@ -10,16 +10,20 @@
 #' @return a data frame
 #' @author Tom Elliott
 #' @export
-readMetadata2 <- function(file) {
+read_meta <- function(file, preview = FALSE, column_types, ...) {
     if (!is.character(file)) stop('file must be a string')
-    if (!file.exists(file)) stop('That file doesn\'t seem to exists.')
+    if (!file.exists(file)) stop('That file doesn\'t seem to exist.')
 
     ## fetch the metadata
     meta <- readMetaComments(file)
+    if (is.null(meta)) {
+        return(read_dlm(file, preview = preview, column_types = column_types, ...))
+    }
     
     ## fetch the first few rows of the data ... 
     suppressMessages({
-        dtop <- readr::read_csv(file, comment = '#', n_max = 5, progress = FALSE)
+        dtop <- read_dlm(file, preview = TRUE, column_types = column_types,
+                         ..., progress = FALSE)
     })
     
     ## columns in meta not in dataset:
@@ -36,7 +40,7 @@ readMetadata2 <- function(file) {
     ctypes <- paste(ifelse(dvars %in% mvars, mtypes[dvars], '?'), collapse = "")
     
     ## read the data (strings remain as strings)
-    data <- readr::read_csv(file, col_types = ctypes, comment = '#')
+    data <- read_dlm(file, col_types = ctypes, preview = preview, ...)
 
     ## convert factors appropriately
     lapply(meta$columns, function(c) {
@@ -55,7 +59,7 @@ readMetadata2 <- function(file) {
         data[[vn]] <<- as.factor(data[[vn]])
     })
 
-    data <- as.data.frame(data)
+    ## data <- as.data.frame(data)
     attr(data, 'name') <- meta$title
     attr(data, 'description') <- meta$desc
 
@@ -197,3 +201,4 @@ cleanstring <- function(x) {
     metaFun(type = 'factor', name = vname, fun = eval(parse(text = fun)))
         
 }
+

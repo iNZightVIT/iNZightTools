@@ -7,6 +7,9 @@ else
 	Rdev := R-devel
 endif
 
+README.md: README.Rmd
+	@$(RCMD) -e "knitr::knit('$^')"
+
 document:
 	@$(RCMD) -e "devtools::document()"
 

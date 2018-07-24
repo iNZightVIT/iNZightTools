@@ -6,3 +6,4 @@
 ^revdep$
 ^testing$
 ^codecov\.yml$
+^README\.Rmd$

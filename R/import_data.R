@@ -41,6 +41,7 @@ guess_type <- function(file) {
 
 read_dlm <- function(file, preview = FALSE, column_types,
                      encoding, decimal_mark, grouping_mark,
+                     convert.to.factor = TRUE,
                      ...) {
 
     named.args <- list(...)
@@ -71,6 +72,18 @@ read_dlm <- function(file, preview = FALSE, column_types,
                              if (is.character(x)) escape_string(x)
                              else x
                          })
+    
+    ctypes <- ""
+    if (!missing(column_types)) {
+        named.args <- c(list(col_types = "COLTYPES"))
+
+        if (!is.null(names(column_types))) {
+            ctypes <- paste("readr::cols(", names(column_types), " = '", column_types, "')",
+                            sep = "", collapse = ", ")
+        } else {
+            ctypes <- paste("readr::cols('", column_types, "')", sep = "", collapse = "")
+        }
+    }
 
     if (length(locale) > 0) 
         named.args$locale <- sprintf("readr::locale(%s)",
@@ -83,14 +96,32 @@ read_dlm <- function(file, preview = FALSE, column_types,
                             collapse = ", ", sep = " = "))
     else
         args <- "file"
-
+    
     exp <- ~FUN(ARGS)
     exp <- replaceVars(exp,
                        FUN = sprintf("readr::read_%s",
                                        ifelse(ext == "csv", "csv", "delim")),
-                       ARGS = args)
+                       ARGS = args,
+                       COLTYPES = ctypes)
 
-    interpolate(exp, file = file)
+    TEMP_RESULT <- interpolate(exp, file = file)
+    if (!convert.to.factor) return(TEMP_RESULT)
+    
+    chars <- sapply(TEMP_RESULT, is.character)
+    if (!any(chars)) return(TEMP_RESULT)
+
+    ## mutate(name = factor(name))
+    charnames <- names(TEMP_RESULT)[chars]
+    expr2 <- paste(
+        "TEMP_RESULT %>% dplyr::mutate(",
+        paste("\"", charnames, "\" = as.factor(", charnames, ")",
+              sep = "", collapse = ", "),
+        ")", sep = "")
+
+    res2 <- eval(parse(text = expr2))
+    attr(res2, "code") <-
+        gsub("TEMP_RESULT", paste(code(TEMP_RESULT), collapse="\n"), expr2)
+    res2
 }
 
 read_excel <- function(file, preview = FALSE, column_types, ...) {

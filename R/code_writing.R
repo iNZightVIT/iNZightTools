@@ -18,6 +18,7 @@ interpolate <- function(code, ..., comment = character(),
     } else {
         expr <- as_call(code)
     }
+
     res <- eval(expr, `_env`)
     if (length(comment) > 0)
         comment <- paste("##", comment)

@@ -1,6 +1,6 @@
 #' @height numeric
 #' @factor gender[male,female]
-#' @factor education[none=0, highschool=1, college=2, university=3|4]
+#' @factor education[none=0,highschool=1,college=2,university=3|4]
 height gender education grade
 154.6 male 2 D
 154.1 female 1 C

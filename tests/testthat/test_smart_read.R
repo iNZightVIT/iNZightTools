@@ -23,7 +23,7 @@ test_that("smart_read gets correct column types and dims", {
 
 test_that("smart_read can handle various encoding", {
     data <- smart_read("enc-latin.csv", encoding = "ISO-8859-1")
-    expect_identical(data$summer[2], "\u00e9t\u00e9")
+    expect_identical(as.character(data$summer[2]), "\u00e9t\u00e9")
 
     data <- smart_read("enc-latin.csv")
     expect_s3_class(data, "data.frame")
@@ -34,4 +34,15 @@ test_that("smart_read returns code!!", {
                  "foreign::read.spss(\"appbset1.sav\", to.data.frame = TRUE)")
     expect_equal(code(smart_read("c5hw1.dta")),
                  "foreign::read.dta(\"c5hw1.dta\")")
+})
+
+test_that("smart_read can take column types", {
+    expect_equal(as.character(sapply(smart_read("cas500.csv"), class)),
+                 c("factor", "numeric", "factor", "factor", "numeric",
+                   "factor", "numeric", "numeric", "numeric", "numeric"))
+    expect_equal(as.character(sapply(smart_read(
+        "cas500.csv",
+        column_types = c(year = "c")), class)),
+        c("factor", "numeric", "factor", "factor", "numeric",
+          "factor", "numeric", "factor", "numeric", "numeric"))
 })

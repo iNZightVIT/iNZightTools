@@ -43,25 +43,43 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
     ctypes <- paste(ifelse(dvars %in% mvars, mtypes[dvars], '?'), collapse = "")
     
     ## read the data (strings remain as strings)
-    data <- read_dlm(file, col_types = ctypes, preview = preview, ...)
+    data <- read_dlm(file, col_types = ctypes, preview = preview,
+                     convert.to.factor = FALSE, ...)
 
+    ## Do this with mutate ()
     ## convert factors appropriately
-    lapply(meta$columns, function(c) {
-        switch(gettype(c),
-            'factor' = {
-                data[[getname(c, original = FALSE)]] <<- c$fun(data[[getname(c)]])
-            },
-            {
-                if (rename(c))
-                    data[[getname(c, original = FALSE)]] <<- data[[getname(c)]]
-            })
-    })
-
-    ## convert any remaining character columns to factors
-    lapply(names(data)[sapply(data, is.character)], function(vn) {
-        data[[vn]] <<- as.factor(data[[vn]])
-    })
-
+    mutatestr <- c(
+        lapply(meta$columns, function(c) {
+            fnc <- c$fun(data[[getname(c)]], getname(c))
+            if (!is.null(fnc))
+                return(sprintf("%s = %s", getname(c, original = FALSE), fnc))
+            if (rename(c))
+                return(sprintf("%s = %s", getname(c, original = FALSE), getname(c)))
+            NULL
+        }),
+        lapply(dvars[!dvars %in% mvars], function(c) {
+            if (is.character(data[[c]]))
+                return(sprintf("%s = as.factor(%s)", c, c))
+            NULL
+        })
+    )
+    
+    ## remaining vars
+    if (!all(sapply(mutatestr, is.null))) {
+        mexp <- eval(parse(
+            text = paste0(
+                "~.dataset %>% dplyr::mutate(",
+                paste(mutatestr[!sapply(mutatestr, is.null)], collapse = ",\n   "),
+                ")")))
+        
+        e <- new.env()
+        e$.dataset <- data
+        dcode <- paste(code(data), collapse = " ")
+        data <- suppressWarnings(interpolate(mexp, "_env" = e))
+        attr(data, "code") <- gsub(".dataset", dcode, code(data))
+    }
+    
+    
     ## data <- as.data.frame(data)
     attr(data, 'name') <- meta$title
     attr(data, 'description') <- meta$desc
@@ -79,7 +97,7 @@ readMetaComments <- function(file) {
 
     if (length(meta) == 0) 
         return(NULL)
-
+    
     md <- list(title = file, desc = NULL, columns = list())
 
     ## Grab the title, if present - always the first line of metadata
@@ -114,7 +132,6 @@ readMetaComments <- function(file) {
 
     ## process each column
     md$columns <- processLines(meta)
-
     md
 }
 
@@ -166,12 +183,15 @@ cleanstring <- function(x) {
     
     ## and return a meta object
     metaFun(type = 'numeric', name = vname, 
-        fun = numeric)
+            fun = eval(parse(text = "function(x, vname) {
+                   if (is.numeric(x)) return(NULL)
+                   sprintf('as.numeric(%s)', vname)
+            }")))
 }
 
 .processLine.inz.meta.factor <- function(x) {
     vname <- x[1]
-
+    
     ## extract levels=labels (level in output, label in dataset)
     if (grepl('\\[', vname)) {
         f <- strsplit(vname, '\\[')[[1]]
@@ -187,21 +207,24 @@ cleanstring <- function(x) {
         levels <- labels <- NULL
     }
     if (is.null(levels)) {
-        fun <- "factor"
-    } else {
-        fun = sprintf("function(x) { 
-                lvls <- %s
-                labs <- %s
-                for (i in 1:length(lvls)) {
-                    if (lvls[i] != labs[i]) {
-                        x[ x %s strsplit(labs[i], '|', fixed = TRUE)[[1]] ] <- lvls[i]
-                    }
-                }
-                factor(x, levels = lvls)
-            }", deparse(levels), deparse(labels), "%in%")
+        fun <- "function(x, vname) {
+             if (is.factor(x)) return(NULL)
+             sprintf('as.factor(%s)', vname)
+        }"
+    } else {       
+        fun <- "function(x, vname) {
+            sprintf(
+                \"forcats::fct_collapse(%s, %s)\",
+                ifelse(inherits(x, 'factor'), vname,
+                       sprintf('as.factor(%s)', vname)),
+                paste(levels, \" = c('\",
+                      gsub(\"|\", \"', '\", labels, fixed = TRUE),
+                      \"')\",
+                      sep = \"\", collapse = \", \"))
+            }"
     }
-
+    
     metaFun(type = 'factor', name = vname, fun = eval(parse(text = fun)))
-        
+    
 }
 

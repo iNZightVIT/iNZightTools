@@ -10,7 +10,7 @@ Imports:
     survey,
     grDevices,
     foreign,
-    readr,
+    readr (>= 1.2.0),
     readxl,
     magrittr,
     tibble,

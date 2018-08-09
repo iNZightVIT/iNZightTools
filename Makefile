@@ -18,11 +18,14 @@ revcheck:
 	@$(RCMD) -f "revdep/check.R"
 
 crancheck:
-	@$(Rdev) CMD build .
-	@$(Rdev) CMD check *.tar.gz
+	@$(R) CMD build .
+	@$(R) CMD check *.tar.gz
 
 install:
 	$(R) CMD INSTALL ./
 
 clean:
 	@rm -rf *.tar.gz *.Rcheck revdep
+
+test:
+	@$(RCMD) -e "devtools::test()"

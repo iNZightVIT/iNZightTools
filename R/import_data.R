@@ -9,25 +9,16 @@
 ##' @return a dataframe with attributes
 ##' @author Tom Elliott
 ##' @export
-smart_read <- function(file, preview = FALSE, column_types, ...) {
-    
-    ## ftype <- switch(type,
-    ##        "txt" = readr::read_delim(file),
-    ##        "csv" = readr::read_csv(file),
-    ##        "xls" = readxl::read_xls(file),
-    ##        "xlsx" = readxl::read_xlsx(file),
-    ##        "sav" = foreign::read.spss(file),
-    ##        "dta" = foreign::read.dta(file),
-    ##        "sas7bdat" = sas7bdat::read.sas7bdat(file))
-
-    type <- guess_type(file)
-    
+smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE, column_types, ...) {
+    type <- guess_type(ext)
     fun <- eval(parse(text = sprintf("read_%s", type)))
-    fun(file, preview = preview, column_types = column_types, ...)
+    d <- fun(file, ext = ext, preview = preview, column_types = column_types, ...)
+    if (preview) 
+      class(d) <- c('inz.preview', class(d))
+    d
 }
 
-guess_type <- function(file) {
-    ext <- tools::file_ext(file)
+guess_type <- function(ext) {
     switch(ext,
            "xls" = "excel",
            "xlsx" = "excel",
@@ -39,8 +30,13 @@ guess_type <- function(file) {
            "unknown")
 }
 
-read_dlm <- function(file, preview = FALSE, column_types,
-                     encoding, decimal_mark, grouping_mark,
+read_unknown <- function(file, ...) {
+  warning("Unable to read file: ", file)
+  return(NULL)
+}
+
+read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_types,
+                     encoding, delimiter, decimal_mark, grouping_mark,
                      convert.to.factor = TRUE,
                      ...) {
 
@@ -51,15 +47,19 @@ read_dlm <- function(file, preview = FALSE, column_types,
 
     if (preview)
         named.args <- c(list(n_max = 10), named.args)
+
+    if (missing(delimiter))
+        delimiter <- ifelse(ext == "csv", ",", " ")
     
-    ext <- tools::file_ext(file)
-    if (ext == "txt")
+    if (ext != "csv" || delimiter != ",")
+        named.args <- c(list(delim = delimiter), named.args)
+    else if (ext == "txt")
         named.args <- c(list(delim = " "), named.args)
 
     locale <- list()
     if (!missing(encoding))
         locale$encoding <- escape_string(encoding)
-    
+
     if (!missing(decimal_mark))
         locale$decimal_mark <- escape_string(decimal_mark)
     
@@ -100,7 +100,8 @@ read_dlm <- function(file, preview = FALSE, column_types,
     exp <- ~FUN(ARGS)
     exp <- replaceVars(exp,
                        FUN = sprintf("readr::read_%s",
-                                       ifelse(ext == "csv", "csv", "delim")),
+                                     ifelse(ext == "csv" && delimiter == ",", 
+                                            "csv", "delim")),
                        ARGS = args,
                        COLTYPES = ctypes)
 
@@ -160,6 +161,14 @@ read_stata <- function(file, preview = FALSE, column_types) {
 
 escape_string <- function(x) sprintf("\"%s\"", x)
 
+#' Checks if the complete file was read or not.
+#'
+#' @title Is Preview
+#' @param df data to check
+#' @return logical
+#' @export
+is_preview <- function(df) inherits(df, "inz.preview")
+
 
 # #' Checks if the entered column types are allowed or not.
 # #'
@@ -187,25 +196,6 @@ escape_string <- function(x) sprintf("\"%s\"", x)
 #   }
 # }
 
-# #' Checks if the complete file was read or not.
-# #'
-# #' \code{isPreview} returns a logical scalar after checking
-# #' the attributes of the dataframe sent as an argument.
-# #' Returns TRUE if it was read as a preview.
-# #'
-# #' @param user.data.frame the dataframe returned after reading the file
-# #' @return A logical scalar
-# #' @export
-# isPreview <- function(user.data.frame) "preview" %in% names(attributes(user.data.frame))
-
-# #   if("preview" %in% attributes(user.data.frame)){
-# #     return(TRUE)
-# #   }
-# #   else{
-# #     return(FALSE)
-# #   }
-# #
-# # }
 
 # #' Changes the datatype of columns of dataframe to the specified datatypes.
 # #'

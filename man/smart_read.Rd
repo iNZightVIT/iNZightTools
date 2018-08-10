@@ -4,10 +4,13 @@
 \alias{smart_read}
 \title{iNZight Smart Read}
 \usage{
-smart_read(file, preview = FALSE, column_types, ...)
+smart_read(file, ext = tools::file_ext(file), preview = FALSE, column_types,
+  ...)
 }
 \arguments{
 \item{file}{the file path to read}
+
+\item{ext}{file extension, namely "csv" or "txt"}
 
 \item{preview}{logical, if \code{TRUE} only the first few rows of
 the data will be returned}

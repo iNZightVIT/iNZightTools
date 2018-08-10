@@ -2,6 +2,7 @@
 ##'
 ##' @title iNZight Smart Read
 ##' @param file the file path to read
+##' @param ext file extension, namely "csv" or "txt"
 ##' @param preview logical, if \code{TRUE} only the first few rows of
 ##'   the data will be returned
 ##' @param column_types vector of column types (see \code{?readr::read_csv})
@@ -125,7 +126,7 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_
     res2
 }
 
-read_excel <- function(file, preview = FALSE, column_types, ...) {
+read_excel <- function(file, ext, preview = FALSE, column_types, ...) {
     named.args <- list(...)
 
     if (!missing(column_types))
@@ -148,13 +149,13 @@ read_excel <- function(file, preview = FALSE, column_types, ...) {
     interpolate(exp, file = file)
 }
 
-read_spss <- function(file, preview = FALSE, column_types) {
+read_spss <- function(file, ext, preview = FALSE, column_types) {
     exp <- ~foreign::read.spss(file, to.data.frame = TRUE)
     
     interpolate(exp, file = file)
 }
 
-read_stata <- function(file, preview = FALSE, column_types) {
+read_stata <- function(file, ext, preview = FALSE, column_types) {
     exp <- ~foreign::read.dta(file)
     interpolate(exp, file = file)
 }

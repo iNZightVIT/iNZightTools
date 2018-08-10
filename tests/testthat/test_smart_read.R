@@ -1,10 +1,10 @@
 context("Importing data via smart_read")
 
 test_that("smart_read can figure out the file type", {
-    expect_equal(guess_type("meta.txt"), "meta")
-    expect_equal(guess_type("file.dta"), "stata")
-    expect_equal(guess_type("file.xls"), "excel")
-    expect_equal(guess_type("file.sas7bdat"), "sas")
+    expect_equal(guess_type("txt"), "meta")
+    expect_equal(guess_type("dta"), "stata")
+    expect_equal(guess_type("xls"), "excel")
+    expect_equal(guess_type("sas7bdat"), "sas")
 })
 
 test_that("files parsed correctly", {

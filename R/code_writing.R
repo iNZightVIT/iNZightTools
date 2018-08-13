@@ -63,3 +63,10 @@ pasteFormulae <- function(formulae, sep = " %>% "){
   output_formula
 }
 
+
+
+create_varname <- function(x) {
+  # create a valid R variable name from a given string
+  x <- gsub("\\(|\\)", "", gsub(" ", "_", x))
+  make.names(x)
+}

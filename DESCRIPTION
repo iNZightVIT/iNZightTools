@@ -10,19 +10,22 @@ Imports:
     survey,
     grDevices,
     foreign,
-    readr,
+    readr (>= 1.2.0),
     readxl,
     magrittr,
     tibble,
     dplyr,
     forcats,
     tidyr,
-    stringr
+    stringr,
+    sas7bdat,
+    tools
 Suggests:
     Acinonyx,
     cairoDevice,
     testthat,
-    FutureLearnData
+    FutureLearnData,
+    covr
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "inzight_support@stat.auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),

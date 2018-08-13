@@ -18,6 +18,7 @@ interpolate <- function(code, ..., comment = character(),
     } else {
         expr <- as_call(code)
     }
+
     res <- eval(expr, `_env`)
     if (length(comment) > 0)
         comment <- paste("##", comment)
@@ -62,3 +63,10 @@ pasteFormulae <- function(formulae, sep = " %>% "){
   output_formula
 }
 
+
+
+create_varname <- function(x) {
+  # create a valid R variable name from a given string
+  x <- gsub("\\(|\\)", "", gsub(" ", "_", x))
+  make.names(x)
+}

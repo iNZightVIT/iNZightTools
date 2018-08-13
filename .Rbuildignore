@@ -5,3 +5,5 @@
 ^\.travis\.yml$
 ^revdep$
 ^testing$
+^codecov\.yml$
+^README\.Rmd$

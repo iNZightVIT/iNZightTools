@@ -17,7 +17,7 @@ revcheck:
 	@$(RCMD) -e "devtools::use_revdep()"
 	@$(RCMD) -f "revdep/check.R"
 
-crancheck:
+crancheck: document
 	@$(R) CMD build .
 	@$(R) CMD check *.tar.gz
 
@@ -26,6 +26,3 @@ install:
 
 clean:
 	@rm -rf *.tar.gz *.Rcheck revdep
-
-test:
-	@$(RCMD) -e "devtools::test()"

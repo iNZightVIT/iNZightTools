@@ -12,3 +12,9 @@ r:
 repos:
   docker: http://r.docker.stat.auckland.ac.nz/R
   rforge: https://r-forge.r-project.org/
+
+r_github_packages:
+  - tidyverse/readr
+
+after_success:
+    - Rscript -e 'covr::codecov()'

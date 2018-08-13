@@ -16,6 +16,8 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE, colum
     d <- fun(file, ext = ext, preview = preview, column_types = column_types, ...)
     if (preview) 
       class(d) <- c('inz.preview', class(d))
+    if (is.null(attr(d, "name")))
+      attr(d, "name") <- tools::file_path_sans_ext(basename(file))
     d
 }
 

@@ -98,7 +98,7 @@ readMetaComments <- function(file) {
     if (length(meta) == 0) 
         return(NULL)
     
-    md <- list(title = file, desc = NULL, columns = list())
+    md <- list(title = tools::file_path_sans_ext(basename(file)), desc = NULL, columns = list())
 
     ## Grab the title, if present - always the first line of metadata
     if (!grepl('^@', meta[1])) {

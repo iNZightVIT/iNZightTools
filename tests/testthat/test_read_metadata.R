@@ -10,3 +10,8 @@ test_that('Metadata is read correctly', {
         c('factor', 'numeric', 'factor', 'factor', 'numeric', 
           'factor', 'numeric', 'numeric', 'numeric', 'numeric', 'factor', 'numeric'))
 })
+
+test_that('Name is read', {
+    expect_equal(attr(smart_read('meta.csv'), 'name'), 'Census at School (subset)')
+    expect_equal(attr(smart_read('meta.txt'), 'name'), 'meta')
+})

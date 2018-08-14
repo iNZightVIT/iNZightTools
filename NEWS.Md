@@ -1,3 +1,16 @@
+# Version 1.6
+__Release date__: 14 Auguest 2018
+
+## Breaking Changes
+
+- data import is now performed by the `smart_read()` function
+
+## Minor Changes and Fixes
+
+- new function to generate R variable names (for code writing)
+- various bug fixes
+
+
 # Version 1.5
 __Release date__: 23 January 2018
 

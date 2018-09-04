@@ -13,6 +13,4 @@ output: github_document
 
 Functions for integration of iNZight GUI to iNZight packages.
 
-## New features in progress
-
-* feature/complete-metadata  [![Travis-CI Build Status](https://travis-ci.org/iNZightVIT/iNZightTools.svg?branch=feature/complete-metadata)](https://travis-ci.org/iNZightVIT/iNZightTools/branches) [![Coverage status](https://codecov.io/gh/iNZightVIT/iNZightTools/branch/feature/complete-metadata/graph/badge.svg)](https://codecov.io/github/iNZightVIT/iNZightTools?branch=feature/complete-metadata)
+Whoever compiled this doesn't have a working copy of `git2r`, so I can't show you.

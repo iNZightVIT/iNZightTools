@@ -10,6 +10,12 @@ __Release date__: 14 Auguest 2018
 - new function to generate R variable names (for code writing)
 - various bug fixes
 
+## Patches
+
+### Patch 1.6.1 - 04/09/2018
+- fix bug in reading metadata where non-meta comments would cancel read
+
+***
 
 # Version 1.5
 __Release date__: 23 January 2018

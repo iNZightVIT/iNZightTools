@@ -91,8 +91,9 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
 readMetaComments <- function(file) {
     con <- file(file, open = 'r')
     meta <- character()
-    while (grepl("^#'", x <- readLines(con, n = 1)))
-        meta <- c(meta, trimws(gsub("^#'", "", x)))
+    while (grepl("^#", x <- readLines(con, n = 1)))
+        if (grepl("^#'", x))
+            meta <- c(meta, trimws(gsub("^#'", "", x)))
     close(con)
 
     if (length(meta) == 0) 

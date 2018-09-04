@@ -26,7 +26,7 @@ if (!requireNamespace("git2r", quietly = TRUE)) {
 } else {
     branches <- git2r::branches(flags = "remote")
     branches <- gsub("origin/", "", sapply(branches, function(x) x$name))
-    branches <- branches[!branches %in% c("HEAD", "master", "dev")]
+    branches <- branches[grepl("feature/", branches)]
     if (length(branches))
         cat("## New features in progress\n\n")
     for (branch in branches) {

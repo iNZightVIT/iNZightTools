@@ -13,4 +13,4 @@ output: github_document
 
 Functions for integration of iNZight GUI to iNZight packages.
 
-Whoever compiled this doesn't have a working copy of `git2r`, so I can't show you.
+

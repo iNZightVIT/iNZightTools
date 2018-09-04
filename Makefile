@@ -1,14 +1,5 @@
-RDEVEL := $(shell command -v R-devel 2> /dev/null)
 R := R
 RCMD := $(R) --vanilla --slave
-ifndef RDEVEL
-	Rdev := $(R)
-else
-	Rdev := R-devel
-endif
-
-README.md: README.Rmd
-	@$(RCMD) -e "knitr::knit('$^')"
 
 document:
 	@$(RCMD) -e "devtools::document()"

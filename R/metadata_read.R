@@ -58,8 +58,12 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
             NULL
         }),
         lapply(dvars[!dvars %in% mvars], function(c) {
-            if (is.character(data[[c]]))
-                return(sprintf("%s = as.factor(%s)", c, c))
+            if (is.character(data[[c]])) {
+                cesc <- c
+                if (grepl(" ", c)) 
+                    cesc <- sprintf("`%s`", c)
+                return(sprintf("%s = as.factor(%s)", cesc, cesc))
+            }
             NULL
         })
     )

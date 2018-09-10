@@ -1,8 +1,11 @@
 R := R
-RCMD := $(R) --vanilla --slave
+RCMD := $(R) --slave
 
 document:
 	@$(RCMD) -e "devtools::document()"
+
+test:
+	@$(RCMD) -e "devtools::test()"
 
 check:
 	@$(RCMD) -e "devtools::check()"

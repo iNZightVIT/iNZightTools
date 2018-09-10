@@ -15,6 +15,9 @@ __Release date__: 14 Auguest 2018
 ### Patch 1.6.1 - 04/09/2018
 - fix bug in reading metadata where non-meta comments would cancel read
 
+### Patch 1.6.2 - 10/09/2018
+- fix a bug in reading csv files with spaces in the header
+
 ***
 
 # Version 1.5

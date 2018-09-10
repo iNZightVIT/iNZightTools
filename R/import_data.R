@@ -148,7 +148,6 @@ read_excel <- function(file, ext, preview = FALSE, column_types, ...) {
     
     exp <- ~readxl::read_excel(ARGS)
     exp <- replaceVars(exp, ARGS = args)
-    print(exp)
 
     interpolate(exp, file = file)
 }

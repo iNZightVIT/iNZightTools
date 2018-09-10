@@ -118,7 +118,9 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_
     charnames <- names(TEMP_RESULT)[chars]
     expr2 <- paste(
         "TEMP_RESULT %>% dplyr::mutate(",
-        paste("\"", charnames, "\" = as.factor(", charnames, ")",
+        paste("\"", charnames, "\" = as.factor(", 
+              quote_varname(charnames), 
+              ")",
               sep = "", collapse = ", "),
         ")", sep = "")
 
@@ -146,7 +148,6 @@ read_excel <- function(file, ext, preview = FALSE, column_types, ...) {
     
     exp <- ~readxl::read_excel(ARGS)
     exp <- replaceVars(exp, ARGS = args)
-    print(exp)
 
     interpolate(exp, file = file)
 }
@@ -163,6 +164,15 @@ read_stata <- function(file, ext, preview = FALSE, column_types) {
 }
 
 escape_string <- function(x) sprintf("\"%s\"", x)
+
+quote_varname <- function(x, q = "`") {
+    ## contains any non alphanumeric characters, OR first character is number
+    xs <- grepl("[^a-zA-Z0-9]", x) | grepl("^[0-9]", x)
+    if (any(xs)) {
+        x[xs] <- paste0(q, x[xs], q)
+    }
+    x
+}
 
 #' Checks if the complete file was read or not.
 #'

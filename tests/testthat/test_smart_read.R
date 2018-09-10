@@ -46,3 +46,7 @@ test_that("smart_read can take column types", {
         c("factor", "numeric", "factor", "factor", "numeric",
           "factor", "numeric", "factor", "numeric", "numeric"))
 })
+
+test_that("smart_read can handle spaces and comment-characters", {
+    expect_s3_class(smart_read("characters.csv"), "data.frame")    
+})

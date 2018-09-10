@@ -28,7 +28,7 @@ print.inzmetafun <- function(x, ...) {
 
 ## Accessors:
 getname <- function(x, original = TRUE) {
-    if (original && rename(x)) 
+    name <- if (original && rename(x)) 
         x$rename
     else
         x$name

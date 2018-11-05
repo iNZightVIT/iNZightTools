@@ -1,3 +1,5 @@
+- [fix] prefix `survey::` namespace to function calls
+
 # Version 1.6
 __Release date__: 14 Auguest 2018
 

@@ -16,6 +16,11 @@ matrix:
     - os: linux
       r: devel
 
+addons:
+  homebrew:
+    packages:
+      - libgit2
+
 repos:
   docker: https://r.docker.stat.auckland.ac.nz
   rforge: https://r-forge.r-project.org/

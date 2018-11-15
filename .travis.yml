@@ -5,6 +5,9 @@ sudo: false
 cache: packages
 latex: false
 
+os:
+  - osx
+
 r:
   - 3.3
   - release

@@ -7,19 +7,15 @@ latex: false
 
 matrix:
   include:
-    - os: osx
-      r: 3.3
     - os: linux
       r: oldrel
     - os: linux
       r: release
     - os: linux
       r: devel
-
-addons:
-  homebrew:
-    packages:
-      - libgit2
+    - os: osx
+      r: 3.3
+      brew_packages: libgit2
 
 repos:
   docker: https://r.docker.stat.auckland.ac.nz

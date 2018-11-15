@@ -5,16 +5,19 @@ sudo: false
 cache: packages
 latex: false
 
-os:
-  - osx
-
-r:
-  - 3.3
-  - release
-  - devel
+matrix:
+  include:
+    - os: osx
+      r: 3.3
+    - os: linux
+      r: oldrel
+    - os: linux
+      r: release
+    - os: linux
+      r: devel
 
 repos:
-  docker: http://r.docker.stat.auckland.ac.nz/R
+  docker: https://r.docker.stat.auckland.ac.nz
   rforge: https://r-forge.r-project.org/
 
 r_github_packages:

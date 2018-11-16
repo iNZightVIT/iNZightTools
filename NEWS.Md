@@ -1,5 +1,3 @@
-- [fix] prefix `survey::` namespace to function calls
-
 # Version 1.6
 __Release date__: 14 Auguest 2018
 
@@ -19,6 +17,10 @@ __Release date__: 14 Auguest 2018
 
 ### Patch 1.6.2 - 10/09/2018
 - fix a bug in reading csv files with spaces in the header
+
+### Patch 1.6.3 - 15/11/2018
+- [fix] prefix `survey::` namespace to function calls
+
 
 ***
 

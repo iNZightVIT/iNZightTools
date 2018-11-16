@@ -73,7 +73,7 @@ fitModel <-
         args <- paste(Formula, fam, "design = svy.design", sep = ', ')
         if (xargs != "")
             args <- paste(args, xargs, sep = ', ')
-        call <- paste('svyglm(', args, ')', sep = '')
+        call <- paste('survey::svyglm(', args, ')', sep = '')
     } else if (design == 'experiment') {
       # experimental design:
         stop('Experiments are not yet implemented. \n')

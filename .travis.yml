@@ -21,7 +21,7 @@ repos:
   rforge: https://r-forge.r-project.org/
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then R -e 'install.packages("git2r")'; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then R -e 'install.packages("git2r", type = "mac.binary")'; fi
 
 after_success:
   - Rscript -e 'covr::codecov()'

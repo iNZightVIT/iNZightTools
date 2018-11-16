@@ -20,5 +20,8 @@ repos:
   docker: https://r.docker.stat.auckland.ac.nz
   rforge: https://r-forge.r-project.org/
 
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then R -e 'install.packages("git2r")'; fi
+
 after_success:
-    - Rscript -e 'covr::codecov()'
+  - Rscript -e 'covr::codecov()'

@@ -4,6 +4,7 @@ language: R
 sudo: false
 cache: packages
 latex: false
+pandoc: false
 
 matrix:
   include:
@@ -21,7 +22,7 @@ repos:
   rforge: https://r-forge.r-project.org/
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then R -e 'install.packages("git2r", type = "mac.binary")'; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo brew install libgit2; fi
 
 after_success:
   - Rscript -e 'covr::codecov()'

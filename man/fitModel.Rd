@@ -4,8 +4,8 @@
 \alias{fitModel}
 \title{Fit a Model}
 \usage{
-fitModel(y, x, data, family = "gaussian", design = "simple", svydes = NA,
-  ...)
+fitModel(y, x, data, family = "gaussian", design = "simple",
+  svydes = NA, ...)
 }
 \arguments{
 \item{y}{character string representing the response,}
@@ -23,7 +23,7 @@ fitModel(y, x, data, family = "gaussian", design = "simple", svydes = NA,
 \item{...}{further arguments to be passed to lm, glm, svyglm, such as offset, etc.}
 }
 \value{
-A fit object (lm, glm, or svyglm)
+A model call formula (using lm, glm, or svyglm)
 }
 \description{
 Fit models

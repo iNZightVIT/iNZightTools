@@ -12,7 +12,7 @@
 ##' @param svydes  a vector of arguments to be passed to the svydesign function, excluding data (defined above)
 ##' @param ... further arguments to be passed to lm, glm, svyglm, such as offset, etc.
 ##'
-##' @return A fit object (lm, glm, or svyglm)
+##' @return A model call formula (using lm, glm, or svyglm)
 ##'
 ##' @author Tom Elliott
 ##'

@@ -115,9 +115,25 @@ wrapperCART <- function(y, train, test = NULL, count = F, time = NULL,
 data(iris)
 class(iris$Species)
 
+                            
+wrpr <- function(y, train, test, n.iter = 1000, ...) {
+  ## first deal with the user config settings etc.
+  z <- something_to_do_with_settings(y, ...)
+  z <- fit_model(z, n.iter = n.iter, n.core)
+  if (!missing(test)) z <- fit_tests(z, test = test)
+  z
+}
+
 library(rpart)
 data(car90)
 b = wrapperCART(train = car90, y = "Price", type = "regr")
+                            
+                            
+## assuming the testing code is all up and running ... 
+b = fit_tests(b, test)
+
+## would be exactly equivalent to
+b = wrapperCART(train = car90, y = "Price", type = "regr", test = test)
 
 # Comparing like with like
 
@@ -137,7 +153,7 @@ wrapperRF <- function(type, y, train, y.test = NULL, test = NULL, tune = F, orde
                       quantreg = F,
                       num.threads = as.numeric(Sys.getenv("NUMBER_OF_PROCESSORS")), 
                       ...) {
-  
+  z <- fit_model(z, n.iter = n.iter, n.core)
   train[ordered.vars] <- lapply(train[ordered.vars],
                                 function(x) if(!is.ordered(x)) factor(x, ordered = T) else x)
   
@@ -268,7 +284,16 @@ testError <- function(model, y.test, test, ...) {
 
 
 
+# S3 classes
+fit_model <- function(x, ...) UseMethod("fit_model")
 
+fit_model.inz.tree.rpart <- function(x, n.iter = 1000, ...) {
+  ## fit the rpart model
+  config <- x$config
+  config$n.iter = n.iter
+  
+  do.call(rpart::rpart, config)
+}
 
 
 

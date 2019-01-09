@@ -23,7 +23,6 @@ environment:
   PKGTYPE: binary
 
   matrix:
-  - R_VERSION: 3.3.3
   - R_VERSION: release
 
 build_script:

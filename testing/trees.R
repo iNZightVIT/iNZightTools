@@ -8,79 +8,71 @@ install.packages(c("rpart", "ranger", "randomForest", "maptree", "cluster", "ice
 lapply(required, require, character.only = TRUE)
 
 ################################
-# CHECKS 
+# Prelim checks
 ################################
 
-checks <- function(type, y, train, test = NULL, ...) {
+super <- function(y, train, test = NULL, time = NULL, event = NULL, ordered.fct = NULL, ...) {
   
-  train = if(is.data.frame(train)) train else as.data.frame(train) 
+  # Don't need the check below 
+  # df = if(is.data.frame(df)) df else as.data.frame(df) 
   
-  if(type == "classif") {
-    
-    train[ycol] <- as.factor[train[ycol]]
-    
-  } else if(type == "surv"){
-    
-    train[ycol] <- train[ycol] == y[["success"]]
-    train[y[["time"]]] <- as.numeric(train[y[["time"]]])
-    
-  } else{
-    
-    train[ycol] <- as.numeric(train[ycol])
-    
-  }
+  # Ensure ordered factors are encoded accordingly.
+  # This will speed up computation for rpart (and ranger) - see last sentence of pg. 29 of the rpart 'long intro'.
+  train[ordered.fct] <- lapply(train[ordered.fct],
+                               function(x) if(!is.ordered(x)) factor(x, ordered = T) else x)
+  
+  train[ordered.fct] <- lapply(test[ordered.fct],
+                               function(x) if(!is.ordered(x)) factor(x, ordered = T) else x)
+  
+  
 }
 
+rpart::rpart(y = iris$Species, x = iris[,-5])
+
 ################################
-# CART
+# CART 
 ################################
 
-wrapperCART <- function(type, y, train, test = NULL, ordered.vars = NULL, count = F,
+wrapperCART <- function(y, train, test = NULL, count = F, time = NULL, 
                         cp = .001, xval = 10L, prior = NULL, loss = NULL, split = "gini", ...) {
   
-  ycol = grep(y[[1]], names(train))
+  # Get values of all args in call - formals returns the defaults, match.call returns the user-defined values 
+  # modifyList merges the two lists so that default values are overwritten by the user-specified values
+  allArgs <- modifyList(formals(), as.list(match.call(expand.dots = TRUE)))
+  allArgs <- allArgs[names(allArgs) != "..."]
   
-  if(type == "surv" && "time" %in% y) {
-    tcol <- grep(y[["time"]], names(train)) 
+  
+  is.surv = is.factor(train[y]) && !is.null(time)
+  
+  xvars <- colnames(train)[ ! names(train) %in% c(y, time) ]
+  
+  resp <- if (is.survtime) {
+    
+    sprintf("survival::Surv(%s, %s, type = \"right\")", train[time], train[y]) # NOTE: type = "right" censored by default.
+    
+  } else  train[y] 
+  
+  fo <- as.formula(sprintf("%s ~ %s", resp, paste(xvars, collapse = "+")), env = parent.frame())
+  
+  # I could leave it up to rpart to infer the method from the column class but it cannot pick up on count data. 
+  if(is.factor(train[y])) {
+    
+    method = "class"
+    param = allArgs[c("prior", "loss", "split")]
+    
+  } else if(is.numeric(train[y])) {
+    
+    method = "anova"
+    param = NULL
+    
+  } else if(is.surv) {
+    
+    method = "exp" # Documentation says "If y is a survival object, then method = "exp" is assumed, if y has 2 columns then method = "poisson" - not sure what '2 columns' means.
+    # param = ?
+    
   }
   
-  # Missing data warnings
-  # if(is.na(train[ycol]) || is.na(train[y[["time"]]]) || any(!complete.cases(train[, -ycol, drop = F]))) {
-  #   
-  #   missing_y = which(is.na(train[ycol])) 
-  #   missing_time = which(is.na(train[y[["time"]]]))
-  #   missing_all = which(!complete.cases(train[, -ycol, drop = F]))
-  #   
-  #   
-  #   warning(paste("Removed", length(missing_y), "cases (rows:", missing_y, ") with missing y values and",  
-  #                 length(missing_all), "cases (rows:", missing_all, ") with no predictor data.", sep = " ")) 
-  # } # Improve wording. And double check how missing surv data is treated.
-  
-  # Ensuring any factors with ordered levels are recognised by rpart as ordered factors
-  # to speed up computation - see last sentence of pg. 29 of the 'long intro'. 
-  train[ordered.vars] <- lapply(train[ordered.vars],
-                               function(x) if(!is.ordered(x)) factor(x, ordered = T) else x) 
-  
-  fo <- sprintf("%s ~ %s", y[[1]],
-                paste(colnames(train[!names(train) %in% y[[1]]]), collapse = "+"))
-  fo <- as.formula(fo)
-  
-  if(type == "surv" && "time" %in% y) {
-    update(fo, survival::Surv(y[["time"]], y[[1]]) ~ . - y[["time"]])
-  }
-  
-  method = switch(type,
-                  "classif" = "class",
-                  "regr" = if(count) "poisson" else "anova",
-                  "surv" = if("time" %in% y) "poisson" else "exp")
-  
-  # Not sure if there is a better way to do this
-  allArgs <- c(mget(names(formals()), sys.frame(sys.nframe())), list(...))
   ctl <- do.call("rpart.control", allArgs[formalArgs(rpart.control)])
-  
-  # rpart will ignore "param" if method = anova but I would prefer setting it to null if regr is chosen.
-  # Need to add the coeff variation for exp and poisson methods
-  param = if(method == "class") allArgs[c("prior", "loss", "split")] else NULL
   
   # Build tree. Remember to add support for ctree (conditional inference trees)
   fit = rpart::rpart(formula = fo, 
@@ -101,28 +93,27 @@ wrapperCART <- function(type, y, train, test = NULL, ordered.vars = NULL, count 
     
   } else error = NULL
   
+  rpart.summary = structure(list(label = "CART",
+                                 learner = list(),
+                                 learner.model = list(),
+                                 task.desc = list(),
+                                 pred = ,
+                                 measures.train = ,
+                                 measures.test = 
+                                   package = if(is.surv) c("rpart", "survival") else c("rpart"),
+                                 callees = c("rpart", "rpart.control"),
+                                 type = switch(class(train[y]), 
+                                               "factor" = if(is.surv) "Survival" else "Classification", 
+                                               "numeric" = "Regression"), 
+                                 
+  ),
+  class = c("inz.tree.rpart", "inz.tree", "inz.mbuilder"))
   
-  # Plot of pruned tree
-  
-  
-  # Variable importance plot
-  imp = fit$variable.importance
-  
-  imp.plot = ggplot2::ggplot(data.frame(variable = names(imp), importance = imp), 
-                             aes(x = reorder(variable, importance), y = importance)) +
-    geom_bar(stat = "identity") + 
-    labs(x = "Variable", y = "Importance") +
-    coord_flip()
-  
-  imp.plot <- plotly::ggplotly(imp.plot)
-  
-  # ICE plots
-  # ice.plot <- ICEbox::ice() # Need to decide layout
-  
-  output = list(fit.pruned, error, tree.plot, imp.plot, ice.plot)
-  
-  return(output)
+  return(rpart.summary)
 }
+
+data(iris)
+class(iris$Species)
 
 library(rpart)
 data(car90)
@@ -139,13 +130,13 @@ b = wrapperCART(train = car90, y = "Price", type = "regr")
 # Alternative would be to use c4.5 trees instead of CART.
 
 wrapperRF <- function(type, y, train, y.test = NULL, test = NULL, tune = F, ordered.vars = NULL, 
-                       probability = F,
-                       num.trees = 500, 
-                       mtry = NULL,
-                       importance = "impurity_corrected",
-                       quantreg = F,
-                       num.threads = as.numeric(Sys.getenv("NUMBER_OF_PROCESSORS")), 
-                       ...) {
+                      probability = F,
+                      num.trees = 500, 
+                      mtry = NULL,
+                      importance = "impurity_corrected",
+                      quantreg = F,
+                      num.threads = as.numeric(Sys.getenv("NUMBER_OF_PROCESSORS")), 
+                      ...) {
   
   train[ordered.vars] <- lapply(train[ordered.vars],
                                 function(x) if(!is.ordered(x)) factor(x, ordered = T) else x)
@@ -214,15 +205,12 @@ wrapperRF <- function(type, y, train, y.test = NULL, test = NULL, tune = F, orde
     
   }
   
-  # Variable importance plots
+  rpart.summary = structure(list(model = "sdf",
+  )
+  class = c("inz.tree.rf", "inz.tree", "inz.mbuilder"))
   
-  # p-values (need to look into holdoutRF as well)
-  pval = importance_pvalues(fit, method = "altmann")
+  return(rf.summary)
   
-  # ICE plots
-  
-  
-
 }
 
 train.idx <- sample(nrow(iris), 2/3 * nrow(iris))
@@ -277,10 +265,10 @@ testError <- function(model, y.test, test, ...) {
   } 
   
 }
-  
-  
-    
-    
+
+
+
+
 
 
 

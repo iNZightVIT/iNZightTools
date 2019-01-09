@@ -20,6 +20,7 @@ environment:
   _R_CHECK_FORCE_SUGGESTS: false
   R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
   USE_RTOOLS: true
+  PKGTYPE: binary
 
   matrix:
   - R_VERSION: 3.3.3

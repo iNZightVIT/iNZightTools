@@ -17,7 +17,7 @@ cache:
 
 environment:
   WARNINGS_ARE_ERRORS:
-  _R_CHECK_FORCE_SUGGESTS: 0
+  _R_CHECK_FORCE_SUGGESTS: FALSE
 
   matrix:
   - R_VERSION: 3.3.3

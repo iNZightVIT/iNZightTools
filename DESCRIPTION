@@ -28,7 +28,7 @@ Suggests:
     covr
 Additional_repositories: 
     https://r.docker.stat.auckland.ac.nz,
-    https://r-forge.r-project.org/
+    http://rforge.net
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "inzight_support@stat.auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),

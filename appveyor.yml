@@ -21,7 +21,7 @@ environment:
     _R_CHECK_FORCE_SUGGESTS: 0
 
   matrix:
-  - R_VERSION: 3.3
+  - R_VERSION: 3.3.3
   - R_VERSION: release
 
 build_script:

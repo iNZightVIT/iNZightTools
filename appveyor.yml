@@ -44,8 +44,6 @@ build_script:
   - mv gtk c:\RLibrary\RGtk2
   - del gtk32.zip
   - del gtk64.zip
-  - Rscript -e 'options(repos=c(CRAN="https://cran.rstudio.com")); utils::install.packages("cairoDevice", type="source")'
-
 
 test_script:
   - travis-tool.sh run_tests

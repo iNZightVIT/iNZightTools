@@ -45,8 +45,12 @@ build_script:
   - del gtk32.zip
   - del gtk64.zip
 
+
 test_script:
   - travis-tool.sh run_tests
+
+build_success:
+  - Rscript -e 'packageVersion("iNZightTools")'
 
 on_failure:
   - 7z a failure.zip *.Rcheck\*
@@ -64,6 +68,7 @@ deploy:
   artifact: /\*_*.tar.gz/, /\*_*.zip/
   draft: true
   prerelease: false
+  force_update: true
   on:
     # branch: master
     APPVEYOR_REPO_TAG: true        # deploy on tag push only

@@ -1,0 +1,92 @@
+# DO NOT CHANGE the "init" and "install" sections below
+
+# Download script file from GitHub
+init:
+  ps: |
+        $ErrorActionPreference = "Stop"
+        Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
+        Import-Module '..\appveyor-tool.ps1'
+
+install:
+  ps: Bootstrap
+
+cache:
+  - C:\RLibrary
+
+# Adapt as necessary starting from here
+
+environment:
+  WARNINGS_ARE_ERRORS: 1
+  _R_CHECK_FORCE_SUGGESTS_: false
+  R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+  USE_RTOOLS: true
+
+  matrix:
+  - R_VERSION: release
+
+build_script:
+  # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  - travis-tool.sh install_deps
+  - appveyor DownloadFile "http://ftp.gnome.org/pub/gnome/binaries/win32/gtk+/2.22/gtk+-bundle_2.22.1-20101227_win32.zip" -FileName gtk32.zip
+  - appveyor DownloadFile "http://ftp.gnome.org/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip" -FileName gtk64.zip
+  - md gtk
+  - cd gtk
+  - md i386
+  - cd i386
+  - 7z x ..\..\gtk32.zip > nul
+  - cd ..
+  - md x64
+  - cd x64
+  - 7z x ..\..\gtk64.zip > nul
+  - cd ..
+  - cd ..
+  - if exist c:\RLibrary\RGtk2\gtk\ rd /s /q c:\RLibrary\RGtk2\gtk
+  - mv gtk c:\RLibrary\RGtk2
+  - del gtk32.zip
+  - del gtk64.zip
+
+test_script:
+  - travis-tool.sh run_tests
+
+on_failure:
+  - 7z a failure.zip *.Rcheck\*
+  - appveyor PushArtifact failure.zip
+
+# to do - fetch the most recent "news" information ... somehow, 
+# and write to 'description' field
+deploy:
+  tag: $(APPVEYOR_REPO_TAG_NAME)
+  release: 'iNZightTools $(APPVEYOR_REPO_TAG_NAME)'
+  description: 'Windows Binary'
+  provider: GitHub
+  auth_token:
+    secure: OQ3078QGelP+SykLVd/mzPYM0nT6iWlBVweiT80TG3vsEMXJSC/GfslihNZ1Z4av
+  artifact: /.*_.*\.zip/
+  draft: false
+  prerelease: true
+  force_update: true
+  on:
+    # branch: master
+    APPVEYOR_REPO_TAG: true        # deploy on tag push only
+
+# on_finish:
+#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+artifacts:
+  - path: '*.Rcheck\**\*.log'
+    name: Logs
+
+  - path: '*.Rcheck\**\*.out'
+    name: Logs
+
+  - path: '*.Rcheck\**\*.fail'
+    name: Logs
+
+  - path: '*.Rcheck\**\*.Rout'
+    name: Logs
+
+  - path: '\*_*.tar.gz'
+    name: Bits
+
+  - path: '\*_*.zip'
+    name: Bits

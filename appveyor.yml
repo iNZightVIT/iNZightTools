@@ -61,9 +61,9 @@ deploy:
   provider: GitHub
   auth_token:
     secure: OQ3078QGelP+SykLVd/mzPYM0nT6iWlBVweiT80TG3vsEMXJSC/GfslihNZ1Z4av
-  artifact: /*_*.zip/
+  artifact: /.*_.*\.zip/
   draft: false
-  prerelease: false
+  prerelease: true
   force_update: true
   on:
     # branch: master

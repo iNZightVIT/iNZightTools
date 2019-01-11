@@ -45,9 +45,6 @@ build_script:
   - del gtk32.zip
   - del gtk64.zip
 
-after_build:
-  - Rscript -e 'packageVersion("iNZightTools")'
-
 test_script:
   - travis-tool.sh run_tests
 

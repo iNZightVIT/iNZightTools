@@ -57,7 +57,7 @@ on_failure:
 deploy:
   tag: $(APPVEYOR_REPO_TAG_NAME)
   release: 'iNZightTools $(APPVEYOR_REPO_TAG_NAME)'
-  description: 'Windows Binary'
+  # description: 'Windows Binary'
   provider: GitHub
   auth_token:
     secure: OQ3078QGelP+SykLVd/mzPYM0nT6iWlBVweiT80TG3vsEMXJSC/GfslihNZ1Z4av

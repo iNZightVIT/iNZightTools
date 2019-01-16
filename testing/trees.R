@@ -206,7 +206,7 @@ wrapperRF <- function(type, y, train, y.test = NULL, test = NULL, tune = F, orde
     allArgs <- c(mget(names(formals()), sys.frame(sys.nframe())), list(...))
     
     # Tune mtry and sampling scheme (sample size and replacement)
-    res = tuneRanger(task, 
+    fit = tuneRanger(task, 
                      parameters = allArgs[formalArgs(ranger)],
                      tune.parameters = c("mtry", "replace", "sample.fraction"), 
                      num.trees = num.trees,
@@ -221,7 +221,7 @@ wrapperRF <- function(type, y, train, y.test = NULL, test = NULL, tune = F, orde
     
   }
   
-  rpart.summary = structure(list(model = "sdf",
+  rf.summary = structure(list(model = "sdf",
   )
   class = c("inz.tree.rf", "inz.tree", "inz.mbuilder"))
   

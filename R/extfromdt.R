@@ -42,11 +42,14 @@ extract_part = function(data, varname, part, name) {
   if (part == "Day of the year") {
     var.dt = lubridate::yday(varx)
   }
+  if (part == "Day of the week (number)") {
+    var.dt = lubridate::wday(varx)
+  }
   if (part == "Time only"){
     var.dt = chron::times(strftime(varx, "%H:%M:%S", tz = "UTC"))
     var.dt = as.character(var.dt)
     if (all(var.dt == "00:00:00")) {
-      var.dt = "NA"
+      var.dt = NA
     }
   }
   if (part == "Date only") {
@@ -62,7 +65,7 @@ extract_part = function(data, varname, part, name) {
     x = chron::times(strftime(varx, "%H:%M:%S", tz = "UTC"))
     x = as.character(x)
     if (all(x == "00:00:00")) {
-      x = "NA"
+      var.dt = NA
     } else {
       var.dt = sapply(strsplit(x, ":"), function(x) {
         x = as.numeric(x)
@@ -70,9 +73,26 @@ extract_part = function(data, varname, part, name) {
       })
     }
   }
+  if (part == "Hours") {
+    var.dt = lubridate::hour(varx)
+    if (all(var.dt == "0")) {
+      var.dt = NA
+    }
+  }
+  if (part == "Minutes") {
+    var.dt = lubridate::minute(varx)
+    if (all(var.dt == "0")) {
+      var.dt = NA
+    }
+  }
+  if (part == "Seconds") {
+    var.dt = lubridate::second(varx)
+    if (all(var.dt == "0")) {
+      var.dt = NA
+    }
+  }
   exp = tibble::add_column(data, name = var.dt)
   names(exp)[length(names(exp))] = name
   return(exp)
 }
-
 

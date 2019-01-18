@@ -62,23 +62,21 @@ makeCodeList <- function(cl) {
 
 cs=makeCodeList(codeList) 
 
-codelength <- function(cs, collapse = FALSE) {
-  # - calculate how long this string is
-  # - by looping over its children and calcualting how long they are
-  #  (using codelength())
-  # - until is.null(cs$subcode)
-  len=vector()
-  for ( i in 1:length(cl)){
-    len=c(len,(nchar(cl[[i]]$text)+cl[[i]]$indent))
-    if(!is.null(cl[[i]]$subcode)){
-      len=c(len, codelength(cl[[i]]$subcode))
-    }
-  }
+codelength=function(cl){
+  if(length(cl$subcode)>0){
+    len=nchar(cl$text)+sum(sapply(cl$subcode,codelength))
+  }else{len=nchar(cl$text)}
   len
 }
 
-codelength(cs)
 
 cancollapse <- function(cs) {
-
+  result=codelength(cs)<=width
+  if(length(cs$subcode)>0){
+    if(!all(sapply(cs$subcode,cancollapse))) {result=FALSE}
+    else{result=result}
+  }
+  result
 }
+
+cancollapse(cs[[1]])

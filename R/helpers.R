@@ -9,8 +9,8 @@
 #' @return logical, \code{TRUE} if the variable is numeric
 #' @author Tom Elliott
 #' @export
-is_numeric <- function(x) {
-    vartype(x) %in% c('numeric', 'datetime')
+is_num <- function(x) {
+    vartype(x) %in% c('num', 'dt')
 }
 
 #' Is factor check
@@ -21,8 +21,8 @@ is_numeric <- function(x) {
 #' @return logical, \code{TRUE} if the variable is numeric
 #' @author Tom Elliott
 #' @export
-is_factor <- function(x) {
-    vartype(x) == 'factor'
+is_cat <- function(x) {
+    vartype(x) == 'cat'
 }
 
 #' Get variable type name
@@ -34,7 +34,7 @@ is_factor <- function(x) {
 vartype <- function(x) {
     if (inherits(x, 'POSIXct') || 
         inherits(x, 'Date') || 
-        inherits(x, 'time')) return('datetime')
+        inherits(x, 'time')) return('dt')
 
-    if (is.numeric(x)) 'numeric' else 'factor'
+    if (is.numeric(x)) 'num' else 'cat'
 }

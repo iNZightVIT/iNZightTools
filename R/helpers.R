@@ -18,11 +18,23 @@ is_num <- function(x) {
 #' This function checks if a variable a factor.
 #' 
 #' @param x the variable to check
-#' @return logical, \code{TRUE} if the variable is numeric
+#' @return logical, \code{TRUE} if the variable is a factor
 #' @author Tom Elliott
 #' @export
 is_cat <- function(x) {
     vartype(x) == 'cat'
+}
+
+#' Is datetime check
+#' 
+#' This function checks if a variable a date/time/datetime
+#' 
+#' @param x the variable to check
+#' @return logical, \code{TRUE} if the variable is a datetime
+#' @author Tom Elliott
+#' @export
+is_dt <- function(x) {
+    vartype(x) == 'dt'
 }
 
 #' Get variable type name

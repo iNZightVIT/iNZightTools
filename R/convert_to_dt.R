@@ -3,9 +3,9 @@
 #' Convert to datetime
 #'
 #' @param data dataframe
-#' @param varname name of the variable
+#' @param factorname name of the variable
 #' @param convname format
-#' @param name name of the new column
+#' @param newname name of the new column
 #'
 #' @return dataframe with datatime column
 #' @export
@@ -61,6 +61,7 @@ convert_to_datetime <- function(data, factorname, convname, newname) {
     exp <- ~.DATA %>% 
       tibble::add_column(.NAME = lubridate::parse_date_time(.VARX, convert), .after = ".AFTER")
   }
+
   
   ## Replacing variables
   exp <- iNZightTools:::replaceVars(exp, 
@@ -73,3 +74,5 @@ convert_to_datetime <- function(data, factorname, convname, newname) {
   
   interpolate(exp, convert = convert.string)
 }
+
+

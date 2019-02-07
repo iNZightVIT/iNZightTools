@@ -17,6 +17,8 @@ matrix:
     - os: osx
       r: 3.3
       brew_packages: libgit2
+  allow_failures:
+    - os: osx
 
 repos:
   docker: https://r.docker.stat.auckland.ac.nz

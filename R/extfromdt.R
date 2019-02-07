@@ -10,89 +10,109 @@
 #' @export
 #'
 #' @author Yiwen He
+# extract_part = function(data, varname, part, name) {
+#   varx = data[[varname]]
+#   if (part == "Date only") {
+#     var.dt = as.Date(varx)
+#   }
+#   if (part == "Year") {
+#     var.dt = format(varx, "%C%y")
+#   }
+#   if (part == "Century") {
+#     var.dt = format(varx, "%C")
+#   }
+#   if (part == "Year Quarter") {
+#     var.dt = zoo::as.yearqtr(varx)
+#   }
+#   if (part == "Quarter") {
+#     var.dt = zoo::as.yearqtr(varx)
+#     var.dt = stringr::str_sub(var.dt, -1)
+#   }
+#   if (part == "Year Month") {
+#     var.dt = format(varx, "%Y M%m")
+#   }
+#   if (part == "Month (full)") {
+#     var.dt = format(varx, "%B")
+#   }
+#   if (part == "Month (abbreviated)") {
+#     var.dt = format(varx, "%b")
+#   }
+#   if (part == "Month (number)") {
+#     var.dt = format(varx, "%m")
+#   }
+#   if (part == "Week of the year") {
+#     var.dt = format(varx, "%W")
+#   }
+#   if (part == "Day of the year") {
+#     var.dt = format(varx, "%j")
+#   }
+#   if (part == "Day of the week (name)") {
+#     var.dt = format(varx, "%A")
+#   }
+#   if (part == "Day of the week (number)") {
+#     var.dt = format(varx, "%u")
+#   }
+#   if (part == "Day"){
+#     var.dt = format(varx, "%d")
+#   }
+#   if (part == "Time only"){
+#     var.dt = format(varx, "%H:%M:%S")
+#   }
+#   if (part == "Hours (decimal)") {
+#     x = format(varx, "%H:%M:%S")
+#     var.dt = sapply(strsplit(x, ":"), function(x) {
+#       x = as.numeric(x)
+#       x[1]+(x[2]+x[3]*60)/60
+#     })
+#   }
+#   if (part == "Hour") {
+#     var.dt = format(varx, "%H")
+#   }
+#   if (part == "Minute") {
+#     var.dt = format(varx, "%M")
+#   }
+#   if (part == "Second") {
+#     var.dt = format(varx, "%S")
+#   }
+#   exp = tibble::add_column(data, name = var.dt)
+#   names(exp)[length(names(exp))] = name
+#   return(exp)
+# }
+
 extract_part = function(data, varname, part, name) {
-  varx = data[[varname]]
-  if (part == "Year") {
-    var.dt = lubridate::year(varx)
-  }
-  if (part == "Month (abbreviated)") {
-    var.dt = lubridate::month(varx, label = TRUE, abbr = TRUE)
-  }
-  if (part == "Month (full)") {
-    var.dt = lubridate::month(varx, label = TRUE)
-  }
-  if (part == "Day"){
-    var.dt = lubridate::day(varx)
-  }
-  if (part == "Year quarter") {
-    var.dt = zoo::as.yearqtr(varx)
-  }
-  if (part == "Quarter") {
-    var.dt = zoo::as.yearqtr(varx)
-    var.dt = stringr::str_sub(var.dt, -1)
-  }
-  if (part == "Year month") {
-    year = lubridate::year(varx)
-    month = sprintf("%02d", lubridate::month(varx))
-    var.dt = paste(year, " M", month, sep ="")
-  }
-  if (part == "Week of the year") {
-    var.dt = lubridate::week(varx)
-  }
-  if (part == "Day of the year") {
-    var.dt = lubridate::yday(varx)
-  }
-  if (part == "Day of the week (number)") {
-    var.dt = lubridate::wday(varx)
-  }
-  if (part == "Time only"){
-    var.dt = chron::times(strftime(varx, "%H:%M:%S", tz = "UTC"))
-    var.dt = as.character(var.dt)
-    if (all(var.dt == "00:00:00")) {
-      var.dt = NA
-    }
-  }
-  if (part == "Date only") {
-    var.dt = as.Date(varx)
-  }
-  if (part == "Month (number)") {
-    var.dt = lubridate::month(varx)
-  }
-  if (part == "Day of the week (name)") {
-    var.dt = lubridate::wday(varx, label = TRUE)
-  }
-  if (part == "Hours (decimal)") {
-    x = chron::times(strftime(varx, "%H:%M:%S", tz = "UTC"))
-    x = as.character(x)
-    if (all(x == "00:00:00")) {
-      var.dt = NA
-    } else {
-      var.dt = sapply(strsplit(x, ":"), function(x) {
-        x = as.numeric(x)
-        x[1]+(x[2]+x[3]*60)/60
-      })
-    }
-  }
-  if (part == "Hours") {
-    var.dt = lubridate::hour(varx)
-    if (all(var.dt == "0")) {
-      var.dt = NA
-    }
-  }
-  if (part == "Minutes") {
-    var.dt = lubridate::minute(varx)
-    if (all(var.dt == "0")) {
-      var.dt = NA
-    }
-  }
-  if (part == "Seconds") {
-    var.dt = lubridate::second(varx)
-    if (all(var.dt == "0")) {
-      var.dt = NA
-    }
-  }
-  exp = tibble::add_column(data, name = var.dt)
-  names(exp)[length(names(exp))] = name
-  return(exp)
+  
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  extexp = switch(part, "Date only" = "as.Date(.DATA$.VARNAME)",
+                  "Year" = 'format(.DATA$.VARNAME, "%C%y")',
+                  "Century" = 'format(.DATA$.VARNAME, "%C")',
+                  "Year Quarter" = 'zoo:as.yearqtr(.DATA$.VARNAME)',
+                  "Quarter" = 'stringr::str_sub(zoo:as.yearqtr(.DATA$.VARNAME), -1)',
+                  "Year Month" = 'format(.DATA$.VARNAME, "%Y M%m")',
+                  "Month (full)" = 'format(.DATA$.VARNAME, "%B")',
+                  "Month (abbreviated)" = 'format(.DATA$.VARNAME, "%b")',
+                  "Month (number)" = 'format(.DATA$.VARNAME, "%m")',
+                  "Week of the year" = 'format(.DATA$.VARNAME, "%W")',
+                  "Day of the year" = 'format(.DATA$.VARNAME, "%j")',
+                  "Day of the week (name)" = 'format(.DATA$.VARNAME, "%A")',
+                  "Day of the week (number)" = 'format(.DATA$.VARNAME, "%u")',
+                  "Day" = 'format(.DATA$.VARNAME, "%d")',
+                  "Time only" = 'format(.DATA$.VARNAME, "%H:%M:%S")',
+                  "Hour" = 'format(.DATA$.VARNAME, "%H")',
+                  "Minute" = 'format(.DATA$.VARNAME, "%M")',
+                  "Second" = 'format(.DATA$.VARNAME, "%S")'
+  )
+  
+  exp = ~.DATA %>%
+    tibble::add_column(.NAME = .EXTEXP, .after = ".VARNAME")
+  
+  exp = replaceVars(exp, 
+                    .EXTEXP = extexp, 
+                    .DATA = data, 
+                    .NAME = name, 
+                    .VARNAME = varname)
+  
+  interpolate(exp)
 }
 

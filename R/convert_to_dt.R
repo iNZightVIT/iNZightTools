@@ -10,33 +10,66 @@
 #' @return dataframe with datatime column
 #' @export
 #' @author Yiwen He
-convert_to_datetime = function(data, factorname, convname, newname) {
-  varx = ""
-  for (num in 1:length(factorname)) {
-    name = factorname[num]
-    varx = paste(varx, data[[name]])
-  }
+# convert_to_datetime = function(data, factorname, convname, newname) {
+#   varx = ""
+#   for (num in 1:length(factorname)) {
+#     name = factorname[num]
+#     varx = paste(varx, data[[name]])
+#   }
+#   order_split = strsplit(convname, " ")
+#   convert = ""
+#   for (i in order_split) {
+#     convert = paste(convert, "%", substring(i, 1, 1), sep = "", collapse = "")
+#   }
+#   if (convname == "Unix timestamp (secs from 1970)") {
+#     varx = as.numeric(varx)
+#     converted = as.POSIXct(varx, origin = "1970-01-01")
+#   } else {
+#     converted <- tryCatch(
+#       lubridate::parse_date_time(varx, convert),
+#       warning = function(w) if (w$message != "All formats failed to parse. No formats found.") warning(w$message) else return(NA)
+#     )
+#   }
+#   exp = tibble::add_column(data, name = converted)
+#   names(exp)[length(names(exp))] = newname
+#   return(exp)
+# }
+
+## Altered codes
+convert_to_datetime <- function(data, factorname, convname, newname) {
+  
+  mc <- match.call()
+  dataname <- mc$.data
+  
+  ## Subsetting dataset to get varx
+  Fname = paste0(".DATA$'", factorname, "'", collapse = ", ")
+  Fname = paste0("paste(", Fname,  ")")
+  
+  ## Working out the convert format
   order_split = strsplit(convname, " ")
-  convert = ""
+  convert.string = ""
   for (i in order_split) {
-    convert = paste(convert, "%", substring(i, 1, 1), sep = "", collapse = "")
+    convert.string = paste(convert.string, "%", substring(i, 1, 1), sep = "", collapse = "")
   }
+  
+  ## Actual function
   if (convname == "Unix timestamp (secs from 1970)") {
-    varx = as.numeric(varx)
-    converted = as.POSIXct(varx, origin = "1970-01-01")
+    Fname = as.numeric(Fname)
+    exp <- ~.DATA %>% 
+      tibble::add_column(.NAME = as.POSIXct(.VARX, origin = "1970-01-01"), .after = ".AFTER")
   } else {
-    converted <- tryCatch(
-      lubridate::parse_date_time(varx, convert),
-      warning = function(w) if (w$message != "All formats failed to parse. No formats found.") warning(w$message) else return(NA)
-    )
+    exp <- ~.DATA %>% 
+      tibble::add_column(.NAME = lubridate::parse_date_time(.VARX, convert), .after = ".AFTER")
   }
-  exp = tibble::add_column(data, name = converted)
-  names(exp)[length(names(exp))] = newname
-  return(exp)
+  
+  ## Replacing variables
+  exp <- iNZightTools:::replaceVars(exp, 
+                                    .NAME = newname,
+                                    .VARX = Fname,
+                                    .DATA = data,
+                                    .VARNAME = factorname,
+                                    .AFTER = factorname[length(factorname)]
+  )
+  
+  interpolate(exp, convert = convert.string)
 }
-
-
-xxt <- tryCatch(
-  lubridate::parse_date_time("this is not a date", "ymd"),
-  warning = function(w) if (w$message != "All formats failed to parse. No formats found.") warning(w$message) else return(NA)
-)

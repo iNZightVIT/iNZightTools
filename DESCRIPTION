@@ -1,7 +1,7 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for iNZight
-Version: 1.6.3
+Version: 1.6.3.9000
 Date: 2018-11.15
 Imports:
     utils,
@@ -29,10 +29,14 @@ Suggests:
     testthat,
     FutureLearnData,
     covr
+Additional_repositories: 
+    https://r.docker.stat.auckland.ac.nz,
+    http://rforge.net
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "inzight_support@stat.auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),
-             person("Akshay", "Gupta", role = "ctb"))
+             person("Akshay", "Gupta", role = "ctb"),
+             person("Owen", "Jin", role = "ctb"))
 Description: Compatibility functions used for multiple packages and
     distributions of iNZight, including Lite.
 License: GPL-3 | file LICENSE

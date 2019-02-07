@@ -1,28 +1,39 @@
-# Version 1.6
-__Release date__: 14 Auguest 2018
+## iNZightTools 1.6.3.900
+__Release date:__ TBA
 
-## Breaking Changes
+- add appveyor ci
+
+
+## iNZightTools 1.6.3
+__Release date:__ 15 November 2018
+
+- [fix] prefix `survey::` namespace to function calls
+
+
+## iNZightTools 1.6.2
+__Release date:__ 10 September 2018
+
+- fix a bug in reading csv files with spaces in the header
+
+
+## iNZightTools 1.6.1
+__Release date:__ 04 September 2018
+
+- fix bug in reading metadata where non-meta comments would cancel read
+
+
+# iNZightTools 1.6
+__Release date:__ 14 Auguest 2018
+
+### Breaking Changes
 
 - data import is now performed by the `smart_read()` function
 
-## Minor Changes and Fixes
+### Minor Changes and Fixes
 
 - new function to generate R variable names (for code writing)
 - various bug fixes
 
-## Patches
-
-### Patch 1.6.1 - 04/09/2018
-- fix bug in reading metadata where non-meta comments would cancel read
-
-### Patch 1.6.2 - 10/09/2018
-- fix a bug in reading csv files with spaces in the header
-
-### Patch 1.6.3 - 15/11/2018
-- [fix] prefix `survey::` namespace to function calls
-
-
-***
 
 # Version 1.5
 __Release date__: 23 January 2018

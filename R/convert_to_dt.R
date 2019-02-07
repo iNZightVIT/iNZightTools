@@ -36,7 +36,7 @@
 # }
 
 ## Altered codes
-convert_to_datetime <- function(data, factorname, convname, newname) {
+convert_to_datetime <- function(.data, factorname, convname, newname) {
   
   mc <- match.call()
   dataname <- mc$.data
@@ -67,7 +67,7 @@ convert_to_datetime <- function(data, factorname, convname, newname) {
   exp <- iNZightTools:::replaceVars(exp, 
                                     .NAME = newname,
                                     .VARX = Fname,
-                                    .DATA = data,
+                                    .DATA = dataname,
                                     .VARNAME = factorname,
                                     .AFTER = factorname[length(factorname)]
   )

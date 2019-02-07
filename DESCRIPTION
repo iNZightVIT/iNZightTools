@@ -21,7 +21,8 @@ Imports:
     sas7bdat,
     tools,
     chron,
-    lubridate
+    lubridate,
+    zoo
 Suggests:
     Acinonyx,
     cairoDevice,

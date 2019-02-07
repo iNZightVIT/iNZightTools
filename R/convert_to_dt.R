@@ -3,9 +3,9 @@
 #' Convert to datetime
 #'
 #' @param data dataframe
-#' @param varname name of the variable
+#' @param factorname name of the variable
 #' @param convname format
-#' @param name name of the new column
+#' @param newname name of the new column
 #'
 #' @return dataframe with datatime column
 #' @export

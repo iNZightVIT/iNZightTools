@@ -4,10 +4,10 @@
 \alias{extract_part}
 \title{Extract part of a datetimes variable}
 \usage{
-extract_part(data, varname, part, name)
+extract_part(.data, varname, part, name)
 }
 \arguments{
-\item{data}{dataframe}
+\item{.data}{dataframe}
 
 \item{varname}{name of the variable}
 

@@ -84,29 +84,37 @@ extract_part = function(.data, varname, part, name) {
   mc <- match.call()
   dataname <- mc$.data
   
-  extexp = switch(part, "Date only" = "as.Date(.DATA$.VARNAME)",
-                  "Year" = 'format(.DATA$.VARNAME, "%C%y")',
-                  "Century" = 'format(.DATA$.VARNAME, "%C")',
-                  "Year Quarter" = 'zoo::as.yearqtr(.DATA$.VARNAME)',
-                  "Quarter" = 'stringr::str_sub(zoo::as.yearqtr(.DATA$.VARNAME), -1)',
-                  "Year Month" = 'format(.DATA$.VARNAME, "%Y M%m")',
-                  "Month (full)" = 'format(.DATA$.VARNAME, "%B")',
-                  "Month (abbreviated)" = 'format(.DATA$.VARNAME, "%b")',
-                  "Month (number)" = 'format(.DATA$.VARNAME, "%m")',
-                  "Week of the year" = 'format(.DATA$.VARNAME, "%W")',
-                  "Day of the year" = 'format(.DATA$.VARNAME, "%j")',
-                  "Day of the week (name)" = 'format(.DATA$.VARNAME, "%A")',
-                  "Day of the week (number)" = 'format(.DATA$.VARNAME, "%u")',
-                  "Day" = 'format(.DATA$.VARNAME, "%d")',
-                  "Time only" = 'format(.DATA$.VARNAME, "%H:%M:%S")',
-                  "Hour" = 'format(.DATA$.VARNAME, "%H")',
-                  "Minute" = 'format(.DATA$.VARNAME, "%M")',
-                  "Second" = 'format(.DATA$.VARNAME, "%S")'
-  )
+  if (part == "Hours (decimal)") {
+    Fname = strsplit(format(.DATA$.VARNAME, "%H:%M:%S"), ":")
+    for (i in 1:length(Fname)) {
+      xyz = as.numeric(Fname[[i]][1]) + (as.numeric(Fname[[i]][2]) + as.numeric(Fname[[i]][3]) * 60) / 60
+    }
+    exp = ~.DATA %>%
+      tibble::add_column(.NAME = xyz, .after = ".VARNAME")
+  } else {
+    extexp = switch(part, "Date only" = "as.Date(.DATA$.VARNAME)",
+                    "Year" = 'format(.DATA$.VARNAME, "%C%y")',
+                    "Century" = 'format(.DATA$.VARNAME, "%C")',
+                    "Year Quarter" = 'zoo::as.yearqtr(.DATA$.VARNAME)',
+                    "Quarter" = 'stringr::str_sub(zoo::as.yearqtr(.DATA$.VARNAME), -1)',
+                    "Year Month" = 'format(.DATA$.VARNAME, "%Y M%m")',
+                    "Month (full)" = 'format(.DATA$.VARNAME, "%B")',
+                    "Month (abbreviated)" = 'format(.DATA$.VARNAME, "%b")',
+                    "Month (number)" = 'format(.DATA$.VARNAME, "%m")',
+                    "Week of the year" = 'format(.DATA$.VARNAME, "%W")',
+                    "Day of the year" = 'format(.DATA$.VARNAME, "%j")',
+                    "Day of the week (name)" = 'format(.DATA$.VARNAME, "%A")',
+                    "Day of the week (number)" = 'format(.DATA$.VARNAME, "%u")',
+                    "Day" = 'format(.DATA$.VARNAME, "%d")',
+                    "Time only" = 'format(.DATA$.VARNAME, "%H:%M:%S")',
+                    "Hour" = 'format(.DATA$.VARNAME, "%H")',
+                    "Minute" = 'format(.DATA$.VARNAME, "%M")',
+                    "Second" = 'format(.DATA$.VARNAME, "%S")'
+    )
+    exp = ~.DATA %>%
+      tibble::add_column(.NAME = .EXTEXP, .after = ".VARNAME")
+  }
 
-  exp = ~.DATA %>%
-    tibble::add_column(.NAME = .EXTEXP, .after = ".VARNAME")
-  
   exp = replaceVars(exp, 
                     .EXTEXP = extexp, 
                     .DATA = dataname, 
@@ -114,7 +122,52 @@ extract_part = function(.data, varname, part, name) {
                     .VARNAME = varname)
   
   interpolate(exp)
+  
 }
+
+
+  # extexp = switch(part, "Date only" = "as.Date(.DATA$.VARNAME)",
+  #                 "Year" = 'format(.DATA$.VARNAME, "%C%y")',
+  #                 "Century" = 'format(.DATA$.VARNAME, "%C")',
+  #                 "Year Quarter" = 'zoo::as.yearqtr(.DATA$.VARNAME)',
+  #                 "Quarter" = 'stringr::str_sub(zoo::as.yearqtr(.DATA$.VARNAME), -1)',
+  #                 "Year Month" = 'format(.DATA$.VARNAME, "%Y M%m")',
+  #                 "Month (full)" = 'format(.DATA$.VARNAME, "%B")',
+  #                 "Month (abbreviated)" = 'format(.DATA$.VARNAME, "%b")',
+  #                 "Month (number)" = 'format(.DATA$.VARNAME, "%m")',
+  #                 "Week of the year" = 'format(.DATA$.VARNAME, "%W")',
+  #                 "Day of the year" = 'format(.DATA$.VARNAME, "%j")',
+  #                 "Day of the week (name)" = 'format(.DATA$.VARNAME, "%A")',
+  #                 "Day of the week (number)" = 'format(.DATA$.VARNAME, "%u")',
+  #                 "Day" = 'format(.DATA$.VARNAME, "%d")',
+  #                 "Time only" = 'format(.DATA$.VARNAME, "%H:%M:%S")',
+  #                 "Hour" = 'format(.DATA$.VARNAME, "%H")',
+  #                 "Minute" = 'format(.DATA$.VARNAME, "%M")',
+  #                 "Second" = 'format(.DATA$.VARNAME, "%S")'
+  # )
+
+  # exp = ~.DATA %>%
+  #   tibble::add_column(.NAME = .EXTEXP, .after = ".VARNAME")
+  # 
+  # exp = replaceVars(exp, 
+  #                   .EXTEXP = extexp, 
+  #                   .DATA = dataname, 
+  #                   .NAME = name, 
+  #                   .VARNAME = varname)
+  # 
+  # interpolate(exp)
 
 ## zoo package
 ## add hours(decimal)
+
+
+# if (part == "Hours (decimal)") {
+#   Fname = strsplit(format(.DATA$.VARNAME, "%H:%M:%S"), ":")
+#   for (i in 1:length(Fname)) {
+#     xyz = as.numeric(Fname[[i]][1]) + (as.numeric(Fname[[i]][2]) + as.numeric(Fname[[i]][3]) * 60) / 60
+#   }
+# }
+
+
+
+

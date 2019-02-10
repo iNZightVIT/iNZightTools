@@ -2,7 +2,7 @@
 
 #' Convert to datetime
 #'
-#' @param data dataframe
+#' @param .data dataframe
 #' @param factorname name of the variable
 #' @param convname format
 #' @param newname name of the new column
@@ -10,32 +10,12 @@
 #' @return dataframe with datatime column
 #' @export
 #' @author Yiwen He
-# convert_to_datetime = function(data, factorname, convname, newname) {
-#   varx = ""
-#   for (num in 1:length(factorname)) {
-#     name = factorname[num]
-#     varx = paste(varx, data[[name]])
-#   }
-#   order_split = strsplit(convname, " ")
-#   convert = ""
-#   for (i in order_split) {
-#     convert = paste(convert, "%", substring(i, 1, 1), sep = "", collapse = "")
-#   }
-#   if (convname == "Unix timestamp (secs from 1970)") {
-#     varx = as.numeric(varx)
-#     converted = as.POSIXct(varx, origin = "1970-01-01")
-#   } else {
+
+# Something to think about
 #     converted <- tryCatch(
 #       lubridate::parse_date_time(varx, convert),
 #       warning = function(w) if (w$message != "All formats failed to parse. No formats found.") warning(w$message) else return(NA)
-#     )
-#   }
-#   exp = tibble::add_column(data, name = converted)
-#   names(exp)[length(names(exp))] = newname
-#   return(exp)
-# }
 
-## Altered codes
 convert_to_datetime <- function(.data, factorname, convname, newname) {
   
   mc <- match.call()
@@ -53,8 +33,8 @@ convert_to_datetime <- function(.data, factorname, convname, newname) {
   }
   
   ## Actual function
-  if (convname == "Unix timestamp (secs from 1970)") {
-    Fname = as.numeric(Fname)
+  if (convert.string == "%U%t%(%f%1") {
+    Fname = paste0("as.numeric(", Fname, ")")
     exp <- ~.DATA %>% 
       tibble::add_column(.NAME = as.POSIXct(.VARX, origin = "1970-01-01"), .after = ".AFTER")
   } else {
@@ -62,17 +42,16 @@ convert_to_datetime <- function(.data, factorname, convname, newname) {
       tibble::add_column(.NAME = lubridate::parse_date_time(.VARX, convert), .after = ".AFTER")
   }
 
-  
   ## Replacing variables
   exp <- iNZightTools:::replaceVars(exp, 
                                     .NAME = newname,
                                     .VARX = Fname,
                                     .DATA = dataname,
                                     .VARNAME = factorname,
-                                    .AFTER = factorname[length(factorname)]
+                                    .AFTER = factorname[length(factorname)],
+                                    .CONVNAME = convname
   )
   
   interpolate(exp, convert = convert.string)
 }
-
 

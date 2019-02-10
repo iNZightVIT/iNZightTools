@@ -43,14 +43,13 @@ convert_to_datetime <- function(.data, factorname, convname, newname) {
   }
 
   ## Replacing variables
-  exp <- iNZightTools:::replaceVars(exp, 
-                                    .NAME = newname,
-                                    .VARX = Fname,
-                                    .DATA = dataname,
-                                    .VARNAME = factorname,
-                                    .AFTER = factorname[length(factorname)],
-                                    .CONVNAME = convname
-  )
+  exp <- replaceVars(exp, 
+                    .NAME = newname,
+                    .VARX = Fname,
+                    .DATA = dataname,
+                    .VARNAME = factorname,
+                    .AFTER = factorname[length(factorname)]
+                    )
   
   interpolate(exp, convert = convert.string)
 }

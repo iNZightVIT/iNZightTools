@@ -4,10 +4,10 @@
 \alias{convert_to_datetime}
 \title{Convert to datetime}
 \usage{
-convert_to_datetime(data, factorname, convname, newname)
+convert_to_datetime(.data, factorname, convname, newname)
 }
 \arguments{
-\item{data}{dataframe}
+\item{.data}{dataframe}
 
 \item{factorname}{name of the variable}
 

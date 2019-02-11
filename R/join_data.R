@@ -2,6 +2,7 @@ joindata <- function(.data, imported_data, origin_join_col, import_join_col, joi
   
   mc <- match.call()
   dataname <- mc$.data
+  importname <- mc$imported_data
   
   col_names = ""
   for (i in 1:length(origin_join_col)) {
@@ -14,20 +15,20 @@ joindata <- function(.data, imported_data, origin_join_col, import_join_col, joi
                   "Full Join" = "full_join",
                   "Semi Join" = "semi_join",
                   "Anti Join" = "anti_join")
-  expext = paste0(expext, '(', .DATA, ', ', .DATA2, ", by = c(", col_names, "))")
+  expext = paste0(expext, '(', '.DATA', ', ', '.DATA2', ", by = c(", col_names, "))")
   
-  ## print(paste0(.EXP, '(', .DATA, ', ', .DATA2, ", by = c(", col_names, "))"))
+  # print(paste0(.EXP, '(', .DATA, ', ', .DATA2, ", by = c(", col_names, "))"))
   
   ## Fname = paste0(.EXP, '(', .DATA, ', ', .DATA2, ", by = c(", .COL, "))")
   
   print(expext)
   
-  exp = ~.DATA %>%
-    tibble::add_column(.NAME = .EXP)
+  exp = ~.DATA %>% .EXP
   
-  exp <- replaceVars(exp, .DATA = dataname,
-                     .DATA2 = imported_data,
+  exp <- replaceVars(exp, 
                      .EXP = expext,
+                     .DATA2 = importname,
+                     .DATA = dataname,
                      .NAME = name)
   
   interpolate(exp)

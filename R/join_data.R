@@ -9,6 +9,8 @@ joindata <- function(.data, imported_data, origin_join_col, import_join_col, joi
   }
   col_names = substr(col_names, 1, nchar(col_names)-1)
   
+  # paste0("'", paste0(left, "' = '", right, collapse = "', '"), "'")
+  
   expext = switch(join_method, "Inner Join" = "inner_join",
                   "Left Join" = "left_join",
                   "Full Join" = "full_join",

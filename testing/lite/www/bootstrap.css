@@ -1,0 +1,177 @@
+.wrapper {
+  overflow: visible !important;
+}
+
+.rightAlign {
+  float: right;
+}
+
+
+.surv .form-group.shiny-input-container {
+  padding-top: 0;
+  margin-bottom: 5px;
+}
+
+/*#target ~ .selectize-control .selectize-input {
+  max-height: 80px;
+  overflow-y: auto;
+}*/
+
+#create_task {
+  margin-left:51%;
+  margin-top:10%;
+}
+
+#create_task .fa.fa-refresh {
+  margin-right:10%;
+}
+                                               
+
+/* task summary box */
+.task {
+  margin-top:15px;
+  margin-left:30px;
+  margin-right:30px;
+}
+
+
+.task .control-label {
+  margin-left:15px;
+  padding-top:0;
+/*  text-align:left; */
+  
+}
+
+.task hr {
+  margin-top:14px;
+  margin-bottom:14px;
+  border-top:1.2px solid #eee;
+  width:90%;
+}
+
+.src-footer {
+    bottom: 6%;
+    position: absolute;
+    right: 8%;
+}
+              
+                                                                                                                 /* why doesn't #add_learner button{} work??? */                                   
+                                                                                                                   
+.lrnrbox .box-header {
+  background: rgba(40,183,141,.3); /* rgba(0,135,90,.45) */  
+  height: 30px;
+  padding-top: 0;
+  color: #28b78d; /* rgb(3,147,118) */
+}                                                  
+                                                  
+                                                  
+.lrnrbox .box.box-solid {
+  border: 1px solid #28b78d;
+  background: rgba(40,183,141,.15); /* rgba(0,135,90,.2) */                                   
+}                                                  
+                                                  
+                                
+                                                  
+.lrnrbox .box-tools {
+  position: absolute;
+  right: 5px;
+  top: 0;
+}                                                  
+                                                  
+                                                  
+.lrnrbox .learner-title {
+  margin-top: 5px;
+}
+
+.lrnrbox .fa.fa-remove {
+  color: rgb(3,147,118);
+}
+                                                  
+/* end lrnrbox */
+
+.paramset h4 {
+  color: #28b78d;
+  font-size: 16px;
+}
+
+.paramset hr {
+  border: 1px solid #28b78d;
+}
+
+.paramset {
+  color: #28b78d;
+}
+
+.paramset .control-label {
+  padding-top:0;
+  text-align: left;
+  padding-left: 0px;
+}
+
+.paramset p {
+  text-align:right;
+}
+  
+div[id *= '_param_modal'] {
+  color:#333;
+}
+
+
+/* start param inputs */
+                                                
+.param .form-group {
+  margin-bottom: 4px;
+}                                                  
+                                                   
+[for *= 'value'] {
+  display: none;
+}                                                   
+
+#param_settings {
+  color: #333;
+}                                                 
+                                                 
+                                                 
+/* inner resampling box */
+
+.innerbox .box-header {
+  background: rgba(254,171,58,.3); /* rgba(0,135,90,.45) */  
+  height: 30px;
+  padding-top: 0px;
+  color: #feab3a; /* rgb(3,147,118) */
+}                                                  
+                                                  
+.innerbox .box {
+  border: 1px solid #feab3a;
+  background: rgba(254,171,58,.15); /* rgba(0,135,90,.2) */                                   
+}                                           
+                                                  
+.innerbox .inner-title {
+  margin-top: 5px;
+}
+
+/* inner resampling box */
+
+.outerbox .box-header {
+  background: rgba(255,89,100,.3); /* rgba(0,135,90,.45) */  
+  height: 30px;
+  padding-top: 0px;
+  color: #ff5964; /* rgb(3,147,118) */
+}                                                  
+                                                  
+.outerbox .box {
+  border: 1px solid #ff5964;
+  background: rgba(255,89,100,.15); /* rgba(0,135,90,.2) */                                   
+}                                           
+                                                  
+.outerbox .outer-title {
+  margin-top: 5px;
+}
+
+
+/* removing whitespace between columns */
+
+#shiny-tab-trees .col-sm-2 {
+  padding-left:0;
+  padding-right:0;
+}

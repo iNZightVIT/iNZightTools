@@ -1,83 +1,51 @@
-joindata <- function(.data, imported_data, origin_join_col, import_join_col, join_method = "inner", left = ".x", right = ".y") {
+#' Join data with another dataset
+#'
+#' @param .data Original data
+#' @param imported_data Imported dataset
+#' @param origin_join_col column selected from the original data
+#' @param import_join_col column selected from the imported dataset
+#' @param join_method function used to join the two datasets
+#' @param left suffix name assigned to the original dataset
+#' @param right suffix name assigned to the imported dataset
+#'
+#' @return joined dataset
+#' @export
+#'
+#' @examples
+joindata <- function(.data, imported_data, origin_join_col, import_join_col, join_method, left, right) {
   
   mc <- match.call()
   dataname <- mc$.data
   importname <- mc$imported_data
-  
-  # join cols need to have the same length (if not, stop('NEed same number of cols'))
+
+  if (((origin_join_col == "") & (import_join_col !="")) | ((origin_join_col != "") & (import_join_col ==""))) {
+    stop('Need same number of cols')
+  }
   
   col_names = ""
-  if (!missing(origin_join_col) && !missing(import_join_col)) {
+  if ( (origin_join_col != "") & (import_join_col != "")) {
     for (i in 1:length(origin_join_col)) {
       col_names = paste0(col_names, "'", origin_join_col[i], "'='", import_join_col[i], "',")
     }
     col_names = substr(col_names, 1, nchar(col_names)-1)
   }
-  
-  fun <- sprintf("%s_join", join_method)
-  # expext = switch(join_method, "Inner Join" = "inner_join",
-  #                 "Left Join" = "left_join",
-  #                 "Full Join" = "full_join",
-  #                 "Semi Join" = "semi_join",
-  #                 "Anti Join" = "anti_join")
-  # expext = paste0(expext, '(', '.IMP', ", by = c(", col_names, "), suffix = c('.", '.LEFT', "', '.", '.RIGHT', "'))")
-  
-  # print(paste0(.EXP, '(', .DATA, ', ', .DATA2, ", by = c(", col_names, "))"))
-  
-  ## Fname = paste0(.EXP, '(', .DATA, ', ', .DATA2, ", by = c(", .COL, "))")
-  
-  print(expext)
-  print(dataname)
-  print(importname)
-  
+
   byfml <- ""
-  if (length(col_names)) {
+  if (col_names != "") {
     byfml <- sprintf(", by = c(%s)", col_names)
   }
   
-  
-  exp = ~.DATA %>% .FUN(.IMP.BY.METHOD.SUFFIX)
+  suf = paste0(", suffix = c('.", left, "', '.", right, "')")
+
+  exp = ~.DATA %>% .FUN(.IMP.BY.SUFFIX)
+
   
   exp <- replaceVars(exp, 
-                     .EXP = expext,
                      .DATA = dataname,
                      .IMP = importname,
-                     .LEFT = left,
-                     .RIGHT = right)
+                     .BY = byfml,
+                     .FUN = join_method,
+                     .SUFFIX = suf)
   
   interpolate(exp)
 }
-
-# joindata <- function(.data, imported_data, origin_join_col, import_join_col, join_method, left, right) {
-#   
-#   mc <- match.call()
-#   dataname <- mc$.data
-#   
-#   col_names = ""
-#   for (i in 1:length(origin_join_col)) {
-#     col_names = paste0(col_names, "'", origin_join_col[i], "'='", import_join_col[i], "',")
-#   }
-#   col_names = substr(col_names, 1, nchar(col_names)-1)
-#   
-#   expext = switch(join_method, "Inner Join" = "inner_join",
-#                   "Left Join" = "left_join",
-#                   "Full Join" = "full_join",
-#                   "Semi Join" = "semi_join",
-#                   "Anti Join" = "anti_join")
-#   expext = paste0(expext, '(', '.DATA', ', ', '.IMP', ", by = c(", col_names, "), suffix = c('.", '.LEFT', "', '.", '.RIGHT', "'))")
-#   
-#   print(expext)
-#   print(.data)
-#   print(imported_data)
-#   
-#   exp = ~.DATA %>% .EXP
-#   
-#   exp <- replaceVars(exp, 
-#                      .EXP = expext,
-#                      .DATA = dataname,
-#                      .IMP = imported_data,
-#                      .LEFT = left,
-#                      .RIGHT = right)
-#   
-#   interpolate(exp)
-# }

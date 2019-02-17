@@ -53,7 +53,13 @@ convert_to_datetime <- function(.data, factorname, convname, newname) {
   
   tryCatch(
     interpolate(exp, convert = convert.string),
-    warning = function(w) if (w$message != "All formats failed to parse. No formats found.") warning(w$message) else return(data.frame(NA))
-  )
+    warning = function(w) {
+      if (w$message != "All formats failed to parse. No formats found.") {
+        warning(w$message)
+        } else {
+          warning("Failed to parse")
+          return(.data)
+        }
+  })
 }
 

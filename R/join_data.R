@@ -17,9 +17,11 @@ joindata <- function(.data, imported_data, origin_join_col, import_join_col, joi
   mc <- match.call()
   dataname <- mc$.data
   importname <- mc$imported_data
-
-  if (((origin_join_col == "") & (import_join_col !="")) | ((origin_join_col != "") & (import_join_col ==""))) {
-    stop('Need same number of cols')
+  
+  for (i in 1:length(origin_join_col)) {
+    if (((origin_join_col[i] == "") & (import_join_col[i] !="")) | ((origin_join_col[i] != "") & (import_join_col[i] ==""))) {
+      stop('Must select at least one column from each dataset to match on')
+    }
   }
   
   col_names = ""
@@ -36,9 +38,8 @@ joindata <- function(.data, imported_data, origin_join_col, import_join_col, joi
   }
   
   suf = paste0(", suffix = c('.", left, "', '.", right, "')")
-
+  
   exp = ~.DATA %>% .FUN(.IMP.BY.SUFFIX)
-
   
   exp <- replaceVars(exp, 
                      .DATA = dataname,

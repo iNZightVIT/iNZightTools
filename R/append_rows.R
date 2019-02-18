@@ -6,8 +6,8 @@ appendrows <- function(.data, imported_data, date) {
   
   if (date) {
     exp = ~.DATA %>% 
-      bind_rows(.IMP) %>% 
-      tibble::add_column("When_Added" = Sys.time())
+      tibble::add_column("When_Added" = Sys.time()) %>% 
+      bind_rows(.IMP)
   } else {
     exp = ~.DATA %>% bind_rows(.IMP)
   }
@@ -18,3 +18,6 @@ appendrows <- function(.data, imported_data, date) {
   
   interpolate(exp)
 }
+
+
+?tibble::add_column

@@ -5,14 +5,43 @@ stripattr <- function(x, attrs = c('code', 'join_cols')) {
   x
 }
 
-data = readr::read_csv("~/iNZight/scripts/parisjoin.csv") #original
-data2 = readr::read_csv("~/iNZight/scripts/parisjoin2.csv") #has the same column "Instagram photo" with completely different values
-data3 = readr::read_csv("~/iNZight/scripts/parisjoin3.csv") #contains a column named "sdasdsds" which has the same value as "Instagram user"
-data4 = readr::read_csv("~/iNZight/scripts/parisjoin4.csv") #contains the same column "Instagram photo" with one value that is the same to the original one
+d1 = readr::read_csv("~/iNZight/scripts/join.csv")
+d2 = readr::read_csv("~/iNZight/scripts/join2.csv") 
+d3 = readr::read_csv("~/iNZight/scripts/join3.csv") 
 
 test_that("Auto detection works", {
-  expect_equal(stripattr(joindata(d1, d2)), inner_join(d1, d2))
+  expect_equal(stripattr(joindata(d1, d2, "", "", "inner_join", "x", "y")), inner_join(d1, d2))
 })
 
-# 
+test_that("Inner join works", {
+  expect_equal(stripattr(joindata(d1, d3, list("x1", "x2"), list("x1", "x6"), "inner_join", "x", "y")), inner_join(d1, d3, by = c("x1" = "x1", "x2" = "x6")))
+  expect_equal(stripattr(joindata(d1, d2, "x1", "x1", "inner_join", "x", "y")), inner_join(d1, d2, by = c("x1" = "x1")))
+})
+
+test_that("Left join works", {
+  expect_equal(stripattr(joindata(d1, d3, list("x1", "x2"), list("x1", "x6"), "left_join", "x", "y")), left_join(d1, d3, by = c("x1" = "x1", "x2" = "x6")))
+  expect_equal(stripattr(joindata(d1, d2, "x1", "x1", "left_join", "x", "y")), left_join(d1, d2, by = c("x1" = "x1")))
+})
+
+test_that("Full join works", {
+  expect_equal(stripattr(joindata(d1, d3, list("x1", "x2"), list("x1", "x6"), "full_join", "x", "y")), full_join(d1, d3, by = c("x1" = "x1", "x2" = "x6")))
+  expect_equal(stripattr(joindata(d1, d2, "x1", "x1", "full_join", "x", "y")), full_join(d1, d2, by = c("x1" = "x1")))
+})
+
+test_that("Semi join works", {
+  expect_equal(stripattr(joindata(d1, d3, list("x1", "x2"), list("x1", "x6"), "semi_join", "x", "y")), semi_join(d1, d3))
+  expect_equal(stripattr(joindata(d1, d2, "x1", "x1", "semi_join", "x", "y")), semi_join(d1, d2, by = c("x1" = "x1")))
+})
+
+test_that("Anti join works", {
+  expect_equal(stripattr(joindata(d1, d3, list("x1", "x2"), list("x1", "x6"), "anti_join", "x", "y")), anti_join(d1, d3))
+  expect_equal(stripattr(joindata(d1, d2, "x1", "x1", "anti_join", "x", "y")), anti_join(d1, d2, by = c("x1" = "x1")))
+})
+
+test_that("Inbalanced columns are returned with an error", {
+  expect_error(
+    stripattr(joindata(d1, d3, list("x1", "x2"), list("x1", ""), "anti_join", "x", "y"))
+  )
+})
+
 

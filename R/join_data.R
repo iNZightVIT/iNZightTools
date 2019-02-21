@@ -27,11 +27,11 @@ joindata <- function(.data, imported_data, origin_join_col, import_join_col, joi
   col_names = ""
   for (i in 1:length(origin_join_col)) {
     if ((origin_join_col[i] != "") & (import_join_col[i] != "")) {
-        col_names = paste0(col_names, "'", origin_join_col[i], "'='", import_join_col[i], "',")
+      col_names = paste0(col_names, "'", origin_join_col[i], "'='", import_join_col[i], "',")
     }
   }
   col_names = substr(col_names, 1, nchar(col_names)-1)
-
+  
   byfml <- ""
   if (col_names != "") {
     byfml <- sprintf(", by = c(%s)", col_names)
@@ -48,41 +48,15 @@ joindata <- function(.data, imported_data, origin_join_col, import_join_col, joi
                      .BY = byfml,
                      .FUN = join_method,
                      .SUFFIX = suf)
-
-  if ((origin_join_col == "") && (import_join_col == "")) {
-    vars = testthat::capture_message(interpolate(exp))
-    vars = stringi::stri_extract_all_regex(vars, '"\\S+"')
-    import_col = list()
-    for (i in 1:length(vars[[1]])) {
-      import_col = append(import_col, noquote(vars[[1]][i]))
-    }
-    origin_col = import_col
-    interpolate(exp)
-  } else {
+  
+  if (origin_join_col == "" & import_join_col == "") {
     res <- interpolate(exp)
+    vars <- capture.output(inner_join(.data, imported_data), type = "message")
+    origin_join_col <- eval(parse(text = gsub(".+ = ", "", vars)))
+    import_join_col <- origin_join_col
+  } else {
+    res <- suppressMessages(interpolate(exp))
   }
-  # attr(res, "join_cols") <- structure(import_col, .Names = origin_col)
+  attr(res, "join_cols") <- structure(import_join_col, .Names = origin_join_col)
+  res
 }
-
-
-  #interpolate(exp)
-  
-  # if (origin_join_col == "" & import_join_col == "") {
-  #   res = interpolate(exp)
-  #   vars = Reduce(intersect, list(colnames(.data), colnames(imported_data)))
-  #   import_col = vars
-  #   origin_col = vars
-  # } else {
-  #   res = interpolate(exp)
-  # }
-  # 
-  # attr(res, "join_cols") = structure(import_col, .Names = origin_col)
-  
-  # interpolate(exp)
-  
-  # if (origin_join_col == "" & import_join_col == "") {
-  #   vars = Reduce(intersect, list(colnames(.data), colnames(imported_data)))
-  #   import_col = vars
-  #   origin_col = vars
-  #   attr(exp, "join_cols") = structure(import_col, .Names = origin_col)
-  # }

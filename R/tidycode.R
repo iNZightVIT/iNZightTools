@@ -1,3 +1,15 @@
+##' Tidy code with correct indents and limit the code to the specific width 
+##' 
+##' @title iNZight Tidy Code 
+##' @param messy_code file name of the file containing messy code 
+##' @param inclLib logical, if true, the output code will contain library name
+##' @param width the width of a line
+##' @param indent how many spaces for one indent
+##' @param outfile the file name of the file containing formatted code
+##' @return a file with formatted code
+##' @author Lushi Cai
+##' @export
+
 ### main function
 tidy_code <- function(codeline, width, indent) {
   code <- getcode(codeline)

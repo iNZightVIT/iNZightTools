@@ -40,6 +40,7 @@ getText <- function(x, inclLib = TRUE) {
       package <- gregexpr("::", withpn)
       if (!(package %in% -1)) {
         space <- gregexpr(" ", withpn)
+        
         allname <- vector()
         for (i in (1:length(package[[1]]))) {
           allname <- c(allname, substr(withpn, space[[1]][max(which(space[[1]] < package[[1]][i]))] +
@@ -56,30 +57,40 @@ getText <- function(x, inclLib = TRUE) {
   }
   
   code <- trimws(code1[trimws(code1) != ""])
+  
   assignment <- grep("<-", code)
   pipe <- grep("%<>%", code)
+  
   allop <- sort(c(assignment, pipe))
-  close <- c(allop[2:length(allop)] - 1, length(code))
-  
-  fin <- c()
-  for (i in 1:length(allop)) {
-    fin <- c(fin, paste(code[allop[i]:close[i]], collapse = " "))
-  }
-  code1 <- fin
-  opindex <- sapply(code1, getop)
-  varlist <- sapply(code1, getvariable)
-  
-  for (i in length(varlist):1) {
-    if (i > 1 && varlist[[i]] == varlist[[i - 1]]) {
-      code1[i - 1] <- paste(code1[i - 1], "%>%", substring(code1[i], opindex[[i]] +
-                                                             1, nchar(code1[i])))
-      code1[i] = ""
+  if(length(allop)<2){
+    code1 <- code
+  } else{
+    close <- c(allop[2:length(allop)] - 1, length(code))
+    
+    fin <- c()
+    for (i in 1:length(allop)) {
+      fin <- c(fin, paste(code[allop[i]:close[i]], collapse = " "))
+    }
+    code1 <- fin
+    
+    opindex <- sapply(code1, getop)
+    
+    varlist <- sapply(code1, getvariable)
+    
+    
+    for (i in length(varlist):1) {
+      if (i > 1 && varlist[[i]] == varlist[[i - 1]]) {
+        code1[i - 1] <- paste(code1[i - 1], "%>%", substring(code1[i], opindex[[i]] +
+                                                               1, nchar(code1[i])))
+        code1[i] = ""
+      }
+    }
+    if (!grepl("<-|%<>%", origin[1])) {
+      code1 <- c(origin[1:allop[1] - 1], code1)
     }
   }
-  if (!grepl("<-|%<>%", origin[1])) {
-    code1 <- c(origin[1:allop[1] - 1], code1)
-  }
   code1[code1 != ""]
+  
 }
 
 getvariable <- function(code) {
@@ -88,7 +99,6 @@ getvariable <- function(code) {
   variable <- trimws(variable)
   variable
 }
-
 getop <- function(code) {
   pos <- regexpr("%<>%|<-|%>%", code)
   pos[[1]] + attr(pos, "match.length") - 1

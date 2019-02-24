@@ -18,7 +18,7 @@ tidy_all_code <- function(messy_code,
                           outfile) {
   if (length(messy_code) == 1 && file.exists(messy_code)) {
     allcode <- get_text(messy_code, incl_library)
-    strvector <- sapply(allcode, tidy_code, width = 2, indent = 2)
+    strvector <- sapply(allcode, tidy_code, width = width, indent = indent)
     splist <- strsplit(unlist(strvector), "\n")
     splist <- unlist(splist, use.names = FALSE)
     splist <- splist[splist != ""]

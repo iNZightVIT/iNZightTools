@@ -12,23 +12,27 @@
 
 ### main function 
 tidy_all_code <- function(messy_code,
-                          incl_library,
+                          incl_library = TRUE,
                           width,
                           indent,
                           outfile) {
   if (length(messy_code) == 1 && file.exists(messy_code)) {
-    allcode <- get_text(messy_code, incl_library)
+    allcode <- getText(messy_code, incl_library)
     strvector <- sapply(allcode, tidy_code, width = width, indent = indent)
     splist <- strsplit(unlist(strvector), "\n")
     splist <- unlist(splist, use.names = FALSE)
     splist <- splist[splist != ""]
     write(splist, outfile)
+    
   }
 }
 
 ### tidy a single piece of code
 tidy_code <- function(codeline, width, indent) {
   code <- getcode(codeline)
+  if (length(code) == 1) {
+    return (code)
+  }
   indents <- getindents(code)
   codeList <- list()
   for (i in seq_along(1:length(code))) {
@@ -36,11 +40,12 @@ tidy_code <- function(codeline, width, indent) {
   }
   final <- list()
   cl <- makeCodeList(codeList)
-  sapply(cl, print_code, wi = width, i = indent)
+  sapply(cl, printcode6, wi = width, i = indent)
 }
 
+
 ### import txt file and library names can display or not display
-get_text <- function(x, incl_library = TRUE) {
+getText <- function(x, incl_library = TRUE) {
   code <- readLines(x)
   code1 <- code[trimws(code) != ""]
   origin <- code1
@@ -68,9 +73,12 @@ get_text <- function(x, incl_library = TRUE) {
     }
     code1 <- code2[trimws(code2) != ""]
   }
+  
   code <- trimws(code1[trimws(code1) != ""])
+  
   assignment <- grep("<-", code)
   pipe <- grep("%<>%", code)
+  
   allop <- sort(c(assignment, pipe))
   
   if (length(allop) < 1) {
@@ -80,6 +88,7 @@ get_text <- function(x, incl_library = TRUE) {
       code1 <- paste(code[allop[1]:length(code)], collapse = " ")
     }else{
       close <- c(allop[2:length(allop)] - 1, length(code))
+      
       fin <- c()
       for (i in 1:length(allop)) {
         fin <- c(fin, paste(code[allop[i]:close[i]], collapse = " "))
@@ -87,7 +96,9 @@ get_text <- function(x, incl_library = TRUE) {
       code1 <- fin
     }
     opindex <- sapply(code1, getop)
+    
     varlist <- sapply(code1, getvariable)
+    
     
     for (i in length(varlist):1) {
       if (i > 1 && varlist[[i]] == varlist[[i - 1]]) {

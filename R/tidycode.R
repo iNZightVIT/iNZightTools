@@ -358,5 +358,6 @@ printcode6 <-
         longstr <- paste(x$text)
       }
     }
+    longstr <- gsub("\n\n", "\n", longstr)
     longstr
   }

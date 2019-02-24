@@ -2,7 +2,7 @@
 ##' 
 ##' @title iNZight Tidy Code 
 ##' @param messy_code file name of the file containing messy code 
-##' @param inclLib logical, if true, the output code will contain library name
+##' @param incl_library logical, if true, the output code will contain library name
 ##' @param width the width of a line
 ##' @param indent how many spaces for one indent
 ##' @param outfile the file name of the file containing formatted code
@@ -10,7 +10,23 @@
 ##' @author Lushi Cai
 ##' @export
 
-### main function
+### main function 
+tidy_all_code <- function(messy_code,
+                          incl_library,
+                          width,
+                          indent,
+                          outfile) {
+  if (length(messy_code) == 1 && file.exists(messy_code)) {
+    allcode <- get_text(messy_code, incl_library)
+    strvector <- sapply(allcode, tidy_code, width = 2, indent = 2)
+    splist <- strsplit(unlist(strvector), "\n")
+    splist <- unlist(splist, use.names = FALSE)
+    splist <- splist[splist != ""]
+    write(splist, outfile)
+  }
+}
+
+### tidy a single piece of code
 tidy_code <- function(codeline, width, indent) {
   code <- getcode(codeline)
   indents <- getindents(code)
@@ -20,30 +36,15 @@ tidy_code <- function(codeline, width, indent) {
   }
   final <- list()
   cl <- makeCodeList(codeList)
-  sapply(cl, printcode6, wi = width, i = indent)
-}
-
-tidy_all_code <- function(messy_code,
-                          inclLib,
-                          width,
-                          indent,
-                          outfile) {
-  if (length(messy_code) == 1 && file.exists(messy_code)) {
-    allcode <- getText(messy_code, inclLib)
-    strvector <- sapply(allcode, tidy_code, width = 2, indent = 2)
-    splist <- strsplit(unlist(strvector), "\n")
-    splist <- unlist(splist, use.names = FALSE)
-    splist <- splist[splist != ""]
-    write(splist, outfile)
-  }
+  sapply(cl, print_code, wi = width, i = indent)
 }
 
 ### import txt file and library names can display or not display
-getText <- function(x, inclLib = TRUE) {
+get_text <- function(x, incl_library = TRUE) {
   code <- readLines(x)
   code1 <- code[trimws(code) != ""]
   origin <- code1
-  if (inclLib) {
+  if (incl_library) {
     code1 <- code1
   } else{
     code2 <- vector()
@@ -58,7 +59,7 @@ getText <- function(x, inclLib = TRUE) {
           allname <- c(allname, substr(withpn, space[[1]][max(which(space[[1]] < package[[1]][i]))] +
                                          1, package[[1]][i] + 1))
         }
-        allname <- paste0(allname, collapse <- "|")
+        allname <- paste0(allname, collapse = "|")
         without <- gsub(allname, "", withpn)
       } else{
         without <- code1[i]
@@ -67,28 +68,26 @@ getText <- function(x, inclLib = TRUE) {
     }
     code1 <- code2[trimws(code2) != ""]
   }
-  
   code <- trimws(code1[trimws(code1) != ""])
-  
   assignment <- grep("<-", code)
   pipe <- grep("%<>%", code)
-  
   allop <- sort(c(assignment, pipe))
-  if(length(allop)<2){
+  
+  if (length(allop) < 1) {
     code1 <- code
   } else{
-    close <- c(allop[2:length(allop)] - 1, length(code))
-    
-    fin <- c()
-    for (i in 1:length(allop)) {
-      fin <- c(fin, paste(code[allop[i]:close[i]], collapse = " "))
+    if (length(allop) == 1) {
+      code1 <- paste(code[allop[1]:length(code)], collapse = " ")
+    }else{
+      close <- c(allop[2:length(allop)] - 1, length(code))
+      fin <- c()
+      for (i in 1:length(allop)) {
+        fin <- c(fin, paste(code[allop[i]:close[i]], collapse = " "))
+      }
+      code1 <- fin
     }
-    code1 <- fin
-    
     opindex <- sapply(code1, getop)
-    
     varlist <- sapply(code1, getvariable)
-    
     
     for (i in length(varlist):1) {
       if (i > 1 && varlist[[i]] == varlist[[i - 1]]) {
@@ -128,14 +127,19 @@ getcode <- function(code) {
   new <- vector()
   for (i in (1:length(cbr))) {
     if (!any(cbr[[i]] == -1)) {
-      new <- substring(split[i], c(1, cbr[[i]]), c(cbr[[i]] - 1, nchar(split[i])))
+      new <-
+        substring(split[i], c(1, cbr[[i]]), c(cbr[[i]] - 1, nchar(split[i])))
       split[i] <- list(new)
     } else{
       next
     }
   }
-  codevector <- trimws(unlist(split))
-  codevector[codevector != ""]
+  codevector <- unlist(split)
+  codevector <- codevector[trimws(codevector) != ""]
+  if (length(codevector) == 1) {
+    return (codevector)
+  }
+  codevector <- trimws(codevector)
 }
 
 ###getting the corresponding indents for the above codes
@@ -247,7 +251,7 @@ cancollapse <- function(cs, width = 0, indent = 2) {
 }
 
 ### printing code with correct indents and within defined width 
-printcode6 <-
+print_code <-
   function(x,
            wi,
            previous = FALSE,
@@ -263,7 +267,7 @@ printcode6 <-
               x$text,
               lapply (
                 x$subcode,
-                printcode6,
+                print_code,
                 wi = wi,
                 previous = TRUE,
                 ind = FALSE,
@@ -278,7 +282,7 @@ printcode6 <-
               ), collapse = ""), x$text, sep = ""),
               lapply(
                 x$subcode,
-                printcode6,
+                print_code,
                 wi = wi,
                 previous = TRUE,
                 ind = TRUE,
@@ -298,7 +302,7 @@ printcode6 <-
               grepl("\\)", x$subcode[[i + 1]]$text)) {
             longstr <- paste(
               longstr,
-              printcode6(
+              print_code(
                 x$subcode[[i]],
                 wi = wi - nchar(x$subcode[[i + 1]]$text) - x$subcode[[i]]$indent,
                 previous = FALSE,
@@ -318,7 +322,7 @@ printcode6 <-
               longstr <-
                 paste(
                   longstr,
-                  printcode6(
+                  print_code(
                     x$subcode[[i]],
                     wi <-
                       wi - x$subcode[[i]]$indent,
@@ -333,7 +337,7 @@ printcode6 <-
             else{
               longstr <- paste(
                 longstr,
-                printcode6(
+                print_code(
                   x$subcode[[i]],
                   wi = wi - x$subcode[[i]]$indent,
                   previous = FALSE,

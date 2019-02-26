@@ -12,10 +12,10 @@
 
 ### main function 
 tidy_all_code <- function(messy_code,
-                          incl_library = TRUE,
                           width,
                           indent,
-                          outfile) {
+                          outfile,
+                          incl_library = TRUE) {
   if (length(messy_code) == 1 && file.exists(messy_code)) {
     allcode <- getText(messy_code, incl_library)
     strvector <- sapply(allcode, tidy_code, width = width, indent = indent)
@@ -40,12 +40,14 @@ tidy_code <- function(codeline, width, indent) {
   }
   final <- list()
   cl <- makeCodeList(codeList)
-  sapply(cl, printcode6, wi = width, i = indent)
+  sapply(cl, 
+         print_code
+         , wi = width, id = indent)
 }
 
 
 ### import txt file and library names can display or not display
-getText <- function(x, incl_library = TRUE) {
+getText <- function(x, incl_library) {
   code <- readLines(x)
   code1 <- code[trimws(code) != ""]
   origin <- code1
@@ -265,10 +267,11 @@ cancollapse <- function(cs, width = 0, indent = 2) {
 print_code <-
   function(x,
            wi,
+           id,
            previous = FALSE,
            ind = TRUE,
-           noind = FALSE,
-           i = 2) {
+           noind = FALSE
+  ) {
     longstr <- ""
     if (length(x$subcode) > 0) {
       if (cancollapse(x, width = wi)) {
@@ -282,14 +285,15 @@ print_code <-
                 wi = wi,
                 previous = TRUE,
                 ind = FALSE,
-                noind = FALSE
+                noind = FALSE,
+                id=id
               )
             ))
         } else{
           longstr <-
             do.call(paste, c(
               paste(paste(rep(
-                " ", (x$indent * i)
+                " ", (x$indent * id)
               ), collapse = ""), x$text, sep = ""),
               lapply(
                 x$subcode,
@@ -297,7 +301,8 @@ print_code <-
                 wi = wi,
                 previous = TRUE,
                 ind = TRUE,
-                noind = FALSE
+                noind = FALSE,
+                id=id
               )
             ))
         }
@@ -306,7 +311,7 @@ print_code <-
       #cannot collapse
       else{
         longstr <-
-          paste(paste(rep(" ", (x$indent * i)), collapse = ""), x$text, "\n", sep =
+          paste(paste(rep(" ", (x$indent * id)), collapse = ""), x$text, "\n", sep =
                   "")
         for (i in 1:length(x$subcode)) {
           if (i < length(x$subcode) &&
@@ -318,7 +323,8 @@ print_code <-
                 wi = wi - nchar(x$subcode[[i + 1]]$text) - x$subcode[[i]]$indent,
                 previous = FALSE,
                 ind = TRUE,
-                noind = FALSE
+                noind = FALSE,
+                id=id
               ),
               sep = ""
             )
@@ -339,7 +345,8 @@ print_code <-
                       wi - x$subcode[[i]]$indent,
                     previous = FALSE,
                     ind = TRUE,
-                    noind = TRUE
+                    noind = TRUE,
+                    id=id
                   ),
                   sep = ""
                 )
@@ -353,7 +360,8 @@ print_code <-
                   wi = wi - x$subcode[[i]]$indent,
                   previous = FALSE,
                   ind = TRUE,
-                  noind = FALSE
+                  noind = FALSE,
+                  id=id
                 ),
                 sep = ""
               )
@@ -377,7 +385,7 @@ print_code <-
         }
         else{
           longstr <-
-            paste("\n", paste(rep(" ", (x$indent * i)), collapse = ""), x$text, "\n", sep =
+            paste("\n", paste(rep(" ", (x$indent * id)), collapse = ""), x$text, "\n", sep =
                     "")
         }
       }

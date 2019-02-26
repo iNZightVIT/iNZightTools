@@ -5,10 +5,11 @@ context("test-test_tidy_code")
 #x <- "C:\\Users\\Administrator\\iNZightTools\\tests\\testthat\\messy_code.txt"
 
 #t <- tidy_all_code(x,incl_library = TRUE,width = 2,indent = 2,outfile = "test1.txt")
-
+#t <- "C:\\Users\\Administrator\\iNZightTools\\tests\\testthat\\test1.txt"
 #test_that("result is same as origin", {
 #  expect_equal(eval(parse(file=x)), eval(parse(file = t)))
 #})
+
 
 messy_code <-
   getText("messy_code_test.txt",TRUE)
@@ -92,3 +93,9 @@ test_that("test short code" , {
   expect_equal(tidy_code(long_code, width = 100, indent = 2), long_code)
 })
 
+pipe_series <- "gapminder_2008_ex.sorted <- gapminder_2008_ex %>% arrange(Year, desc(Country), Imports) %>%  add_column(log.e.CO2Emissions = log(gapminder_20), .after = \"CO2Emissions\") %>%  add_column(LifeExpectancy.squared = gapminder_2008_ex.sorted$LifeExpectancy^2, .after = \"LifeExpectancy\") %>%  mutate(bmi.diff = BodyMassIndex_M - BodyMassIndex_F) %>%  add_column(Year.rank = min_rank(gapminder_2008_ex.sorted$Year), .after = \"Year\") %>%  select(-log.e.CO2Emissions) %>%  add_column(Year.rank.cat = factor(gapminder_2008_ex.sorted$Year.rank), .after = \"Year.rank\")"
+correct_bracket <- "gapminder_2008_ex.sorted <-\n  gapminder_2008_ex %>%\n    arrange( Year, desc( Country ), Imports) %>%\n    add_column( log.e.CO2Emissions = log( gapminder_20 ), .after = \"CO2Emissions\") %>%\n    add_column( LifeExpectancy.squared = gapminder_2008_ex.sorted$LifeExpectancy^2, .after = \"LifeExpectancy\") %>%\n    mutate( bmi.diff = BodyMassIndex_M - BodyMassIndex_F) %>%\n    add_column( Year.rank = min_rank( gapminder_2008_ex.sorted$Year ), .after = \"Year\") %>%\n    select( -log.e.CO2Emissions) %>%\n    add_column( Year.rank.cat = factor( gapminder_2008_ex.sorted$Year.rank ), .after = \"Year.rank\")\n"
+
+test_that("test correct bracket" , {
+  expect_equal(tidy_code(pipe_series, width = 150, indent = 2), correct_bracket)
+})

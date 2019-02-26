@@ -46,6 +46,10 @@ test_that("test getindnets" , {
   expect_equal(getindents(code_Vector), indents)
 })
 
+test_that("test print.txtcodestring" , {
+  expect_equal(print.txtcodestring((txtCodeString(code_Vector[2],indents[2]))),cat(paste(paste(rep(" ",4),collapse = ""),code_Vector[2],sep="")))
+})
+
 codeList <- list()
 for (i in seq_along(1:length(code_Vector))) {
   codeList[[i]] <- txtCodeString(code_Vector[i], indents[i])
@@ -99,3 +103,4 @@ correct_bracket <- "gapminder_2008_ex.sorted <-\n  gapminder_2008_ex %>%\n    ar
 test_that("test correct bracket" , {
   expect_equal(tidy_code(pipe_series, width = 150, indent = 2), correct_bracket)
 })
+

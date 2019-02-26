@@ -19,8 +19,18 @@ output <-
     "gapminder_2008_ex.sorted <- gapminder_2008_ex %>% dplyr::arrange(Year, desc(Country), Imports) %>%  tibble::add_column(log.e.CO2Emissions = log(gapminder_20), .after = \"CO2Emissions\") %>%  tibble::add_column(LifeExpectancy.squared = gapminder_2008_ex.sorted$LifeExpectancy^2, .after = \"LifeExpectancy\") %>%  dplyr::mutate(bmi.diff = BodyMassIndex_M - BodyMassIndex_F) %>%  tibble::add_column(Year.rank = dplyr::min_rank(gapminder_2008_ex.sorted$Year), .after = \"Year\") %>%  dplyr::select(-log.e.CO2Emissions) %>%  tibble::add_column(Year.rank.cat = factor(gapminder_2008_ex.sorted$Year.rank), .after = \"Year.rank\")"
   )
 
+messy_code_without_library <-
+  getText("messy_code_test.txt",FALSE)
+
+output_without_library <-
+  c(
+    "gapminder_2008_ex %<>% add_column(Region.reord = factor(gapminder_2008_ex$Region, levels = c(\"East Asia & Pacific\", \"Europe & Central Asia\", \"Middle East & North Africa\", \"America\", \"Sub-Saharan Africa\", \"South Asia\")), .after = \"Region\")",
+    "gapminder_2008_ex.sorted <- gapminder_2008_ex %>% arrange(Year, desc(Country), Imports) %>%  add_column(log.e.CO2Emissions = log(gapminder_20), .after = \"CO2Emissions\") %>%  add_column(LifeExpectancy.squared = gapminder_2008_ex.sorted$LifeExpectancy^2, .after = \"LifeExpectancy\") %>%  mutate(bmi.diff = BodyMassIndex_M - BodyMassIndex_F) %>%  add_column(Year.rank = min_rank(gapminder_2008_ex.sorted$Year), .after = \"Year\") %>%  select(-log.e.CO2Emissions) %>%  add_column(Year.rank.cat = factor(gapminder_2008_ex.sorted$Year.rank), .after = \"Year.rank\")"
+  )
+
 test_that("test getText" , {
   expect_equal(messy_code, output)
+  expect_equal(messy_code_without_library, output_without_library)
 })
 
 code_Vector <- getcode(output[1])
@@ -60,13 +70,25 @@ width_100 <-
   "gapminder_2008_ex %<>%\n  tibble::add_column(\n    Region.reord =\n      factor(\n        gapminder_2008_ex$Region,\n        levels =\n          c(\n            \"East Asia & Pacific\",\n            \"Europe & Central Asia\",\n            \"Middle East & North Africa\",\n            \"America\",\n            \"Sub-Saharan Africa\",\n            \"South Asia\"\n          )\n      ),\n      .after = \"Region\"\n  )\n"
 width_200 <-
   "gapminder_2008_ex %<>%\n  tibble::add_column(\n    Region.reord = factor( gapminder_2008_ex$Region, levels = c( \"East Asia & Pacific\", \"Europe & Central Asia\", \"Middle East & North Africa\", \"America\", \"Sub-Saharan Africa\", \"South Asia\" ) ), .after = \"Region\"\n  )\n"
+width_150 <-
+  "gapminder_2008_ex %<>%\n  add_column(\n    Region.reord =\n      factor(\n        gapminder_2008_ex$Region,\n        levels = c( \"East Asia & Pacific\", \"Europe & Central Asia\", \"Middle East & North Africa\", \"America\", \"Sub-Saharan Africa\", \"South Asia\" )\n      ),\n      .after = \"Region\"\n  )\n"
 indent_4 <-
   "gapminder_2008_ex %<>%\n    tibble::add_column(\n        Region.reord = factor( gapminder_2008_ex$Region, levels = c( \"East Asia & Pacific\", \"Europe & Central Asia\", \"Middle East & North Africa\", \"America\", \"Sub-Saharan Africa\", \"South Asia\" ) ), .after = \"Region\"\n    )\n"
 test_that("test tidy code" , {
   expect_equal(tidy_code(output[1], width = 2, indent = 2), width_2)
   expect_equal(tidy_code(output[1], width = 100, indent = 2), width_100)
+  expect_equal(tidy_code(output_without_library[1], width = 150, indent = 2), width_150)
   expect_equal(tidy_code(output[1], width = 200, indent = 2), width_200)
   expect_equal(tidy_code(output[1], width = 200, indent = 4), indent_4)
 })
 
+short_code <- "library(iNZightRegression)"
+long_code <- "model_1 = lm( log( Time ) ~ China..People.s.Republic.of + Japan + United.Kingdom, data = mydata )"
+tidy_long_code <- "model_1 =\n  lm(\n    log(\n      Time\n    ) ~ China..People.s.Republic.of + Japan + United.Kingdom,\n    data = mydata\n  )\n"
+test_that("test short code" , {
+  expect_equal(tidy_code(short_code, width = 2, indent = 2), short_code)
+  expect_equal(tidy_code(short_code, width = 200, indent = 2), short_code)
+  expect_equal(tidy_code(long_code, width = 20, indent = 2), tidy_long_code)
+  expect_equal(tidy_code(long_code, width = 100, indent = 2), long_code)
+})
 

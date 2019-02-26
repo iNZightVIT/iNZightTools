@@ -29,6 +29,10 @@ tidy_all_code <- function(messy_code,
 
 ### tidy a single piece of code
 tidy_code <- function(codeline, width, indent) {
+  print(codeline)
+  if (!grepl("<-|%<>%|&>%|=", codeline)){
+    return (codeline)
+  }
   code <- getcode(codeline)
   if (length(code) == 1) {
     return (code)

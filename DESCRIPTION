@@ -36,7 +36,8 @@ Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "inzight_support@stat.auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),
              person("Akshay", "Gupta", role = "ctb"),
-             person("Owen", "Jin", role = "ctb"))
+             person("Owen", "Jin", role = "ctb"),
+             person("Lushi", "Cai", role = "ctb"))
 Description: Compatibility functions used for multiple packages and
     distributions of iNZight, including Lite.
 License: GPL-3 | file LICENSE

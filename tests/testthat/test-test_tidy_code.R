@@ -1,5 +1,5 @@
 library(magrittr)
-context("test-test_tidy_code")
+context("test if tidycode function can produce prett printing code")
 
 import_gapminder = "gapminder_2008_ex <- read.csv('Gapminder-2008.csv',comment.char='#')"
 fConn <- file("messy_gapminder.txt", "r+")

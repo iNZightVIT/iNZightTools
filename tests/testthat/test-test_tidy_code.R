@@ -58,7 +58,7 @@ test_that("test longer parsing code(gapminder_2008)", {
   expect_equal(eval(parse(file = "messy_longer_gap.txt")), eval(parse(file = "test_longer_gap.txt")))
 })
 
-import_census = "census.at.school.500_ex <- read.csv('Census at School-500.csv',comment.char='#')"
+import_census = "census.at.school.500_ex <- read.csv('cas500.csv',comment.char='#')"
 fConn <- file("messy_census.txt", "r+")
 Lines <- readLines(fConn)
 writeLines(c(import_census, "\n", Lines), con = fConn)

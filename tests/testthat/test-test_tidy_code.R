@@ -186,3 +186,4 @@ test_that("test correct bracket" , {
   expect_equal(tidy_code(pipe_series, width = 150, indent = 2),
                correct_bracket)
 })
+

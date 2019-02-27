@@ -1,18 +1,87 @@
 library(magrittr)
 context("test-test_tidy_code")
 
-#gapminder_2008_ex <- read.csv('C:\\Users\\Administrator\\iNZightTools\\tests\\testthat\\Gapminder-2008.csv')
-#x <- "C:\\Users\\Administrator\\iNZightTools\\tests\\testthat\\messy_code.txt"
+import_gapminder = "gapminder_2008_ex <- read.csv('Gapminder-2008.csv',comment.char='#')"
+fConn <- file("messy_gapminder.txt", "r+")
+Lines <- readLines(fConn)
+writeLines(c(import_gapminder, "\n", Lines), con = fConn)
+close(fConn)
+write("gapminder_2008_ex", file = "messy_gapminder.txt", append = TRUE)
 
-#t <- tidy_all_code(x,incl_library = TRUE,width = 2,indent = 2,outfile = "test1.txt")
-#t <- "C:\\Users\\Administrator\\iNZightTools\\tests\\testthat\\test1.txt"
-#test_that("result is same as origin", {
-#  expect_equal(eval(parse(file=x)), eval(parse(file = t)))
-#})
+tidy_all_code(
+  "messy_gapminder.txt",
+  incl_library = TRUE,
+  width = 2,
+  indent = 2,
+  outfile = "test_gap_w2.txt"
+)
+tidy_all_code(
+  "messy_gapminder.txt",
+  incl_library = TRUE,
+  width = 50,
+  indent = 2,
+  outfile = "test_gap_w50.txt"
+)
+tidy_all_code(
+  "messy_gapminder.txt",
+  incl_library = TRUE,
+  width = 2,
+  indent = 4,
+  outfile = "test_gap_i4.txt"
+)
+
+test_that("result is the same as origin", {
+  expect_equal(eval(parse(file = "messy_gapminder.txt")), eval(parse(file = "test_gap_w2.txt")))
+  expect_equal(eval(parse(file = "messy_gapminder.txt")), eval(parse(file = "test_gap_w50.txt")))
+  expect_equal(eval(parse(file = "messy_gapminder.txt")), eval(parse(file = "test_gap_i4.txt")))
+})
+
+
+import_gapminder = "gapminder_2008_ex <- read.csv('Gapminder-2008.csv',comment.char='#')"
+fConn <- file("messy_longer_gap.txt", "r+")
+Lines <- readLines(fConn)
+writeLines(c(import_gapminder, "\n", Lines), con = fConn)
+close(fConn)
+write("gapminder_2008_ex.sorted",
+      file = "messy_longer_gap.txt",
+      append = TRUE)
+
+tidy_all_code(
+  "messy_longer_gap.txt",
+  incl_library = TRUE,
+  width = 2,
+  indent = 2,
+  outfile = "test_longer_gap.txt"
+)
+
+test_that("result is the same as origin", {
+  expect_equal(eval(parse(file = "messy_longer_gap.txt")), eval(parse(file = "test_longer_gap.txt")))
+})
+
+import_census = "census.at.school.500_ex <- read.csv('Census at School-500.csv',comment.char='#')"
+fConn <- file("messy_census.txt", "r+")
+Lines <- readLines(fConn)
+writeLines(c(import_census, "\n", Lines), con = fConn)
+close(fConn)
+write("census.at.school.500_ex",
+      file = "messy_census.txt",
+      append = TRUE)
+
+tidy_all_code(
+  "messy_census.txt",
+  incl_library = TRUE,
+  width = 2,
+  indent = 2,
+  outfile = "test_census.txt"
+)
+
+test_that("result is the same as origin", {
+  expect_equal(eval(parse(file = "messy_census.txt")), eval(parse(file = "test_census.txt")))
+})
 
 
 messy_code <-
-  getText("messy_code_test.txt",TRUE)
+  getText("messy_code_test.txt", TRUE)
 
 output <-
   c(
@@ -21,7 +90,7 @@ output <-
   )
 
 messy_code_without_library <-
-  getText("messy_code_test.txt",FALSE)
+  getText("messy_code_test.txt", FALSE)
 
 output_without_library <-
   c(
@@ -47,7 +116,11 @@ test_that("test getindnets" , {
 })
 
 test_that("test print.txtcodestring" , {
-  expect_equal(print.txtcodestring((txtCodeString(code_Vector[2],indents[2]))),cat(paste(paste(rep(" ",4),collapse = ""),code_Vector[2],sep="")))
+  expect_equal(print.txtcodestring((txtCodeString(
+    code_Vector[2], indents[2]
+  ))), cat(paste(
+    paste(rep(" ", 4), collapse = ""), code_Vector[2], sep = ""
+  )))
 })
 
 codeList <- list()
@@ -82,14 +155,21 @@ indent_4 <-
 test_that("test tidy code" , {
   expect_equal(tidy_code(output[1], width = 2, indent = 2), width_2)
   expect_equal(tidy_code(output[1], width = 100, indent = 2), width_100)
-  expect_equal(tidy_code(output_without_library[1], width = 150, indent = 2), width_150)
+  expect_equal(tidy_code(
+    output_without_library[1],
+    width = 150,
+    indent = 2
+  ),
+  width_150)
   expect_equal(tidy_code(output[1], width = 200, indent = 2), width_200)
   expect_equal(tidy_code(output[1], width = 200, indent = 4), indent_4)
 })
 
 short_code <- "library(iNZightRegression)"
-long_code <- "model_1 = lm( log( Time ) ~ China..People.s.Republic.of + Japan + United.Kingdom, data = mydata )"
-tidy_long_code <- "model_1 =\n  lm(\n    log(\n      Time\n    ) ~ China..People.s.Republic.of + Japan + United.Kingdom,\n    data = mydata\n  )\n"
+long_code <-
+  "model_1 = lm( log( Time ) ~ China..People.s.Republic.of + Japan + United.Kingdom, data = mydata )"
+tidy_long_code <-
+  "model_1 =\n  lm(\n    log(\n      Time\n    ) ~ China..People.s.Republic.of + Japan + United.Kingdom,\n    data = mydata\n  )\n"
 test_that("test short code" , {
   expect_equal(tidy_code(short_code, width = 2, indent = 2), short_code)
   expect_equal(tidy_code(short_code, width = 200, indent = 2), short_code)
@@ -97,10 +177,12 @@ test_that("test short code" , {
   expect_equal(tidy_code(long_code, width = 100, indent = 2), long_code)
 })
 
-pipe_series <- "gapminder_2008_ex.sorted <- gapminder_2008_ex %>% arrange(Year, desc(Country), Imports) %>%  add_column(log.e.CO2Emissions = log(gapminder_20), .after = \"CO2Emissions\") %>%  add_column(LifeExpectancy.squared = gapminder_2008_ex.sorted$LifeExpectancy^2, .after = \"LifeExpectancy\") %>%  mutate(bmi.diff = BodyMassIndex_M - BodyMassIndex_F) %>%  add_column(Year.rank = min_rank(gapminder_2008_ex.sorted$Year), .after = \"Year\") %>%  select(-log.e.CO2Emissions) %>%  add_column(Year.rank.cat = factor(gapminder_2008_ex.sorted$Year.rank), .after = \"Year.rank\")"
-correct_bracket <- "gapminder_2008_ex.sorted <-\n  gapminder_2008_ex %>%\n    arrange( Year, desc( Country ), Imports) %>%\n    add_column( log.e.CO2Emissions = log( gapminder_20 ), .after = \"CO2Emissions\") %>%\n    add_column( LifeExpectancy.squared = gapminder_2008_ex.sorted$LifeExpectancy^2, .after = \"LifeExpectancy\") %>%\n    mutate( bmi.diff = BodyMassIndex_M - BodyMassIndex_F) %>%\n    add_column( Year.rank = min_rank( gapminder_2008_ex.sorted$Year ), .after = \"Year\") %>%\n    select( -log.e.CO2Emissions) %>%\n    add_column( Year.rank.cat = factor( gapminder_2008_ex.sorted$Year.rank ), .after = \"Year.rank\")\n"
+pipe_series <-
+  "gapminder_2008_ex.sorted <- gapminder_2008_ex %>% arrange(Year, desc(Country), Imports) %>%  add_column(log.e.CO2Emissions = log(gapminder_20), .after = \"CO2Emissions\") %>%  add_column(LifeExpectancy.squared = gapminder_2008_ex.sorted$LifeExpectancy^2, .after = \"LifeExpectancy\") %>%  mutate(bmi.diff = BodyMassIndex_M - BodyMassIndex_F) %>%  add_column(Year.rank = min_rank(gapminder_2008_ex.sorted$Year), .after = \"Year\") %>%  select(-log.e.CO2Emissions) %>%  add_column(Year.rank.cat = factor(gapminder_2008_ex.sorted$Year.rank), .after = \"Year.rank\")"
+correct_bracket <-
+  "gapminder_2008_ex.sorted <-\n  gapminder_2008_ex %>%\n    arrange( Year, desc( Country ), Imports) %>%\n    add_column( log.e.CO2Emissions = log( gapminder_20 ), .after = \"CO2Emissions\") %>%\n    add_column( LifeExpectancy.squared = gapminder_2008_ex.sorted$LifeExpectancy^2, .after = \"LifeExpectancy\") %>%\n    mutate( bmi.diff = BodyMassIndex_M - BodyMassIndex_F) %>%\n    add_column( Year.rank = min_rank( gapminder_2008_ex.sorted$Year ), .after = \"Year\") %>%\n    select( -log.e.CO2Emissions) %>%\n    add_column( Year.rank.cat = factor( gapminder_2008_ex.sorted$Year.rank ), .after = \"Year.rank\")\n"
 
 test_that("test correct bracket" , {
-  expect_equal(tidy_code(pipe_series, width = 150, indent = 2), correct_bracket)
+  expect_equal(tidy_code(pipe_series, width = 150, indent = 2),
+               correct_bracket)
 })
-

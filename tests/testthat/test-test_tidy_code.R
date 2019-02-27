@@ -30,7 +30,7 @@ tidy_all_code(
   outfile = "test_gap_i4.txt"
 )
 
-test_that("result is the same as origin", {
+test_that("test if short parsing code is the same as origin (gapminder_2008)", {
   expect_equal(eval(parse(file = "messy_gapminder.txt")), eval(parse(file = "test_gap_w2.txt")))
   expect_equal(eval(parse(file = "messy_gapminder.txt")), eval(parse(file = "test_gap_w50.txt")))
   expect_equal(eval(parse(file = "messy_gapminder.txt")), eval(parse(file = "test_gap_i4.txt")))
@@ -54,7 +54,7 @@ tidy_all_code(
   outfile = "test_longer_gap.txt"
 )
 
-test_that("result is the same as origin", {
+test_that("test longer parsing code(gapminder_2008)", {
   expect_equal(eval(parse(file = "messy_longer_gap.txt")), eval(parse(file = "test_longer_gap.txt")))
 })
 
@@ -75,7 +75,7 @@ tidy_all_code(
   outfile = "test_census.txt"
 )
 
-test_that("result is the same as origin", {
+test_that("test longer parsing code(census_at_school_500)", {
   expect_equal(eval(parse(file = "messy_census.txt")), eval(parse(file = "test_census.txt")))
 })
 

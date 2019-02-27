@@ -93,7 +93,7 @@ getText <- function(x, incl_library) {
     if (length(allop) == 1) {
       code1 <- paste(code[allop[1]:length(code)], collapse = " ")
     }else{
-      close <- c(allop[2:length(allop)] - 1, length(code))
+      close <- c(allop[2:length(allop)] - 1, allop[length(allop)])
       
       fin <- c()
       for (i in 1:length(allop)) {
@@ -115,6 +115,10 @@ getText <- function(x, incl_library) {
     }
     if (!grepl("<-|%<>%", origin[1])) {
       code1 <- c(origin[1:allop[1] - 1], code1)
+    }
+    if (length(origin) > allop[length(allop)]) {
+      
+      code1 <- c(code1, origin[(allop[length(allop)]+1):length(origin)])
     }
   }
   code1[code1 != ""]

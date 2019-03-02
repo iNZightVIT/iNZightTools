@@ -11,6 +11,7 @@
 ##' @export
 
 ### main function 
+### main function 
 tidy_all_code <- function(messy_code,
                           width,
                           indent,
@@ -29,7 +30,6 @@ tidy_all_code <- function(messy_code,
 
 ### tidy a single piece of code
 tidy_code <- function(codeline, width, indent) {
-  print(codeline)
   if (!grepl("<-|%<>%|&>%|=", codeline)){
     return (codeline)
   }
@@ -45,8 +45,9 @@ tidy_code <- function(codeline, width, indent) {
   final <- list()
   cl <- makeCodeList(codeList)
   sapply(cl, 
-         print_code
-         , wi = width, id = indent)
+         print_code, 
+         wi = width, 
+         id = indent)
 }
 
 

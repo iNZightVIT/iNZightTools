@@ -11,7 +11,6 @@
 ##' @export
 
 ### main function 
-### main function 
 tidy_all_code <- function(messy_code,
                           width,
                           indent,

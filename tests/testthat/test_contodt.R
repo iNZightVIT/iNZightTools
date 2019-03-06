@@ -52,22 +52,18 @@ test_that("Strings are converted to date time objects", {
 })
 
 test_that("Invalid formats are dealt with appropriately", {
-  expect_equal(
-    stripcode(convert_to_datetime(data, "y", "year month", "y.dt")),
-    data %>% tibble::add_column(
-      y.dt = NA,
-      .after = "y"
-    )
+  expect_warning(
+    expect_equal(
+      convert_to_datetime(data, "y", "year month", "y.dt"),
+      data
+    ),
+    "Failed to parse"
   )
-  expect_equal(
-    stripcode(convert_to_datetime(data, "c", "year month day", "c.dt")),
-    data %>% tibble::add_column(
-      c.dt = NA,
-      .after = "c"
-    )
+  expect_warning(
+    expect_equal(
+      convert_to_datetime(data, "c", "year month day", "c.dt"), 
+      data
+    ),
+    "Failed to parse"
   )
 })
-
-# test_that("Code generation is valid", {
-  # easiest to simply check that the results are the same
-# })

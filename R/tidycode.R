@@ -1,30 +1,36 @@
 ##' Tidy code with correct indents and limit the code to the specific width 
 ##' 
 ##' @title iNZight Tidy Code 
-##' @param messy_code file name of the file containing messy code 
+##' @param x character string or file name of the file containing messy code 
 ##' @param incl_library logical, if true, the output code will contain library name
 ##' @param width the width of a line
 ##' @param indent how many spaces for one indent
 ##' @param outfile the file name of the file containing formatted code
-##' @return a file with formatted code
+##' @return formatted code, optionally written to `outfile`
 ##' @author Lushi Cai
 ##' @export
 
 ### main function 
-tidy_all_code <- function(messy_code,
+tidy_all_code <- function(x,
                           width,
                           indent,
                           outfile,
                           incl_library = TRUE) {
-  if (length(messy_code) == 1 && file.exists(messy_code)) {
-    allcode <- getText(messy_code, incl_library)
-    strvector <- sapply(allcode, tidy_code, width = width, indent = indent)
-    splist <- strsplit(unlist(strvector), "\n")
-    splist <- unlist(splist, use.names = FALSE)
-    splist <- splist[splist != ""]
-    write(splist, outfile)
-    
+  if (length(x) == 1 && file.exists(x))
+    x <- readLines(x)
+
+  allcode <- getText(x, incl_library)
+  strvector <- sapply(allcode, tidy_code, width = width, indent = indent)
+  splist <- strsplit(unlist(strvector), "\n")
+  splist <- unlist(splist, use.names = FALSE)
+  splist <- splist[splist != ""]
+
+  if (!missing(outfile)) {
+    return(write(splist, outfile))
+    # return(invisible(outfile))
   }
+
+  splist 
 }
 
 ### tidy a single piece of code
@@ -51,8 +57,8 @@ tidy_code <- function(codeline, width, indent) {
 
 
 ### import txt file and library names can display or not display
-getText <- function(x, incl_library) {
-  code <- readLines(x)
+getText <- function(code, incl_library) {
+  # code <- readLines(x)
   code1 <- code[trimws(code) != ""]
   origin <- code1
   if (incl_library) {

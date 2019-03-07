@@ -1,13 +1,6 @@
 library(magrittr)
 context("test if tidycode function can produce prett printing code")
 
-import_gapminder = "gapminder_2008_ex <- read.csv('Gapminder-2008.csv',comment.char='#')"
-fConn <- file("messy_gapminder.txt", "r+")
-Lines <- readLines(fConn)
-writeLines(c(import_gapminder, "\n", Lines), con = fConn)
-close(fConn)
-write("gapminder_2008_ex", file = "messy_gapminder.txt", append = TRUE)
-
 tidy_all_code(
   "messy_gapminder.txt",
   incl_library = TRUE,
@@ -35,16 +28,10 @@ test_that("test if short parsing code is the same as origin (gapminder_2008)", {
   expect_equal(eval(parse(file = "messy_gapminder.txt")), eval(parse(file = "test_gap_w50.txt")))
   expect_equal(eval(parse(file = "messy_gapminder.txt")), eval(parse(file = "test_gap_i4.txt")))
 })
+unlink("test_gap_w2.txt")
+unlink("test_gap_w50.txt")
+unlink("test_gap_i4.txt")
 
-
-import_gapminder = "gapminder_2008_ex <- read.csv('Gapminder-2008.csv',comment.char='#')"
-fConn <- file("messy_longer_gap.txt", "r+")
-Lines <- readLines(fConn)
-writeLines(c(import_gapminder, "\n", Lines), con = fConn)
-close(fConn)
-write("gapminder_2008_ex.sorted",
-      file = "messy_longer_gap.txt",
-      append = TRUE)
 
 tidy_all_code(
   "messy_longer_gap.txt",
@@ -57,15 +44,7 @@ tidy_all_code(
 test_that("test longer parsing code(gapminder_2008)", {
   expect_equal(eval(parse(file = "messy_longer_gap.txt")), eval(parse(file = "test_longer_gap.txt")))
 })
-
-import_census = "census.at.school.500_ex <- read.csv('cas500.csv',comment.char='#')"
-fConn <- file("messy_census.txt", "r+")
-Lines <- readLines(fConn)
-writeLines(c(import_census, "\n", Lines), con = fConn)
-close(fConn)
-write("census.at.school.500_ex",
-      file = "messy_census.txt",
-      append = TRUE)
+unlink("test_longer_gap.txt")
 
 tidy_all_code(
   "messy_census.txt",
@@ -78,10 +57,10 @@ tidy_all_code(
 test_that("test longer parsing code(census_at_school_500)", {
   expect_equal(eval(parse(file = "messy_census.txt")), eval(parse(file = "test_census.txt")))
 })
-
+unlink("test_census.txt")
 
 messy_code <-
-  getText("messy_code_test.txt", TRUE)
+  getText(readLines("messy_code_test.txt"), TRUE)
 
 output <-
   c(
@@ -90,7 +69,7 @@ output <-
   )
 
 messy_code_without_library <-
-  getText("messy_code_test.txt", FALSE)
+  getText(readLines("messy_code_test.txt"), FALSE)
 
 output_without_library <-
   c(
@@ -116,11 +95,18 @@ test_that("test getindnets" , {
 })
 
 test_that("test print.txtcodestring" , {
-  expect_equal(print.txtcodestring((txtCodeString(
-    code_Vector[2], indents[2]
-  ))), cat(paste(
-    paste(rep(" ", 4), collapse = ""), code_Vector[2], sep = ""
-  )))
+  expect_equal(
+    capture.output(
+      print.txtcodestring((txtCodeString(
+        code_Vector[2], indents[2]
+      )))
+    ), 
+    capture.output(
+      cat(paste(
+        paste(rep(" ", 4), collapse = ""), code_Vector[2], sep = ""
+      ))
+    )
+  )
 })
 
 codeList <- list()

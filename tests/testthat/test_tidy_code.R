@@ -1,17 +1,8 @@
 library(magrittr)
 context("test-test_tidy_code")
 
-#gapminder_2008_ex <- read.csv('C:\\Users\\Administrator\\iNZightTools\\tests\\testthat\\Gapminder-2008.csv')
-#x <- "C:\\Users\\Administrator\\iNZightTools\\tests\\testthat\\messy_code.txt"
-
-#t <- tidy_all_code(x,incl_library = TRUE,width = 2,indent = 2,outfile = "test1.txt")
-
-#test_that("result is same as origin", {
-#  expect_equal(eval(parse(file=x)), eval(parse(file = t)))
-#})
-
 messy_code <-
-  getText("messy_code_test.txt",TRUE)
+  getText(readLines("messy_code_test.txt"),TRUE)
 
 output <-
   c(

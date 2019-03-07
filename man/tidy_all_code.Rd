@@ -4,10 +4,10 @@
 \alias{tidy_all_code}
 \title{iNZight Tidy Code}
 \usage{
-tidy_all_code(messy_code, width, indent, outfile, incl_library = TRUE)
+tidy_all_code(x, width, indent, outfile, incl_library = TRUE)
 }
 \arguments{
-\item{messy_code}{file name of the file containing messy code}
+\item{x}{character string or file name of the file containing messy code}
 
 \item{width}{the width of a line}
 
@@ -18,7 +18,7 @@ tidy_all_code(messy_code, width, indent, outfile, incl_library = TRUE)
 \item{incl_library}{logical, if true, the output code will contain library name}
 }
 \value{
-a file with formatted code
+formatted code, optionally written to `outfile`
 }
 \description{
 Tidy code with correct indents and limit the code to the specific width

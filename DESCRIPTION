@@ -19,7 +19,10 @@ Imports:
     tidyr,
     stringr,
     sas7bdat,
-    tools
+    tools,
+    chron,
+    lubridate,
+    zoo
 Suggests:
     Acinonyx,
     cairoDevice,
@@ -37,4 +40,5 @@ Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
 Description: Compatibility functions used for multiple packages and
     distributions of iNZight, including Lite.
 License: GPL-3 | file LICENSE
+Encoding: UTF-8
 RoxygenNote: 6.1.1

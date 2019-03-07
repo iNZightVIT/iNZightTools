@@ -49,7 +49,7 @@ joindata <- function(.data, imported_data, origin_join_col, import_join_col, joi
                      .FUN = join_method,
                      .SUFFIX = suf)
   
-  if (origin_join_col == "" & import_join_col == "") {
+  if (all(origin_join_col == "") & all(import_join_col == "")) {
     res <- interpolate(exp)
     vars <- capture.output(inner_join(.data, imported_data), type = "message")
     origin_join_col <- eval(parse(text = gsub(".+ = ", "", vars)))

@@ -12,8 +12,8 @@
 
 ### main function 
 tidy_all_code <- function(x,
-                          width,
-                          indent,
+                          width = 80,
+                          indent = 4,
                           outfile,
                           incl_library = TRUE) {
   if (length(x) == 1 && file.exists(x))

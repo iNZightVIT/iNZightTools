@@ -173,3 +173,10 @@ test_that("test correct bracket" , {
                correct_bracket)
 })
 
+test_that("Passing in a character vector works too", {
+  expect_equal(
+    tidy_all_code("messy_census.txt"),
+    tidy_all_code(readLines("messy_census.txt"))
+  )
+  expect_is(tidy_all_code("messy_census.txt"), "character")
+})

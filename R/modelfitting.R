@@ -8,6 +8,7 @@
 ##' @param x character string of the explanatory variables,
 ##' @param data name of the object containing the data.
 ##' @param family gaussian, binomial, poisson (so far, no others will be added)
+##' @param link the link function to use
 ##' @param design data design specification. one of 'simple', 'survey' or 'experiment'
 ##' @param svydes  a vector of arguments to be passed to the svydesign function, excluding data (defined above)
 ##' @param ... further arguments to be passed to lm, glm, svyglm, such as offset, etc.
@@ -20,33 +21,17 @@
 ##' @export
 fitModel <-
   function(y, x, data, family = 'gaussian',
+           link = switch(family, "gaussian" = "gaussian", "binomial" = "logit",
+                         "poisson" = "log"),
            design = 'simple', svydes = NA, ...) {
-
-    ##################################################################
-    # This function takes input from iNZight software, and perpares
-    # it for iNZightRegression package.
-    # y            character string representing the response,
-    # x            character string of the explanatory variables,
-    # family       gaussian, binomial, poisson (so far, no others
-    #              will be added)
-    # design       data design specification. one of 'simple',
-    #              'survey' or 'experiment'
-    # data         name of the object containing the data.
-    # svydes       a vector of arguments to be passed to the svydesign
-    #              function, excluding data (defined above)
-    # ...          further arguments to be passed to lm, glm, svyglm,
-    #              such as offset, etc.
-    #
-    # Value: a fitted model object, either an lm, glm, or svyglm,
-    # depending on the design and family of the model.
-    #
-    # Details:
-    ##################################################################
 
       if (missing(x) || length(x) == 0 || x == "") x <- 1
       Formula <- paste(y, x, sep = ' ~ ')
       dat <- paste("data", data, sep = ' = ')
       fam <- paste("family", family, sep = ' = ')
+      if (family == "binomial" && link != "logit") {
+        fam <- sprintf("%s(link = \"%s\")", fam, link)
+      }
 
     # Deal with extra arguments (eg. weights, offset ...)
       xarg <- list(...)

@@ -1,4 +1,4 @@
-reshape_data <- function(.data, cols, colname, value) {
+reshape_data_wide_to_long <- function(.data, cols, colname, value) {
   mc <- match.call()
   dataname <- mc$.data
 

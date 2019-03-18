@@ -4,8 +4,9 @@
 \alias{fitModel}
 \title{Fit a Model}
 \usage{
-fitModel(y, x, data, family = "gaussian", design = "simple",
-  svydes = NA, ...)
+fitModel(y, x, data, family = "gaussian", link = switch(family,
+  gaussian = "gaussian", binomial = "logit", poisson = "log"),
+  design = "simple", svydes = NA, ...)
 }
 \arguments{
 \item{y}{character string representing the response,}
@@ -15,6 +16,8 @@ fitModel(y, x, data, family = "gaussian", design = "simple",
 \item{data}{name of the object containing the data.}
 
 \item{family}{gaussian, binomial, poisson (so far, no others will be added)}
+
+\item{link}{the link function to use}
 
 \item{design}{data design specification. one of 'simple', 'survey' or 'experiment'}
 

@@ -1,0 +1,16 @@
+gapminder_2008_ex %<>% tibble::add_column(Region.reord = factor(gapminder_2008_ex$Region, levels = c("East Asia & Pacific", "Europe & Central Asia", "Middle East & North Africa", "America", "Sub-Saharan Africa", "South Asia")), .after = "Region")
+
+gapminder_2008_ex.sorted <- 
+gapminder_2008_ex %>% dplyr::arrange(Year, desc(Country), Imports)
+
+gapminder_2008_ex.sorted %<>% tibble::add_column(log.e.CO2Emissions = log(gapminder_20), .after = "CO2Emissions")
+
+gapminder_2008_ex.sorted %<>% tibble::add_column(LifeExpectancy.squared = gapminder_2008_ex.sorted$LifeExpectancy^2, .after = "LifeExpectancy")
+
+gapminder_2008_ex.sorted %<>% dplyr::mutate(bmi.diff = BodyMassIndex_M - BodyMassIndex_F)
+
+gapminder_2008_ex.sorted %<>% tibble::add_column(Year.rank = dplyr::min_rank(gapminder_2008_ex.sorted$Year), .after = "Year")
+
+gapminder_2008_ex.sorted %<>% dplyr::select(-log.e.CO2Emissions)
+
+gapminder_2008_ex.sorted %<>% tibble::add_column(Year.rank.cat = factor(gapminder_2008_ex.sorted$Year.rank), .after = "Year.rank")

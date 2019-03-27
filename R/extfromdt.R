@@ -26,6 +26,7 @@ extract_part = function(.data, varname, part, name) {
                         "Month (full)" = 'format(.DATA$.VARNAME, "%B")',
                         "Month (abbreviated)" = 'format(.DATA$.VARNAME, "%b")',
                         "Month (number)" = 'format(.DATA$.VARNAME, "%m")',
+                        "Year Week" = 'format(.DATA$.VARNAME, "%Y W%W")',
                         "Week of the year (Monday as first day of the week)" = 'format(.DATA$.VARNAME, "%W")',
                         "Week of the year (Sunday as first day of the week)" = 'format(.DATA$.VARNAME, "%U")',
                         "Day of the year" = 'format(.DATA$.VARNAME, "%j")',
@@ -40,7 +41,7 @@ extract_part = function(.data, varname, part, name) {
                         "Second" = 'format(.DATA$.VARNAME, "%S")')
   
   exp = ~.DATA %>%
-    tibble::add_column(.NAME = .EXTEXP, .after = ".VARNAME")
+    tibble::add_column(.NAME = as.character(.EXTEXP), .after = ".VARNAME")
 
 
   exp = replaceVars(exp, 

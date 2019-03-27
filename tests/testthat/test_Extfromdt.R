@@ -26,7 +26,7 @@ test_that("Desired parts are extracted", {
   expect_equal(
     stripcode(extract_part(data, "a", "Date only", "a.dt")),
     data %>% tibble::add_column(
-      a.dt = as.Date(data$a),
+      a.dt = "2020-07-07",
       .after = "a"
     )
   )

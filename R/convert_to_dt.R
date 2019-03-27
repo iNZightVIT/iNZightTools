@@ -54,12 +54,14 @@ convert_to_datetime <- function(.data, factorname, convname, newname) {
   tryCatch(
     interpolate(exp, convert = convert.string),
     warning = function(w) {
-      if (w$message != "All formats failed to parse. No formats found.") {
+      if (w$message == "All formats failed to parse. No formats found." | substr(w$message,1,10) == "PCRE patte"){
+        warning("Failed to parse")
+        return(.data)
+      } else {
         warning(w$message)
-        } else {
-          warning("Failed to parse")
-          return(.data)
-        }
-  })
+      }
+    }
+  )
+  
 }
 

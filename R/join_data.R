@@ -55,6 +55,11 @@ joindata <- function(.data, imported_data, origin_join_col, import_join_col, joi
   } else {
     res <- suppressMessages(interpolate(exp))
   }
+  print(import_join_col)
+  print(origin_join_col)
+  # if (import_join_col == NULL) {
+  #   import_join_col = character()
+  # }
   # if import_join_col is NULL, then this expression is:
   # set import_join_col to character()
   attr(res, "join_cols") <- structure(import_join_col, .Names = origin_join_col)

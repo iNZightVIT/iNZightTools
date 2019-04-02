@@ -31,7 +31,9 @@ repos:
   rforge: https://r-forge.r-project.org/
 
 before_install:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo chown -R $(whoami) /usr/local/share;
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]];
+    then sudo chown -R $(whoami) /usr/local/share;
+    Rscript -e "install.packages('lazyeval', repos='https://cran.rstudio.com')";
   fi
 
 after_success:
@@ -49,5 +51,5 @@ deploy:
   file: iNZightTools_*.t*gz
   overwrite: true
   on:
-    tags: true    
+    tags: true
     repo: iNZightVIT/iNZightTools

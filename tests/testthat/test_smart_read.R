@@ -31,10 +31,14 @@ test_that("smart_read can handle various encoding", {
 })
 
 test_that("smart_read returns code!!", {
-    expect_equal(code(smart_read("appbset1.sav")),
-                 "foreign::read.spss(\"appbset1.sav\", to.data.frame = TRUE)")
-    expect_equal(code(smart_read("c5hw1.dta")),
-                 "foreign::read.dta(\"c5hw1.dta\")")
+    expect_equal(
+        code(smart_read("appbset1.sav")),
+        "haven::read_sav(\"appbset1.sav\")"
+    )
+    expect_equal(
+        code(smart_read("c5hw1.dta")),
+        "haven::read_dta(\"c5hw1.dta\")"
+    )
     expect_equal(
         code(smart_read("test.sas7bdat")),
         "haven::read_sas(\"test.sas7bdat\")"

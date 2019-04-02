@@ -9,28 +9,26 @@ Imports:
     methods,
     survey,
     grDevices,
-    foreign,
     readr (>= 1.2.0),
     readxl,
+    haven,
     magrittr,
     tibble,
     dplyr,
     forcats,
     tidyr,
     stringr,
-    sas7bdat,
     tools,
     chron,
     lubridate,
-    zoo,
-    haven
+    zoo
 Suggests:
     Acinonyx,
     cairoDevice,
     testthat,
     FutureLearnData,
     covr
-Additional_repositories: 
+Additional_repositories:
     https://r.docker.stat.auckland.ac.nz,
     http://rforge.net
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),

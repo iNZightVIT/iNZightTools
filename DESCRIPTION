@@ -22,7 +22,8 @@ Imports:
     tools,
     chron,
     lubridate,
-    zoo
+    zoo,
+    haven
 Suggests:
     Acinonyx,
     cairoDevice,

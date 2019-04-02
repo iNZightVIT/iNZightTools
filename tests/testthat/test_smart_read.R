@@ -12,6 +12,7 @@ test_that("files parsed correctly", {
     expect_is(smart_read("meta.csv"), "data.frame")
     expect_is(smart_read("appbset1.sav"), "data.frame")
     expect_is(smart_read("c5hw1.dta"), "data.frame")
+    expect_is(smart_read("test.sas7bdat"), "data.frame")
 })
 
 test_that("smart_read gets correct column types and dims", {
@@ -34,6 +35,10 @@ test_that("smart_read returns code!!", {
                  "foreign::read.spss(\"appbset1.sav\", to.data.frame = TRUE)")
     expect_equal(code(smart_read("c5hw1.dta")),
                  "foreign::read.dta(\"c5hw1.dta\")")
+    expect_equal(
+        code(smart_read("test.sas7bdat")),
+        "haven::read_sas(\"test.sas7bdat\")"
+    )
 })
 
 test_that("smart_read can take column types", {
@@ -48,5 +53,5 @@ test_that("smart_read can take column types", {
 })
 
 test_that("smart_read can handle spaces and comment-characters", {
-    expect_s3_class(smart_read("characters.csv"), "data.frame")    
+    expect_s3_class(smart_read("characters.csv"), "data.frame")
 })

@@ -14,7 +14,7 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE, colum
     type <- guess_type(ext)
     fun <- eval(parse(text = sprintf("read_%s", type)))
     d <- fun(file, ext = ext, preview = preview, column_types = column_types, ...)
-    if (preview) 
+    if (preview)
       class(d) <- c('inz.preview', class(d))
     if (is.null(attr(d, "name")))
       attr(d, "name") <- tools::file_path_sans_ext(basename(file))
@@ -44,7 +44,7 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_
                      ...) {
 
     named.args <- list(...)
-    
+
     if (is.null(named.args$comment))
         named.args$comment <- "#"
 
@@ -53,7 +53,7 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_
 
     if (missing(delimiter))
         delimiter <- ifelse(ext == "csv", ",", " ")
-    
+
     if (ext != "csv" || delimiter != ",")
         named.args <- c(list(delim = delimiter), named.args)
     else if (ext == "txt")
@@ -65,7 +65,7 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_
 
     if (!missing(decimal_mark))
         locale$decimal_mark <- escape_string(decimal_mark)
-    
+
     if (!missing(grouping_mark))
         locale$grouping_mark <- escape_string(grouping_mark)
 
@@ -75,7 +75,7 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_
                              if (is.character(x)) escape_string(x)
                              else x
                          })
-    
+
     ctypes <- ""
     if (!missing(column_types)) {
         named.args <- c(list(col_types = "COLTYPES"))
@@ -88,29 +88,29 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_
         }
     }
 
-    if (length(locale) > 0) 
+    if (length(locale) > 0)
         named.args$locale <- sprintf("readr::locale(%s)",
                                      paste(names(locale), locale,
                                            sep = " = ", collapse = ", "))
-    
+
     if (length(named.args) > 0)
         args <- paste("file,",
                       paste(names(named.args), named.args,
                             collapse = ", ", sep = " = "))
     else
         args <- "file"
-    
+
     exp <- ~FUN(ARGS)
     exp <- replaceVars(exp,
                        FUN = sprintf("readr::read_%s",
-                                     ifelse(ext == "csv" && delimiter == ",", 
+                                     ifelse(ext == "csv" && delimiter == ",",
                                             "csv", "delim")),
                        ARGS = args,
                        COLTYPES = ctypes)
 
     TEMP_RESULT <- interpolate(exp, file = file)
     if (!convert.to.factor) return(TEMP_RESULT)
-    
+
     chars <- sapply(TEMP_RESULT, is.character)
     if (!any(chars)) return(TEMP_RESULT)
 
@@ -118,8 +118,8 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_
     charnames <- names(TEMP_RESULT)[chars]
     expr2 <- paste(
         "TEMP_RESULT %>% dplyr::mutate(",
-        paste("\"", charnames, "\" = as.factor(", 
-              quote_varname(charnames), 
+        paste("\"", charnames, "\" = as.factor(",
+              quote_varname(charnames),
               ")",
               sep = "", collapse = ", "),
         ")", sep = "")
@@ -135,7 +135,7 @@ read_excel <- function(file, ext, preview = FALSE, column_types, ...) {
 
     if (!missing(column_types))
         named.args <- c(list(col_types = column_types), named.args)
-        
+
     if (preview)
         named.args <- c(list(n_max = 10), named.args)
 
@@ -145,7 +145,7 @@ read_excel <- function(file, ext, preview = FALSE, column_types, ...) {
                             collapse = ", ", sep = " = "))
     else
         args <- "file"
-    
+
     exp <- ~readxl::read_excel(ARGS)
     exp <- replaceVars(exp, ARGS = args)
 
@@ -154,12 +154,17 @@ read_excel <- function(file, ext, preview = FALSE, column_types, ...) {
 
 read_spss <- function(file, ext, preview = FALSE, column_types) {
     exp <- ~foreign::read.spss(file, to.data.frame = TRUE)
-    
+
     interpolate(exp, file = file)
 }
 
 read_stata <- function(file, ext, preview = FALSE, column_types) {
     exp <- ~foreign::read.dta(file)
+    interpolate(exp, file = file)
+}
+
+read_sas <- function(file, ext, preview = FALSE, column_types) {
+    exp <- ~haven::read_sas(file)
     interpolate(exp, file = file)
 }
 
@@ -585,7 +590,7 @@ is_preview <- function(df) inherits(df, "inz.preview")
 #                            delim          = attr(path, "delim"),
 #                            date.names     = "en",
 #                            time.format    = "%AT",
-#                            time.zone      = 
+#                            time.zone      =
 #                               ifelse(is.na(Sys.timezone()), 'NZ', Sys.timezone()),
 #                            date.format    = "%Y-%m-%d",
 #                            decimal.mark   = (Sys.localeconv())["decimal_point"],

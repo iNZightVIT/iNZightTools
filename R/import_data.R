@@ -28,6 +28,7 @@ guess_type <- function(ext) {
            "sav" = "spss",
            "dta" = "stata",
            "sas7bdat" = "sas",
+           "xpt" = "sas",
            "txt" = "meta",
            "csv" = "meta", ## -> metadata_read.R
            "unknown")
@@ -164,7 +165,13 @@ read_stata <- function(file, ext, preview = FALSE, column_types) {
 }
 
 read_sas <- function(file, ext, preview = FALSE, column_types) {
-    exp <- ~haven::read_sas(file)
+    exp <- ~haven::read_EXT(file)
+    exp <- replaceVars(exp,
+        EXT = switch(ext,
+            "xpt" = "xpt",
+            "sas"
+        )
+    )
     interpolate(exp, file = file)
 }
 

@@ -13,6 +13,7 @@ test_that("files parsed correctly", {
     expect_is(smart_read("appbset1.sav"), "data.frame")
     expect_is(smart_read("c5hw1.dta"), "data.frame")
     expect_is(smart_read("test.sas7bdat"), "data.frame")
+    expect_is(smart_read("cars.xpt"), "data.frame")
 })
 
 test_that("smart_read gets correct column types and dims", {
@@ -42,6 +43,10 @@ test_that("smart_read returns code!!", {
     expect_equal(
         code(smart_read("test.sas7bdat")),
         "haven::read_sas(\"test.sas7bdat\")"
+    )
+    expect_equal(
+        code(smart_read("cars.xpt")),
+        "haven::read_xpt(\"cars.xpt\")"
     )
 })
 

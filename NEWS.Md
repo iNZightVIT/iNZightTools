@@ -1,8 +1,10 @@
-## iNZightTools 1.6.3.900
+## iNZightTools 1.6.3.9000
 __Release date:__ TBA
 
 - add appveyor ci
 - add code tidying functionality
+- import SAS files (.sas7bdat and .xpt)
+
 
 ## iNZightTools 1.6.3
 __Release date:__ 15 November 2018

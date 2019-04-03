@@ -5,8 +5,8 @@ data <- data.frame(
   b = "19560612",
   c = "20191901",
   d = "18561263123",
-  x = "2018-01-01 12:20", 
-  y = "this is not a date", 
+  x = "2018-01-01 12:20",
+  y = "this is not a date",
   z = "12pm on the 8th day of march, 2017"
 )
 stripcode <- function(x) {
@@ -61,7 +61,7 @@ test_that("Invalid formats are dealt with appropriately", {
   )
   expect_warning(
     expect_equal(
-      convert_to_datetime(data, "c", "year month day", "c.dt"), 
+      convert_to_datetime(data, "c", "year month day", "c.dt"),
       data
     ),
     "Failed to parse"

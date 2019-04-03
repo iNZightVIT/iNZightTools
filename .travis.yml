@@ -15,6 +15,9 @@ matrix:
     - os: osx
       r: 3.3
       brew_packages: libgit2
+    - os: osx
+      r: release
+      brew_packages: libgit2
   allow_failures:
     - os: osx
 

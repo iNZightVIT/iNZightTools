@@ -12,8 +12,11 @@ matrix:
       r: release
     - os: linux
       r: devel
+#    - os: osx
+#      r: 3.3
+#      brew_packages: libgit2
     - os: osx
-      r: 3.3
+      r: release
       brew_packages: libgit2
   allow_failures:
     - os: osx
@@ -31,7 +34,9 @@ repos:
   rforge: https://r-forge.r-project.org/
 
 before_install:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo chown -R $(whoami) /usr/local/share;
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]];
+    then sudo chown -R $(whoami) /usr/local/share;
+    Rscript -e "install.packages('lazyeval', repos='https://cran.rstudio.com')";
   fi
 
 after_success:
@@ -49,5 +54,5 @@ deploy:
   file: iNZightTools_*.t*gz
   overwrite: true
   on:
-    tags: true    
+    tags: true
     repo: iNZightVIT/iNZightTools

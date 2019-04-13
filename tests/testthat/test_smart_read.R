@@ -66,3 +66,10 @@ test_that("smart_read can take column types", {
 test_that("smart_read can handle spaces and comment-characters", {
     expect_s3_class(smart_read("characters.csv"), "data.frame")
 })
+
+test_that("smart_read can handle datetimes", {
+    dt <- smart_read("dt.csv")
+    expect_is(dt$x, "Date")
+    expect_is(dt$y, "hms")
+    expect_is(dt$z, "POSIXct")
+})

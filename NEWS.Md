@@ -4,6 +4,7 @@ __Release date:__ TBA
 - add appveyor ci
 - add code tidying functionality
 - import SAS files (.sas7bdat and .xpt)
+- validate datasets
 
 
 ## iNZightTools 1.6.3

@@ -77,8 +77,8 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_
                              else x
                          })
 
-    ctypes <- ""
-    if (!missing(column_types)) {
+    ctypes <- "NULL"
+    if (!missing(column_types) && !is.null(column_types)) {
         named.args <- c(list(col_types = "COLTYPES"))
 
         if (!is.null(names(column_types))) {

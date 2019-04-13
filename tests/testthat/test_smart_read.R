@@ -60,7 +60,7 @@ test_that("smart_read can take column types", {
         c("factor", "numeric", "factor", "factor", "numeric",
           "factor", "numeric", "factor", "numeric", "numeric"))
 
-    expect_is(smart_read("cas5.csv", column_types = NULL), "data.frame")
+    expect_is(smart_read("cas500.csv", column_types = NULL), "data.frame")
 })
 
 test_that("smart_read can handle spaces and comment-characters", {

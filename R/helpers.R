@@ -46,7 +46,8 @@ is_dt <- function(x) {
 vartype <- function(x) {
     if (inherits(x, 'POSIXct') || 
         inherits(x, 'Date') || 
-        inherits(x, 'time')) return('dt')
+        inherits(x, 'time') ||
+        inherits(x, 'hms')) return('dt')
 
     if (is.numeric(x)) 'num' else 'cat'
 }

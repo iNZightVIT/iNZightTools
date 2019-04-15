@@ -1,3 +1,15 @@
+#' Unite columns in a dataset
+#'
+#' @param .data dataset
+#' @param name name for the new united column
+#' @param col a vector of column names
+#' @param sep separator used in between the united columns
+#'
+#' @return united dataset
+#' @export
+#' @author Yiwen He
+#'
+#' @examples
 unite <- function(.data, name, col, sep) {
   
   mc <- match.call()

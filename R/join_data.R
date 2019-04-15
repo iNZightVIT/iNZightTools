@@ -48,15 +48,13 @@ joindata <- function(.data, imported_data, origin_join_col, import_join_col, joi
                      .SUFFIX = suf)
 
   if (all(origin_join_col == "") & all(import_join_col == "")) {
-    res <- interpolate(exp)
+    res <- suppressMessages(interpolate(exp))
     vars <- capture.output(dplyr::inner_join(.data, imported_data), type = "message")
     origin_join_col <- eval(parse(text = gsub(".+ = ", "", vars)))
     import_join_col <- origin_join_col
   } else {
     res <- suppressMessages(interpolate(exp))
   }
-  print(import_join_col)
-  print(origin_join_col)
   # if (import_join_col == NULL) {
   #   import_join_col = character()
   # }

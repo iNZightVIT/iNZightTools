@@ -1,67 +1,51 @@
-#' Reshape long to wide
+#' Reshaping dataset from wide to long or from long to wide
 #'
-#' Reshape a data set from long form (observations in rows),
-#' to wide form (observations in columns).
+#' @param .data dataset
+#' @param col1 column to spread out (for long to wide)
+#' @param col2 values to be put in the spread out column (for long to wide)
+#' @param cols columns(s) to gather together (for wide to long)
+#' @param key name for new column containing old column names (for wide to long)
+#' @param value name for new column containing old column values (for wide to long)
+#' @param check check whether to use long to wide or wide to long
 #'
-#' @param .data a dataframe or tibble to be reshaped
-#' @param col1 the column containing the 'key'
-#' @param col2 the column containing the values
-#' @return a dataframe or tibble
+#' @return reshaped dataset
 #' @author Yiwen He
 #' @export
-reshape_data_long_to_wide <- function(.data, col1, col2) {
+reshape_data <- function(.data, col1, col2, cols, key, value, check) {
 
   mc <- match.call()
   dataname <- mc$.data
 
-  keyname <- paste0("key = '", col1, "', ")
+  keynameL <- paste0("key = '", col1, "', ")
 
-  value <- paste0("value = '", col2, "'")
-
-  exp = ~.DATA %>%
-    tidyr::spread(.KEY.VALUE)
-
-  exp <- replaceVars(exp,
-                     .DATA = dataname,
-                     .KEY = keyname,
-                     .VALUE = value)
-
-  interpolate(exp)
-}
-
-#' Reshape wide to long
-#'
-#' Reshape a data set from wide form (observations in columns)
-#' to long form (observations in rows)
-#'
-#' @param .data a dataframe or tibble to be reshaped
-#' @param cols the columns containing values
-#' @param colname the name of the 'key' column in the new data set
-#' @param value the name of the 'value' column in the new data set
-#' @return a dataframe or tibble
-#' @author Yiwen He
-#' @export
-reshape_data_wide_to_long <- function(.data, cols, colname, value) {
-  mc <- match.call()
-  dataname <- mc$.data
+  valueL <- paste0("value = '", col2, "'")
 
   colnames <- ""
   for (i in 1:length(cols)) {
     colnames = paste0(colnames, "'", cols[i], "'", ", ")
   }
 
-  keyname <- paste0("key = '", colname, "', ")
+  keynameW <- paste0("key = '", key, "', ")
 
-  value <- paste0("value = '", value, "'")
+  valueW <- paste0("value = '", value, "'")
 
-  exp = ~.DATA %>%
-    tidyr::gather(.COL.KEY.VALUE)
+
+  if (check == "long") {
+    exp = ~.DATA %>%
+      tidyr::spread(.KEYL.VALUEL)
+  } else if (check == "wide") {
+    exp = ~.DATA %>%
+      tidyr::gather(.COL.KEYW.VALUEW)
+  }
 
   exp <- replaceVars(exp,
                      .DATA = dataname,
+                     .KEYL = keynameL,
+                     .VALUEL = valueL,
                      .COL = colnames,
-                     .KEY = keyname,
-                     .VALUE = value)
+                     .KEYW = keynameW,
+                     .VALUEW = valueW
+                     )
 
   interpolate(exp)
 }

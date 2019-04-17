@@ -8,14 +8,12 @@
 #' @return dataset with new rows appended
 #' @export
 #' @author Yiwen He
-#'
-#' @examples
 appendrows <- function(.data, imported_data, colnames, date) {
-  
+
   mc <- match.call()
   dataname <- mc$.data
   importname <- mc$imported_data
-  
+
   if (date) {
     exp = ~.DATA %>%
       dplyr::bind_rows(.IMP %>% tibble::add_column("When_Added" = Sys.time()))
@@ -23,10 +21,10 @@ appendrows <- function(.data, imported_data, colnames, date) {
     exp = ~.DATA %>% dplyr::bind_rows(.IMP)
   }
 
-  exp <- replaceVars(exp, 
+  exp <- replaceVars(exp,
                      .DATA = dataname,
                      .IMP = importname)
-  
+
   interpolate(exp)
 }
 

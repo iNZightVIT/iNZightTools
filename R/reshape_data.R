@@ -51,4 +51,3 @@ reshape_data <- function(.data, col1, col2, cols, key, value, check) {
   
   interpolate(exp)
 }
-

@@ -10,10 +10,13 @@
 ##' @return a dataframe with attributes
 ##' @author Tom Elliott
 ##' @export
-smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE, column_types, ...) {
+smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
+                       column_types, ...) {
     type <- guess_type(ext)
     fun <- eval(parse(text = sprintf("read_%s", type)))
-    d <- fun(file, ext = ext, preview = preview, column_types = column_types, ...)
+    d <- fun(file, ext = ext, preview = preview,
+        column_types = column_types, ...
+    )
     if (preview)
       class(d) <- c('inz.preview', class(d))
     if (is.null(attr(d, "name")))
@@ -23,15 +26,16 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE, colum
 
 guess_type <- function(ext) {
     switch(ext,
-           "xls" = "excel",
-           "xlsx" = "excel",
-           "sav" = "spss",
-           "dta" = "stata",
-           "sas7bdat" = "sas",
-           "xpt" = "sas",
-           "txt" = "meta",
-           "csv" = "meta", ## -> metadata_read.R
-           "unknown")
+        "xls" = "excel",
+        "xlsx" = "excel",
+        "sav" = "spss",
+        "dta" = "stata",
+        "sas7bdat" = "sas",
+        "xpt" = "sas",
+        "txt" = "meta",
+        "csv" = "meta", ## -> metadata_read.R
+        "unknown"
+    )
 }
 
 read_unknown <- function(file, ...) {
@@ -39,9 +43,9 @@ read_unknown <- function(file, ...) {
   return(NULL)
 }
 
-read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_types,
-                     encoding, delimiter, decimal_mark, grouping_mark,
-                     convert.to.factor = TRUE,
+read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
+                     column_types, encoding, delimiter, decimal_mark,
+                     grouping_mark, convert.to.factor = TRUE,
                      ...) {
 
     named.args <- list(...)
@@ -72,42 +76,60 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_
 
     ## quote character arguments (x = z -> x = "z")
     named.args <- lapply(named.args,
-                         function(x) {
-                             if (is.character(x)) escape_string(x)
-                             else x
-                         })
+        function(x) {
+            if (is.character(x)) escape_string(x)
+                else x
+        }
+    )
 
     ctypes <- "NULL"
     if (!missing(column_types) && !is.null(column_types)) {
         named.args <- c(list(col_types = "COLTYPES"))
-
         if (!is.null(names(column_types))) {
-            ctypes <- paste("readr::cols(", names(column_types), " = '", column_types, "')",
-                            sep = "", collapse = ", ")
+            ctypes <- paste(
+                "readr::cols(",
+                paste(names(column_types), " = '", column_types, "'",
+                    sep = "",
+                    collapse = ", "
+                ),
+                ")",
+                sep = ""
+            )
         } else {
-            ctypes <- paste("readr::cols('", column_types, "')", sep = "", collapse = "")
+            ctypes <- paste("readr::cols('", column_types, "')",
+                sep = "",
+                collapse = ""
+            )
         }
     }
 
     if (length(locale) > 0)
         named.args$locale <- sprintf("readr::locale(%s)",
-                                     paste(names(locale), locale,
-                                           sep = " = ", collapse = ", "))
+            paste(names(locale), locale,
+                sep = " = ",
+                collapse = ", "
+            )
+        )
 
     if (length(named.args) > 0)
-        args <- paste("file,",
-                      paste(names(named.args), named.args,
-                            collapse = ", ", sep = " = "))
+        args <- paste(
+            "file,",
+            paste(names(named.args), named.args,
+                collapse = ", ",
+                sep = " = "
+            )
+        )
     else
         args <- "file"
 
     exp <- ~FUN(ARGS)
     exp <- replaceVars(exp,
-                       FUN = sprintf("readr::read_%s",
-                                     ifelse(ext == "csv" && delimiter == ",",
-                                            "csv", "delim")),
-                       ARGS = args,
-                       COLTYPES = ctypes)
+        FUN = sprintf("readr::read_%s",
+            ifelse(ext == "csv" && delimiter == ",", "csv", "delim")
+        ),
+        ARGS = args,
+        COLTYPES = ctypes
+    )
 
     TEMP_RESULT <- interpolate(exp, file = file)
     if (!convert.to.factor) return(TEMP_RESULT)
@@ -120,10 +142,39 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE, column_
     expr2 <- paste(
         "TEMP_RESULT %>% dplyr::mutate(",
         paste("\"", charnames, "\" = as.factor(",
-              quote_varname(charnames),
-              ")",
-              sep = "", collapse = ", "),
-        ")", sep = "")
+            quote_varname(charnames),
+            ")",
+            sep = "",
+            collapse = ", "
+        ),
+        ")",
+        sep = ""
+    )
+
+    ## ensure that numeric -> categorical order is in numerical order
+    if (ctypes != "NULL") {
+        if (any(column_types == "c")) {
+            to_cat <- names(column_types[column_types == "c"])
+            conv <- sapply(to_cat, function(v) {
+                clev <- levels(as.factor(TEMP_RESULT[[v]]))
+                if (!any(is.na(suppressWarnings(as.numeric(clev)) == clev))) {
+                    clev <- as.character(sort(as.numeric(clev)))
+                    sprintf(
+                        "%s = forcats::fct_relevel(%s, c(%s))",
+                        v, v,
+                        paste("\"", clev, "\"", sep = "", collapse = ", ")
+                    )
+                } else {
+                    ""
+                }
+            })
+            conv <- conv[conv != ""]
+            expr2 <- sprintf("%s %s dplyr::mutate(%s)",
+                expr2, "%>%",
+                paste(conv, sep = ",")
+            )
+        }
+    }
 
     res2 <- eval(parse(text = expr2))
     attr(res2, "code") <-
@@ -142,8 +193,11 @@ read_excel <- function(file, ext, preview = FALSE, column_types, ...) {
 
     if (length(named.args) > 0)
         args <- paste("file,",
-                      paste(names(named.args), named.args,
-                            collapse = ", ", sep = " = "))
+            paste(names(named.args), named.args,
+                collapse = ", ",
+                sep = " = "
+            )
+        )
     else
         args <- "file"
 

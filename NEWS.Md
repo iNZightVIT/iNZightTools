@@ -5,6 +5,9 @@ __Release date:__ TBA
 - add code tidying functionality
 - import SAS files (.sas7bdat and .xpt)
 - validate datasets
+- join data using `*_join()`
+- join data by rows
+- reshape data from long to wide, and vice versa
 
 
 ## iNZightTools 1.6.3

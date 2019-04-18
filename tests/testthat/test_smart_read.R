@@ -50,16 +50,24 @@ test_that("smart_read returns code!!", {
     )
 })
 
-test_that("smart_read can take column types", {
+test_that("Column type overrides are respected", {
     expect_equal(as.character(sapply(smart_read("cas500.csv"), class)),
                  c("factor", "numeric", "factor", "factor", "numeric",
                    "factor", "numeric", "numeric", "numeric", "numeric"))
-    expect_equal(as.character(sapply(smart_read(
-        "cas500.csv",
-        column_types = c(year = "c")), class)),
+    cas.yearcat <- smart_read("cas500.csv",
+        column_types = c(year = "c")
+    )
+    expect_equal(
+        as.character(sapply(cas.yearcat, class)),
         c("factor", "numeric", "factor", "factor", "numeric",
-          "factor", "numeric", "factor", "numeric", "numeric"))
+          "factor", "numeric", "factor", "numeric", "numeric")
+    )
+    expect_equal(
+        levels(cas.yearcat$year),
+        4:13
+    )
 
+    # null should also work
     expect_is(smart_read("cas500.csv", column_types = NULL), "data.frame")
 })
 

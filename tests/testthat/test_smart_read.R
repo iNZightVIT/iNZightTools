@@ -55,7 +55,7 @@ test_that("Column type overrides are respected", {
                  c("factor", "numeric", "factor", "factor", "numeric",
                    "factor", "numeric", "numeric", "numeric", "numeric"))
     cas.yearcat <- smart_read("cas500.csv",
-        column_types = c(year = "c")
+        column_types = c(year = "c", age = "n", travel = "c")
     )
     expect_equal(
         as.character(sapply(cas.yearcat, class)),
@@ -64,7 +64,7 @@ test_that("Column type overrides are respected", {
     )
     expect_equal(
         levels(cas.yearcat$year),
-        4:13
+        as.character(4:13)
     )
 
     # null should also work

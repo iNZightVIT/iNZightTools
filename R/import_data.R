@@ -85,12 +85,15 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
     ctypes <- "NULL"
     if (!missing(column_types) && !is.null(column_types)) {
         named.args <- c(list(col_types = "COLTYPES"))
-
         if (!is.null(names(column_types))) {
             ctypes <- paste(
-                "readr::cols(", names(column_types), " = '", column_types, "')",
-                sep = "",
-                collapse = ", "
+                "readr::cols(",
+                paste(names(column_types), " = '", column_types, "'",
+                    sep = "",
+                    collapse = ", "
+                ),
+                ")",
+                sep = ""
             )
         } else {
             ctypes <- paste("readr::cols('", column_types, "')",
@@ -147,6 +150,31 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
         ")",
         sep = ""
     )
+
+    ## ensure that numeric -> categorical order is in numerical order
+    if (ctypes != "NULL") {
+        if (any(column_types == "c")) {
+            to_cat <- names(column_types[column_types == "c"])
+            conv <- sapply(to_cat, function(v) {
+                clev <- levels(as.factor(TEMP_RESULT[[v]]))
+                if (!any(is.na(suppressWarnings(as.numeric(clev)) == clev))) {
+                    clev <- as.character(sort(as.numeric(clev)))
+                    sprintf(
+                        "%s = forcats::fct_relevel(%s, c(%s))",
+                        v, v,
+                        paste("\"", clev, "\"", sep = "", collapse = ", ")
+                    )
+                } else {
+                    ""
+                }
+            })
+            conv <- conv[conv != ""]
+            expr2 <- sprintf("%s %s dplyr::mutate(%s)",
+                expr2, "%>%",
+                paste(conv, sep = ",")
+            )
+        }
+    }
 
     res2 <- eval(parse(text = expr2))
     attr(res2, "code") <-

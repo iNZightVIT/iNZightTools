@@ -1,4 +1,4 @@
-## iNZightTools 1.7
+# iNZightTools 1.7
 __Release date:__ 30 April 2019
 
 - add appveyor ci

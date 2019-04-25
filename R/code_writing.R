@@ -49,7 +49,7 @@ replaceVars = function(exp, ...){
                     exp_str, 
                     fixed = TRUE)
   }
-  exp <- as.formula(exp_str)
+  exp <- as.formula(paste(exp_str, collapse = " "))
   exp
 } 
 

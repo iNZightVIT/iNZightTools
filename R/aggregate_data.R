@@ -64,7 +64,7 @@ aggregateData = function(.data, vars, summaries){
                                   each = length(summary_names)), 
                          ", na.rm = TRUE)", collapse = ", ")
   
-  summarize_str <- str_c("count = n(), ", summarize_str)
+  summarize_str <- str_c("count = dplyr::n(), ", summarize_str)
   
   exp <- ~.data %>%
     dplyr::group_by(.EVAL_GROUPBY) %>%

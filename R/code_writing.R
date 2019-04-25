@@ -59,7 +59,10 @@ pasteFormulae <- function(formulae, sep = " %>% "){
   for (i in 1:length(formulae)){
     combined_formulae[i] <- as.character(formulae[[i]])[2]
   }
-  output_formula <- as.formula(paste("~", paste(combined_formulae, collapse = sep)))
+  output_formula <- as.formula(
+    paste("~", paste(combined_formulae, collapse = sep),
+      collapse = " ")
+  )
   output_formula
 }
 

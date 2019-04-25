@@ -169,10 +169,11 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
                 }
             })
             conv <- conv[conv != ""]
-            expr2 <- sprintf("%s %s dplyr::mutate(%s)",
-                expr2, "%>%",
-                paste(conv, sep = ",")
-            )
+            if (length(conv))
+                expr2 <- sprintf("%s %s dplyr::mutate(%s)",
+                    expr2, "%>%",
+                    paste(conv, sep = ",")
+                )
         }
     }
 

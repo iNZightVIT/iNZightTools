@@ -84,7 +84,7 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
 
     ctypes <- "NULL"
     if (!missing(column_types) && !is.null(column_types)) {
-        named.args <- c(list(col_types = "COLTYPES"))
+        named.args <- c(named.args, list(col_types = "COLTYPES"))
         if (!is.null(names(column_types))) {
             ctypes <- paste(
                 "readr::cols(",

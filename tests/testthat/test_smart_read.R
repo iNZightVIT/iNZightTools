@@ -99,3 +99,10 @@ test_that("converting numeric with some string values to cat behaves appropriate
     expect_is(d$y, "factor")
     expect_true(all(levels(d) %in% c("1", "2", "text")))
 })
+
+test_that("changing column types in delimited file", {
+    expect_silent(
+        dt <- smart_read("cas.txt", column_types = c(education = "c"))
+    )
+    expect_is(dt$education, "factor")
+})

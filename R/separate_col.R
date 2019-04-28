@@ -11,23 +11,23 @@
 #' @export
 #' @author Yiwen He
 separate <- function(.data, col, left, right, sep, check) {
-
+  
   mc <- match.call()
   dataname <- mc$.data
-
+  
   if (sep != "") {
     sep_string <- paste0(", sep = '", sep, "'")
   }
-
+  
   name <- paste0(", into = c('", left, "', '", right, "')")
-
+  
   if (check == "Row") {
     name = ""
   }
-
+  
   exp <- ~.DATA %>%
     .FUN(.COL.NAME.SEP.MERGE)
-
+  
   if (check == "Column") {
     exp <- ~.DATA %>%
       tidyr::separate(.COL.NAME.SEP.MERGE)
@@ -35,8 +35,8 @@ separate <- function(.data, col, left, right, sep, check) {
     exp <- ~.DATA %>%
       tidyr::separate_rows(.COL.SEP)
   }
-
-
+  
+  
   exp <- replaceVars(exp,
                      .DATA = dataname,
                      .COL = col,
@@ -44,6 +44,7 @@ separate <- function(.data, col, left, right, sep, check) {
                      .SEP = sep_string,
                      .MERGE = ", extra = 'merge'",
                      .FILL = ", fill = 'right'")
-
+  
   interpolate(exp)
 }
+

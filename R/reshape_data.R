@@ -12,24 +12,24 @@
 #' @author Yiwen He
 #' @export
 reshape_data <- function(.data, col1, col2, cols, key, value, check) {
-
+  
   mc <- match.call()
   dataname <- mc$.data
-
+  
   keynameL <- paste0("key = '", col1, "', ")
-
+  
   valueL <- paste0("value = '", col2, "'")
-
+  
   colnames <- ""
   for (i in 1:length(cols)) {
     colnames = paste0(colnames, "'", cols[i], "'", ", ")
   }
-
+  
   keynameW <- paste0("key = '", key, "', ")
-
+  
   valueW <- paste0("value = '", value, "'")
-
-
+  
+  
   if (check == "long") {
     exp = ~.DATA %>%
       tidyr::spread(.KEYL.VALUEL)
@@ -37,7 +37,7 @@ reshape_data <- function(.data, col1, col2, cols, key, value, check) {
     exp = ~.DATA %>%
       tidyr::gather(.COL.KEYW.VALUEW)
   }
-
+  
   exp <- replaceVars(exp,
                      .DATA = dataname,
                      .KEYL = keynameL,
@@ -45,7 +45,7 @@ reshape_data <- function(.data, col1, col2, cols, key, value, check) {
                      .COL = colnames,
                      .KEYW = keynameW,
                      .VALUEW = valueW
-                     )
-
+  )
+  
   interpolate(exp)
 }

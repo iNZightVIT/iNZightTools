@@ -31,6 +31,7 @@ extract_part = function(.data, varname, part, name) {
                         "Week of the year (Sunday as first day of the week)" = 'format(.DATA$.VARNAME, "%U")',
                         "Day of the year" = 'format(.DATA$.VARNAME, "%j")',
                         "Day of the week (name)" = 'format(.DATA$.VARNAME, "%A")',
+                        "Day of the week (abbreviated)" = 'lubridate::wday(.DATA$.VARNAME, label = TRUE)',
                         "Day of the week (number, Monday as 1)" = 'format(.DATA$.VARNAME, "%u")',
                         "Day of the week (number, Sunday as 0)" = 'format(.DATA$.VARNAME, "%w")',
                         "Day" = 'format(.DATA$.VARNAME, "%d")',

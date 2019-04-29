@@ -2,13 +2,12 @@
 #'
 #' @param .data original dataset
 #' @param imported_data imported dataset
-#' @param colnames column names of the original dataset
 #' @param date whether a "When_Added“ column is required
 #'
 #' @return dataset with new rows appended
 #' @export
 #' @author Yiwen He
-appendrows <- function(.data, imported_data, colnames, date) {
+appendrows <- function(.data, imported_data, date) {
 
   mc <- match.call()
   dataname <- mc$.data
@@ -27,6 +26,3 @@ appendrows <- function(.data, imported_data, colnames, date) {
 
   interpolate(exp)
 }
-
-
-?tibble::add_column

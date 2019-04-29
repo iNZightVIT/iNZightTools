@@ -4,14 +4,12 @@
 \alias{appendrows}
 \title{Append row to the dataset}
 \usage{
-appendrows(.data, imported_data, colnames, date)
+appendrows(.data, imported_data, date)
 }
 \arguments{
 \item{.data}{original dataset}
 
 \item{imported_data}{imported dataset}
-
-\item{colnames}{column names of the original dataset}
 
 \item{date}{whether a "When_Added“ column is required}
 }

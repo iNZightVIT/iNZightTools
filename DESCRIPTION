@@ -29,8 +29,7 @@ Suggests:
     FutureLearnData,
     covr
 Additional_repositories:
-    https://r.docker.stat.auckland.ac.nz,
-    http://rforge.net
+    https://r.docker.stat.auckland.ac.nz
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "inzight_support@stat.auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),

@@ -44,7 +44,7 @@ aggregateData = function(.data, vars, summaries){
   
   summaries_functionCall <- ifelse(summaries == "iqr", "IQR", summaries) %>%
     sort() %>%
-    c("countMissing")
+    c("iNZightTools::countMissing")
   
   numeric_vars <- colnames(dplyr::select_if(.data, is.numeric)) %>%
     sort()

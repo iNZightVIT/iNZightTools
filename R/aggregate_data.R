@@ -44,7 +44,7 @@ aggregateData = function(.data, vars, summaries){
   
   summaries_functionCall <- ifelse(summaries == "iqr", "IQR", summaries) %>%
     sort() %>%
-    c("countMissing")
+    c("iNZightTools::countMissing")
   
   numeric_vars <- colnames(dplyr::select_if(.data, is.numeric)) %>%
     sort()
@@ -64,7 +64,7 @@ aggregateData = function(.data, vars, summaries){
                                   each = length(summary_names)), 
                          ", na.rm = TRUE)", collapse = ", ")
   
-  summarize_str <- str_c("count = n(), ", summarize_str)
+  summarize_str <- str_c("count = dplyr::n(), ", summarize_str)
   
   exp <- ~.data %>%
     dplyr::group_by(.EVAL_GROUPBY) %>%

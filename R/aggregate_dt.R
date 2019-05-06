@@ -8,8 +8,6 @@ aggregatedt <- function(.data, method, key, name) {
   left = paste0(".DATA$", "left")
   right = paste0(".DATA$", "right")
   
-  .data <- iNZightTools::separate(.data, col, "left", "right", key, "Column")
-  
   if (method == "Yearly") {
     exp <- ~.DATA %>% tibble::add_column(.NAME = .DATA$left)
   } else if (method == "Quarterly" & key == "W") {

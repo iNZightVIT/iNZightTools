@@ -33,7 +33,7 @@ test_that("Desired parts are extracted", {
   expect_equal(
     stripcode(extract_part(data, "a", "Hour", "a.dt")),
     data %>% tibble::add_column(
-      a.dt = format(data$a, "%H"),
+      a.dt = as.numeric(format(data$a, "%H")),
       .after = "a"
     )
   )

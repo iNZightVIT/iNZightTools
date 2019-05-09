@@ -3,8 +3,8 @@
 
 #' @param .data dataframe or tibble to aggregate
 #' @param method the type of aggregation
-#' @param the key column
-#' @param the name of the variable
+#' @param key the key column
+#' @param name the name of the variable
 #' @return a data frame/tibble
 #' @author Yiwen He
 #' @export

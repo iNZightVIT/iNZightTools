@@ -11,9 +11,9 @@ aggregatedt(.data, method, key, name)
 
 \item{method}{the type of aggregation}
 
-\item{the}{key column}
+\item{key}{the key column}
 
-\item{the}{name of the variable}
+\item{name}{the name of the variable}
 }
 \value{
 a data frame/tibble

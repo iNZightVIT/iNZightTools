@@ -1,5 +1,13 @@
 ## Pass in key, format wanted, dataset, colname, 
+#' Aggregate datetimes
 
+#' @param .data dataframe or tibble to aggregate
+#' @param method the type of aggregation
+#' @param key the key column
+#' @param name the name of the variable
+#' @return a data frame/tibble
+#' @author Yiwen He
+#' @export
 aggregatedt <- function(.data, method, key, name) {
   
   mc <- match.call()

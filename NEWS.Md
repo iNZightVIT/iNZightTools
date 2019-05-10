@@ -1,5 +1,11 @@
-## iNZightTools 1.6.3.9000
-__Release date:__ TBA
+## iNZightTools 1.7.0.9000
+__Release date__: TBA
+
+
+
+
+# iNZightTools 1.7
+__Release date:__ 30 April 2019
 
 - add appveyor ci
 - add code tidying functionality

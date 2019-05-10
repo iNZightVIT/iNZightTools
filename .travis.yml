@@ -31,7 +31,7 @@ env:
 
 repos:
   docker: https://r.docker.stat.auckland.ac.nz
-  rforge: https://r-forge.r-project.org/
+# rforge: https://r-forge.r-project.org/
 
 before_install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]];

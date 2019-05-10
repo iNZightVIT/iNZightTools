@@ -81,3 +81,28 @@ test_that("smart_read can handle datetimes", {
     expect_is(dt$y, "hms")
     expect_is(dt$z, "POSIXct")
 })
+
+
+test_that("conversion to categorical works for datetimes", {
+    expect_silent(dt <- smart_read("dt.csv", column_types = c(x = "c")))
+    expect_is(dt$x, "factor")
+})
+
+test_that("converting numeric with some string values to cat behaves appropriately", {
+    tmp <- tempfile(fileext = ".csv")
+    on.exit(unlink(tmp))
+    readr::write_csv(
+        data.frame(x = 1:100, y = c(sample(1:2, 99, T), "text")), 
+        tmp
+    )
+    expect_silent(d <- smart_read(tmp, column_types = c(y = "c")))
+    expect_is(d$y, "factor")
+    expect_true(all(levels(d) %in% c("1", "2", "text")))
+})
+
+test_that("changing column types in delimited file", {
+    expect_silent(
+        dt <- smart_read("cas.txt", column_types = c(education = "c"))
+    )
+    expect_is(dt$education, "factor")
+})

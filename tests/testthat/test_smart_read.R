@@ -31,7 +31,7 @@ test_that("smart_read can handle various encoding", {
     expect_s3_class(data, "data.frame")
 })
 
-test_that("smart_read returns code!!", {
+test_that("smart_read returns code with necessary conversions included", {
     expect_equal(
         code(smart_read("appbset1.sav")),
         "haven::read_sav(\"appbset1.sav\")"
@@ -42,11 +42,11 @@ test_that("smart_read returns code!!", {
     )
     expect_equal(
         code(smart_read("test.sas7bdat")),
-        "haven::read_sas(\"test.sas7bdat\")"
+        "haven::read_sas(\"test.sas7bdat\") %>% dplyr::mutate(\"gender\" = as.factor(gender))"
     )
     expect_equal(
         code(smart_read("cars.xpt")),
-        "haven::read_xpt(\"cars.xpt\")"
+        "haven::read_xpt(\"cars.xpt\") %>% dplyr::mutate(\"MAKE\" = as.factor(MAKE))"
     )
 })
 
@@ -105,4 +105,10 @@ test_that("changing column types in delimited file", {
         dt <- smart_read("cas.txt", column_types = c(education = "c"))
     )
     expect_is(dt$education, "factor")
+})
+
+test_that("Reading (excel) files converts strings to factor", {
+    dt <- smart_read("cas500.xls")
+    expect_is(dt$travel, "factor")
+    expect_is(dt$gender, "factor")
 })

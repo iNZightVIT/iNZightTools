@@ -1,4 +1,4 @@
-# iNZightTools 1.7
+# iNZightTools 1.7.1
 __Release date:__ 30 April 2019
 
 - add appveyor ci
@@ -8,6 +8,8 @@ __Release date:__ 30 April 2019
 - join data using `*_join()`
 - join data by rows
 - reshape data from long to wide, and vice versa
+- convert characters to factors (this is how iNZight does things)
+- respect numerical order in factor conversions
 
 
 ## iNZightTools 1.6.3

@@ -11,12 +11,19 @@
 ##' @author Tom Elliott
 ##' @export
 smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
-                       column_types, ...) {
+                       column_types = NULL, ...) {
     type <- guess_type(ext)
     fun <- eval(parse(text = sprintf("read_%s", type)))
     d <- fun(file, ext = ext, preview = preview,
         column_types = column_types, ...
     )
+
+    ## now the data is read, convert things to factors etc
+    d <- strings_to_factors(d)
+
+    ## ensure any numeric->categorical changes retain numeric order of levels
+    d <- validate_type_changes(d, column_types)
+
     if (preview)
       class(d) <- c('inz.preview', class(d))
     if (is.null(attr(d, "name")))
@@ -44,7 +51,7 @@ read_unknown <- function(file, ...) {
 }
 
 read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
-                     column_types, encoding, delimiter, decimal_mark,
+                     column_types = NULL, encoding, delimiter, decimal_mark,
                      grouping_mark, convert.to.factor = TRUE,
                      ...) {
 
@@ -82,26 +89,9 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
         }
     )
 
-    ctypes <- "NULL"
-    if (!missing(column_types) && !is.null(column_types)) {
+    ctypes <- parse_coltypes(column_types)
+    if (ctypes != "NULL")
         named.args <- c(named.args, list(col_types = "COLTYPES"))
-        if (!is.null(names(column_types))) {
-            ctypes <- paste(
-                "readr::cols(",
-                paste(names(column_types), " = '", column_types, "'",
-                    sep = "",
-                    collapse = ", "
-                ),
-                ")",
-                sep = ""
-            )
-        } else {
-            ctypes <- paste("readr::cols('", column_types, "')",
-                sep = "",
-                collapse = ""
-            )
-        }
-    }
 
     if (length(locale) > 0)
         named.args$locale <- sprintf("readr::locale(%s)",
@@ -131,56 +121,7 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
         COLTYPES = ctypes
     )
 
-    TEMP_RESULT <- interpolate(exp, file = file)
-    if (!convert.to.factor) return(TEMP_RESULT)
-
-    chars <- sapply(TEMP_RESULT, is.character)
-    if (!any(chars)) return(TEMP_RESULT)
-
-    ## mutate(name = factor(name))
-    charnames <- names(TEMP_RESULT)[chars]
-    expr2 <- paste(
-        "TEMP_RESULT %>% dplyr::mutate(",
-        paste("\"", charnames, "\" = as.factor(",
-            quote_varname(charnames),
-            ")",
-            sep = "",
-            collapse = ", "
-        ),
-        ")",
-        sep = ""
-    )
-
-    ## ensure that numeric -> categorical order is in numerical order
-    if (ctypes != "NULL") {
-        if (any(column_types == "c")) {
-            to_cat <- names(column_types[column_types == "c"])
-            conv <- sapply(to_cat, function(v) {
-                clev <- levels(as.factor(TEMP_RESULT[[v]]))
-                if (!any(is.na(suppressWarnings(as.numeric(clev)) == clev))) {
-                    clev <- as.character(sort(as.numeric(clev)))
-                    sprintf(
-                        "%s = forcats::fct_relevel(%s, c(%s))",
-                        v, v,
-                        paste("\"", clev, "\"", sep = "", collapse = ", ")
-                    )
-                } else {
-                    ""
-                }
-            })
-            conv <- conv[conv != ""]
-            if (length(conv))
-                expr2 <- sprintf("%s %s dplyr::mutate(%s)",
-                    expr2, "%>%",
-                    paste(conv, sep = ",")
-                )
-        }
-    }
-
-    res2 <- eval(parse(text = expr2))
-    attr(res2, "code") <-
-        gsub("TEMP_RESULT", paste(code(TEMP_RESULT), collapse="\n"), expr2)
-    res2
+    interpolate(exp, file = file)
 }
 
 read_excel <- function(file, ext, preview = FALSE, column_types, ...) {
@@ -249,3 +190,97 @@ quote_varname <- function(x, q = "`") {
 #' @export
 is_preview <- function(df) inherits(df, "inz.preview")
 
+## Convert string/character columns of a dataframe to factors,
+## adding the necessary code along the way.
+strings_to_factors <- function(x, ctypes) {
+    chars <- sapply(x, is.character)
+    if (!any(chars)) return(x)
+
+    ## mutate(name = factor(name))
+    TEMP_RESULT <- x
+    rm(x) # clean up
+    charnames <- names(TEMP_RESULT)[chars]
+
+    expr <- paste(
+        "TEMP_RESULT %>% dplyr::mutate(",
+        paste("\"", charnames, "\" = as.factor(",
+            quote_varname(charnames),
+            ")",
+            sep = "",
+            collapse = ", "
+        ),
+        ")",
+        sep = ""
+    )
+
+    res <- eval(parse(text = expr))
+    # prepend original code
+    if (!is.null(code(TEMP_RESULT)))
+        attr(res, "code") <-
+            gsub("TEMP_RESULT", 
+                paste(code(TEMP_RESULT), collapse="\n"), 
+                expr
+            )
+    res
+}
+
+validate_type_changes <- function(x, column_types) {
+    ctypes <- parse_coltypes(column_types)
+    if (ctypes == "NULL") return(x)
+
+    ## ensure that numeric -> categorical order is in numerical order
+    if (!any(column_types == "c")) return(x)
+
+    TEMP_RESULT <- x
+    to_cat <- names(column_types[column_types == "c"])
+    conv <- sapply(to_cat, function(v) {
+        clev <- levels(as.factor(TEMP_RESULT[[v]]))
+        if (!any(is.na(suppressWarnings(as.numeric(clev)) == clev))) {
+            clev <- as.character(sort(as.numeric(clev)))
+            sprintf(
+                "%s = forcats::fct_relevel(%s, c(%s))",
+                v, v,
+                paste("\"", clev, "\"", sep = "", collapse = ", ")
+            )
+        } else {
+            ""
+        }
+    })
+
+    if (all(conv == "")) return(x)
+    conv <- conv[conv != ""]
+
+    expr <- sprintf("TEMP_RESULT %s dplyr::mutate(%s)",
+        "%>%",
+        paste(conv, sep = ",")
+    )
+
+    res <- eval(parse(text = expr))
+    attr(res, "code") <-
+        gsub("TEMP_RESULT", paste(code(TEMP_RESULT), collapse="\n"), expr)
+    res
+}
+
+
+parse_coltypes <- function(column_types = NULL) {
+    if (is.null(column_types)) return("NULL")
+    
+    if (!is.null(names(column_types))) {
+        ctypes <- paste(
+            "readr::cols(",
+            paste(names(column_types), " = '", column_types, "'",
+                sep = "",
+                collapse = ", "
+            ),
+            ")",
+            sep = ""
+        )
+    } else {
+        ctypes <- paste("readr::cols('", column_types, "')",
+            sep = "",
+            collapse = ""
+        )
+    }
+
+    ctypes
+}

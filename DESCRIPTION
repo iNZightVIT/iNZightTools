@@ -1,7 +1,7 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for iNZight
-Version: 1.7
+Version: 1.7.1
 Imports:
     utils,
     stats,

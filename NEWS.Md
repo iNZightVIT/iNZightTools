@@ -1,3 +1,8 @@
+# iNZightTools 1.7.1.9000
+__Release date:__ TBA
+
+
+
 # iNZightTools 1.7.1
 __Release date:__ 30 April 2019
 

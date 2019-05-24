@@ -5,7 +5,7 @@
 \title{iNZight Smart Read}
 \usage{
 smart_read(file, ext = tools::file_ext(file), preview = FALSE,
-  column_types, ...)
+  column_types = NULL, ...)
 }
 \arguments{
 \item{file}{the file path to read}

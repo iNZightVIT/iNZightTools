@@ -37,6 +37,8 @@ test_that("Desired parts are extracted", {
       .after = "a"
     )
   )
+
+  expect_true(is_dt(extract_part(data, "a", "Time only", "time")$time))
 })
 
 test_that("Invalid parts are returned with NA", {

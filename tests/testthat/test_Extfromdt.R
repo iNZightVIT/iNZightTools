@@ -12,21 +12,21 @@ test_that("Desired parts are extracted", {
   expect_equal(
     stripcode(extract_part(data, "a", "Year Month", "a.dt")),
     data %>% tibble::add_column(
-      a.dt = format(data$a, "%Y M%m"),
+      a.dt = factor(format(data$a, "%Y M%m")),
       .after = "a"
     )
   )
   expect_equal(
     stripcode(extract_part(data, "a", "Day of the week (name)", "a.dt")),
     data %>% tibble::add_column(
-      a.dt = format(data$a, "%A"),
+      a.dt = factor(format(data$a, "%A")),
       .after = "a"
     )
   )
   expect_equal(
     stripcode(extract_part(data, "a", "Date only", "a.dt")),
     data %>% tibble::add_column(
-      a.dt = "2020-07-07",
+      a.dt = as.Date("2020-07-07"),
       .after = "a"
     )
   )

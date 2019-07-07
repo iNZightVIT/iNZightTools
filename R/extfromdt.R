@@ -10,28 +10,28 @@
 #' @export
 #'
 #' @author Yiwen He
-#' 
+#'
 extract_part = function(.data, varname, part, name) {
   mc <- match.call()
   dataname <- mc$.data
-  
 
-  extexp = switch(part, "Date only" = "as.character(as.Date(.DATA$.VARNAME))",
+
+  extexp = switch(part, "Date only" = "as.Date(.DATA$.VARNAME)",
                         "Year" = 'as.numeric(format(.DATA$.VARNAME, "%C%y"))',
                         "Century" = 'as.numeric(format(.DATA$.VARNAME, "%C"))',
                         "Decimal Year" = 'lubridate::decimal_date(.DATA$.VARNAME)',
-                        "Year Quarter" = 'as.character(zoo::as.yearqtr(.DATA$.VARNAME))',
+                        "Year Quarter" = 'factor(as.character(zoo::as.yearqtr(.DATA$.VARNAME)))',
                         "Quarter" = 'as.numeric(stringr::str_sub(zoo::as.yearqtr(.DATA$.VARNAME), -1))',
-                        "Year Month" = 'format(.DATA$.VARNAME, "%Y M%m")',
-                        "Month (full)" = 'format(.DATA$.VARNAME, "%B")',
-                        "Month (abbreviated)" = 'format(.DATA$.VARNAME, "%b")',
+                        "Year Month" = 'factor(format(.DATA$.VARNAME, "%Y M%m"))',
+                        "Month (full)" = 'factor(format(.DATA$.VARNAME, "%B"))',
+                        "Month (abbreviated)" = 'factor(format(.DATA$.VARNAME, "%b"))',
                         "Month (number)" = 'as.numeric(format(.DATA$.VARNAME, "%m"))',
-                        "Year Week" = 'format(.DATA$.VARNAME, "%Y W%W")',
+                        "Year Week" = 'factor(format(.DATA$.VARNAME, "%Y W%W"))',
                         "Week of the year (Monday as first day of the week)" = 'as.numeric(format(.DATA$.VARNAME, "%W"))',
                         "Week of the year (Sunday as first day of the week)" = 'as.numeric(format(.DATA$.VARNAME, "%U"))',
                         "Day of the year" = 'as.numeric(format(.DATA$.VARNAME, "%j"))',
-                        "Day of the week (name)" = 'format(.DATA$.VARNAME, "%A")',
-                        "Day of the week (abbreviated)" = 'as.character(lubridate::wday(.DATA$.VARNAME, label = TRUE))',
+                        "Day of the week (name)" = 'factor(format(.DATA$.VARNAME, "%A"))',
+                        "Day of the week (abbreviated)" = 'factor(lubridate::wday(.DATA$.VARNAME, label = TRUE))',
                         "Day of the week (number, Monday as 1)" = 'as.numeric(format(.DATA$.VARNAME, "%u"))',
                         "Day of the week (number, Sunday as 0)" = 'as.numeric(format(.DATA$.VARNAME, "%w"))',
                         "Day" = 'as.numeric(format(.DATA$.VARNAME, "%d"))',
@@ -40,16 +40,16 @@ extract_part = function(.data, varname, part, name) {
                         "Hour" = 'as.numeric(format(.DATA$.VARNAME, "%H"))',
                         "Minute" = 'as.numeric(format(.DATA$.VARNAME, "%M"))',
                         "Second" = 'as.numeric(format(.DATA$.VARNAME, "%S"))')
-  
+
   exp = ~.DATA %>%
     tibble::add_column(.NAME = .EXTEXP, .after = ".VARNAME")
 
 
-  exp = replaceVars(exp, 
-                    .EXTEXP = extexp, 
-                    .DATA = dataname, 
-                    .NAME = name, 
+  exp = replaceVars(exp,
+                    .EXTEXP = extexp,
+                    .DATA = dataname,
+                    .NAME = name,
                     .VARNAME = varname)
-  
+
   interpolate(exp)
 }

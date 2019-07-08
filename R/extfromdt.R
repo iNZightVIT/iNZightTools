@@ -24,15 +24,15 @@ extract_part = function(.data, varname, part, name) {
     "Year Quarter" = 'factor(as.character(zoo::as.yearqtr(.DATA$.VARNAME)))',
     "Quarter" = 'as.numeric(stringr::str_sub(zoo::as.yearqtr(.DATA$.VARNAME), -1))',
     "Year Month" = 'factor(format(.DATA$.VARNAME, "%Y M%m"))',
-    "Month (full)" = 'factor(format(.DATA$.VARNAME, "%B"), levels = MONTHS_FULL)',
-    "Month (abbreviated)" = 'factor(format(.DATA$.VARNAME, "%b"), levels = MONTHS_ABBR)',
+    "Month (full)" = 'lubridate::month(.DATA$.VARNAME, label = TRUE, abbr = FALSE)',
+    "Month (abbreviated)" = 'lubridate::month(.DATA$.VARNAME, label = TRUE)',
     "Month (number)" = 'as.numeric(format(.DATA$.VARNAME, "%m"))',
     "Year Week" = 'factor(format(.DATA$.VARNAME, "%Y W%W"))',
     "Week of the year (Monday as first day of the week)" = 'as.numeric(format(.DATA$.VARNAME, "%W"))',
     "Week of the year (Sunday as first day of the week)" = 'as.numeric(format(.DATA$.VARNAME, "%U"))',
     "Day of the year" = 'as.numeric(format(.DATA$.VARNAME, "%j"))',
-    "Day of the week (name)" = 'factor(format(.DATA$.VARNAME, "%A"))',
-    "Day of the week (abbreviated)" = 'factor(lubridate::wday(.DATA$.VARNAME, label = TRUE))',
+    "Day of the week (name)" = 'lubridate::wday(.DATA$.VARNAME, label = TRUE, abbr = FALSE, week_start = 1)',
+    "Day of the week (abbreviated)" = 'lubridate::wday(.DATA$.VARNAME, label = TRUE, week_start = 1)',
     "Day of the week (number, Monday as 1)" = 'as.numeric(format(.DATA$.VARNAME, "%u"))',
     "Day of the week (number, Sunday as 0)" = 'as.numeric(format(.DATA$.VARNAME, "%w"))',
     "Day" = 'as.numeric(format(.DATA$.VARNAME, "%d"))',
@@ -52,13 +52,13 @@ extract_part = function(.data, varname, part, name) {
                     .NAME = name,
                     .VARNAME = varname)
 
-  if (grepl("MONTHS_(FULL|ABBR)", extexp)) {
-    months <- as.Date(paste("2019", 1:12, "01", sep = "-"))
-    if (grepl("MONTHS_FULL", extexp))
-        exp <- replaceVars(exp, MONTHS_FULL = format(months, "%B"))
-    else
-        exp <- replaceVars(exp, MONTHS_ABBR = format(months, "%b"))
-  }
+  # if (grepl("MONTHS_(FULL|ABBR)", extexp)) {
+  #   months <- as.Date(paste("2019", 1:12, "01", sep = "-"))
+  #   if (grepl("MONTHS_FULL", extexp))
+  #       exp <- replaceVars(exp, MONTHS_FULL = format(months, "%B"))
+  #   else
+  #       exp <- replaceVars(exp, MONTHS_ABBR = format(months, "%b"))
+  # }
 
   interpolate(exp)
 }

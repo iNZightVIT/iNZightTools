@@ -17,13 +17,6 @@ test_that("Desired parts are extracted", {
     )
   )
   expect_equal(
-    stripcode(extract_part(data, "a", "Day of the week (name)", "a.dt")),
-    data %>% tibble::add_column(
-      a.dt = factor(format(data$a, "%A")),
-      .after = "a"
-    )
-  )
-  expect_equal(
     stripcode(extract_part(data, "a", "Date only", "a.dt")),
     data %>% tibble::add_column(
       a.dt = as.Date("2020-07-07"),
@@ -57,7 +50,6 @@ months <- as.Date(paste("2019", 1:12, "01", sep = "-"))
 weekdays <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
   "Saturday", "Sunday")
 
-
 test_that("Factor levels have correct order", {
   expect_equal(
     levels(extract_part(data, "a", "Month (full)", "month")$month),
@@ -66,5 +58,14 @@ test_that("Factor levels have correct order", {
   expect_equal(
     levels(extract_part(data, "a", "Month (abbreviated)", "month")$month),
     format(months, "%b")
+  )
+
+  expect_equal(
+    levels(extract_part(data, "a", "Day of the week (name)", "dow")$dow),
+    weekdays
+  )
+  expect_equal(
+    levels(extract_part(data, "a", "Day of the week (abbreviated)", "dow")$dow),
+    substr(weekdays, 1, 3)
   )
 })

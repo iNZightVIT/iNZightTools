@@ -53,3 +53,18 @@ test_that("Invalid parts are returned with NA", {
   # )
 })
 
+months <- as.Date(paste("2019", 1:12, "01", sep = "-"))
+weekdays <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+  "Saturday", "Sunday")
+
+
+test_that("Factor levels have correct order", {
+  expect_equal(
+    levels(extract_part(data, "a", "Month (full)", "month")$month),
+    format(months, "%B")
+  )
+  expect_equal(
+    levels(extract_part(data, "a", "Month (abbreviated)", "month")$month),
+    format(months, "%b")
+  )
+})

@@ -21,7 +21,8 @@ Imports:
     chron,
     lubridate,
     zoo,
-    validate
+    validate,
+    chron
 Suggests:
     Acinonyx,
     cairoDevice,

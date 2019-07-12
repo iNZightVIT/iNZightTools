@@ -1,5 +1,5 @@
 # iNZightTools 1.7.2
-__Release date:__ 08 July 2019
+__Release date:__ 15 July 2019
 
 - various bug fixes
 

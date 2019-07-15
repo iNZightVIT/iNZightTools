@@ -14,37 +14,23 @@ separate <- function(.data, col, left, right, sep, check) {
   
   mc <- match.call()
   dataname <- mc$.data
-  
-  if (sep != "") {
-    sep_string <- paste0(", sep = '", sep, "'")
+
+  punctlist <- c("\\", "[", "(", "{", "?", "^", "$", ")", "]", "}", ".")
+  if (sep %in% punctlist) {
+    sep <- paste0("\\", sep)
   }
-  
-  name <- paste0(", into = c('", left, "', '", right, "')")
-  
-  if (check == "Row") {
-    name = ""
-  }
-  
-  exp <- ~.DATA %>%
-    .FUN(.COL.NAME.SEP.MERGE)
-  
+
   if (check == "Column") {
     exp <- ~.DATA %>%
-      tidyr::separate(.COL.NAME.SEP.MERGE)
+      tidyr::separate(col = col_name, into = into_cols, sep = separator, extra = "merge")
   } else if (check == "Row") {
     exp <- ~.DATA %>%
-      tidyr::separate_rows(.COL.SEP)
+      tidyr::separate_rows(col = col_name, sep = separator)
   }
   
-  
   exp <- replaceVars(exp,
-                     .DATA = dataname,
-                     .COL = col,
-                     .NAME = name,
-                     .SEP = sep_string,
-                     .MERGE = ", extra = 'merge'",
-                     .FILL = ", fill = 'right'")
+                     .DATA = dataname)
   
-  interpolate(exp)
+  interpolate(exp, col_name = col, into_cols = c(left, right), separator = sep)
 }
 

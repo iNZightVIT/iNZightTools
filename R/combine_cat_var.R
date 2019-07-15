@@ -43,7 +43,7 @@ combineCatVars <- function(.data, vars, sep = ".", name = paste(vars, collapse =
   to_be_combined <- paste(vars, collapse =", ")
   
   exp <- ~.DATA %>%
-    dplyr::mutate(.NEWVAR = paste(.VARS, sep = ".SEP"))
+    dplyr::mutate(.NEWVAR = factor(paste(.VARS, sep = ".SEP")))
   exp <- replaceVars(exp, .DATA = dataname, .NEWVAR = name, .VARS = to_be_combined, .SEP = sep)
   
   interpolate(exp)

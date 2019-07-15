@@ -12,21 +12,14 @@ test_that("Desired parts are extracted", {
   expect_equal(
     stripcode(extract_part(data, "a", "Year Month", "a.dt")),
     data %>% tibble::add_column(
-      a.dt = format(data$a, "%Y M%m"),
-      .after = "a"
-    )
-  )
-  expect_equal(
-    stripcode(extract_part(data, "a", "Day of the week (name)", "a.dt")),
-    data %>% tibble::add_column(
-      a.dt = format(data$a, "%A"),
+      a.dt = factor(format(data$a, "%Y M%m")),
       .after = "a"
     )
   )
   expect_equal(
     stripcode(extract_part(data, "a", "Date only", "a.dt")),
     data %>% tibble::add_column(
-      a.dt = "2020-07-07",
+      a.dt = as.Date("2020-07-07"),
       .after = "a"
     )
   )
@@ -37,6 +30,8 @@ test_that("Desired parts are extracted", {
       .after = "a"
     )
   )
+
+  expect_true(is_dt(extract_part(data, "a", "Time only", "time")$time))
 })
 
 test_that("Invalid parts are returned with NA", {
@@ -51,3 +46,26 @@ test_that("Invalid parts are returned with NA", {
   # )
 })
 
+months <- as.Date(paste("2019", 1:12, "01", sep = "-"))
+weekdays <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+  "Saturday", "Sunday")
+
+test_that("Factor levels have correct order", {
+  expect_equal(
+    levels(extract_part(data, "a", "Month (full)", "month")$month),
+    format(months, "%B")
+  )
+  expect_equal(
+    levels(extract_part(data, "a", "Month (abbreviated)", "month")$month),
+    format(months, "%b")
+  )
+
+  expect_equal(
+    levels(extract_part(data, "a", "Day of the week (name)", "dow")$dow),
+    weekdays
+  )
+  expect_equal(
+    levels(extract_part(data, "a", "Day of the week (abbreviated)", "dow")$dow),
+    substr(weekdays, 1, 3)
+  )
+})

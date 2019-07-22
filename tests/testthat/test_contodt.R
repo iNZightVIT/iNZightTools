@@ -42,13 +42,13 @@ test_that("Strings are converted to date time objects", {
       .after = "b"
     )
   )
-  # expect_equal(
-  #   stripcode(convert_to_datetime(data, "d", "Unix timestamp (secs from 1970)", "d.dt")),
-  #   data %>% tibble::add_column(
-  #     d.dt = as.POSIXct(as.numeric("18561263123"), origin = "1970-01-01"),
-  #     .after = "d"
-  #   )
-  # )
+  expect_equal(
+    stripcode(convert_to_datetime(data, "d", "Unix timestamp (secs from 1970)", "d.dt")),
+    data %>% tibble::add_column(
+      d.dt = as.POSIXct(as.numeric("18561263123"), origin = "1970-01-01"),
+      .after = "d"
+    )
+  )
 })
 
 test_that("Invalid formats are dealt with appropriately", {

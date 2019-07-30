@@ -219,16 +219,18 @@ cleanstring <- function(x) {
     } else {       
         fun <- "function(x, vname) {
             sprintf(
-                \"forcats::fct_collapse(%s, %s)\",
+                \"forcats::fct_relevel(forcats::fct_collapse(%s, %s), '%s')\",
                 ifelse(inherits(x, 'factor'), vname,
                        sprintf('as.factor(%s)', vname)),
                 paste(levels, \" = c('\",
                       gsub(\"|\", \"', '\", labels, fixed = TRUE),
                       \"')\",
-                      sep = \"\", collapse = \", \"))
+                      sep = \"\", collapse = \", \"),
+                paste(levels, collapse = \"', '\")
+            )
             }"
     }
-    
+
     metaFun(type = 'factor', name = vname, fun = eval(parse(text = fun)))
     
 }

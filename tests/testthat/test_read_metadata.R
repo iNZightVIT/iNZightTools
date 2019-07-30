@@ -15,3 +15,9 @@ test_that('Name is read', {
     expect_equal(attr(smart_read('meta.csv'), 'name'), 'Census at School (subset)')
     expect_equal(attr(smart_read('meta.txt'), 'name'), 'meta')
 })
+
+test_that("Factor level orders are respected", {
+    data <- smart_read('meta.csv')
+    # data <- smart_read('tests/testthat/meta.csv')
+    expect_equal(levels(data$gender), c("male", "female"))
+})

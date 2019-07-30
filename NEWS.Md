@@ -1,6 +1,6 @@
 # iNZightTools 1.7.2.9000
 
-
+- fixes bug where factor order specified by metadata wasn't being respected
 
 
 # iNZightTools 1.7.2

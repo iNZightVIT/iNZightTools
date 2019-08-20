@@ -1,12 +1,12 @@
 #' Read CSV with iNZight metadata
-#' 
+#'
 #' This function will read a CSV file with iNZight metadata in the header.
 #' This allows plain text CSV files to be supplied with additional comments
 #' that describe the structure of the data to make import and data handling easier.
-#' 
+#'
 #' The main example is to define factor levels for an integer variable in large data sets.
-#' 
-#' @param file the plain text file with metadata 
+#'
+#' @param file the plain text file with metadata
 #' @param preview logical, if \code{TRUE} only the first 10 rows are returned
 #' @param column_types optional column types
 #' @param ... more arguments
@@ -22,13 +22,13 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
     if (is.null(meta)) {
         return(read_dlm(file, preview = preview, column_types = column_types, ...))
     }
-    
-    ## fetch the first few rows of the data ... 
+
+    ## fetch the first few rows of the data ...
     suppressMessages({
         dtop <- read_dlm(file, preview = TRUE, column_types = column_types,
                          ..., progress = FALSE)
     })
-    
+
     ## columns in meta not in dataset:
     mvars <- sapply(meta$columns, getname)
     dvars <- names(dtop)
@@ -41,7 +41,7 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
     mtypes <- sapply(meta$columns, gettype, abbr = TRUE)
     names(mtypes) <- mvars
     ctypes <- paste(ifelse(dvars %in% mvars, mtypes[dvars], '?'), collapse = "")
-    
+
     ## read the data (strings remain as strings)
     data <- read_dlm(file, col_types = ctypes, preview = preview,
                      convert.to.factor = FALSE, ...)
@@ -60,14 +60,14 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
         lapply(dvars[!dvars %in% mvars], function(c) {
             if (is.character(data[[c]])) {
                 cesc <- c
-                if (grepl(" ", c)) 
+                if (grepl(" ", c))
                     cesc <- sprintf("`%s`", c)
                 return(sprintf("%s = as.factor(%s)", cesc, cesc))
             }
             NULL
         })
     )
-    
+
     ## remaining vars
     if (!all(sapply(mutatestr, is.null))) {
         mexp <- eval(parse(
@@ -75,15 +75,15 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
                 "~.dataset %>% dplyr::mutate(",
                 paste(mutatestr[!sapply(mutatestr, is.null)], collapse = ",\n   "),
                 ")")))
-        
+
         e <- new.env()
         e$.dataset <- data
         dcode <- paste(code(data), collapse = " ")
         data <- suppressWarnings(interpolate(mexp, "_env" = e))
         attr(data, "code") <- gsub(".dataset", dcode, code(data))
     }
-    
-    
+
+
     ## data <- as.data.frame(data)
     attr(data, 'name') <- meta$title
     attr(data, 'description') <- meta$desc
@@ -100,9 +100,9 @@ readMetaComments <- function(file) {
             meta <- c(meta, trimws(gsub("^#'", "", x)))
     close(con)
 
-    if (length(meta) == 0) 
+    if (length(meta) == 0)
         return(NULL)
-    
+
     md <- list(title = tools::file_path_sans_ext(basename(file)), desc = NULL, columns = list())
 
     ## Grab the title, if present - always the first line of metadata
@@ -112,7 +112,7 @@ readMetaComments <- function(file) {
     }
 
     ## Remove any empty lines between title description
-    while (meta[1] == "") 
+    while (meta[1] == "")
         meta <- meta[-1]
 
     ## Grab the description - all content between the title and first @
@@ -126,10 +126,10 @@ readMetaComments <- function(file) {
         desc[desc == ""] <- "\n\n"
         ## add space at END of each line, but collapse with no space so new lines are flush
         md$desc <- trimws(paste(trimws(desc), " ", collapse = ""))
+        meta <- meta[-(1:desc.end)]
     }
 
     ## check remaining lines commence with a @; drop any that don't
-    meta <- meta[-(1:desc.end)]
     if (any(!grepl('^@', meta))) {
         warning('All lines after title and description should start with a @. Skipping those that don\'t')
         meta <- meta[grepl('^@', meta)]
@@ -149,7 +149,7 @@ processLine <- function(x) {
     txt <- strsplit(x, ' ')[[1]]
 
     ## now x is a vector of components
-    if (length(txt) == 1) 
+    if (length(txt) == 1)
         stop('Invalid metadata: ', x, '. Needs at least a type and a column name')
 
     type <- txt[1]
@@ -162,10 +162,10 @@ processLine <- function(x) {
 }
 
 cleanstring <- function(x) {
-    ## return a cleaned meta data string 
-    
+    ## return a cleaned meta data string
+
     ## how about dealing with quotes?
-    
+
     ## removing additional spaces around: '=', '@', '+', '-', '\', ','
     x <- gsub('\\s*([,@\\[\\=\\+\\-\\\\])\\s*','\\1', x, perl = TRUE)
 
@@ -185,9 +185,9 @@ cleanstring <- function(x) {
     vname <- x[1]
 
     ## some other calculations? perhaps ...
-    
+
     ## and return a meta object
-    metaFun(type = 'numeric', name = vname, 
+    metaFun(type = 'numeric', name = vname,
             fun = eval(parse(text = "function(x, vname) {
                    if (is.numeric(x)) return(NULL)
                    sprintf('as.numeric(%s)', vname)
@@ -196,7 +196,7 @@ cleanstring <- function(x) {
 
 .processLine.inz.meta.factor <- function(x) {
     vname <- x[1]
-    
+
     ## extract levels=labels (level in output, label in dataset)
     if (grepl('\\[', vname)) {
         f <- strsplit(vname, '\\[')[[1]]
@@ -207,7 +207,7 @@ cleanstring <- function(x) {
             lvl <- strsplit(lvlstr[i], '=')[[1]]
             levels[i] <- lvl[1]
             labels[i] <- lvl[length(lvl)]
-        }        
+        }
     } else {
         levels <- labels <- NULL
     }
@@ -216,7 +216,7 @@ cleanstring <- function(x) {
              if (is.factor(x)) return(NULL)
              sprintf('as.factor(%s)', vname)
         }"
-    } else {       
+    } else {
         fun <- "function(x, vname) {
             sprintf(
                 \"forcats::fct_relevel(forcats::fct_collapse(%s, %s), '%s')\",
@@ -232,6 +232,6 @@ cleanstring <- function(x) {
     }
 
     metaFun(type = 'factor', name = vname, fun = eval(parse(text = fun)))
-    
+
 }
 

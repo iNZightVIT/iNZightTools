@@ -1,6 +1,7 @@
 # iNZightTools 1.7.2.9000
 
 - fixes bug where factor order specified by metadata wasn't being respected
+- fix bug preventing first row of metadata comments to be read if description was missing
 
 
 # iNZightTools 1.7.2

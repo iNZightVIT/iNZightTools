@@ -1,4 +1,3 @@
-#' @height numeric
 #' @factor gender[male,female]
 #' @factor education[none=0,highschool=1,college=2,university=3|4]
 height gender education grade

@@ -1,7 +1,7 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for iNZight
-Version: 1.7.2
+Version: 1.7.3
 Imports:
     utils,
     stats,
@@ -21,8 +21,7 @@ Imports:
     chron,
     lubridate,
     zoo,
-    validate,
-    chron
+    validate
 Suggests:
     Acinonyx,
     cairoDevice,

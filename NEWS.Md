@@ -1,3 +1,10 @@
+# iNZightTools 1.7.3
+__Release date:__ 26 August 2019
+
+- fixes bug where factor order specified by metadata wasn't being respected
+- fix bug preventing first row of metadata comments to be read if description was missing
+
+
 # iNZightTools 1.7.2
 __Release date:__ 15 July 2019
 

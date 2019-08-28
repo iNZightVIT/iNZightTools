@@ -1,0 +1,50 @@
+context("Reorder levels")
+
+cas <- smart_read("cas500.csv")
+# cas <- smart_read("tests/testthat/cas500.csv")
+
+test_that("Reordering levels works", {
+    expect_is(
+        cas1 <- reorderLevels(cas, "getlunch", 
+            new_levels = 
+                c("dairy", "friend", "home", "school", "tuckshop", "none")
+        ),
+        "data.frame"
+    )
+    expect_true("getlunch.reord" %in% names(cas1))
+})
+
+test_that("Reordering respects name argument", {
+    expect_is(
+        cas1 <- reorderLevels(cas, "getlunch", 
+            new_levels = 
+                c("dairy", "friend", "home", "school", "tuckshop", "none"),
+            name = "getlunch.reordered"
+        ),
+        "data.frame"
+    )
+    expect_true("getlunch.reordered" %in% names(cas1))
+})
+
+test_that("Reordering twice works", {
+    cas1 <- reorderLevels(cas, "getlunch", 
+        new_levels = 
+            c("dairy", "friend", "home", "school", "tuckshop", "none")
+    )
+    expect_is(
+        cas2 <- reorderLevels(cas1, "getlunch", 
+            new_levels = 
+                c("home", "dairy", "friend", "school", "tuckshop", "none")
+        ),
+        "data.frame"
+    )
+    expect_equal(
+        names(cas2),
+        c(
+            "cellsource", "rightfoot", "travel", "getlunch", "getlunch.reord",
+            "getlunch.reord2", "height", "gender", "age", "year",
+            "armspan", "cellcost"
+        )
+    )
+})
+

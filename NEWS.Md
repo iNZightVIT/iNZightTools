@@ -1,6 +1,7 @@
 # iNZightTools 1.7.3.9000
 __Release date:__ TBA
 
+- fix bug in reordering same factor twice
 
 
 # iNZightTools 1.7.3

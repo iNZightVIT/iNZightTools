@@ -26,14 +26,25 @@
 collapseLevels <- function(.data, var, levels, 
                            collapse = paste(levels, collapse = "_"),
                            name = sprintf("%s.coll", var)) {
-  mc <- match.call()
-  dataname <- mc$.data
+    mc <- match.call()
+    dataname <- mc$.data
   
-  exp <- ~.DATA %>%
-    tibble::add_column(.NAME = forcats::fct_collapse(.DATA$.VARNAME, .COLLAPSENAME = .LEVELS), 
-                       .after = ".VARNAME")
-  exp <- replaceVars(exp, .VARNAME = var, .COLLAPSENAME = collapse, 
-        .LEVELS = levels, .DATA = dataname, .NAME = name)
-  
-  interpolate(exp)
+    exp <- ~.DATA %>%
+        tibble::add_column(
+            .NAME = forcats::fct_collapse(.DATA$.VARNAME, .COLLAPSENAME = .LEVELS), 
+            .after = ".VARNAME")
+
+    # cannot start a variable name with a number
+    if (grepl("^[0-9]", collapse)) 
+        collapse = sprintf("`%s`", collapse)
+    
+    exp <- replaceVars(exp, 
+        .VARNAME = var, 
+        .COLLAPSENAME = collapse, 
+        .LEVELS = levels, 
+        .DATA = dataname, 
+        .NAME = name
+    )
+
+    interpolate(exp)
 }

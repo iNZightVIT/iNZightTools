@@ -1,5 +1,5 @@
-# iNZightTools 1.7.3.9000
-__Release date:__ TBA
+# iNZightTools 1.7.4
+__Release date:__ 2 September 2019
 
 - fix bug where collapsing a "numeric" factor was giving an error
 - fix bug in reordering same factor twice

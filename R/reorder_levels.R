@@ -27,18 +27,39 @@
 #reorder.levels = function(dafr,column,levels.new){
 reorderLevels <- function(.data, var, new_levels = NULL, freq = FALSE, 
                           name = sprintf("%s.reord", var)) {
-  mc <- match.call()
-  dataname <- mc$.data
+    mc <- match.call()
+    dataname <- mc$.data
+
+    # fix the name
+    i <- 1
+    after <- var
+    while (name %in% colnames(.data)) {
+        i <- i + 1
+        after <- name
+        name <- sprintf("%s.reord%i", var, i)
+    }
+
+    if (freq) {
+        exp <- ~.DATA %>%
+            tibble::add_column(
+                .NEWNAME = forcats::fct_infreq(.DATA$.VARNAME), 
+                .after = ".AFTER"
+            )
+    } else {
+        exp <- ~.DATA %>%
+            tibble::add_column(
+                .NEWNAME = factor(.DATA$.VARNAME, levels = .NEWLEVELS), 
+                .after = ".AFTER"
+            )
+    }
+
+    exp <- replaceVars(exp, 
+        .NEWNAME = name,
+        .AFTER = after,
+        .VARNAME = var, 
+        .DATA = dataname, 
+        .NEWLEVELS = new_levels
+    )
   
-  if(freq){
-    exp <- ~.DATA %>%
-      tibble::add_column(.VARNAME.reord = forcats::fct_infreq(.DATA$.VARNAME), .after = ".VARNAME") 
-  }
-  else{
-    exp <- ~.DATA %>%
-      tibble::add_column(.VARNAME.reord = factor(.DATA$.VARNAME, levels = .NEWLEVELS), .after = ".VARNAME") 
-  }
-  exp <- replaceVars(exp, .VARNAME = var, .DATA = dataname, .NEWLEVELS = new_levels)
-  
-  interpolate(exp)
+    interpolate(exp)
 }

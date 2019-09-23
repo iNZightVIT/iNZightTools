@@ -1,6 +1,7 @@
 ## iNZightTools 1.7.4.9000
 __Release date__:
 
+- ensure column_types argument is respected
 
 
 ## iNZightTools 1.7.4

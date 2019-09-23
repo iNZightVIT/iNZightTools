@@ -71,6 +71,15 @@ test_that("Column type overrides are respected", {
     expect_is(smart_read("cas500.csv", column_types = NULL), "data.frame")
 })
 
+test_that("SAS Import num to cat works", {
+    expect_silent(
+        d <- smart_read("test.sas7bdat", 
+            column_types = c(q1 = "c", q2 = "c"))
+    )
+    expect_is(d$q1, "factor")
+    expect_is(d$q2, "factor")
+})
+
 test_that("smart_read can handle spaces and comment-characters", {
     expect_s3_class(smart_read("characters.csv"), "data.frame")
 })

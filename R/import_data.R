@@ -161,11 +161,11 @@ read_stata <- function(file, ext, preview = FALSE, column_types) {
 }
 
 read_sas <- function(file, ext, preview = FALSE, column_types) {
-    exp <- ~haven::read_EXT(file)
+    exp <- ~FUN(file)
     exp <- replaceVars(exp,
-        EXT = switch(ext,
-            "xpt" = "xpt",
-            "sas"
+        FUN = switch(ext,
+            "xpt" = "haven::read_xpt",
+            "haven::read_sas"
         )
     )
     interpolate(exp, file = file)
@@ -229,22 +229,41 @@ validate_type_changes <- function(x, column_types) {
     if (ctypes == "NULL") return(x)
 
     ## ensure that numeric -> categorical order is in numerical order
-    if (!any(column_types == "c")) return(x)
+    # if (!any(column_types == "c")) return(x)
 
     TEMP_RESULT <- x
-    to_cat <- names(column_types[column_types == "c"])
-    conv <- sapply(to_cat, function(v) {
-        clev <- levels(as.factor(TEMP_RESULT[[v]]))
-        if (!any(is.na(suppressWarnings(as.numeric(clev)) == clev))) {
-            clev <- as.character(sort(as.numeric(clev)))
-            sprintf(
-                "%s = forcats::fct_relevel(%s, c(%s))",
-                v, v,
-                paste("\"", clev, "\"", sep = "", collapse = ", ")
-            )
-        } else {
-            ""
-        }
+    
+    conv <- sapply(names(column_types), function(name) {
+        type <- column_types[[name]]
+        col <- TEMP_RESULT[[name]]
+        switch(type,
+            "n" = {
+                ## Convert factor to numeric
+                if (is.numeric(col)) return("")
+                sprintf("%s = as.numeric(%s)", name, name)
+            },
+            "c" = {
+                ## Convert numeric to factor
+                ncol <- suppressWarnings(as.numeric(as.character(col)))
+                if (any(is.na(ncol)) || !all(ncol == col))
+                    return("")
+                lvls <- sort(unique(ncol))
+                if (is.factor(col)) {
+                    # relevel
+                    if (!all(levels(col) == lvls)) {
+                        sprintf("%s = forcats::fct_relevel(%s, c('%s'))",
+                            name, name,
+                            paste(lvls, collapse = "', '")
+                        )
+                    }
+                } else {
+                    sprintf("%s = factor(%s, levels = c('%s'))",
+                        name, name, 
+                        paste(lvls, collapse = "', '")
+                    )
+                }
+            }
+        )
     })
 
     if (all(conv == "")) return(x)
@@ -252,7 +271,7 @@ validate_type_changes <- function(x, column_types) {
 
     expr <- sprintf("TEMP_RESULT %s dplyr::mutate(%s)",
         "%>%",
-        paste(conv, sep = ",")
+        paste(conv, collapse = ", ")
     )
 
     res <- eval(parse(text = expr))

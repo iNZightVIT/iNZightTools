@@ -271,7 +271,7 @@ validate_type_changes <- function(x, column_types) {
 
     expr <- sprintf("TEMP_RESULT %s dplyr::mutate(%s)",
         "%>%",
-        paste(conv, sep = ",")
+        paste(conv, collapse = ", ")
     )
 
     res <- eval(parse(text = expr))

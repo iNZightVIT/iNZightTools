@@ -92,6 +92,9 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
     ctypes <- parse_coltypes(column_types)
     if (ctypes != "NULL")
         named.args <- c(named.args, list(col_types = "COLTYPES"))
+    
+    if (is.null(named.args$col_types))
+        named.args <- c(named.args, list(col_types = "readr::cols()"))
 
     if (length(locale) > 0)
         named.args$locale <- sprintf("readr::locale(%s)",

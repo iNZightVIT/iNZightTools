@@ -4,7 +4,8 @@ __Release date__:
 - ensure column_types argument is respected
 - if no col types specified, pass `col_types = cols()` to suppress the col spec messages
 - new `load_rda()` function which loads all data frames in an rda file into a list
-- new `save_rda9)` function allows saving of a data set to a file, optionally with a different name (i.e., the actual object name can be changed)
+- new `save_rda())` function allows saving of a data set to a file, optionally with a different name (i.e., the actual object name can be changed)
+- `smart_read()` now handles RDS files
 
 
 ## iNZightTools 1.7.4

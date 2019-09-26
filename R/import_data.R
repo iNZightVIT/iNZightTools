@@ -311,7 +311,8 @@ parse_coltypes <- function(column_types = NULL) {
 #' 
 #' @param file path to an rdata file
 #' 
-#' @return list of data frames
+#' @return list of data frames, plus code
+#' @seealso \code{\link{save_rda}}
 #' @author Tom Elliott
 #' @export
 load_rda <- function(file) {
@@ -322,4 +323,29 @@ load_rda <- function(file) {
     names(res) <- names(e)[keep]
     attr(res, "code") <- sprintf("load('%s')", file)
     res
+}
+
+#' Save an object with, optionally, a (valid) name
+#' 
+#' @param data the data frame to save
+#' @param file where to save it
+#' @param name optional, the name the data will have in the rda file
+#' 
+#' @return logical, should be TRUE, along with code for the save
+#' @seealso \code{\link{load_rda}}
+#' @author Tom Elliott
+#' @export
+save_rda <- function(data, file, name) {
+    data_name <- deparse(substitute(data))
+    if (!missing(name))
+        name <- create_varname(name)
+    else
+        name <- data_name
+
+    e <- new.env()
+    e[[name]] <- data
+
+    exp <- sprintf("save(%s, file = '%s')", name, file)
+    eval(parse(text = exp), envir = e)
+    structure(TRUE, code = exp)   
 }

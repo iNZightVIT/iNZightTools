@@ -10,10 +10,13 @@ load_rda(file)
 \item{file}{path to an rdata file}
 }
 \value{
-list of data frames
+list of data frames, plus code
 }
 \description{
 Load object(s) from an Rdata file
+}
+\seealso{
+\code{\link{save_rda}}
 }
 \author{
 Tom Elliott

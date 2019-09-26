@@ -3,6 +3,7 @@ __Release date__:
 
 - ensure column_types argument is respected
 - if no col types specified, pass `col_types = cols()` to suppress the col spec messages
+- new `load_rda()` function which loads all data frames in an rda file into a list
 
 
 ## iNZightTools 1.7.4

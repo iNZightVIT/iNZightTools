@@ -306,3 +306,20 @@ parse_coltypes <- function(column_types = NULL) {
 
     ctypes
 }
+
+#' Load object(s) from an Rdata file
+#' 
+#' @param file path to an rdata file
+#' 
+#' @return list of data frames
+#' @author Tom Elliott
+#' @export
+load_rda <- function(file) {
+    e <- new.env()
+    load(file, envir = e)
+    keep <- sapply(names(e), function(n) is.data.frame(e[[n]]))
+    res <- lapply(names(e)[keep], function(n) e[[n]])
+    names(res) <- names(e)[keep]
+    attr(res, "code") <- sprintf("load('%s')", file)
+    res
+}

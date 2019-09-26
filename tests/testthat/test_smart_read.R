@@ -125,3 +125,12 @@ test_that("Reading (excel) files converts strings to factor", {
     expect_is(dt$travel, "factor")
     expect_is(dt$gender, "factor")
 })
+
+test_that("Reading RDS works", {
+    t <- "iris_data.rds"
+    on.exit(unlink(t))
+
+    saveRDS(iris, t)
+    expect_equivalent(smart_read(t), iris)
+    expect_equal(code(smart_read(t)), "readRDS(\"iris_data.rds\")")
+})

@@ -2,6 +2,7 @@
 __Release date__:
 
 - ensure column_types argument is respected
+- if no col types specified, pass `col_types = cols()` to suppress the col spec messages
 
 
 ## iNZightTools 1.7.4

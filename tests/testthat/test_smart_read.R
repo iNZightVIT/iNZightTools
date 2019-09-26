@@ -50,6 +50,10 @@ test_that("smart_read returns code with necessary conversions included", {
     )
 })
 
+test_that("smart_read doesn't output col_types spec", {
+    expect_silent(x <- smart_read("cas.txt"))
+})
+
 test_that("Column type overrides are respected", {
     expect_equal(as.character(sapply(smart_read("cas500.csv"), class)),
                  c("factor", "numeric", "factor", "factor", "numeric",

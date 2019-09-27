@@ -69,5 +69,5 @@ deploy:
   name: iNZightTools $TRAVIS_TAG
   overwrite: true
   on:
-    branch: fake-master
+    branch: master
     repo: iNZightVIT/iNZightTools

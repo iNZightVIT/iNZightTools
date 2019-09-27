@@ -48,17 +48,7 @@ before_deploy:
       then R CMD INSTALL --build iNZightTools*.tar.gz; 
       rm -f *.tar.gz; 
     fi
-  - wget https://raw.githubusercontent.com/iNZightVIT/dev/master/read_latest_changes.R -O read_latest_changes.R
-  - export RELEASE_BODY="$(Rscript read_latest_changes.R)"
   - cp DESCRIPTION PACKAGES
-  - R CMD INSTALL .;
-  - export TRAVIS_TAG=$(Rscript -e "cat(as.character(packageVersion('iNZightTools')))")
-  - git fetch --tags
-  - if git tag $TRAVIS_TAG -a -m "$msg" 2>/dev/null;
-      then git config --local user.name = "tmelliott";
-      git config --local user.email = "tomelliottnz@gmail.com";
-      git tag $TRAVIS_TAG;
-    fi
 
 deploy:
   provider: releases
@@ -72,5 +62,5 @@ deploy:
   name: iNZightTools $TRAVIS_TAG
   overwrite: true
   on:
-    branch: fake-master
+    tag: true
     repo: iNZightVIT/iNZightTools

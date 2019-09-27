@@ -51,10 +51,6 @@ on_failure:
   - 7z a failure.zip *.Rcheck\*
   - appveyor PushArtifact failure.zip
 
-# after_test:
-#   - appveyor DownloadFile "https://raw.githubusercontent.com/iNZightVIT/dev/master/rename_binaries.R" -FileName rename_binaries.R
-#   - Rscript rename_binaries.R
-
 deploy:
   tag: $(APPVEYOR_REPO_TAG_NAME)
   provider: GitHub

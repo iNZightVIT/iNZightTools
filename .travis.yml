@@ -14,11 +14,11 @@ matrix:
       r: devel
     - os: osx
       r: release
-      brew_packages: libgit2
+      brew_packages: 
+        - libgit2
+        - rename
   allow_failures:
     - os: osx
-
-#r_check_args: "--as-cran --install-args=--build"
 
 env:
   global:
@@ -38,6 +38,8 @@ before_install:
 after_success:
 - Rscript -e 'covr::codecov()'
 
+# wget https://raw.githubusercontent.com/iNZightVIT/dev/master/rename_binaries.R -O rename_binaries.R;
+# Rscript rename_binaries.R
 before_deploy:
   - if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; 
       then R CMD INSTALL --build iNZightTools*.tar.gz; 

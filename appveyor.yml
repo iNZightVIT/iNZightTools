@@ -25,7 +25,6 @@ environment:
   - R_VERSION: release
 
 build_script:
-  # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - travis-tool.sh install_deps
   - appveyor DownloadFile "http://ftp.gnome.org/pub/gnome/binaries/win32/gtk+/2.22/gtk+-bundle_2.22.1-20101227_win32.zip" -FileName gtk32.zip
   - appveyor DownloadFile "http://ftp.gnome.org/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip" -FileName gtk64.zip
@@ -52,25 +51,20 @@ on_failure:
   - 7z a failure.zip *.Rcheck\*
   - appveyor PushArtifact failure.zip
 
-# to do - fetch the most recent "news" information ... somehow, 
-# and write to 'description' field
+# after_test:
+#   - appveyor DownloadFile "https://raw.githubusercontent.com/iNZightVIT/dev/master/rename_binaries.R" -FileName rename_binaries.R
+#   - Rscript rename_binaries.R
+
 deploy:
   tag: $(APPVEYOR_REPO_TAG_NAME)
-  # release: 'iNZightTools $(APPVEYOR_REPO_TAG_NAME)'
-  # description: 'Windows Binary'
   provider: GitHub
   auth_token:
     secure: OQ3078QGelP+SykLVd/mzPYM0nT6iWlBVweiT80TG3vsEMXJSC/GfslihNZ1Z4av
-  artifact: /.*_.*\.zip/
+  artifact: /iNZightTools.*\.zip/
   draft: false
-  # prerelease: true
   force_update: true
   on:
-    # branch: master
-    APPVEYOR_REPO_TAG: true        # deploy on tag push only
-
-# on_finish:
-#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+    APPVEYOR_REPO_TAG: true
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
@@ -88,5 +82,5 @@ artifacts:
   - path: '\*_*.tar.gz'
     name: Bits
 
-  - path: '\*_*.zip'
+  - path: '\*.zip'
     name: Bits

@@ -62,5 +62,5 @@ deploy:
   name: iNZightTools $TRAVIS_TAG
   overwrite: true
   on:
-    tag: true
+    tags: true
     repo: iNZightVIT/iNZightTools

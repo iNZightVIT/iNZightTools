@@ -52,10 +52,13 @@ before_deploy:
   - export RELEASE_BODY="$(Rscript read_latest_changes.R)"
   - cp DESCRIPTION PACKAGES
   - R CMD INSTALL .;
-  - git config --local user.name = "tmelliott"
-  - git config --local user.email = "tomelliottnz@gmail.com"
   - export TRAVIS_TAG=$(Rscript -e "cat(as.character(packageVersion('iNZightTools')))")
-  - git tag $TRAVIS_TAG
+  - git fetch --tags
+  - if git tag $TRAVIS_TAG -a -m "$msg" 2>/dev/null;
+      then git config --local user.name = "tmelliott";
+      git config --local user.email = "tomelliottnz@gmail.com";
+      git tag $TRAVIS_TAG;
+    fi
 
 deploy:
   provider: releases
@@ -69,5 +72,5 @@ deploy:
   name: iNZightTools $TRAVIS_TAG
   overwrite: true
   on:
-    branch: master
+    branch: fake-master
     repo: iNZightVIT/iNZightTools

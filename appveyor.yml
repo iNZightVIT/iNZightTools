@@ -64,6 +64,7 @@ deploy:
   draft: false
   force_update: true
   on:
+    branch: fake-master
     APPVEYOR_REPO_TAG: true
 
 artifacts:

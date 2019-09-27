@@ -37,6 +37,14 @@ before_install:
 
 after_success:
 - Rscript -e 'covr::codecov()'
+- if [[ "$TRAVIS_BRANCH" == "fake-master" ]];
+    then R CMD INSTALL .;
+    git config --local user.name = "tmelliott";
+    git config --local user.email = "tomelliottnz@gmail.com";
+    export TRAVIS_TAG=$(Rscript -e "cat(as.character(packageVersion('iNZightTools')))");
+    git tag $TRAVIS_TAG;
+    git push --tags;
+  fi
 
 # wget https://raw.githubusercontent.com/iNZightVIT/dev/master/rename_binaries.R -O rename_binaries.R;
 # Rscript rename_binaries.R

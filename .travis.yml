@@ -47,6 +47,7 @@ before_deploy:
     fi
   - wget https://raw.githubusercontent.com/iNZightVIT/dev/master/read_latest_changes.R -O read_latest_changes.R
   - export RELEASE_BODY="$(Rscript read_latest_changes.R)"
+  - cp DESCRIPTION PACKAGES
 
 deploy:
   provider: releases
@@ -56,8 +57,8 @@ deploy:
   file_glob: true
   file: 
     - iNZightTools_*.t*gz
+    - PACKAGES
   name: iNZightTools $TRAVIS_TAG
-  # body: ${RELEASE_BODY} ## uncomment if travis-ci ever fixes the bug.
   overwrite: true
   on:
     tags: true

@@ -6,6 +6,7 @@ __Release date__:
 - new `load_rda()` function which loads all data frames in an rda file into a list
 - new `save_rda())` function allows saving of a data set to a file, optionally with a different name (i.e., the actual object name can be changed)
 - `smart_read()` now handles RDS files
+- add attribute to preview excel containing names of available sheets
 
 
 ## iNZightTools 1.7.4

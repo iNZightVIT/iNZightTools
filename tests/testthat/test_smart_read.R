@@ -50,6 +50,10 @@ test_that("smart_read returns code with necessary conversions included", {
     )
 })
 
+test_that("smart_read doesn't output col_types spec", {
+    expect_silent(x <- smart_read("cas.txt"))
+})
+
 test_that("Column type overrides are respected", {
     expect_equal(as.character(sapply(smart_read("cas500.csv"), class)),
                  c("factor", "numeric", "factor", "factor", "numeric",
@@ -69,6 +73,15 @@ test_that("Column type overrides are respected", {
 
     # null should also work
     expect_is(smart_read("cas500.csv", column_types = NULL), "data.frame")
+})
+
+test_that("SAS Import num to cat works", {
+    expect_silent(
+        d <- smart_read("test.sas7bdat",
+            column_types = c(q1 = "c", q2 = "c"))
+    )
+    expect_is(d$q1, "factor")
+    expect_is(d$q2, "factor")
 })
 
 test_that("smart_read can handle spaces and comment-characters", {
@@ -92,7 +105,7 @@ test_that("converting numeric with some string values to cat behaves appropriate
     tmp <- tempfile(fileext = ".csv")
     on.exit(unlink(tmp))
     readr::write_csv(
-        data.frame(x = 1:100, y = c(sample(1:2, 99, T), "text")), 
+        data.frame(x = 1:100, y = c(sample(1:2, 99, T), "text")),
         tmp
     )
     expect_silent(d <- smart_read(tmp, column_types = c(y = "c")))
@@ -111,4 +124,22 @@ test_that("Reading (excel) files converts strings to factor", {
     dt <- smart_read("cas500.xls")
     expect_is(dt$travel, "factor")
     expect_is(dt$gender, "factor")
+})
+
+test_that("Read excel returns list of sheets as attribute", {
+    dt <- smart_read("cas500.xls", preview = TRUE)
+    expect_equal(sheets(dt), "Census at School-500")
+    expect_match(
+        code(smart_read("cas500.xls", sheet = "Census at School-500")),
+        "sheet = \"Census at School-500\""
+    )
+})
+
+test_that("Reading RDS works", {
+    t <- "iris_data.rds"
+    on.exit(unlink(t))
+
+    saveRDS(iris, t)
+    expect_equivalent(smart_read(t), iris)
+    expect_equal(code(smart_read(t)), "readRDS(\"iris_data.rds\")")
 })

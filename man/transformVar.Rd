@@ -12,7 +12,9 @@ transformVar(.data, var, transformation, name = sprintf("\%s.\%s",
 
 \item{var}{a character of the numeric variable in \code{.data} to transform}
 
-\item{transformation}{a name of a valid mathematical function that can be applied to numeric values, eg. "log", "exp", "sqrt". For squaring - use "square", for inversing - use "reciprocal"}
+\item{transformation}{a name of a valid mathematical function that can
+be applied to numeric values, eg. "log", "exp", "sqrt".
+For squaring, use "square"; for inversing, use "reciprocal"}
 
 \item{name}{the name of the new variable}
 }

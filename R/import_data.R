@@ -17,6 +17,12 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
     d <- fun(file, ext = ext, preview = preview,
         column_types = column_types, ...
     )
+    attrs <- attributes(d)
+    attr_to_keep <- c("available.sheets")
+    if (any(names(attrs) %in% attr_to_keep))
+        attrs <- attrs[names(attrs) %in% attr_to_keep]
+    else
+        attrs <- NULL
 
     ## now the data is read, convert things to factors etc
     d <- strings_to_factors(d)
@@ -28,6 +34,12 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
       class(d) <- c('inz.preview', class(d))
     if (is.null(attr(d, "name")))
       attr(d, "name") <- tools::file_path_sans_ext(basename(file))
+
+    # replace any attributes
+    if (!is.null(attrs)) {
+        attributes(d) <- c(attributes(d), attrs)
+    }
+
     d
 }
 
@@ -39,6 +51,7 @@ guess_type <- function(ext) {
         "dta" = "stata",
         "sas7bdat" = "sas",
         "xpt" = "sas",
+        "rds" = "rds",
         "txt" = "meta",
         "csv" = "meta", ## -> metadata_read.R
         "unknown"
@@ -93,6 +106,9 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
     if (ctypes != "NULL")
         named.args <- c(named.args, list(col_types = "COLTYPES"))
 
+    if (is.null(named.args$col_types))
+        named.args <- c(named.args, list(col_types = "readr::cols()"))
+
     if (length(locale) > 0)
         named.args$locale <- sprintf("readr::locale(%s)",
             paste(names(locale), locale,
@@ -124,7 +140,8 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
     interpolate(exp, file = file)
 }
 
-read_excel <- function(file, ext, preview = FALSE, column_types, ...) {
+#' @import readxl
+read_excel <- function(file, ext, preview = FALSE, column_types, sheet = NULL, ...) {
     named.args <- list(...)
 
     if (!missing(column_types))
@@ -132,6 +149,9 @@ read_excel <- function(file, ext, preview = FALSE, column_types, ...) {
 
     if (preview)
         named.args <- c(list(n_max = 10), named.args)
+
+    if (!is.null(sheet))
+        named.args <- c(list(sheet = "sheetname"), named.args)
 
     if (length(named.args) > 0)
         args <- paste("file,",
@@ -146,7 +166,20 @@ read_excel <- function(file, ext, preview = FALSE, column_types, ...) {
     exp <- ~readxl::read_excel(ARGS)
     exp <- replaceVars(exp, ARGS = args)
 
-    interpolate(exp, file = file)
+    res <- interpolate(exp, file = file, sheetname = sheet)
+    if (preview)
+        attr(res, "available.sheets") <- readxl::excel_sheets(file)
+    res
+}
+
+#' List of available sheets from a file
+#'
+#' @param x a dataframe from \code{smart_read}
+#' @return vector of sheet names, or NULL
+#' @author Tom Elliott
+#' @export
+sheets <- function(x) {
+    attr(x, "available.sheets")
 }
 
 read_spss <- function(file, ext, preview = FALSE, column_types) {
@@ -161,13 +194,18 @@ read_stata <- function(file, ext, preview = FALSE, column_types) {
 }
 
 read_sas <- function(file, ext, preview = FALSE, column_types) {
-    exp <- ~haven::read_EXT(file)
+    exp <- ~FUN(file)
     exp <- replaceVars(exp,
-        EXT = switch(ext,
-            "xpt" = "xpt",
-            "sas"
+        FUN = switch(ext,
+            "xpt" = "haven::read_xpt",
+            "haven::read_sas"
         )
     )
+    interpolate(exp, file = file)
+}
+
+read_rds <- function(file, ext, preview = FALSE, column_types) {
+    exp <- ~readRDS(file)
     interpolate(exp, file = file)
 }
 
@@ -217,8 +255,8 @@ strings_to_factors <- function(x, ctypes) {
     # prepend original code
     if (!is.null(code(TEMP_RESULT)))
         attr(res, "code") <-
-            gsub("TEMP_RESULT", 
-                paste(code(TEMP_RESULT), collapse="\n"), 
+            gsub("TEMP_RESULT",
+                paste(code(TEMP_RESULT), collapse="\n"),
                 expr
             )
     res
@@ -229,22 +267,41 @@ validate_type_changes <- function(x, column_types) {
     if (ctypes == "NULL") return(x)
 
     ## ensure that numeric -> categorical order is in numerical order
-    if (!any(column_types == "c")) return(x)
+    # if (!any(column_types == "c")) return(x)
 
     TEMP_RESULT <- x
-    to_cat <- names(column_types[column_types == "c"])
-    conv <- sapply(to_cat, function(v) {
-        clev <- levels(as.factor(TEMP_RESULT[[v]]))
-        if (!any(is.na(suppressWarnings(as.numeric(clev)) == clev))) {
-            clev <- as.character(sort(as.numeric(clev)))
-            sprintf(
-                "%s = forcats::fct_relevel(%s, c(%s))",
-                v, v,
-                paste("\"", clev, "\"", sep = "", collapse = ", ")
-            )
-        } else {
-            ""
-        }
+
+    conv <- sapply(names(column_types), function(name) {
+        type <- column_types[[name]]
+        col <- TEMP_RESULT[[name]]
+        switch(type,
+            "n" = {
+                ## Convert factor to numeric
+                if (is.numeric(col)) return("")
+                sprintf("%s = as.numeric(%s)", name, name)
+            },
+            "c" = {
+                ## Convert numeric to factor
+                ncol <- suppressWarnings(as.numeric(as.character(col)))
+                if (any(is.na(ncol)) || !all(ncol == col))
+                    return("")
+                lvls <- sort(unique(ncol))
+                if (is.factor(col)) {
+                    # relevel
+                    if (!all(levels(col) == lvls)) {
+                        sprintf("%s = forcats::fct_relevel(%s, c('%s'))",
+                            name, name,
+                            paste(lvls, collapse = "', '")
+                        )
+                    }
+                } else {
+                    sprintf("%s = factor(%s, levels = c('%s'))",
+                        name, name,
+                        paste(lvls, collapse = "', '")
+                    )
+                }
+            }
+        )
     })
 
     if (all(conv == "")) return(x)
@@ -252,7 +309,7 @@ validate_type_changes <- function(x, column_types) {
 
     expr <- sprintf("TEMP_RESULT %s dplyr::mutate(%s)",
         "%>%",
-        paste(conv, sep = ",")
+        paste(conv, collapse = ", ")
     )
 
     res <- eval(parse(text = expr))
@@ -264,7 +321,7 @@ validate_type_changes <- function(x, column_types) {
 
 parse_coltypes <- function(column_types = NULL) {
     if (is.null(column_types)) return("NULL")
-    
+
     if (!is.null(names(column_types))) {
         ctypes <- paste(
             "readr::cols(",
@@ -283,4 +340,47 @@ parse_coltypes <- function(column_types = NULL) {
     }
 
     ctypes
+}
+
+#' Load object(s) from an Rdata file
+#'
+#' @param file path to an rdata file
+#'
+#' @return list of data frames, plus code
+#' @seealso \code{\link{save_rda}}
+#' @author Tom Elliott
+#' @export
+load_rda <- function(file) {
+    e <- new.env()
+    load(file, envir = e)
+    keep <- sapply(names(e), function(n) is.data.frame(e[[n]]))
+    res <- lapply(names(e)[keep], function(n) e[[n]])
+    names(res) <- names(e)[keep]
+    attr(res, "code") <- sprintf("load('%s')", file)
+    res
+}
+
+#' Save an object with, optionally, a (valid) name
+#'
+#' @param data the data frame to save
+#' @param file where to save it
+#' @param name optional, the name the data will have in the rda file
+#'
+#' @return logical, should be TRUE, along with code for the save
+#' @seealso \code{\link{load_rda}}
+#' @author Tom Elliott
+#' @export
+save_rda <- function(data, file, name) {
+    data_name <- deparse(substitute(data))
+    if (!missing(name))
+        name <- create_varname(name)
+    else
+        name <- data_name
+
+    e <- new.env()
+    e[[name]] <- data
+
+    exp <- sprintf("save(%s, file = '%s')", name, file)
+    eval(parse(text = exp), envir = e)
+    structure(TRUE, code = exp)
 }

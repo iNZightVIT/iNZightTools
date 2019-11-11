@@ -1,25 +1,36 @@
-# iNZightTools 1.7.4
-__Release date:__ 2 September 2019
+## iNZightTools 1.8
+__Release date__: 11 November 2019
+
+- ensure column_types argument is respected
+- if no col types specified, pass `col_types = cols()` to suppress the col spec messages
+- new `load_rda()` function which loads all data frames in an rda file into a list
+- new `save_rda())` function allows saving of a data set to a file, optionally with a different name (i.e., the actual object name can be changed)
+- `smart_read()` now handles RDS files
+- add attribute to preview excel containing names of available sheets
+
+
+## iNZightTools 1.7.4
+__Release date__: 2 September 2019
 
 - fix bug where collapsing a "numeric" factor was giving an error
 - fix bug in reordering same factor twice
 
 
-# iNZightTools 1.7.3
-__Release date:__ 26 August 2019
+## iNZightTools 1.7.3
+__Release date__: 26 August 2019
 
 - fixes bug where factor order specified by metadata wasn't being respected
 - fix bug preventing first row of metadata comments to be read if description was missing
 
 
-# iNZightTools 1.7.2
-__Release date:__ 15 July 2019
+## iNZightTools 1.7.2
+__Release date__: 15 July 2019
 
 - various bug fixes
 
 
-# iNZightTools 1.7.1
-__Release date:__ 30 April 2019
+## iNZightTools 1.7.1
+__Release date__: 30 April 2019
 
 - add appveyor ci
 - add code tidying functionality
@@ -33,25 +44,25 @@ __Release date:__ 30 April 2019
 
 
 ## iNZightTools 1.6.3
-__Release date:__ 15 November 2018
+__Release date__: 15 November 2018
 
 - [fix] prefix `survey::` namespace to function calls
 
 
 ## iNZightTools 1.6.2
-__Release date:__ 10 September 2018
+__Release date__: 10 September 2018
 
 - fix a bug in reading csv files with spaces in the header
 
 
 ## iNZightTools 1.6.1
-__Release date:__ 04 September 2018
+__Release date__: 04 September 2018
 
 - fix bug in reading metadata where non-meta comments would cancel read
 
 
 # iNZightTools 1.6
-__Release date:__ 14 Auguest 2018
+__Release date__: 14 Auguest 2018
 
 ### Breaking Changes
 

@@ -1,5 +1,5 @@
-## iNZightTools 1.7.4.9000
-__Release date__:
+## iNZightTools 1.8
+__Release date__: 11 November 2019
 
 - ensure column_types argument is respected
 - if no col types specified, pass `col_types = cols()` to suppress the col spec messages

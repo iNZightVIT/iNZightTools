@@ -43,7 +43,7 @@ code <- function(data) return(attr(data, "code"))
 replaceVars <- function(exp, ...) {
     sub_list <- list(...)
     exp_str <- as.character(exp)
-    for (i in seq_len(sub_list)) {
+    for (i in seq_along(sub_list)) {
         exp_str <- gsub(names(sub_list)[i],
             sub_list[i],
             exp_str,
@@ -57,7 +57,7 @@ replaceVars <- function(exp, ...) {
 
 pasteFormulae <- function(formulae, sep = " %>% ") {
     combined_formulae <- c()
-    for (i in seq_len(formulae)) {
+    for (i in seq_along(formulae)) {
         combined_formulae[i] <- as.character(formulae[[i]])[2]
     }
     output_formula <- as.formula(

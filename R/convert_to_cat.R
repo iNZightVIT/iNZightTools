@@ -21,7 +21,7 @@ convertToCat <- function(.data, vars, names = paste(vars, "cat", sep = ".")) {
 
     formulae <- list(~.DATA)
 
-    for (i in seq_len(vars)) {
+    for (i in seq_along(vars)) {
         formula <- ~tibble::add_column(
             .NAME = factor(.DATA$.VARNAME),
             .after = ".VARNAME"

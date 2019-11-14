@@ -7,7 +7,9 @@
 read_text(txt, delim = "\\t", ...)
 }
 \arguments{
-\item{text}{character string}
+\item{txt}{character string}
+
+\item{delim}{the delimter to use, passed to `readr::read_delim()`}
 }
 \value{
 data.frame

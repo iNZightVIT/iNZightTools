@@ -3,7 +3,8 @@
 #' The text can also be the value `"clipboard"` which
 #' will use `readr::clipboard()`.
 #'
-#' @param text character string
+#' @param txt character string
+#' @param delim the delimter to use, passed to `readr::read_delim()`
 #' @return data.frame
 #' @author Tom Elliott
 #' @export

@@ -1,22 +1,19 @@
-##' Opens a new graphics device
-##'
-##' Depending on the system, difference devices are better.
-##' The windows device works fine (for now), only attempt to speed up
-##' any other devices that we're going to be using.
-##' We speed them up by getting rid of bufferring.
-##'
-##' @title Open a New Graphics Device
-##' @param width the width (in inches) of the new device
-##' @param height the height (in inches) of the new device
-##' @param ... additional arguments passed to the new device function
-##'
-##' @return NULL
-##'
-##' @author Tom Elliott
-##'
-##' @export
+#' Opens a new graphics device
+#'
+#' Depending on the system, difference devices are better.
+#' The windows device works fine (for now), only attempt to speed up
+#' any other devices that we're going to be using.
+#' We speed them up by getting rid of bufferring.
+#'
+#' @title Open a New Graphics Device
+#' @param width the width (in inches) of the new device
+#' @param height the height (in inches) of the new device
+#' @param ... additional arguments passed to the new device function
+#'
+#' @return NULL
+#' @author Tom Elliott
+#' @export
 newdevice <- function(width = 7, height = 7, ...) {
-
     if (.Platform$OS.type == "windows") {
         ## Windows
         grDevices::dev.new(width = width, height = height, ...)
@@ -41,5 +38,4 @@ newdevice <- function(width = 7, height = 7, ...) {
     }
 
     invisible(NULL)
-
 }

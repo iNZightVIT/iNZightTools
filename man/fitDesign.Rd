@@ -2,7 +2,7 @@
 % Please edit documentation in R/modelfitting.R
 \name{fitDesign}
 \alias{fitDesign}
-\title{Fit Survey Design}
+\title{Fit a survey design}
 \usage{
 fitDesign(svydes, dataset.name)
 }
@@ -15,9 +15,6 @@ fitDesign(svydes, dataset.name)
 a survey object
 }
 \description{
-Fit a survey design
-}
-\details{
 Fit a survey design to an object
 }
 \author{

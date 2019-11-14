@@ -14,7 +14,8 @@ filterRandom(.data, n, sample_size)
 \item{sample_size}{the size of each group specified in \code{n}}
 }
 \value{
-a dataframe containing the random samples with tidyverse code attached
+a dataframe containing the random samples with
+        tidyverse code attached
 }
 \description{
 Take a specified number of groups of obersations with fixed group size

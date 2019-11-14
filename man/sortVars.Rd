@@ -11,8 +11,8 @@ sortVars(.data, vars, asc = rep(TRUE, length(vars)))
 
 \item{vars}{a character vector of variable names to sort by}
 
-\item{asc}{logical, same length as \code{vars}. 
-If \code{TRUE} (default), sorted in ascending order, 
+\item{asc}{logical, same length as \code{vars}.
+If \code{TRUE} (default), sorted in ascending order,
 otherwise descending.}
 }
 \value{
@@ -23,7 +23,8 @@ Sorts a dataframe by one or more variables, and returns the result
 along with tidyverse code used to generate it.
 }
 \examples{
-sorted <- sortVars(iris, vars = c("Sepal.Width", "Sepal.Length"), asc = c(TRUE, FALSE))
+sorted <- sortVars(iris, vars = c("Sepal.Width", "Sepal.Length"),
+    asc = c(TRUE, FALSE))
 cat(code(sorted))
 head(sorted)
 

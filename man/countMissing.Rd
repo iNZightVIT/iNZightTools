@@ -2,7 +2,7 @@
 % Please edit documentation in R/count_missing.R
 \name{countMissing}
 \alias{countMissing}
-\title{helper function for counting the missing values - used for aggregateData() function}
+\title{Count missing values}
 \usage{
 countMissing(var, na.rm = FALSE)
 }
@@ -15,7 +15,7 @@ countMissing(var, na.rm = FALSE)
 the number of missing values for that vector
 }
 \description{
-helper function for counting the missing values - used for aggregateData() function
+Count missing values
 }
 \seealso{
 \code{\link{aggregateData}}

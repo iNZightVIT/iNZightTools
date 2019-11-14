@@ -9,7 +9,7 @@ renameVars(.data, to_be_renamed_list)
 \arguments{
 \item{.data}{a dataframe with columns to rename}
 
-\item{to_be_renamed_list}{a list of the new column names assigned 
+\item{to_be_renamed_list}{a list of the new column names assigned
 to the old column names
 ie. list('old column names' = 'new colummn names')}
 }
@@ -18,11 +18,12 @@ original dataframe containing new columns of the renamed columns
 with tidyverse code attached
 }
 \description{
-Rename column names 
+Rename column names
 and returns the result along with tidyverse code used to generate it.
 }
 \examples{
-renamed <- renameVars(iris, to_be_renamed_list = list(Species = "Type", Petal.Width = "P.W"))
+renamed <- renameVars(iris,
+    to_be_renamed_list = list(Species = "Type", Petal.Width = "P.W"))
 cat(code(renamed))
 head(renamed)
 

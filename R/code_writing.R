@@ -34,42 +34,45 @@ interpolate <- function(code, ..., comment = character(),
 ##'
 ##' @title Get Data's Code
 ##' @param data dataset you want to extract the code from
-##' @return The code used to generate the data.frame, if available (else NULL) 
+##' @return The code used to generate the data.frame, if available (else NULL)
 ##' @author Tom Elliott
 ##' @export
 code <- function(data) return(attr(data, "code"))
 
 
-replaceVars = function(exp, ...){
-  toBeSubbed <- list(...)
-  exp_str <- as.character(exp)
-  for (i in 1:length(toBeSubbed)){
-    exp_str <- gsub(names(toBeSubbed)[i], 
-                    toBeSubbed[i], 
-                    exp_str, 
-                    fixed = TRUE)
-  }
-  exp <- as.formula(paste(exp_str, collapse = " "))
-  exp
-} 
+replaceVars <- function(exp, ...) {
+    sub_list <- list(...)
+    exp_str <- as.character(exp)
+    for (i in seq_along(sub_list)) {
+        exp_str <- gsub(names(sub_list)[i],
+            sub_list[i],
+            exp_str,
+            fixed = TRUE
+        )
+    }
+    exp <- as.formula(paste(exp_str, collapse = " "))
+    exp
+}
 
 
-pasteFormulae <- function(formulae, sep = " %>% "){
-  combined_formulae <- c()
-  for (i in 1:length(formulae)){
-    combined_formulae[i] <- as.character(formulae[[i]])[2]
-  }
-  output_formula <- as.formula(
-    paste("~", paste(combined_formulae, collapse = sep),
-      collapse = " ")
-  )
-  output_formula
+pasteFormulae <- function(formulae, sep = " %>% ") {
+    combined_formulae <- c()
+    for (i in seq_along(formulae)) {
+        combined_formulae[i] <- as.character(formulae[[i]])[2]
+    }
+    output_formula <- as.formula(
+        paste("~",
+            paste(combined_formulae, collapse = sep),
+            collapse = " "
+        )
+    )
+    output_formula
 }
 
 
 
 create_varname <- function(x) {
-  # create a valid R variable name from a given string
-  x <- gsub("\\(|\\)", "", gsub(" ", "_", x))
-  make.names(x)
+    # create a valid R variable name from a given string
+    x <- gsub("\\(|\\)", "", gsub(" ", "_", x))
+    make.names(x)
 }

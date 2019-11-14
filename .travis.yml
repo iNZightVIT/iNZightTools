@@ -12,13 +12,6 @@ matrix:
       r: release
     - os: linux
       r: devel
-    - os: osx
-      r: release
-      brew_packages: 
-        - libgit2
-        - rename
-  allow_failures:
-    - os: osx
 
 env:
   global:
@@ -41,9 +34,9 @@ after_success:
 # wget https://raw.githubusercontent.com/iNZightVIT/dev/master/rename_binaries.R -O rename_binaries.R;
 # Rscript rename_binaries.R
 before_deploy:
-  - if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; 
-      then R CMD INSTALL --build iNZightTools*.tar.gz; 
-      rm -f *.tar.gz; 
+  - if [[ "${TRAVIS_OS_NAME}" = "osx" ]];
+      then R CMD INSTALL --build iNZightTools*.tar.gz;
+      rm -f *.tar.gz;
     fi
   - wget https://raw.githubusercontent.com/iNZightVIT/dev/master/read_latest_changes.R -O read_latest_changes.R
   - export RELEASE_BODY="$(Rscript read_latest_changes.R)"
@@ -55,7 +48,7 @@ deploy:
   api_key:
     secure: vnkP+d9MWQCGsyBO7E5IMIz6U9G+sJnjMWfCgaidum6RlW3pn+mE7WaO0ORCCaORUOaTHGcwQ+XefVbFxG+rYTZqR+a75e/MdWu5lnMbdljz6R2mMJijfpW3jGT20JyFJC7TYmccTt5UyVKS+vbVezSvbNfKoYdmM+sKvLP3hvcxxl0QFbhxrXesf/cAj9rhwqOxIbo7JP0ihHf4vBieSzwDhlfRL6945jze+qWX3tG+j3Po/PiBSgks/kCAmjnZrsuLLML3qqa9eUC7NQDOls43Mbdhg7gu2TjHAl+qaJT4gf+U7auX4JANJi69GCgKJ0kvkJio8LcFTfhzmJsHv4nZ1MKGy8Js0zEH4hdE55SHzA39Zm113+2xIyrEQ4+r/VnZJB496q250banSmArTGv23LqLpn04UY0i3maY8iN9eDnm7KGaPNABiZNWkui8Hs6s46W1xIubGieCtqo5k9Bw9g8ht01UB13+7kqkNhjVHEJcQ/QuIV6brfqqwOTSeXIcTbIc0XiVWgVyCJW/7RPZ1CATGCTDgoUpyJPyef+dOdUQAWm9aDefsc/cxpJxwj1ASqvCGVdfu+dXR1OCzGPab+1rcag5pmYkqZe5/Hc9IR9FNtvvxK7Bz/arcsLbVpaX38zAmvbzSjrDT9YRGcVZdZLP4FARcT0nHfowhMA=
   file_glob: true
-  file: 
+  file:
     - iNZightTools_*.t*gz
     - PACKAGES
   name: iNZightTools $TRAVIS_TAG

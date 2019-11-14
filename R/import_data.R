@@ -31,7 +31,7 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
     d <- validate_type_changes(d, column_types)
 
     if (preview)
-      class(d) <- c('inz.preview', class(d))
+      class(d) <- c("inz.preview", class(d))
     if (is.null(attr(d, "name")))
       attr(d, "name") <- tools::file_path_sans_ext(basename(file))
 
@@ -63,9 +63,15 @@ read_unknown <- function(file, ...) {
   return(NULL)
 }
 
-read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
-                     column_types = NULL, encoding, delimiter, decimal_mark,
-                     grouping_mark, convert.to.factor = TRUE,
+read_dlm <- function(file,
+                     ext = tools::file_ext(file),
+                     preview = FALSE,
+                     column_types = NULL,
+                     encoding,
+                     delimiter,
+                     decimal_mark,
+                     grouping_mark,
+                     convert.to.factor = TRUE,
                      ...) {
 
     named.args <- list(...)
@@ -141,7 +147,12 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
 }
 
 #' @import readxl
-read_excel <- function(file, ext, preview = FALSE, column_types, sheet = NULL, ...) {
+read_excel <- function(file,
+                       ext,
+                       preview = FALSE,
+                       column_types,
+                       sheet = NULL,
+                       ...) {
     named.args <- list(...)
 
     if (!missing(column_types))
@@ -212,7 +223,8 @@ read_rds <- function(file, ext, preview = FALSE, column_types) {
 escape_string <- function(x) sprintf("\"%s\"", x)
 
 quote_varname <- function(x, q = "`") {
-    ## contains any non alphanumeric characters, OR first character is number
+    ## contains any non alphanumeric characters,
+    ## OR first character is number
     xs <- grepl("[^a-zA-Z0-9]", x) | grepl("^[0-9]", x)
     if (any(xs)) {
         x[xs] <- paste0(q, x[xs], q)
@@ -266,9 +278,6 @@ validate_type_changes <- function(x, column_types) {
     ctypes <- parse_coltypes(column_types)
     if (ctypes == "NULL") return(x)
 
-    ## ensure that numeric -> categorical order is in numerical order
-    # if (!any(column_types == "c")) return(x)
-
     TEMP_RESULT <- x
 
     conv <- sapply(names(column_types), function(name) {
@@ -314,7 +323,10 @@ validate_type_changes <- function(x, column_types) {
 
     res <- eval(parse(text = expr))
     attr(res, "code") <-
-        gsub("TEMP_RESULT", paste(code(TEMP_RESULT), collapse="\n"), expr)
+        gsub("TEMP_RESULT",
+            paste(code(TEMP_RESULT), collapse="\n"),
+            expr
+        )
     res
 }
 

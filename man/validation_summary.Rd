@@ -10,11 +10,11 @@ validation_summary(cf)
 \item{cf}{Confrontation object from \code{validate::confront()}}
 }
 \value{
-A \code{data.frame} with number of tests performed, number of 
+A \code{data.frame} with number of tests performed, number of
 passes, number of failures, and failure percentage for each validation rule.
 }
 \description{
-Generates a summary of a confrontation which gives basic information about 
+Generates a summary of a confrontation which gives basic information about
 each validation rule tested.
 }
 \author{

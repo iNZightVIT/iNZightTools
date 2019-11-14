@@ -17,7 +17,8 @@ reshape_data(.data, col1, col2, cols, key, value, check)
 
 \item{key}{name for new column containing old column names (for wide to long)}
 
-\item{value}{name for new column containing old column values (for wide to long)}
+\item{value}{name for new column containing old column values
+(for wide to long)}
 
 \item{check}{check whether to use long to wide or wide to long}
 }

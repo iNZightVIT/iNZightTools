@@ -13,7 +13,8 @@ validation_details(cf, v, var, id.var, df)
 
 \item{var}{Rule name to give details about}
 
-\item{id.var}{Variable name denoting a unique identifier for each observation}
+\item{id.var}{Variable name denoting a unique identifier
+for each observation}
 
 \item{df}{The dataset that was confronted}
 }
@@ -21,7 +22,7 @@ validation_details(cf, v, var, id.var, df)
 A character vector giving each line of the summary detail text
 }
 \description{
-Generates the more detailed text required for the details section in 
+Generates the more detailed text required for the details section in
 \code{iNZValidateWin}.
 }
 \author{

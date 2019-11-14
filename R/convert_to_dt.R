@@ -49,7 +49,7 @@ convert_to_datetime <- function(.data, factorname, convname, newname) {
     ## Replacing variables
     exp <- replaceVars(exp,
         .NAME = newname,
-        .VARX = Fname,
+        .VARX = fact_name,
         .DATA = dataname,
         .VARNAME = factorname,
         .AFTER = factorname[length(factorname)]

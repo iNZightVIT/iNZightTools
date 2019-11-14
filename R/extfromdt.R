@@ -44,7 +44,7 @@ extract_part <- function(.data, varname, part, name) {
         "Day of the week (name)" =
             paste(sep = ", ",
                 "lubridate::wday(.DATA$.VARNAME, label = TRUE",
-            "'abbr = FALSE, week_start = 1)"
+                "abbr = FALSE, week_start = 1)"
             ),
         "Day of the week (abbreviated)" =
             "lubridate::wday(.DATA$.VARNAME, label = TRUE, week_start = 1)",

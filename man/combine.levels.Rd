@@ -7,10 +7,10 @@
 combine.levels(dafr, columns)
 }
 \arguments{
-\item{dafr}{The data.frame containing factor columns 
+\item{dafr}{The data.frame containing factor columns
 specified in columns.}
 
-\item{columns}{The column names of the columns in dafr 
+\item{columns}{The column names of the columns in dafr
 to combine.}
 }
 \value{

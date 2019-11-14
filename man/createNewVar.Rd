@@ -9,14 +9,15 @@ createNewVar(.data, new_var = "new.variable", R_exp)
 \arguments{
 \item{.data}{a dataframe to which to add a new variable to}
 
-\item{new_var}{a character of the new variable name. 
+\item{new_var}{a character of the new variable name.
 "new.variable" by default}
 
-\item{R_exp}{a character of a valid R expression which can 
+\item{R_exp}{a character of a valid R expression which can
 generate a vector of values}
 }
 \value{
-original dataframe containing the new column created from \code{R_exp}
+original dataframe containing the new column
+        created from \code{R_exp}
 with tidyverse code attached
 }
 \description{

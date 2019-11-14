@@ -14,7 +14,8 @@ convertToCat(.data, vars, names = paste(vars, "cat", sep = "."))
 \item{names}{a charactor vector of names for the created variable(s)}
 }
 \value{
-original dataframe containing a new column of the converted numeric variable with tidyverse code attached
+original dataframe containing a new column of the
+        converted numeric variable with tidyverse code attached
 }
 \description{
 Convert specified numeric variables into factors

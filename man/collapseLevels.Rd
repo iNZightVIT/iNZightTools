@@ -19,13 +19,15 @@ collapseLevels(.data, var, levels, collapse = paste(levels, collapse =
 \item{name}{a name for the new variable}
 }
 \value{
-the original dataframe containing a new column of the collapsed variable with tidyverse code attached
+the original dataframe containing a new column of the
+        collapsed variable with tidyverse code attached
 }
 \description{
 Collapse several values in a categorical variable into one level
 }
 \examples{
-collapsed <- collapseLevels(iris, var = "Species", levels = c("setosa", "virginica"))
+collapsed <- collapseLevels(iris, var = "Species",
+    levels = c("setosa", "virginica"))
 cat(code(collapsed))
 head(collapsed)
 

@@ -9,20 +9,23 @@
 #' @author Yiwen He
 appendrows <- function(.data, imported_data, date) {
 
-  mc <- match.call()
-  dataname <- mc$.data
-  importname <- mc$imported_data
+    mc <- match.call()
+    dataname <- mc$.data
+    importname <- mc$imported_data
 
-  if (date) {
-    exp = ~.DATA %>%
-      dplyr::bind_rows(.IMP %>% tibble::add_column("When_Added" = Sys.time()))
-  } else {
-    exp = ~.DATA %>% dplyr::bind_rows(.IMP)
-  }
+    if (date) {
+        exp <- ~.DATA %>%
+            dplyr::bind_rows(
+                .IMP %>% tibble::add_column("When_Added" = Sys.time())
+            )
+    } else {
+        exp <- ~.DATA %>% dplyr::bind_rows(.IMP)
+    }
 
-  exp <- replaceVars(exp,
-                     .DATA = dataname,
-                     .IMP = importname)
+    exp <- replaceVars(exp,
+        .DATA = dataname,
+        .IMP = importname
+    )
 
-  interpolate(exp)
+    interpolate(exp)
 }

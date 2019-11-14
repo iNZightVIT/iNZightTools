@@ -9,13 +9,16 @@ aggregateData(.data, vars, summaries)
 \arguments{
 \item{.data}{a dataframe to aggregate}
 
-\item{vars}{a character vector of categorical variables in \code{.data} 
+\item{vars}{a character vector of categorical variables in \code{.data}
 to group by}
 
-\item{summaries}{summaries to generate for the groups generated in \code{vars}. Valid summaries are "iqr" , mean", "median", "sd", "sum"}
+\item{summaries}{summaries to generate for the groups generated
+in \code{vars}.
+Valid summaries are "iqr" , mean", "median", "sd", "sum"}
 }
 \value{
-aggregated dataframe containing the summaries with tidyverse code attached
+aggregated dataframe containing the summaries
+        with tidyverse code attached
 }
 \description{
 Aggregate a dataframe into summaries of all numeric variables by grouping
@@ -23,8 +26,11 @@ them by specified categorical variables
 and returns the result along with tidyverse code used to generate it.
 }
 \examples{
-aggregated <- aggregateData(iris, vars = c("Species"), 
-                            summaries = c("mean", "sd", "iqr"))
+aggregated <-
+    aggregateData(iris,
+        vars = c("Species"),
+        summaries = c("mean", "sd", "iqr")
+    )
 cat(code(aggregated))
 head(aggregated)
 

@@ -12,21 +12,26 @@ reorderLevels(.data, var, new_levels = NULL, freq = FALSE,
 
 \item{var}{a categorical variable to reorder}
 
-\item{new_levels}{a character vector of the new factor order. Only specify if \code{freq} = FALSE}
+\item{new_levels}{a character vector of the new factor order.
+Only specify if \code{freq} = FALSE}
 
-\item{freq}{logical, If \code{freq} = \code{FALSE} (default), will manually reorder using \code{new_levels}. If \code{freq} = \code{TRUE}, will reorder based of descending frequency of the factor levels}
+\item{freq}{logical, If \code{freq} = \code{FALSE} (default),
+will manually reorder using \code{new_levels}.
+If \code{freq} = \code{TRUE}, will reorder
+based of descending frequency of the factor levels}
 
 \item{name}{name for the new variable}
 }
 \value{
-original dataframe containing a new column of the reordered categorical variable with tidyverse code attached
+original dataframe containing a new column of the reordered
+        categorical variable with tidyverse code attached
 }
 \description{
 Reorder the factors of a categorical variable either manually or frequeny
 }
 \examples{
-reordered <- reorderLevels(iris, var = "Species", 
-                           new_levels = c("versicolor", "virginica", "setosa"))
+reordered <- reorderLevels(iris, var = "Species",
+    new_levels = c("versicolor", "virginica", "setosa"))
 cat(code(reordered))
 head(reordered)
 

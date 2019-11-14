@@ -19,13 +19,16 @@ For squaring, use "square"; for inversing, use "reciprocal"}
 \item{name}{the name of the new variable}
 }
 \value{
-the original dataframe containing a new column of the transformed variable with tidyverse code attached
+the original dataframe containing a new column of the transformed
+        variable with tidyverse code attached
 }
 \description{
-Transform the values of a numeric variable by applying a mathematical function
+Transform the values of a numeric variable by applying
+a mathematical function
 }
 \examples{
-transformed <- transformVar(iris, var = "Petal.Length", transformation = "log")
+transformed <- transformVar(iris, var = "Petal.Length",
+    transformation = "log")
 cat(code(transformed))
 head(transformed)
 

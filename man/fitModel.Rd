@@ -2,7 +2,7 @@
 % Please edit documentation in R/modelfitting.R
 \name{fitModel}
 \alias{fitModel}
-\title{Fit a Model}
+\title{Fit models}
 \usage{
 fitModel(y, x, data, family = "gaussian", link = switch(family,
   gaussian = "gaussian", binomial = "logit", poisson = "log"),
@@ -19,19 +19,19 @@ fitModel(y, x, data, family = "gaussian", link = switch(family,
 
 \item{link}{the link function to use}
 
-\item{design}{data design specification. one of 'simple', 'survey' or 'experiment'}
+\item{design}{data design specification.
+one of 'simple', 'survey' or 'experiment'}
 
-\item{svydes}{a vector of arguments to be passed to the svydesign function, excluding data (defined above)}
+\item{svydes}{a vector of arguments to be passed to the svydesign function,
+excluding data (defined above)}
 
-\item{...}{further arguments to be passed to lm, glm, svyglm, such as offset, etc.}
+\item{...}{further arguments to be passed to lm, glm, svyglm,
+such as offset, etc.}
 }
 \value{
 A model call formula (using lm, glm, or svyglm)
 }
 \description{
-Fit models
-}
-\details{
 wrapper function
 }
 \author{

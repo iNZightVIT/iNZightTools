@@ -9,12 +9,12 @@ rankVars(.data, vars)
 \arguments{
 \item{.data}{a dataframe with the variables to rank}
 
-\item{vars}{a character vector of numeric variables in \code{.data} 
+\item{vars}{a character vector of numeric variables in \code{.data}
 to rank}
 }
 \value{
 the original dataframe containing new columns with the ranks of the
- variables in \code{var} with tidyverse code attached
+        variables in \code{var} with tidyverse code attached
 }
 \description{
 Rank the values of a numeric variable in descending order,

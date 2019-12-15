@@ -1,3 +1,9 @@
+## iNZightTools 1.8.0.9000
+__Release date__: TBA
+
+- new `read_text()` function to read from text string/clipboard
+
+
 ## iNZightTools 1.8
 __Release date__: 11 November 2019
 

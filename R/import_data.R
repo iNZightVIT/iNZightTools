@@ -12,6 +12,9 @@
 ##' @export
 smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
                        column_types = NULL, ...) {
+
+    if (grepl("^https?://", file)) file <- url_to_temp(file)
+
     type <- guess_type(ext)
     fun <- eval(parse(text = sprintf("read_%s", type)))
     d <- fun(file, ext = ext, preview = preview,
@@ -395,4 +398,19 @@ save_rda <- function(data, file, name) {
     exp <- sprintf("save(%s, file = '%s')", name, file)
     eval(parse(text = exp), envir = e)
     structure(TRUE, code = exp)
+}
+
+#' Download URL to temp file
+#'
+#' @param url where the file lives on the internet
+#' @return the location of a (temporary) file location
+#' @author Tom Elliott
+url_to_temp <- function(url) {
+    name <- basename(url)
+    name <- gsub("%20", "_", name)
+    name <- create_varname(name)
+    dir <- tempdir()
+    file <- file.path(dir, name)
+    utils::download.file(url, file, quiet = TRUE)
+    file
 }

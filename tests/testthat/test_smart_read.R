@@ -143,3 +143,12 @@ test_that("Reading RDS works", {
     expect_equivalent(smart_read(t), iris)
     expect_equal(code(smart_read(t)), "readRDS(\"iris_data.rds\")")
 })
+
+test_that("URLs are supported", {
+    url <- "https://www.stat.auckland.ac.nz/~wild/data/test/Census%20at%20School-500.xls"
+    skip_if( !RCurl::url.exists(url), "URL not available." )
+
+    file <- url_to_temp(url)
+    expect_match(file, "Census.at.School.500.xls")
+    expect_true(file.exists(file))
+})

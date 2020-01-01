@@ -2,6 +2,7 @@
 __Release date__: TBA
 
 - new `read_text()` function to read from text string/clipboard
+- Extract from datetime no longer includes space in `2010M01`, etc. so it works correctly with `iNZightTS`
 
 
 ## iNZightTools 1.8

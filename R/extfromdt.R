@@ -22,11 +22,11 @@ extract_part <- function(.data, varname, part, name) {
         "Decimal Year" =
             "lubridate::decimal_date(.DATA$.VARNAME)",
         "Year Quarter" =
-            "factor(as.character(zoo::as.yearqtr(.DATA$.VARNAME)))",
+            "factor(format(zoo::as.yearqtr(.DATA$.VARNAME), '%YQ%q'))",
         "Quarter" =
             "as.numeric(stringr::str_sub(zoo::as.yearqtr(.DATA$.VARNAME), -1))",
         "Year Month" =
-            'factor(format(.DATA$.VARNAME, "%Y M%m"))',
+            'factor(format(.DATA$.VARNAME, "%YM%m"))',
         "Month (full)" =
             "lubridate::month(.DATA$.VARNAME, label = TRUE, abbr = FALSE)",
         "Month (abbreviated)" =
@@ -34,7 +34,7 @@ extract_part <- function(.data, varname, part, name) {
         "Month (number)" =
             'as.numeric(format(.DATA$.VARNAME, "%m"))',
         "Year Week" =
-            'factor(format(.DATA$.VARNAME, "%Y W%W"))',
+            'factor(format(.DATA$.VARNAME, "%YW%W"))',
         "Week of the year (Monday as first day of the week)" =
             'as.numeric(format(.DATA$.VARNAME, "%W"))',
         "Week of the year (Sunday as first day of the week)" =

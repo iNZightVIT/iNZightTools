@@ -12,7 +12,14 @@ test_that("Desired parts are extracted", {
   expect_equal(
     stripcode(extract_part(data, "a", "Year Month", "a.dt")),
     data %>% tibble::add_column(
-      a.dt = factor(format(data$a, "%Y M%m")),
+      a.dt = factor(format(data$a, "%YM%m")),
+      .after = "a"
+    )
+  )
+  expect_equal(
+    stripcode(extract_part(data, "a", "Year Quarter", "a.dt")),
+    data %>% tibble::add_column(
+      a.dt = factor(format(zoo::as.yearqtr(data$a), '%YQ%q')),
       .after = "a"
     )
   )

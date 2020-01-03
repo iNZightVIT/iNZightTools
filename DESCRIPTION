@@ -27,7 +27,8 @@ Suggests:
     cairoDevice,
     testthat,
     FutureLearnData,
-    covr
+    covr,
+    RCurl
 Additional_repositories:
     https://r.docker.stat.auckland.ac.nz
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),

@@ -28,12 +28,18 @@ stripattr <- function(x, attr = 'code') {
 
 test_that("Reshape wide to long works", {
     expect_equal(
-        suppressWarnings(stripattr(reshape_data(dt1, "", "", list("v1999", "v2000"), "Year", "Count", "wide"))),
-        suppressWarnings(tidyr::gather(dt1, key = "Year", value = "Count", c("v1999", "v2000")))
+        suppressWarnings(
+            stripattr(reshape_data(dt1, "", "", list("v1999", "v2000"), "Year", "Count", "wide"))
+        ),
+        suppressWarnings(
+            tidyr::gather(dt1, key = "Year", value = "Count", c("v1999", "v2000")) %>%
+                dplyr::mutate(Year = as.factor(Year), Count = as.factor(Count))
+        )
     )
     expect_equal(
         stripattr(reshape_data(dt2, "", "", "Count", "xx", "yy", "wide")),
-        tidyr::gather(dt2, key = "xx", value = "yy", "Count")
+        tidyr::gather(dt2, key = "xx", value = "yy", "Count") %>%
+            dplyr::mutate(xx = as.factor(xx))
     )
 })
 

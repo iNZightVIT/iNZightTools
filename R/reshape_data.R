@@ -29,13 +29,19 @@ reshape_data <- function(.data, col1, col2, cols, key, value, check) {
 
     valueW <- paste0("value = '", value, "'")
 
-
+    mutation <- ""
     if (check == "long") {
         exp <- ~.DATA %>%
             tidyr::spread(.KEYL.VALUEL)
     } else if (check == "wide") {
+        mutation <- ".VNAME = as.factor(.VNAME)"
+        cat_cols <- sapply(cols, function(c) is_cat(.data[[c]]))
+        if (any(cat_cols)) {
+            mutation <- paste0(mutation, ", .RNAME = as.factor(.RNAME)")
+        }
         exp <- ~.DATA %>%
-            tidyr::gather(.COL.KEYW.VALUEW)
+            tidyr::gather(.COL.KEYW.VALUEW) %>%
+            dplyr::mutate(.MUTATION)
     }
 
     exp <- replaceVars(exp,
@@ -44,7 +50,10 @@ reshape_data <- function(.data, col1, col2, cols, key, value, check) {
         .VALUEL = valueL,
         .COL = colnames,
         .KEYW = keynameW,
-        .VALUEW = valueW
+        .VALUEW = valueW,
+        .MUTATION = mutation,
+        .VNAME = key,
+        .RNAME = value
     )
 
     interpolate(exp)

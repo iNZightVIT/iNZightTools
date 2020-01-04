@@ -1,6 +1,6 @@
 #' Fit models
 #'
-#' wrapper function
+#' Wrapper function for `lm`, `glm`, and `svyglm`.
 #'
 #' @param y character string representing the response,
 #' @param x character string of the explanatory variables,

@@ -8,5 +8,3 @@
 #' @usage lhs \%>\% rhs
 #' @importFrom stringr str_c
 NULL
-
-

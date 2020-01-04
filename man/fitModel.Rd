@@ -32,7 +32,7 @@ such as offset, etc.}
 A model call formula (using lm, glm, or svyglm)
 }
 \description{
-wrapper function
+Wrapper function for `lm`, `glm`, and `svyglm`.
 }
 \author{
 Tom Elliott

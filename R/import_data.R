@@ -1,15 +1,15 @@
-##' A simple function that magically imports a file, irrespective of type.
-##'
-##' @title iNZight Smart Read
-##' @param file the file path to read
-##' @param ext file extension, namely "csv" or "txt"
-##' @param preview logical, if \code{TRUE} only the first few rows of
-##'   the data will be returned
-##' @param column_types vector of column types (see \code{?readr::read_csv})
-##' @param ... additional parameters passed to read_* functions
-##' @return a dataframe with attributes
-##' @author Tom Elliott
-##' @export
+#' A simple function that magically imports a file, irrespective of type.
+#'
+#' @title iNZight Smart Read
+#' @param file the file path to read
+#' @param ext file extension, namely "csv" or "txt"
+#' @param preview logical, if \code{TRUE} only the first few rows of
+#'   the data will be returned
+#' @param column_types vector of column types (see \code{?readr::read_csv})
+#' @param ... additional parameters passed to read_* functions
+#' @return a dataframe with attributes
+#' @author Tom Elliott
+#' @export
 smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
                        column_types = NULL, ...) {
 
@@ -62,8 +62,8 @@ guess_type <- function(ext) {
 }
 
 read_unknown <- function(file, ...) {
-  warning("Unable to read file: ", file)
-  return(NULL)
+    warning("Unable to read file: ", file)
+    return(NULL)
 }
 
 read_dlm <- function(file,

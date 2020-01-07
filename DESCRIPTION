@@ -37,6 +37,8 @@ Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
              person("Akshay", "Gupta", role = "ctb"),
              person("Owen", "Jin", role = "ctb"),
              person("Lushi", "Cai", role = "ctb"))
+BugReports: https://github.com/iNZightVIT/iNZightTools/issues
+Contact: inzight_support@stat.auckland.ac.nz
 Description: Compatibility functions used for multiple packages and
     distributions of iNZight, including Lite.
 License: GPL-3 | file LICENSE

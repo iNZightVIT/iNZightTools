@@ -8,7 +8,7 @@
 
 0 errors | 0 warnings | 2 notes
 
-* This is a new release.
+* This is a new submission
 
 * checking package dependencies (1.2s) ... NOTE
   Package suggested but not available for checking: ‘Acinonyx’

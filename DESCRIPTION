@@ -32,7 +32,7 @@ Suggests:
 Additional_repositories:
     https://r.docker.stat.auckland.ac.nz
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
-                    email = "inzight_support@stat.auckland.ac.nz"),
+                    email = "tom.elliott@auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),
              person("Akshay", "Gupta", role = "ctb"),
              person("Owen", "Jin", role = "ctb"),

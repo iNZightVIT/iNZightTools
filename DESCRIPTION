@@ -30,7 +30,7 @@ Suggests:
     covr,
     RCurl
 Additional_repositories:
-    https://r.docker.stat.auckland.ac.nz
+    https://r-forge.r-project.org/
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "tom.elliott@auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),

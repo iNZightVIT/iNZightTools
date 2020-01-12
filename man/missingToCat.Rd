@@ -7,21 +7,21 @@
 missingToCat(.data, vars, names = paste0(vars, "_miss"))
 }
 \arguments{
-\item{.data}{a dataframe with the columns to convert 
+\item{.data}{a dataframe with the columns to convert
 its missing values into categorical}
 
-\item{vars}{a character vector of the variables in \code{.data} 
+\item{vars}{a character vector of the variables in \code{.data}
 for conversion of missing values to categorical}
 
 \item{names}{a vector of names for the new variables}
 }
 \value{
-original dataframe containing new columns of the converted variables 
-for the missing values
-with tidyverse code attached
+original dataframe containing new columns of the converted variables
+       for the missing values
+       with tidyverse code attached
 }
 \description{
-Turn <NA>'s into a "missing" character; 
+Turn <NA>'s into a "missing" character;
 hence numeric variables will be converted to categorical variables
 with any numeric values will be converted to "observed",
 and returns the result along with tidyverse code used to generate it.

@@ -1,3 +1,11 @@
+## iNZightTools 1.8.1
+
+- new `read_text()` function to read from text string/clipboard
+- `smart_read()` now supports URLs by downloading to a temporary file, with the same name
+- Extract from datetime no longer includes space in `2010M01`, etc. so it works correctly with `iNZightTS`
+- Reshape (wide to long) returns a factor to work with the rest of iNZight
+
+
 ## iNZightTools 1.8
 __Release date__: 11 November 2019
 

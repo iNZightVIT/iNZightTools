@@ -17,11 +17,12 @@ filterLevels(.data, var, levels)
 filtered dataframe with tidyverse code attached
 }
 \description{
-Filter a dataframe by some levels of one categorical variable 
+Filter a dataframe by some levels of one categorical variable
 and returns the result along with tidyverse code used to generate it.
 }
 \examples{
-filtered <- filterLevels(iris, var = "Species", levels = c("versicolor", "virginica"))
+filtered <- filterLevels(iris, var = "Species",
+    levels = c("versicolor", "virginica"))
 cat(code(filtered))
 head(filtered)
 

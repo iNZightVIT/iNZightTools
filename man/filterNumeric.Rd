@@ -11,7 +11,7 @@ filterNumeric(.data, var, op, num)
 
 \item{var}{character of the column in \code{.data} to filter by}
 
-\item{op}{a logical operator of "<=", "<", ">=", ">", "==" or "!=" 
+\item{op}{a logical operator of "<=", "<", ">=", ">", "==" or "!="
 for the boolean condition}
 
 \item{num}{a number for which the \code{op} applies to}
@@ -20,7 +20,7 @@ for the boolean condition}
 filtered dataframe with tidyverse code attached
 }
 \description{
-Filter a dataframe by some boolean condition of one numeric variable 
+Filter a dataframe by some boolean condition of one numeric variable
 and returns the result along with tidyverse code used to generate it.
 }
 \examples{

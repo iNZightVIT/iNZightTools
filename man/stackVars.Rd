@@ -11,9 +11,11 @@ stackVars(.data, vars, key = "stack.variable", value = "stack.value")
 
 \item{vars}{a character vector of variables to stack}
 
-\item{key}{name of the new column for the stacked variables. "stack.variable" by default}
+\item{key}{name of the new column for the stacked variables.
+"stack.variable" by default}
 
-\item{value}{name of the new column for the stacked values of the stacked. "stack.value" by default}
+\item{value}{name of the new column for the stacked values of the stacked.
+"stack.value" by default}
 }
 \value{
 stacked dataframe with tidyverse code attached
@@ -23,7 +25,8 @@ Collpase columns by converting from a long format to a tall format
 and returns the result along with tidyverse code used to generate it.
 }
 \examples{
-stacked <- stackVars(iris, vars = c("Species", "Sepal.Width"), key = "Variable", value = "Value")
+stacked <- stackVars(iris, vars = c("Species", "Sepal.Width"),
+    key = "Variable", value = "Value")
 cat(code(stacked))
 head(stacked)
 

@@ -21,10 +21,12 @@ a data frame
 \description{
 This function will read a CSV file with iNZight metadata in the header.
 This allows plain text CSV files to be supplied with additional comments
-that describe the structure of the data to make import and data handling easier.
+that describe the structure of the data to make import and
+data handling easier.
 }
 \details{
-The main example is to define factor levels for an integer variable in large data sets.
+The main example is to define factor levels for an integer variable
+in large data sets.
 }
 \author{
 Tom Elliott

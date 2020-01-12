@@ -1,17 +1,20 @@
-##' A simple function that magically imports a file, irrespective of type.
-##'
-##' @title iNZight Smart Read
-##' @param file the file path to read
-##' @param ext file extension, namely "csv" or "txt"
-##' @param preview logical, if \code{TRUE} only the first few rows of
-##'   the data will be returned
-##' @param column_types vector of column types (see \code{?readr::read_csv})
-##' @param ... additional parameters passed to read_* functions
-##' @return a dataframe with attributes
-##' @author Tom Elliott
-##' @export
+#' A simple function that magically imports a file, irrespective of type.
+#'
+#' @title iNZight Smart Read
+#' @param file the file path to read
+#' @param ext file extension, namely "csv" or "txt"
+#' @param preview logical, if \code{TRUE} only the first few rows of
+#'   the data will be returned
+#' @param column_types vector of column types (see \code{?readr::read_csv})
+#' @param ... additional parameters passed to read_* functions
+#' @return a dataframe with attributes
+#' @author Tom Elliott
+#' @export
 smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
                        column_types = NULL, ...) {
+
+    if (grepl("^https?://", file)) file <- url_to_temp(file)
+
     type <- guess_type(ext)
     fun <- eval(parse(text = sprintf("read_%s", type)))
     d <- fun(file, ext = ext, preview = preview,
@@ -31,7 +34,7 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
     d <- validate_type_changes(d, column_types)
 
     if (preview)
-      class(d) <- c('inz.preview', class(d))
+      class(d) <- c("inz.preview", class(d))
     if (is.null(attr(d, "name")))
       attr(d, "name") <- tools::file_path_sans_ext(basename(file))
 
@@ -59,13 +62,19 @@ guess_type <- function(ext) {
 }
 
 read_unknown <- function(file, ...) {
-  warning("Unable to read file: ", file)
-  return(NULL)
+    warning("Unable to read file: ", file)
+    return(NULL)
 }
 
-read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
-                     column_types = NULL, encoding, delimiter, decimal_mark,
-                     grouping_mark, convert.to.factor = TRUE,
+read_dlm <- function(file,
+                     ext = tools::file_ext(file),
+                     preview = FALSE,
+                     column_types = NULL,
+                     encoding,
+                     delimiter,
+                     decimal_mark,
+                     grouping_mark,
+                     convert.to.factor = TRUE,
                      ...) {
 
     named.args <- list(...)
@@ -141,7 +150,12 @@ read_dlm <- function(file, ext = tools::file_ext(file), preview = FALSE,
 }
 
 #' @import readxl
-read_excel <- function(file, ext, preview = FALSE, column_types, sheet = NULL, ...) {
+read_excel <- function(file,
+                       ext,
+                       preview = FALSE,
+                       column_types,
+                       sheet = NULL,
+                       ...) {
     named.args <- list(...)
 
     if (!missing(column_types))
@@ -212,7 +226,8 @@ read_rds <- function(file, ext, preview = FALSE, column_types) {
 escape_string <- function(x) sprintf("\"%s\"", x)
 
 quote_varname <- function(x, q = "`") {
-    ## contains any non alphanumeric characters, OR first character is number
+    ## contains any non alphanumeric characters,
+    ## OR first character is number
     xs <- grepl("[^a-zA-Z0-9]", x) | grepl("^[0-9]", x)
     if (any(xs)) {
         x[xs] <- paste0(q, x[xs], q)
@@ -266,9 +281,6 @@ validate_type_changes <- function(x, column_types) {
     ctypes <- parse_coltypes(column_types)
     if (ctypes == "NULL") return(x)
 
-    ## ensure that numeric -> categorical order is in numerical order
-    # if (!any(column_types == "c")) return(x)
-
     TEMP_RESULT <- x
 
     conv <- sapply(names(column_types), function(name) {
@@ -314,7 +326,10 @@ validate_type_changes <- function(x, column_types) {
 
     res <- eval(parse(text = expr))
     attr(res, "code") <-
-        gsub("TEMP_RESULT", paste(code(TEMP_RESULT), collapse="\n"), expr)
+        gsub("TEMP_RESULT",
+            paste(code(TEMP_RESULT), collapse="\n"),
+            expr
+        )
     res
 }
 
@@ -383,4 +398,19 @@ save_rda <- function(data, file, name) {
     exp <- sprintf("save(%s, file = '%s')", name, file)
     eval(parse(text = exp), envir = e)
     structure(TRUE, code = exp)
+}
+
+#' Download URL to temp file
+#'
+#' @param url where the file lives on the internet
+#' @return the location of a (temporary) file location
+#' @author Tom Elliott
+url_to_temp <- function(url) {
+    name <- basename(url)
+    name <- gsub("%20", "_", name)
+    name <- create_varname(name)
+    dir <- tempdir()
+    file <- file.path(dir, name)
+    utils::download.file(url, file, quiet = TRUE)
+    file
 }

@@ -7,7 +7,7 @@
 standardizeVars(.data, vars, names = paste(sep = ".", vars, "std"))
 }
 \arguments{
-\item{.data}{a dataframe with the columns to standarize}
+\item{.data}{a dataframe with the columns to standardize}
 
 \item{vars}{a character vector of the numeric variables in \code{.data}
 to standardize}

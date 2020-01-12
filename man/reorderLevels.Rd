@@ -27,7 +27,7 @@ original dataframe containing a new column of the reordered
         categorical variable with tidyverse code attached
 }
 \description{
-Reorder the factors of a categorical variable either manually or frequeny
+Reorder the factors of a categorical variable either manually or frequency
 }
 \examples{
 reordered <- reorderLevels(iris, var = "Species",

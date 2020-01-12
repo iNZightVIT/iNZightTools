@@ -2,7 +2,7 @@
 #'
 #' Centre then divide by the standard error of the values in a numeric variable
 #'
-#' @param .data a dataframe with the columns to standarize
+#' @param .data a dataframe with the columns to standardize
 #' @param vars  a character vector of the numeric variables in \code{.data}
 #'        to standardize
 #' @param names names for the created variables

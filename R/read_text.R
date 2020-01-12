@@ -4,7 +4,7 @@
 #' will use `readr::clipboard()`.
 #'
 #' @param txt character string
-#' @param delim the delimter to use, passed to `readr::read_delim()`
+#' @param delim the delimiter to use, passed to `readr::read_delim()`
 #' @param ... additional arguments passed to `readr::read_delim()`
 #' @return data.frame
 #' @author Tom Elliott

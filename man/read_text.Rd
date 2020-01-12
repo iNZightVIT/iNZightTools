@@ -9,7 +9,7 @@ read_text(txt, delim = "\\t", ...)
 \arguments{
 \item{txt}{character string}
 
-\item{delim}{the delimter to use, passed to `readr::read_delim()`}
+\item{delim}{the delimiter to use, passed to `readr::read_delim()`}
 
 \item{...}{additional arguments passed to `readr::read_delim()`}
 }

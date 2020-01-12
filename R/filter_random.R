@@ -1,6 +1,6 @@
 #' Random sampling without replacement
 #'
-#' Take a specified number of groups of obersations with fixed group size
+#' Take a specified number of groups of observations with fixed group size
 #' by sampling without replacement
 #' and returns the result along with tidyverse code used to generate it.
 #'

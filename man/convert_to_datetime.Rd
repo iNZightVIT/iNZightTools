@@ -16,7 +16,7 @@ convert_to_datetime(.data, factorname, convname, newname)
 \item{newname}{name of the new column}
 }
 \value{
-dataframe with datatime column
+dataframe with datetime column
 }
 \description{
 Convert to datetime

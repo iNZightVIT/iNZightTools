@@ -3,7 +3,7 @@
 #' Collapse several values in a categorical variable into one level
 #'
 #' @param .data a dataframe to collapse
-#' @param var  a character of the name of the catgorical variable to collapse
+#' @param var  a character of the name of the categorical variable to collapse
 #' @param levels  a character vector of the levels to be collapsed
 #' @param collapse name of the newly created level
 #' @param name a name for the new variable

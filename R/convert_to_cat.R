@@ -4,7 +4,7 @@
 #'
 #' @param .data a dataframe with the categorical column to convert
 #' @param vars  a character vector of numeric column names to convert
-#' @param names a charactor vector of names for the created variable(s)
+#' @param names a character vector of names for the created variable(s)
 #' @return original dataframe containing a new column of the
 #'         converted numeric variable with tidyverse code attached
 #' @seealso \code{\link{code}}

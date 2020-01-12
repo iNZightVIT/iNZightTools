@@ -10,7 +10,7 @@ collapseLevels(.data, var, levels, collapse = paste(levels, collapse =
 \arguments{
 \item{.data}{a dataframe to collapse}
 
-\item{var}{a character of the name of the catgorical variable to collapse}
+\item{var}{a character of the name of the categorical variable to collapse}
 
 \item{levels}{a character vector of the levels to be collapsed}
 

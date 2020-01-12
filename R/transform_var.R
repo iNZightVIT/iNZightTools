@@ -6,7 +6,7 @@
 #' @param var  a character of the numeric variable in \code{.data} to transform
 #' @param transformation  a name of a valid mathematical function that can
 #'        be applied to numeric values, eg. "log", "exp", "sqrt".
-#'        For squaring, use "square"; for inversing, use "reciprocal"
+#'        For squaring, use "square"; for inverting, use "reciprocal"
 #' @param name the name of the new variable
 #'
 #' @return the original dataframe containing a new column of the transformed

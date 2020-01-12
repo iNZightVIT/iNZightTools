@@ -1,7 +1,7 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for iNZight
-Version: 1.8
+Version: 1.8.1
 Imports:
     utils,
     stats,
@@ -30,15 +30,21 @@ Suggests:
     covr,
     RCurl
 Additional_repositories:
-    https://r.docker.stat.auckland.ac.nz
+    https://r-forge.r-project.org/
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "tom.elliott@auckland.ac.nz"),
              person("Christoph", "Knopf", role = "aut"),
              person("Akshay", "Gupta", role = "ctb"),
              person("Owen", "Jin", role = "ctb"),
              person("Lushi", "Cai", role = "ctb"))
-Description: Compatibility functions used for multiple packages and
-    distributions of iNZight, including Lite.
+BugReports: https://github.com/iNZightVIT/iNZightTools/issues
+Contact: inzight_support@stat.auckland.ac.nz
+URL: https://www.stat.auckland.ac.nz/~wild/iNZight/
+Description: Wrapper functions providing a simple, limited interface to
+    more complex functions and code snippets. In many cases, the result
+    includes a `code` attribute containing the tidyverse R code used
+    to obtain the result. iNZightTools also contains a set of helper
+    functions used by other iNZight packages (including itself).
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 RoxygenNote: 6.1.1

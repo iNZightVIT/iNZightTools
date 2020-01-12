@@ -1,5 +1,4 @@
-## iNZightTools 1.8.0.9000
-__Release date__: TBA
+## iNZightTools 1.8.1
 
 - new `read_text()` function to read from text string/clipboard
 - `smart_read()` now supports URLs by downloading to a temporary file, with the same name

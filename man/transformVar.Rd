@@ -14,7 +14,7 @@ transformVar(.data, var, transformation, name = sprintf("\%s.\%s",
 
 \item{transformation}{a name of a valid mathematical function that can
 be applied to numeric values, eg. "log", "exp", "sqrt".
-For squaring, use "square"; for inversing, use "reciprocal"}
+For squaring, use "square"; for inverting, use "reciprocal"}
 
 \item{name}{the name of the new variable}
 }

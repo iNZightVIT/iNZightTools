@@ -47,4 +47,5 @@ Description: Wrapper functions providing a simple, limited interface to
     functions used by other iNZight packages (including itself).
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
+Language: en-GB
 RoxygenNote: 6.1.1

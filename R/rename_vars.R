@@ -6,7 +6,7 @@
 #' @param .data a dataframe with columns to rename
 #' @param to_be_renamed_list  a list of the new column names assigned
 #'        to the old column names
-#'        ie. list('old column names' = 'new colummn names')
+#'        ie. list('old column names' = 'new column names')
 #'
 #' @return original dataframe containing new columns of the renamed columns
 #' with tidyverse code attached

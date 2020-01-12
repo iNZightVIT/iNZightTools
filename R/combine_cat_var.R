@@ -1,12 +1,12 @@
 #' Combine categorical variables into one
 #'
-#' Combine specified categorical varaibles by concatenating
+#' Combine specified categorical variables by concatenating
 #' their values into one character, and returns the result
 #' along with tidyverse code used to generate it.
 #'
 #' @param .data a dataframe with the columns to be combined
 #' @param vars  a character vector of the categorical variables to be combined
-#' @param sep the seperator to combine the values of the variables
+#' @param sep the separator to combine the values of the variables
 #'        in \code{var} by. "." by default
 #' @param name a name for the new variable
 #' @return original dataframe containing a new column of the renamed

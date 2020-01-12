@@ -1,6 +1,6 @@
 #' Stack variables
 #'
-#' Collpase columns by converting from a long format to a tall format
+#' Collapse columns by converting from a long format to a tall format
 #' and returns the result along with tidyverse code used to generate it.
 #'
 #' @param .data a dataframe to stack

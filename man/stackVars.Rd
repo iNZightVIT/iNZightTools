@@ -21,7 +21,7 @@ stackVars(.data, vars, key = "stack.variable", value = "stack.value")
 stacked dataframe with tidyverse code attached
 }
 \description{
-Collpase columns by converting from a long format to a tall format
+Collapse columns by converting from a long format to a tall format
 and returns the result along with tidyverse code used to generate it.
 }
 \examples{

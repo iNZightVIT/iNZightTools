@@ -1,6 +1,6 @@
 #' Reorder a categorical
 #'
-#' Reorder the factors of a categorical variable either manually or frequeny
+#' Reorder the factors of a categorical variable either manually or frequency
 #'
 #' @param .data a dataframe to reorder
 #' @param var a categorical variable to reorder

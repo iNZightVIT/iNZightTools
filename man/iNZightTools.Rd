@@ -7,7 +7,7 @@
 \title{Tools for data processing with iNZight}
 \description{
 The iNZightTools package contains a suite of helper functions
-for iNZight, mostly to make GUI developement easier to provide
+for iNZight, mostly to make GUI development easier to provide
 some type of consistency across desktop and shiny versions.
 }
 \seealso{

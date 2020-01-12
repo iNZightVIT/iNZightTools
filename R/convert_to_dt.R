@@ -5,7 +5,7 @@
 #' @param convname format
 #' @param newname name of the new column
 #'
-#' @return dataframe with datatime column
+#' @return dataframe with datetime column
 #' @export
 #' @author Yiwen He
 convert_to_datetime <- function(.data, factorname, convname, newname) {

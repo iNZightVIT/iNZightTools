@@ -28,23 +28,6 @@ environment:
 
 build_script:
   - travis-tool.sh install_deps
-  - appveyor DownloadFile "http://ftp.gnome.org/pub/gnome/binaries/win32/gtk+/2.22/gtk+-bundle_2.22.1-20101227_win32.zip" -FileName gtk32.zip
-  - appveyor DownloadFile "http://ftp.gnome.org/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip" -FileName gtk64.zip
-  - md gtk
-  - cd gtk
-  - md i386
-  - cd i386
-  - 7z x ..\..\gtk32.zip > nul
-  - cd ..
-  - md x64
-  - cd x64
-  - 7z x ..\..\gtk64.zip > nul
-  - cd ..
-  - cd ..
-  - if exist c:\RLibrary\RGtk2\gtk\ rd /s /q c:\RLibrary\RGtk2\gtk
-  - mv gtk c:\RLibrary\RGtk2
-  - del gtk32.zip
-  - del gtk64.zip
 
 test_script:
   - travis-tool.sh run_tests

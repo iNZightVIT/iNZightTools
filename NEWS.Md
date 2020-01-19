@@ -1,7 +1,3 @@
-## iNZightTools 1.9.1.9000
-
-
-
 ## iNZightTools 1.8.1
 
 - new `read_text()` function to read from text string/clipboard

@@ -48,3 +48,4 @@ License: GPL-3 | file LICENSE
 Encoding: UTF-8
 Language: en-GB
 RoxygenNote: 6.1.1
+Remotes: url::https://r-forge.r-project.org/

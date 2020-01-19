@@ -26,7 +26,6 @@ Suggests:
     Acinonyx,
     cairoDevice,
     testthat,
-    FutureLearnData,
     covr,
     RCurl
 Additional_repositories:

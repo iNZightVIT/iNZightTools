@@ -1,10 +1,6 @@
-library(testthat)
+context("Filter levels of categorical variables")
 
-skip_if_not_installed("FutureLearnData")
-data('census.at.school.500', package = 'FutureLearnData')
-dat <- census.at.school.500 ## - give it a shorter name
-
-context("filterLevels")
+dat <- readr::read_csv("cas500.csv")
 
 # 1 LEVEL
 filtered.1LVL <- filterLevels(dat, "cellsource", c("job"))

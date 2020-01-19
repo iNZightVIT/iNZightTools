@@ -1,10 +1,6 @@
-library(testthat)
+context("Filter numeric variables")
 
-skip_if_not_installed("FutureLearnData")
-data('census.at.school.500', package = 'FutureLearnData')
-dat <- census.at.school.500 ## - give it a shorter name
-
-context("filterNumeric")
+dat <- readr::read_csv("cas500.csv")
 
 # FOR "<"
 filtered.L <- filterNumeric(dat, "rightfoot", "<", 15)

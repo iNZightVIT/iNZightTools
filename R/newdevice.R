@@ -26,7 +26,9 @@ newdevice <- function(width = 7, height = 7, ...) {
         grDevices::dev.new(width = width, height = height, ...)
     } else if (Sys.info()["sysname"] == "Darwin") {
         ## Mac - prefer Acinonyx if installed
-        if (eval(parse(text = "requireNamespace(\"Acinonyx\", quietly = TRUE)"))) {
+        acinonyx.exists <-
+            inherits(try(find.package("Acinonyx"), silent = TRUE), "try-error")
+        if (acinonyx.exists) {
             # Acinonyx uses pixels rather than inches, convert inches to
             # pixels to determine dims. Assume 90 dpi.
             width.in <- round(width * 90)
@@ -38,7 +40,9 @@ newdevice <- function(width = 7, height = 7, ...) {
         }
     } else {
         ## Linux - prefer cairoDevice over default
-        if (eval(parse(text = "requireNamespace(\"cairoDevice\", quietly = TRUE)"))) {
+        cairo.exists <-
+            inherits(try(find.package("cairoDevice"), silent = TRUE), "try-error")
+        if (cairo.exists) {
             cairoDev <- eval(parse(text = "cairoDevice::Cairo"))
             cairoDev(width = width, height = height, ...)
         } else {

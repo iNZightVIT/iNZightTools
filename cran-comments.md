@@ -6,14 +6,9 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
+0 errors | 0 warnings | 1 notes
 
 * This is a new submission
-
-* checking package dependencies (1.2s) ... NOTE
-  Package suggested but not available for checking: ‘Acinonyx’
-
-  Acinonyx is only used on macOS and is available from R-forge (which is included in Additional_repositories)
 
 ## Downstream dependencies
 

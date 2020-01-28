@@ -24,5 +24,5 @@ a counter (data.filtered2).
 }
 \examples{
 add_suffix("data", "filtered")
-add_suffix("data.filtered", "filtered")
+add_suffix(c("data.filtered", "data.filtered.reshaped"), "filtered")
 }

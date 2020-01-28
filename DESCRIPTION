@@ -43,4 +43,4 @@ Description: Wrapper functions providing a simple, limited interface to
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 Language: en-GB
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2

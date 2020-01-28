@@ -4,8 +4,13 @@
 \alias{reorderLevels}
 \title{Reorder a categorical}
 \usage{
-reorderLevels(.data, var, new_levels = NULL, freq = FALSE,
-  name = sprintf("\%s.reord", var))
+reorderLevels(
+  .data,
+  var,
+  new_levels = NULL,
+  freq = FALSE,
+  name = sprintf("\%s.reord", var)
+)
 }
 \arguments{
 \item{.data}{a dataframe to reorder}

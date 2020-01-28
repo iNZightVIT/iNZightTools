@@ -4,8 +4,7 @@
 \alias{combineCatVars}
 \title{Combine categorical variables into one}
 \usage{
-combineCatVars(.data, vars, sep = ".", name = paste(vars, collapse =
-  sep))
+combineCatVars(.data, vars, sep = ".", name = paste(vars, collapse = sep))
 }
 \arguments{
 \item{.data}{a dataframe with the columns to be combined}

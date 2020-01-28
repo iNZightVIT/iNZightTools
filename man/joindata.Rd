@@ -4,8 +4,15 @@
 \alias{joindata}
 \title{Join data with another dataset}
 \usage{
-joindata(.data, imported_data, origin_join_col, import_join_col,
-  join_method, left, right)
+joindata(
+  .data,
+  imported_data,
+  origin_join_col,
+  import_join_col,
+  join_method,
+  left,
+  right
+)
 }
 \arguments{
 \item{.data}{Original data}

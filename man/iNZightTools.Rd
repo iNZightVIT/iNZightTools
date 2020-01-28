@@ -3,7 +3,6 @@
 \docType{package}
 \name{iNZightTools}
 \alias{iNZightTools}
-\alias{iNZightTools-package}
 \title{Tools for data processing with iNZight}
 \description{
 The iNZightTools package contains a suite of helper functions

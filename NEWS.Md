@@ -1,5 +1,6 @@
 ## iNZightTools 1.8.1.9000
 
+- new `add_suffix()` function to smartly add suffixes to object names and append counter if suffix is already present
 
 
 ## iNZightTools 1.8.1

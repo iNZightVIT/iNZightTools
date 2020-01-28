@@ -82,3 +82,44 @@ is_svydesign <- function(x) {
 is_svyrep <- function(x) {
     inherits(x, "svyrep.design")
 }
+
+
+#' Add suffix to string
+#'
+#' When creating new variables or modifying the data set, we often
+#' add a suffix added to distinguish the new name from the original one.
+#' However, if the same action is performed twice (for example, filtering a data set),
+#' the suffix is supliated (data.filtered.filtered). This function averts this
+#' by adding the suffix if it doesn't exist, and otherwise appending
+#' a counter (data.filtered2).
+#'
+#' @param name a character vector containing (original) names
+#' @param suffix the suffix to add, a length-one character vector
+#' @return character vector of names with suffix appended
+#' @examples
+#' add_suffix("data", "filtered")
+#' add_suffix(c("data.filtered", "data.filtered.reshaped"), "filtered")
+#' @export
+add_suffix <- function(name, suffix) {
+    if (length(suffix) > 1)
+        warning("More than one suffix specified, using only the first.")
+    suffix <- suffix[1]
+
+    new_name <- sapply(name,
+        function(x) {
+            if (grepl(suffix, x, fixed = TRUE)) {
+                # counter (numbers after suffix)
+                expr <- paste0("\\.", suffix, "[0-9]*")
+                rgx <- regexpr(expr, x)
+                rgn <- gsub(paste0(".", suffix), "",
+                    substr(x, rgx, rgx + attr(rgx, "match.length") - 1)
+                )
+                count <- max(1, as.integer(rgn), na.rm = TRUE) + 1
+                gsub(expr, sprintf(".%s%d", suffix, count), x)
+            } else {
+                sprintf("%s.%s", x, suffix)
+            }
+        }
+    )
+    unname(new_name)
+}

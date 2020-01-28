@@ -4,8 +4,13 @@
 \alias{collapseLevels}
 \title{Collapse data by values of a categorical variable}
 \usage{
-collapseLevels(.data, var, levels, collapse = paste(levels, collapse =
-  "_"), name = sprintf("\%s.coll", var))
+collapseLevels(
+  .data,
+  var,
+  levels,
+  collapse = paste(levels, collapse = "_"),
+  name = sprintf("\%s.coll", var)
+)
 }
 \arguments{
 \item{.data}{a dataframe to collapse}

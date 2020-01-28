@@ -4,8 +4,7 @@
 \alias{tidy_all_code}
 \title{iNZight Tidy Code}
 \usage{
-tidy_all_code(x, width = 80, indent = 4, outfile,
-  incl_library = TRUE)
+tidy_all_code(x, width = 80, indent = 4, outfile, incl_library = TRUE)
 }
 \arguments{
 \item{x}{character string or file name of the file containing messy code}

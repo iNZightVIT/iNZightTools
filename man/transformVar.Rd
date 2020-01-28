@@ -4,8 +4,12 @@
 \alias{transformVar}
 \title{Transform data of a numeric variable}
 \usage{
-transformVar(.data, var, transformation, name = sprintf("\%s.\%s",
-  transformation, var))
+transformVar(
+  .data,
+  var,
+  transformation,
+  name = sprintf("\%s.\%s", transformation, var)
+)
 }
 \arguments{
 \item{.data}{a dataframe with the variables to transform}

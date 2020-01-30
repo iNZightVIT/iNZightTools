@@ -1,3 +1,8 @@
+## iNZightTools 1.8.2
+
+- fix issues for CRAN submission
+
+
 ## iNZightTools 1.8.1
 
 - new `read_text()` function to read from text string/clipboard

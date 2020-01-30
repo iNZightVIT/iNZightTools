@@ -4,9 +4,16 @@
 \alias{fitModel}
 \title{Fit models}
 \usage{
-fitModel(y, x, data, family = "gaussian", link = switch(family,
-  gaussian = "gaussian", binomial = "logit", poisson = "log"),
-  design = "simple", svydes = NA, ...)
+fitModel(
+  y,
+  x,
+  data,
+  family = "gaussian",
+  link = switch(family, gaussian = "gaussian", binomial = "logit", poisson = "log"),
+  design = "simple",
+  svydes = NA,
+  ...
+)
 }
 \arguments{
 \item{y}{character string representing the response,}

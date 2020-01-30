@@ -4,8 +4,7 @@
 \alias{renameLevels}
 \title{Rename the levels of a categorical variable}
 \usage{
-renameLevels(.data, var, to_be_renamed, name = sprintf("\%s.rename",
-  var))
+renameLevels(.data, var, to_be_renamed, name = sprintf("\%s.rename", var))
 }
 \arguments{
 \item{.data}{a dataframe with the column to be renamed}

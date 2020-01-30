@@ -1,6 +1,6 @@
 ## iNZightTools 1.8.2
 
-- fix issues for CRAN submission
+- fix issues from CRAN submission
 
 
 ## iNZightTools 1.8.1

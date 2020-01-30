@@ -143,7 +143,7 @@ test_that("Reading RDS works", {
     expect_equivalent(smart_read(t), iris)
     expect_equal(
         code(smart_read(t)),
-        sprintf("readRDS(\"%s\")", t)
+        sprintf("readRDS('%s')", t)
     )
 })
 

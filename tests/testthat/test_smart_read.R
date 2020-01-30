@@ -141,10 +141,7 @@ test_that("Reading RDS works", {
 
     saveRDS(iris, t)
     expect_equivalent(smart_read(t), iris)
-    expect_equal(
-        code(smart_read(t)),
-        sprintf("readRDS('%s')", t)
-    )
+    expect_match(code(smart_read(t)), sprintf("readRDS\\(\"%s\"\\)", t))
 })
 
 test_that("URLs are supported", {

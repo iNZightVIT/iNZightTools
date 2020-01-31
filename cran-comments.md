@@ -1,10 +1,10 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* added necessary single quotes in the DESCRIPTION
+* added the necessary single quotes in the DESCRIPTION
 * rewritten the package description to more clearly describe the package
   and the functionality of 'iNZight'
-* fixed tests to use 'tempdir()' rather than writing directly to home filesystem
+* fixed or removed offending tests which were writing to the user's home filesystem
 * added the missing contributors to the Authors list
 
 

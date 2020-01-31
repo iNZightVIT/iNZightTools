@@ -142,7 +142,7 @@ test_that("Reading RDS works", {
     saveRDS(iris, t)
     expect_equivalent(smart_read(t), iris)
 
-    skip_on_appveyor()
+    skip_on_os("windows")
     expect_match(code(smart_read(t)), sprintf("readRDS\\(\"%s\"\\)", t))
 })
 

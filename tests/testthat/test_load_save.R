@@ -2,7 +2,7 @@ context("Load/save RDA files")
 
 cas <- smart_read("cas500.csv")
 not_a_df <- 1:10
-rda <- "my_files.rda"
+rda <- file.path(tempdir(), "my_files.rda")
 on.exit(unlink(rda))
 
 save(cas, iris, not_a_df, file = rda)
@@ -16,15 +16,18 @@ test_that("Load returns list of data frames", {
 })
 
 test_that("Load has valid code", {
-    expect_equal(code(load_rda(rda)), "load('my_files.rda')")
+    expect_equal(
+        code(load_rda(rda)),
+        sprintf("load('%s')", rda)
+    )
 })
 
 test_that("Save writes file with correct name", {
-    on.exit(unlink("irisdata.rda"))
-    x <- save_rda(iris, "irisdata.rda", "my_iris")
+    fp <- chartr("\\", "/", file.path(tempdir(), "irisdata.rda"))
+    on.exit(unlink(fp))
+    x <- save_rda(iris, fp, "my_iris")
     expect_true(x)
-    expect_equal(code(x), "save(my_iris, file = 'irisdata.rda')")
-
-    load("irisdata.rda")
+    expect_equal(code(x), sprintf("save(my_iris, file = '%s')", fp))
+    load(fp)
     expect_equal(my_iris, iris)
 })

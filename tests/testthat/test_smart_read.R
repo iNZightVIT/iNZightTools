@@ -136,12 +136,12 @@ test_that("Read excel returns list of sheets as attribute", {
 })
 
 test_that("Reading RDS works", {
-    t <- "iris_data.rds"
+    t <- chartr("\\", "/", file.path(tempdir(), "iris_data.rds"))
     on.exit(unlink(t))
 
     saveRDS(iris, t)
     expect_equivalent(smart_read(t), iris)
-    expect_equal(code(smart_read(t)), "readRDS(\"iris_data.rds\")")
+    expect_match(code(smart_read(t)), sprintf("readRDS\\(\"%s\"\\)", t))
 })
 
 test_that("URLs are supported", {

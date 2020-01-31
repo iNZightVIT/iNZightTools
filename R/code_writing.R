@@ -22,7 +22,10 @@ interpolate <- function(code, ..., comment = character(),
     res <- eval(expr, `_env`)
     if (length(comment) > 0)
         comment <- paste("##", comment)
-    attr(res, "code") <- c(comment, capture.output(expr))
+    attr(res, "code") <- c(
+        comment,
+        gsub("\\\\\\\\", "\\\\", capture.output(expr))
+    )
     res
 }
 

@@ -137,7 +137,6 @@ test_that("Read excel returns list of sheets as attribute", {
 
 test_that("Reading RDS works", {
     t <- file.path(tempdir(), "iris_data.rds")
-    print(t)
     on.exit(unlink(t))
 
     saveRDS(iris, t)

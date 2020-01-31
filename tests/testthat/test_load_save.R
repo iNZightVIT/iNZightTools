@@ -23,7 +23,8 @@ test_that("Load has valid code", {
 })
 
 test_that("Save writes file with correct name", {
-    fp <- gsub("\\", "\\\\", file.path(tempdir(), "irisdata.rda"), fixed = TRUE)
+    fp <- chatr("\\", "/", file.path(tempdir(), "irisdata.rda"))
+    print(fp)
     on.exit(unlink(fp))
     x <- save_rda(iris, fp, "my_iris")
     expect_true(x)

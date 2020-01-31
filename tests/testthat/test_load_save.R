@@ -23,7 +23,7 @@ test_that("Load has valid code", {
 })
 
 test_that("Save writes file with correct name", {
-    fp <- chatr("\\", "/", file.path(tempdir(), "irisdata.rda"))
+    fp <- chartr("\\", "/", file.path(tempdir(), "irisdata.rda"))
     print(fp)
     on.exit(unlink(fp))
     x <- save_rda(iris, fp, "my_iris")

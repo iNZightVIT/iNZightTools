@@ -386,6 +386,7 @@ load_rda <- function(file) {
 #' @author Tom Elliott
 #' @export
 save_rda <- function(data, file, name) {
+    if (missing(file)) stop("Please specify a file location")
     data_name <- deparse(substitute(data))
     if (!missing(name))
         name <- create_varname(name)

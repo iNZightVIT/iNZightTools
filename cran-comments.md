@@ -1,3 +1,13 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* added necessary single quotes in the DESCRIPTION
+* rewritten the package description to more clearly describe the package
+  and the functionality of 'iNZight'
+* fixed tests to use 'tempdir()' rather than writing directly to home filesystem
+* added the missing contributors to the Authors list
+
+
 ## Test environments
 * local ubuntu 18.04, R 3.6.1
 * ubuntu 18.04 (on travis-ci) R oldrel, release, and devel

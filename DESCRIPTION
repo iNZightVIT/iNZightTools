@@ -1,7 +1,7 @@
 Package: iNZightTools
 Type: Package
-Title: Tools for iNZight
-Version: 1.8.1
+Title: Tools for 'iNZight'
+Version: 1.8.2
 Imports:
     utils,
     stats,
@@ -28,19 +28,26 @@ Suggests:
     RCurl
 Authors@R: c(person("Tom", "Elliott", role = c("aut", "cre"),
                     email = "tom.elliott@auckland.ac.nz"),
-             person("Christoph", "Knopf", role = "aut"),
+             person("Christoph", "Knopf", role = "ctb"),
              person("Akshay", "Gupta", role = "ctb"),
-             person("Owen", "Jin", role = "ctb"),
-             person("Lushi", "Cai", role = "ctb"))
+             person("Owen", "Jin", role = "ctb",
+                    comment = "Tidyverse variable/data manipulation functions"),
+             person("Lushi", "Cai", role = "ctb"),
+             person("Yiwen", "He", role = "ctb",
+                    comment = "Dates/times and dataset manipulation"),
+             person("Daniel", "Barnett", role = "ctb",
+                    comment = "Data validation"))
 BugReports: https://github.com/iNZightVIT/iNZightTools/issues
 Contact: inzight_support@stat.auckland.ac.nz
 URL: https://www.stat.auckland.ac.nz/~wild/iNZight/
-Description: Wrapper functions providing a simple, limited interface to
-    more complex functions and code snippets. In many cases, the result
-    includes a code attribute containing the 'tidyverse' R code used
-    to obtain the result. iNZightTools also contains a set of helper
-    functions used by other 'iNZight' packages (including itself).
+Description: The 'iNZightTools' package provides a suite of wrapper functions for common
+    variable and dataset manipulation workflows. This package is primarily used
+    by 'iNZight', a graphical user interface providing easy exploration
+    and visualisation of data for students of statistics, available in both
+    desktop and online versions.
+    Additionally, many of the functions in this package return the 'tidyverse'
+    code used to obtain the result in an effort to bridge the gap between GUI and coding.
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 Language: en-GB
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2

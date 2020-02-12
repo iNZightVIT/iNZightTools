@@ -89,7 +89,7 @@ is_svyrep <- function(x) {
 #' When creating new variables or modifying the data set, we often
 #' add a suffix added to distinguish the new name from the original one.
 #' However, if the same action is performed twice (for example, filtering a data set),
-#' the suffix is supliated (data.filtered.filtered). This function averts this
+#' the suffix is duplicated (data.filtered.filtered). This function averts this
 #' by adding the suffix if it doesn't exist, and otherwise appending
 #' a counter (data.filtered2).
 #'

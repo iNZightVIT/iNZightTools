@@ -1,9 +1,12 @@
 ## Resubmission
 This is a resubmission. In this version I have:
+* improved the wording of the package description
+* removed the superfluous LICENCE file
 
+
+In previous submissions, I have:
 * added the necessary single quotes in the DESCRIPTION
-* rewritten the package description to more clearly describe the package
-  and the functionality of 'iNZight'
+* rewritten the package description to more clearly describe the package and the functionality of 'iNZight'
 * fixed or removed offending tests which were writing to the user's home filesystem
 * added the missing contributors to the Authors list
 

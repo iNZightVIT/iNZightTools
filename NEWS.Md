@@ -1,5 +1,4 @@
-## iNZightTools 1.8.3.9000
-
+- fix handling of special characters in column names (spaces replaces with underscores, all others replaced with a period (.))
 
 ## iNZightTools 1.8.3
 

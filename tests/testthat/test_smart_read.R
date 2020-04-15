@@ -152,3 +152,32 @@ test_that("URLs are supported", {
     expect_match(file, "Census.at.School.500.xls")
     expect_true(file.exists(file))
 })
+
+test_that("Special characters are correctly replaced", {
+    fb <- readr::read_csv("fbcomments.csv", col_types = "cc")
+    expect_equal(
+        names(validate_names(fb)),
+        c("Is_the_answer_correct", "What_was_the_answer_given")
+    )
+
+    expect_equal(
+        names(smart_read("fbcomments.csv")),
+        c("Is_the_answer_correct", "What_was_the_answer_given")
+    )
+})
+
+test_that("Final dot is preserved if it is in the original name", {
+    d <- data.frame(x = 1:10, y. = 1:10, "y?" = 1:10, check.names = FALSE)
+    expect_equal(
+        names(validate_names(d)),
+        c("x", "y.", "y")
+    )
+})
+
+test_that("Duplicates are numbered", {
+    d <- data.frame(x. = 1:10, "y!" = 1:10, "y?" = 1:10, check.names = FALSE)
+    expect_equal(
+        names(validate_names(d)),
+        c("x.", "y", "y.1")
+    )
+})

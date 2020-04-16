@@ -4,7 +4,7 @@
 \alias{make_names}
 \title{Make unique variable names}
 \usage{
-make_names(new, existing)
+make_names(new, existing = character())
 }
 \arguments{
 \item{new}{a vector of proposed new variable names}
@@ -17,8 +17,7 @@ a vector of unique variable names
 \description{
 Helper function to create new variable names that are unique
 given a set of existing names (in a data set, for example).
-If a variable name already exists, a number will be appended
-(starting from 2).
+If a variable name already exists, a number will be appended.
 }
 \examples{
 make_names(c("var_x", "var_y"), c("var_x", "var_z"))

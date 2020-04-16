@@ -128,8 +128,7 @@ add_suffix <- function(name, suffix) {
 #'
 #' Helper function to create new variable names that are unique
 #' given a set of existing names (in a data set, for example).
-#' If a variable name already exists, a number will be appended
-#' (starting from 2).
+#' If a variable name already exists, a number will be appended.
 #'
 #' @param new a vector of proposed new variable names
 #' @param existing a vector of existing variable names
@@ -139,7 +138,7 @@ add_suffix <- function(name, suffix) {
 #' make_names(c("var_x", "var_y"), c("var_x", "var_z"))
 #'
 #' @export
-make_names <- function(new, existing) {
+make_names <- function(new, existing = character()) {
     names <- character(length(new))
     for (v in seq_along(new)) {
         if (new[v] %in% existing) {

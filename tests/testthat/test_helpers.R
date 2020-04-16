@@ -42,3 +42,10 @@ test_that("Survey objects identified correctly", {
     expect_false(is_svyrep(scd))
     expect_true(is_svyrep(scdrep))
 })
+
+test_that("Make names are unique", {
+    expect_equal(make_names("var"), "var")
+    expect_equal(make_names("var", "var_z"), "var")
+    expect_equal(make_names("var", "var"), "var1")
+    expect_equal(make_names(c("var", "var"), "var"), c("var1", "var2"))
+})

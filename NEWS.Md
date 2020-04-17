@@ -1,6 +1,8 @@
+## iNZightTools 1.8.4
 - fix handling of special characters in column names (spaces replaces with underscores, all others replaced with a period (.))
 - create make_names() function (previously from 'iNZight') to create unique
   new variable names for columns in a data.frame
+
 
 ## iNZightTools 1.8.3
 

@@ -1,7 +1,7 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for 'iNZight'
-Version: 1.8.3
+Version: 1.8.4
 Imports:
     utils,
     stats,
@@ -42,4 +42,4 @@ Description: Provides a collection of wrapper functions for common variable and 
 License: GPL-3
 Encoding: UTF-8
 Language: en-GB
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0

@@ -13,7 +13,10 @@
 validation_summary <- function(cf) {
     orig.summary <- validate::summary(cf)
 
-    new.summary <- data.frame(rule = orig.summary$expression)
+    new.summary <- data.frame(
+        rule = orig.summary$expression,
+        stringsAsFactors = TRUE
+    )
 
     new.summary$total <- orig.summary$items
     new.summary$passes <- orig.summary$passes

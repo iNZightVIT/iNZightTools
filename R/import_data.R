@@ -33,6 +33,9 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
     ## ensure any numeric->categorical changes retain numeric order of levels
     d <- validate_type_changes(d, column_types)
 
+    ## ensure variable names are valid
+    d <- validate_names(d)
+
     if (preview)
       class(d) <- c("inz.preview", class(d))
     if (is.null(attr(d, "name")))
@@ -355,6 +358,38 @@ parse_coltypes <- function(column_types = NULL) {
     }
 
     ctypes
+}
+
+validate_names <- function(x) {
+    # check if any columns need renaming:
+    names <- names(x)
+    new <- make.names(gsub("\\s+", "_", names))
+    if (all(new == names)) return(x)
+
+    # if the last character is a dot (but only in `new`), remove it
+    remove_dot <- grepl("[.]$", new) & !grepl("[.]", names)
+    if (any(remove_dot))
+        new[remove_dot] <- gsub("[.]$", "", new[remove_dot])
+
+    # now ensure names are all UNIQUE
+    new <- make.names(new, unique = TRUE)
+
+    TEMP_RESULT <- x
+    w <- which(new != names)
+    conv <- paste0(new[w], " = \"", names[w], "\"")
+    expr <- sprintf(
+        "TEMP_RESULT %s dplyr::rename(%s)",
+        "%>%",
+        paste(conv, collapse = ", ")
+    )
+
+    res <- eval(parse(text = expr))
+    attr(res, "code") <-
+        gsub("TEMP_RESULT",
+            paste(code(TEMP_RESULT), collapse="\n"),
+            expr
+        )
+    res
 }
 
 #' Load object(s) from an Rdata file

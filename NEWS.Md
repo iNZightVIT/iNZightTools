@@ -1,3 +1,5 @@
+- increase nmax for previews to 100 (from 10)
+
 ## iNZightTools 1.8.4
 - fix handling of special characters in column names (spaces replaces with underscores, all others replaced with a period (.))
 - create make_names() function (previously from 'iNZight') to create unique

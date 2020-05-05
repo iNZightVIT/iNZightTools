@@ -1,3 +1,4 @@
+## iNZightTools 1.8.5
 - increase nmax for previews to 100 (from 10)
 
 ## iNZightTools 1.8.4

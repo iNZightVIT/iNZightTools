@@ -1,4 +1,5 @@
 - increase nmax for previews to 100 (from 10)
+- use forcats::fct_cross() with optional argument `keep_empty`
 
 ## iNZightTools 1.8.4
 - fix handling of special characters in column names (spaces replaces with underscores, all others replaced with a period (.))

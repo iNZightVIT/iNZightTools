@@ -8,8 +8,8 @@ combineCatVars(
   .data,
   vars,
   sep = ".",
-  keep_empty = FALSE,
-  name = paste(vars, collapse = sep)
+  name = paste(vars, collapse = sep),
+  keep_empty = FALSE
 )
 }
 \arguments{
@@ -20,10 +20,10 @@ combineCatVars(
 \item{sep}{the separator to combine the values of the variables
 in \code{var} by. "." by default}
 
+\item{name}{a name for the new variable}
+
 \item{keep_empty}{logical, if \code{FALSE} empty level combinations
 are removed from the factor}
-
-\item{name}{a name for the new variable}
 }
 \value{
 original dataframe containing a new column of the renamed

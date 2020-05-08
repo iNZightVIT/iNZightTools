@@ -25,8 +25,8 @@
 #' @export
 #'
 combineCatVars <- function(.data, vars, sep = ".",
-                           keep_empty = FALSE,
-                           name = paste(vars, collapse = sep)) {
+                           name = paste(vars, collapse = sep),
+                           keep_empty = FALSE) {
     if (length(sep) > 1) {
         warning("only one separator allowed")
         sep <- sep[1]

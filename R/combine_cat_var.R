@@ -4,10 +4,14 @@
 #' their values into one character, and returns the result
 #' along with tidyverse code used to generate it.
 #'
+#' When either variable is NA, the result is NA.
+#'
 #' @param .data a dataframe with the columns to be combined
 #' @param vars  a character vector of the categorical variables to be combined
 #' @param sep the separator to combine the values of the variables
 #'        in \code{var} by. "." by default
+#' @param keep_empty logical, if \code{FALSE} empty level combinations
+#'        are removed from the factor
 #' @param name a name for the new variable
 #' @return original dataframe containing a new column of the renamed
 #'         categorical variable with tidyverse code attached
@@ -21,7 +25,8 @@
 #' @export
 #'
 combineCatVars <- function(.data, vars, sep = ".",
-                           name = paste(vars, collapse = sep)) {
+                           name = paste(vars, collapse = sep),
+                           keep_empty = FALSE) {
     if (length(sep) > 1) {
         warning("only one separator allowed")
         sep <- sep[1]
@@ -43,13 +48,17 @@ combineCatVars <- function(.data, vars, sep = ".",
     to_be_combined <- paste(vars, collapse = ", ")
 
     exp <- ~.DATA %>%
-        dplyr::mutate(.NEWVAR = factor(paste(.VARS, sep = ".SEP")))
+        dplyr::mutate(
+            .NEWVAR = forcats::fct_cross(
+                .VARS,
+                sep = .SEP,
+                keep_empty = .KEEP
+            )
+        )
     exp <- replaceVars(exp,
         .DATA = dataname,
         .NEWVAR = name,
-        .VARS = to_be_combined,
-        .SEP = sep
+        .VARS = to_be_combined
     )
-
-    interpolate(exp)
+    interpolate(exp, .SEP = sep, .KEEP = keep_empty)
 }

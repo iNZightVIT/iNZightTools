@@ -86,7 +86,7 @@ read_dlm <- function(file,
         named.args$comment <- "#"
 
     if (preview)
-        named.args <- c(list(n_max = 10), named.args)
+        named.args <- c(list(n_max = 100), named.args)
 
     if (missing(delimiter))
         delimiter <- ifelse(ext == "csv", ",", " ")

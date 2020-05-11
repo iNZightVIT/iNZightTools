@@ -4,7 +4,13 @@
 \alias{combineCatVars}
 \title{Combine categorical variables into one}
 \usage{
-combineCatVars(.data, vars, sep = ".", name = paste(vars, collapse = sep))
+combineCatVars(
+  .data,
+  vars,
+  sep = ".",
+  name = paste(vars, collapse = sep),
+  keep_empty = FALSE
+)
 }
 \arguments{
 \item{.data}{a dataframe with the columns to be combined}
@@ -15,6 +21,9 @@ combineCatVars(.data, vars, sep = ".", name = paste(vars, collapse = sep))
 in \code{var} by. "." by default}
 
 \item{name}{a name for the new variable}
+
+\item{keep_empty}{logical, if \code{FALSE} empty level combinations
+are removed from the factor}
 }
 \value{
 original dataframe containing a new column of the renamed
@@ -24,6 +33,9 @@ original dataframe containing a new column of the renamed
 Combine specified categorical variables by concatenating
 their values into one character, and returns the result
 along with tidyverse code used to generate it.
+}
+\details{
+When either variable is NA, the result is NA.
 }
 \examples{
 combined <- combineCatVars(warpbreaks, vars = c("wool", "tension"), sep = "_")

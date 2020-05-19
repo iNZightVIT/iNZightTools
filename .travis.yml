@@ -19,7 +19,6 @@ matrix:
         - rename
   allow_failures:
     - os: osx
-    - r: devel
 
 env:
   global:

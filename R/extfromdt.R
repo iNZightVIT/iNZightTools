@@ -7,6 +7,8 @@
 #'
 #' @return dataframe with extracted part column
 #' @author Yiwen He
+#' @importFrom chron chron
+#' @importFrom zoo as.yearqtr
 #' @export
 extract_part <- function(.data, varname, part, name) {
     mc <- match.call()

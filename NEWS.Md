@@ -1,4 +1,4 @@
-
+- ensure non-numeric values are returned as factors by read_text()
 
 
 ## iNZightTools 1.8.5

@@ -10,7 +10,6 @@ text <- "x\ty\tz
 test_that("Tab-delim text reads", {
     expect_equal(
         read_text(text),
-        readr::read_tsv(text)
+        readr::read_tsv(text) %>% dplyr::mutate(y = as.factor(y))
     )
 })
-

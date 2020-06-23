@@ -23,6 +23,7 @@ Imports:
     zoo,
     validate
 Suggests:
+    jsonlite,
     testthat,
     covr,
     RCurl

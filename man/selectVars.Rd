@@ -12,13 +12,13 @@ selectVars(.data, keep)
 \item{keep}{vector of variable names to keep}
 }
 \value{
-a data frame
+a data frame with tidyverse code attribute
 }
 \description{
-Select variables from a dataset
+Select a (reordered) subset of variables from a subset.`
 }
 \examples{
-selectVars(iris, c("Sepal.Length", "Species", "Sepal.Width")
+selectVars(iris, c("Sepal.Length", "Species", "Sepal.Width"))
 }
 \author{
 Tom Elliott

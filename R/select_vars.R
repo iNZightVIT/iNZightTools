@@ -1,12 +1,14 @@
 #' Select variables from a dataset
 #'
+#' Select a (reordered) subset of variables from a subset.`
+#'
 #' @param .data the dataset
 #' @param keep vector of variable names to keep
-#' @return a data frame
+#' @return a data frame with tidyverse code attribute
 #' @author Tom Elliott
-#' @export
 #' @examples
-#' selectVars(iris, c("Sepal.Length", "Species", "Sepal.Width")
+#' selectVars(iris, c("Sepal.Length", "Species", "Sepal.Width"))
+#' @export
 selectVars <- function(.data, keep) {
     mc <- match.call()
     dataname <- mc$.data

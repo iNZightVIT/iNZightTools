@@ -2,6 +2,7 @@
 
 Minor version bump to align with release of iNZight 4.0.
 
+- add functions for reading survey design from a file (and applying to dataset)
 - add support for reading JSON files
 - add new `selectVars` function
 

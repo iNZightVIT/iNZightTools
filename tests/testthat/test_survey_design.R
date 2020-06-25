@@ -19,4 +19,7 @@ test_that("Survey design file parsed correctly", {
         {data <- apistrat; make_survey(data, s)},
         s2
     )
+
+    expect_output(print(s), "empty")
+    expect_output(print(s2), "Stratified Independent Sampling design")
 })

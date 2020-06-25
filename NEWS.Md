@@ -1,6 +1,11 @@
+# iNZightTools 1.9
+
+Minor version bump to align with release of iNZight 4.0.
+
 - add support for reading JSON files
 - add new `selectVars` function
 
+***
 ## iNZightTools 1.8.6
 - ensure non-numeric values are returned as factors by read_text()
 

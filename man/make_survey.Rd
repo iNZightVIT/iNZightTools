@@ -7,9 +7,9 @@
 make_survey(.data, spec)
 }
 \arguments{
-\item{spec}{a \code{inzsvyspec} object}
+\item{.data}{a data.frame}
 
-\item{data}{a data.frame}
+\item{spec}{a \code{inzsvyspec} object}
 }
 \value{
 a \code{inzsvyspec} object with the survey design loaded

@@ -56,7 +56,7 @@ import_survey <- function(file, data) {
 #'
 #' Construct a survey object from a data set and an `inzsvyspec` object.
 #'
-#' @param data a data.frame
+#' @param .data a data.frame
 #' @param spec a `inzsvyspec` object
 #' @return a `inzsvyspec` object with the survey design loaded
 #' @author Tom Elliott

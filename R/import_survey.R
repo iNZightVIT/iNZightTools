@@ -39,8 +39,10 @@ import_survey <- function(file, data) {
         class = "inzsvyspec"
     )
 
-    if (!is.null(spec$data) && file.exists(spec$data)) {
-        data <- smart_read(spec$data)
+    if (!is.null(spec$data)) {
+        data <- file.path(dirname(file), spec$data)
+        if (file.exists(data))
+            data <- smart_read(data)
     } else if (!missing(data)) {
         if (is.character(data) && file.exists(data)) {
             data <- smart_read(data)
@@ -90,6 +92,13 @@ make_survey <- function(.data, spec) {
     spec
 }
 
+#' Print iNZight Survey Spec
+#'
+#' @param x a `inzsvyspec` object
+#' @param ... additional arguments, ignored
+#' @author Tom Elliott
+#' @md
+#' @export
 print.inzsvyspec <- function(x, ...) {
     cat("Survey design specification:\n")
     s <- x$spec

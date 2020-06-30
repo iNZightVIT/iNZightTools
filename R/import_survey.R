@@ -88,6 +88,7 @@ make_survey <- function(.data, spec) {
     )
 
     exp <- replaceVars(exp, terms = terms)
+    spec$data <- .data
     spec$design <- interpolate(exp, .data = dataname)
     spec
 }

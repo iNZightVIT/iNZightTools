@@ -33,7 +33,9 @@ import_survey <- function(file, data) {
                 strata = spec$strata,
                 fpc = spec$fpc,
                 nest = spec$nest,
-                weights = spec$weights
+                weights = spec$weights,
+                ## this will become conditional on what fields are specified
+                type = "survey"
             )
         ),
         class = "inzsvyspec"

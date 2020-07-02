@@ -70,9 +70,11 @@ make_survey <- function(.data, spec) {
     mc <- match.call()
     dataname <- mc$.data
 
+    type <- spec$spec$type
     exp <- ~survey::svydesign(terms, data = .data)
 
     s <- spec$spec
+    s$type <- NULL
     terms <- do.call(
         paste,
         c(

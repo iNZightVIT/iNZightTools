@@ -53,7 +53,7 @@ fitModel <- function(y, x, data,
             args <- paste(Formula, dat, sep = ", ")
             if (xargs != "")
                 args <- paste(args, xargs, sep = ", ")
-            if (link != "log") {
+            if (isTRUE(link != "log")) {
                 args <- paste(args, sprintf("link = \"%s\"", link), sep = ", ")
             }
             call <- paste("MASS::glm.nb(", args, ")", sep = "")

@@ -153,3 +153,7 @@ make_names <- function(new, existing = character()) {
     }
     names
 }
+
+orNULL <- function(x, y = x) {
+    if (is.null(x)) NULL else y
+}

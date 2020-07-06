@@ -1,5 +1,6 @@
 - add support for reading JSON files
 - add new `selectVars` function
+- add negative binomial as an option for `family` in `fitModel`
 
 ## iNZightTools 1.8.6
 - ensure non-numeric values are returned as factors by read_text()

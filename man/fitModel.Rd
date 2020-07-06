@@ -9,7 +9,8 @@ fitModel(
   x,
   data,
   family = "gaussian",
-  link = switch(family, gaussian = "gaussian", binomial = "logit", poisson = "log"),
+  link = switch(family, gaussian = "gaussian", binomial = "logit", poisson = "log",
+    negbin = "log"),
   design = "simple",
   svydes = NA,
   ...

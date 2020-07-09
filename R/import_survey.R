@@ -28,7 +28,10 @@ import_survey <- function(file, data) {
     svyspec <- structure(
         list(
             spec = list(
-                ids = if (is.null(spec$clusters)) 1 else spec$clusters,
+                ids =
+                    if ("clusters" %in% names(spec) && !is.null(spec$clusters)) spec$clusters
+                    else if ("ids" %in% names(spec) && !is.null(spec$ids)) spec$ids
+                    else 1,
                 probs = spec$probs,
                 strata = spec$strata,
                 fpc = spec$fpc,

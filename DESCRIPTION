@@ -43,4 +43,4 @@ Description: Provides a collection of wrapper functions for common variable and 
 License: GPL-3
 Encoding: UTF-8
 Language: en-GB
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

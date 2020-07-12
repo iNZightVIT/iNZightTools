@@ -37,8 +37,12 @@ import_survey <- function(file, data) {
                 fpc = spec$fpc,
                 nest = spec$nest,
                 weights = spec$weights,
+                repweights = spec$repweights,
+                type = spec$type,
+                scale = spec$scale,
+                rscales = spec$rscales,
                 ## this will become conditional on what fields are specified
-                type = "survey"
+                svy_type = ifelse("repweights" %in% names(spec), "replicate", "survey")
             )
         ),
         class = "inzsvyspec"
@@ -73,24 +77,52 @@ make_survey <- function(.data, spec) {
     mc <- match.call()
     dataname <- mc$.data
 
-    type <- spec$spec$type
-    exp <- ~survey::svydesign(terms, data = .data)
+    type <- spec$spec$svy_type
+    exp <- switch(type,
+        "replicate" = ~survey::svrepdesign(terms, data = .data),
+        "survey" = ~survey::svydesign(terms, data = .data)
+    )
+
 
     s <- spec$spec
-    s$type <- NULL
+    s$svy_type <- NULL
+    fmla_args <- c("ids", "probs", "strata", "fpc", "weights")
+    str_args <- c("type")
+
+    if (type == "replicate") {
+        s <- s[names(s) %in% c("weights", "repweights", "type", "scale", "rscales")]
+        # is repweights a formula or string?
+        split <- trimws(strsplit(s$repweights, "+", fixed = TRUE)[[1]])
+        if (all(split %in% names(.data))) {
+            # a formula
+            fmla_args <- c(fmla_args, "repweights")
+        } else {
+            # string/something else ...
+            str_args <- c(str_args, "repweights")
+        }
+    }
+
+    if (type == "survey") {
+        s <- s[names(s) %in% c("ids", "probs", "strata", "fpc", "nest", "weights")]
+    }
+
     terms <- do.call(
         paste,
         c(
             lapply(names(s)[!sapply(s, is.null)],
                 function(x) {
-                    sprintf("%s = %s%s",
+                    sprintf("%s = %s%s%s",
                         x,
-                        ifelse(x %in% c("nest"), "", "~"),
-                        s[[x]]
+                        ifelse(x %in% fmla_args,
+                            "~",
+                            ifelse(x %in% str_args, "\"", "")
+                        ),
+                        s[[x]],
+                        ifelse(x %in% str_args, "\"", "")
                     )
                 }
             ),
-            list(sep = ",")
+            list(sep = ", ")
         )
     )
 

@@ -49,3 +49,43 @@ test_that("Survey design file parsed correctly", {
     s3 <- import_survey(svyfile, apiclus2)
     expect_equal(s2, s3)
 })
+
+test_that("Replicate weight designs", {
+    skip_if_offline()
+    skip_on_cran()
+
+    chis_url <- "https://github.com/iNZightVIT/iNZight/raw/dev/tests/testthat/chis.csv"
+    skip_if_not(RCurl::url.exists(chis_url))
+
+    data <- smart_read(chis_url)
+
+    svyfile <- tempfile("chis", fileext = ".svydesign")
+    write.dcf(
+        data.frame(
+            repweights = "rakedw[1-9]",
+            weights = "rakedw0",
+            type = "other",
+            scale = 1,
+            rscales = 1
+        ),
+        svyfile
+    )
+
+    dchis <- svrepdesign(
+        weights = ~rakedw0,
+        repweights = "rakedw[1-9]",
+        type = "other",
+        scale = 1,
+        rscales = 1,
+        data = data
+    )
+
+    s <- import_survey(svyfile, data)
+    expect_is(s, "inzsvyspec")
+    expect_is(s$design, "svyrep.design")
+    expect_equivalent(
+        make_survey(data, s)$design,
+        dchis
+    )
+
+})

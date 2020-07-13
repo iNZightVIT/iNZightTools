@@ -31,10 +31,10 @@ fitModel <- function(y, x, data,
                      surv = NULL,
                      surv_params = NULL,
                      ...) {
-    
+
     if (missing(x) || length(x) == 0 || x == "") x <- 1
     if (surv %in% c("cox", "aft")) {
-        y <- paste0("Surv(", paste(surv_params, collapse = ", "), ")")
+        y <- paste0("survival::Surv(", paste(surv_params, collapse = ", "), ")")
     }
     Formula <- paste(y, x, sep = " ~ ")
     dat <- paste("data", data, sep = " = ")
@@ -42,11 +42,11 @@ fitModel <- function(y, x, data,
     if (family == "binomial" && link != "logit") {
         fam <- sprintf("%s(link = \"%s\")", fam, link)
     }
-    
+
     # Deal with extra arguments (eg. weights, offset ...)
     xarg <- list(...)
     xargs <- paste(names(xarg), xarg, sep = " = ", collapse = ", ")
-    
+
     if (design == "simple") {
         # simple IID data:
         if (!(surv %in% c("cox", "aft"))) {
@@ -69,7 +69,7 @@ fitModel <- function(y, x, data,
             args <- paste(Formula, dat, sep = ", ")
             if (xargs != "")
                 args <- paste(args, xargs, sep = ", ")
-            call <- paste("survival::", surv.fun, "(", args, ")", sep = "")
+            call <- paste("survival::", surv.fun, "(", args,  ", model = TRUE)", sep = "")
         }
     } else if (design == "survey") {
         # complex survey design:

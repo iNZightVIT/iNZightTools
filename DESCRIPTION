@@ -34,7 +34,7 @@ Authors@R: c(
     person("Owen", "Jin", role = "ctb", comment = "Tidyverse variable/data manipulation functions"),
     person("Lushi", "Cai", role = "ctb"),
     person("Yiwen", "He", role = "ctb", comment = "Dates/times and dataset manipulation"),
-    person("Daniel", "Barnett", role = "ctb", comment = "Data validation")
+    person("Daniel", "Barnett", role = "ctb", comment = "Data validation/survival analysis")
     )
 BugReports: https://github.com/iNZightVIT/iNZightTools/issues
 Contact: inzight_support@stat.auckland.ac.nz

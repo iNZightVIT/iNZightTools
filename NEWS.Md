@@ -1,5 +1,6 @@
 - add support for reading JSON files
 - add new `selectVars` function
+- `fitModel` can now fit Cox PH models
 
 ## iNZightTools 1.8.6
 - ensure non-numeric values are returned as factors by read_text()

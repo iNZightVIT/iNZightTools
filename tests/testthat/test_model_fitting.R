@@ -17,3 +17,15 @@ test_that("Family and link arguments are included", {
         "glm(response ~ x1, data = d, family = binomial(link = \"probit\"))"
     )
 })
+
+test_that("Cox PH models are generated correctly", {
+    expect_equal(
+        fitModel("response", "x1", "d", surv = "cox", surv_params = c("time", "event")),
+        "survival::coxph(survival::Surv(time, event) ~ x1, data = d, model = TRUE)"
+    )
+
+    expect_equal(
+        fitModel("response", "x1 + x2", "d", design = "survey", surv = "cox", surv_params = c("time", "event")),
+        "survey::svycoxph(survival::Surv(time, event) ~ x1 + x2, design = svy.design)"
+    )
+})

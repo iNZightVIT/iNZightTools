@@ -33,7 +33,7 @@ fitModel <- function(y, x, data,
                      ...) {
 
     if (missing(x) || length(x) == 0 || x == "") x <- 1
-    if (surv %in% c("cox", "aft")) {
+    if (isTRUE(surv %in% c("cox", "aft"))) {
         y <- paste0("survival::Surv(", paste(surv_params, collapse = ", "), ")")
     }
     Formula <- paste(y, x, sep = " ~ ")
@@ -49,7 +49,7 @@ fitModel <- function(y, x, data,
 
     if (design == "simple") {
         # simple IID data:
-        if (!(surv %in% c("cox", "aft"))) {
+        if (!isTRUE(surv %in% c("cox", "aft"))) {
             if (family == "gaussian") {
                 # Simple linear regression model:
                 args <- paste(Formula, dat, sep = ", ")
@@ -63,7 +63,7 @@ fitModel <- function(y, x, data,
                     args <- paste(args, xargs, sep = ", ")
                 call <- paste("glm(", args, ")", sep = "")
             }
-        } else if (surv %in% c("cox", "aft")) {
+        } else if (isTRUE(surv %in% c("cox", "aft"))) {
             ## Which survival model?
             surv.fun <- ifelse(surv == "cox", "coxph", "survreg")
             args <- paste(Formula, dat, sep = ", ")
@@ -73,13 +73,13 @@ fitModel <- function(y, x, data,
         }
     } else if (design == "survey") {
         # complex survey design:
-        if (!(surv %in% c("cox", "aft"))) {
+        if (!isTRUE(surv %in% c("cox", "aft"))) {
             # set up the svyglm function call
             args <- paste(Formula, fam, "design = svy.design", sep = ", ")
             if (xargs != "")
                 args <- paste(args, xargs, sep = ", ")
             call <- paste("survey::svyglm(", args, ")", sep = "")
-        } else if (surv %in% c("cox", "aft")) {
+        } else if (isTRUE(surv %in% c("cox", "aft"))) {
             surv.fun <- ifelse(surv == "cox", "coxph", "survreg")
             args <- paste(Formula, "design = svy.design", sep = ", ")
             if (xargs != "")
@@ -90,7 +90,7 @@ fitModel <- function(y, x, data,
         # experimental design:
         stop("Experiments are not yet implemented. \n")
     }
-    
+
     # at this stage we just return the call
     call
 }
@@ -113,7 +113,7 @@ fitDesign <- function(svydes, dataset.name) {
         dataset.name,
         ")"
     )
-    
+
     eval(parse(text = svy.des), .GlobalEnv)
 }
 

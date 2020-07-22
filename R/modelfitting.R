@@ -34,7 +34,7 @@ fitModel <- function(y, x, data,
                      ...) {
 
     if (missing(x) || length(x) == 0 || x == "") x <- 1
-    if (isTRUE(surv %in% c("cox", "aft"))) {
+    if (family == "survival" && isTRUE(surv %in% c("cox", "aft"))) {
         y <- paste0("survival::Surv(", paste(surv_params, collapse = ", "), ")")
     }
     Formula <- paste(y, x, sep = " ~ ")
@@ -50,7 +50,7 @@ fitModel <- function(y, x, data,
 
     if (design == "simple") {
         # simple IID data:
-        if (!isTRUE(surv %in% c("cox", "aft"))) {
+        if (family != "survival") {
             if (family == "gaussian") {
                 # Simple linear regression model:
                 args <- paste(Formula, dat, sep = ", ")
@@ -72,7 +72,7 @@ fitModel <- function(y, x, data,
                     args <- paste(args, xargs, sep = ", ")
                 call <- paste("glm(", args, ")", sep = "")
             }
-        } else if (isTRUE(surv %in% c("cox", "aft"))) {
+        } else if (family == "survival" && isTRUE(surv %in% c("cox", "aft"))) {
             ## Which survival model?
             surv.fun <- ifelse(surv == "cox", "coxph", "survreg")
             args <- paste(Formula, dat, sep = ", ")
@@ -82,7 +82,7 @@ fitModel <- function(y, x, data,
         }
     } else if (design == "survey") {
         # complex survey design:
-        if (!isTRUE(surv %in% c("cox", "aft"))) {
+        if (family != "survival") {
             if (family == "negbin") {
                 stop("Negative binomial regression is not yet implemented for survey designs. \n")
             }
@@ -92,7 +92,7 @@ fitModel <- function(y, x, data,
             if (xargs != "")
                 args <- paste(args, xargs, sep = ", ")
             call <- paste("survey::svyglm(", args, ")", sep = "")
-        } else if (isTRUE(surv %in% c("cox", "aft"))) {
+        } else if (family == "survival" && isTRUE(surv %in% c("cox", "aft"))) {
             surv.fun <- ifelse(surv == "cox", "coxph", "survreg")
             args <- paste(Formula, "design = svy.design", sep = ", ")
             if (xargs != "")

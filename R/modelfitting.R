@@ -22,7 +22,8 @@ fitModel <- function(y, x, data,
                      link = switch(family,
                          "gaussian" = "gaussian",
                          "binomial" = "logit",
-                         "poisson" = "log"
+                         "poisson" = "log",
+                         "negbin" = "log"
                      ),
                      design = "simple",
                      svydes = NA,
@@ -48,6 +49,14 @@ fitModel <- function(y, x, data,
             if (xargs != "")
                 args <- paste(args, xargs, sep = ", ")
             call <- paste("lm(", args, ")", sep = "")
+        } else if (family == "negbin") {
+            args <- paste(Formula, dat, sep = ", ")
+            if (xargs != "")
+                args <- paste(args, xargs, sep = ", ")
+            if (isTRUE(link != "log")) {
+                args <- paste(args, sprintf("link = \"%s\"", link), sep = ", ")
+            }
+            call <- paste("MASS::glm.nb(", args, ")", sep = "")
         } else {
             # general linear model:
             args <- paste(Formula, dat, fam, sep = ", ")
@@ -57,6 +66,10 @@ fitModel <- function(y, x, data,
         }
     } else if (design == "survey") {
         # complex survey design:
+        if (family == "negbin") {
+            stop("Negative binomial regression is not yet implemented for survey designs. \n")
+        }
+        
         # set up the svyglm function call
         args <- paste(Formula, fam, "design = svy.design", sep = ", ")
         if (xargs != "")

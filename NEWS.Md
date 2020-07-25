@@ -1,5 +1,16 @@
+# iNZightTools 1.9
+
+Minor version bump to align with release of iNZight 4.0.
+
+- add functions for reading survey design from a file (and applying to dataset)
+- add support for reading JSON files
+- add new `selectVars` function
+- add negative binomial as an option for `family` in `fitModel`
+- add `%notin%` operator to more easily/readably check `! x %in% y`
+
+***
 ## iNZightTools 1.8.6
-- ensure non-numeric values are returned as factors by read_text()
+- ensure non-numeric values are returned as factors by `read_text()`
 
 ## iNZightTools 1.8.5
 - increase nmax for previews to 100 (from 10)

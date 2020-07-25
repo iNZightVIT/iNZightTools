@@ -30,6 +30,18 @@ a dataframe with attributes
 \description{
 A simple function that magically imports a file, irrespective of type.
 }
+\details{
+The smart read function understands the following:
+\itemize{
+\item delimited (.csv, .txt)
+\item excel files (.xls, .xlsx)
+\item spss files (.sav)
+\item stata files (.dta)
+\item SAS files (.sas7bdat, .xpt)
+\item R data files (.rds)
+\item JSON files (.json)
+}
+}
 \author{
 Tom Elliott
 }

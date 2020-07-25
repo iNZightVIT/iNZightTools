@@ -49,3 +49,8 @@ test_that("Make names are unique", {
     expect_equal(make_names("var", "var"), "var1")
     expect_equal(make_names(c("var", "var"), "var"), c("var1", "var2"))
 })
+
+test_that("Not in works", {
+    expect_true("a" %notin% LETTERS)
+    expect_false("A" %notin% LETTERS)
+})

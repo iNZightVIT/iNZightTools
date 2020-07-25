@@ -181,3 +181,14 @@ test_that("Duplicates are numbered", {
         c("x.", "y", "y.1")
     )
 })
+
+test_that("JSON supported", {
+    t <- tempfile(fileext = ".json")
+    on.exit(unlink(t))
+
+    jsonlite::write_json(iris, t)
+    expect_equivalent(smart_read(t), iris)
+
+    write.csv(iris, t, row.names = FALSE, quote = FALSE)
+    expect_error(smart_read(t), "Unable to read file")
+})

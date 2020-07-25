@@ -1,5 +1,14 @@
 #' A simple function that magically imports a file, irrespective of type.
 #'
+#' The smart read function understands the following:
+#' * delimited (.csv, .txt)
+#' * excel files (.xls, .xlsx)
+#' * spss files (.sav)
+#' * stata files (.dta)
+#' * SAS files (.sas7bdat, .xpt)
+#' * R data files (.rds)
+#' * JSON files (.json)
+#'
 #' @title iNZight Smart Read
 #' @param file the file path to read
 #' @param ext file extension, namely "csv" or "txt"
@@ -9,6 +18,7 @@
 #' @param ... additional parameters passed to read_* functions
 #' @return a dataframe with attributes
 #' @author Tom Elliott
+#' @md
 #' @export
 smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
                        column_types = NULL, ...) {
@@ -58,6 +68,7 @@ guess_type <- function(ext) {
         "sas7bdat" = "sas",
         "xpt" = "sas",
         "rds" = "rds",
+        "json" = "json",
         "txt" = "meta",
         "csv" = "meta", ## -> metadata_read.R
         "unknown"
@@ -224,6 +235,20 @@ read_sas <- function(file, ext, preview = FALSE, column_types) {
 read_rds <- function(file, ext, preview = FALSE, column_types) {
     exp <- ~readRDS(file)
     interpolate(exp, file = file)
+}
+
+read_json <- function(file, ext, preview = FALSE, column_types) {
+    if (!requireNamespace("jsonlite", quietly = TRUE))
+        stop("Please install the `jsonlite` package to read JSON files.")
+
+    exp <- ~jsonlite::fromJSON(f)
+    tryCatch(x <- interpolate(exp, f = file),
+        error = function(e) {
+            stop("Unable to read file:\n", e)
+        }
+    )
+
+    x
 }
 
 escape_string <- function(x) sprintf("\"%s\"", x)

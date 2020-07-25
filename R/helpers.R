@@ -153,3 +153,16 @@ make_names <- function(new, existing = character()) {
     }
     names
 }
+
+orNULL <- function(x, y = x) {
+    if (is.null(x)) NULL else y
+}
+
+#' Anti value matching
+#' @param x vector of values to be matched
+#' @param table vector of values to match against
+#' @return A logical vector of same length as 'x', indicating if each
+#'         element does **not** exist in the table.
+#' @export
+#' @md
+`%notin%` <- function(x, table) match(x, table, nomatch = 0L) == 0L

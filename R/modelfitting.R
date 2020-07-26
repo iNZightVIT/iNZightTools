@@ -11,7 +11,6 @@
 #'        one of 'simple', 'survey' or 'experiment'
 #' @param svydes  a vector of arguments to be passed to the svydesign function,
 #'        excluding data (defined above)
-#' @param surv if the analysis is survival analysis, is it \code{cox} or \code{aft}?
 #' @param surv_params a vector containing arguments for \code{survival::Surv()}
 #' @param ... further arguments to be passed to lm, glm, svyglm,
 #'        such as offset, etc.
@@ -29,12 +28,11 @@ fitModel <- function(y, x, data,
                      ),
                      design = "simple",
                      svydes = NA,
-                     surv = NULL,
                      surv_params = NULL,
                      ...) {
 
     if (missing(x) || length(x) == 0 || x == "") x <- 1
-    if (family == "survival" && isTRUE(surv %in% c("cox", "aft"))) {
+    if (isTRUE(family %in% c("cox", "aft"))) {
         y <- paste0("survival::Surv(", paste(surv_params, collapse = ", "), ")")
     }
     Formula <- paste(y, x, sep = " ~ ")
@@ -50,7 +48,7 @@ fitModel <- function(y, x, data,
 
     if (design == "simple") {
         # simple IID data:
-        if (family != "survival") {
+        if (!(family %in% c("cox", "aft"))) {
             if (family == "gaussian") {
                 # Simple linear regression model:
                 args <- paste(Formula, dat, sep = ", ")
@@ -72,9 +70,9 @@ fitModel <- function(y, x, data,
                     args <- paste(args, xargs, sep = ", ")
                 call <- paste("glm(", args, ")", sep = "")
             }
-        } else if (family == "survival" && isTRUE(surv %in% c("cox", "aft"))) {
+        } else if (isTRUE(family %in% c("cox", "aft"))) {
             ## Which survival model?
-            surv.fun <- ifelse(surv == "cox", "coxph", "survreg")
+            surv.fun <- ifelse(family == "cox", "coxph", "survreg")
             args <- paste(Formula, dat, sep = ", ")
             if (xargs != "")
                 args <- paste(args, xargs, sep = ", ")
@@ -82,7 +80,7 @@ fitModel <- function(y, x, data,
         }
     } else if (design == "survey") {
         # complex survey design:
-        if (family != "survival") {
+        if (!(family %in% c("cox", "aft"))) {
             if (family == "negbin") {
                 stop("Negative binomial regression is not yet implemented for survey designs. \n")
             }
@@ -92,8 +90,8 @@ fitModel <- function(y, x, data,
             if (xargs != "")
                 args <- paste(args, xargs, sep = ", ")
             call <- paste("survey::svyglm(", args, ")", sep = "")
-        } else if (family == "survival" && isTRUE(surv %in% c("cox", "aft"))) {
-            surv.fun <- ifelse(surv == "cox", "coxph", "survreg")
+        } else if (isTRUE(family %in% c("cox", "aft"))) {
+            surv.fun <- ifelse(family == "cox", "coxph", "survreg")
             args <- paste(Formula, "design = svy.design", sep = ", ")
             if (xargs != "")
                 args <- paste(args, xargs, sep = ", ")

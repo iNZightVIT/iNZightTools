@@ -1,4 +1,5 @@
 
+- add survival analysis as an option for `fitModel` via `family = "cox"`
 
 
 # iNZightTools 1.9

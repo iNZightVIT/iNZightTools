@@ -1,4 +1,4 @@
-# iNZightTools 1.9
+# iNZightTools 1.9.0
 
 Minor version bump to align with release of iNZight 4.0.
 

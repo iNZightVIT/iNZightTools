@@ -1,7 +1,7 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for 'iNZight'
-Version: 1.9
+Version: 1.9.0
 Imports:
     utils,
     stats,

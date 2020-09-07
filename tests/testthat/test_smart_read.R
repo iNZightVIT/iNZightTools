@@ -192,3 +192,11 @@ test_that("JSON supported", {
     write.csv(iris, t, row.names = FALSE, quote = FALSE)
     expect_error(smart_read(t), "Unable to read file")
 })
+
+test_that("Columns with first >1000 rows NA are read as character", {
+    skip_if_offline()
+    url <- "https://www.stat.auckland.ac.nz/~wild/data/FutureLearn/NHANES2009-2012.csv"
+    expect_is(d <- smart_read(url), "data.frame")
+    expect_is(d$Race3, "factor")
+    expect_false(all(is.na(d$Race3)))
+})

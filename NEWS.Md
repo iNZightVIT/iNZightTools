@@ -1,3 +1,7 @@
+# iNZightTools 1.9.1
+- fix bug in reading delim files where, if first 1000+ rows of a column were `NA`, the column was read as logical instead of character (this is a fixed behaviour of `readr`, so cannot be overridden)
+
+
 # iNZightTools 1.9.0
 
 Minor version bump to align with release of iNZight 4.0.

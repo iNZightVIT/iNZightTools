@@ -120,7 +120,7 @@ make_varnames <- function(summaries, varnames) {
     if (missing(varnames) || is.null(varnames)) {
         varnames <- default_varnames
     } else if (length(varnames) != length(summaries)) {
-        varnames <- modifyList(default_varnames, varnames)
+        varnames <- methods::modifyList(default_varnames, varnames)
     } else {
         varnames <- as.list(varnames)
         names(varnames) <- summaries

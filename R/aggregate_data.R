@@ -50,7 +50,7 @@
 #' @export
 #' @md
 aggregateData <- function(.data, vars, summaries,
-                          summary_vars = colnames(.data),
+                          summary_vars,
                           varnames = NULL,
                           quantiles = c(0.25, 0.75),
                           custom_funs = NULL) {
@@ -59,6 +59,11 @@ aggregateData <- function(.data, vars, summaries,
     dataname <- mc$.data
 
     if (missing(vars)) stop("Variables to aggregate over required")
+
+    if (missing(summary_vars)) {
+        cols <- colnames(.data)
+        summary_vars <- cols[cols %notin% vars]
+    }
 
     varnames <- make_varnames(summaries, varnames)
     summary_funs <- do.call(rbind,
@@ -69,6 +74,7 @@ aggregateData <- function(.data, vars, summaries,
                 na <- ifelse(smry %in% c("count"), "", ", na.rm = TRUE")
                 fun <- switch(smry,
                     "count" = "dplyr::n()",
+                    "iqr" = "IQR({var}, na.rm = TRUE)",
                     "missing" = "iNZightTools::countMissing({var})",
                     paste0(smry, "({var}", na, ")")
                 )
@@ -120,7 +126,7 @@ make_varnames <- function(summaries, varnames) {
     if (missing(varnames) || is.null(varnames)) {
         varnames <- default_varnames
     } else if (length(varnames) != length(summaries)) {
-        varnames <- methods::modifyList(default_varnames, varnames)
+        varnames <- utils::modifyList(default_varnames, varnames)
     } else {
         varnames <- as.list(varnames)
         names(varnames) <- summaries

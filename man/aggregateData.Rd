@@ -8,7 +8,7 @@ aggregateData(
   .data,
   vars,
   summaries,
-  summary_vars = colnames(.data),
+  summary_vars,
   varnames = NULL,
   quantiles = c(0.25, 0.75),
   custom_funs = NULL

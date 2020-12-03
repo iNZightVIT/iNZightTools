@@ -42,7 +42,7 @@ import_survey <- function(file, data) {
                 scale = spec$scale,
                 rscales = spec$rscales,
                 ## this will become conditional on what fields are specified
-                svy_type = ifelse("repweights" %in% names(spec), "replicate", "survey")
+                type = ifelse("repweights" %in% names(spec), "replicate", "survey")
             )
         ),
         class = "inzsvyspec"
@@ -77,15 +77,14 @@ make_survey <- function(.data, spec) {
     mc <- match.call()
     dataname <- mc$.data
 
-    type <- spec$spec$svy_type
+    type <- spec$spec$type
     exp <- switch(type,
         "replicate" = ~survey::svrepdesign(terms, data = .data),
         "survey" = ~survey::svydesign(terms, data = .data)
     )
 
-
     s <- spec$spec
-    s$svy_type <- NULL
+    s$type <- NULL
     fmla_args <- c("ids", "probs", "strata", "fpc", "weights")
     str_args <- c("type")
 

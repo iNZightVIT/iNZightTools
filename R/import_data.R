@@ -180,7 +180,7 @@ read_dlm <- function(file,
     if (!is.null(attr(x, "problems"))) {
         # logical -> character
         spec <- attr(x, "spec")$cols
-        is_bad <- sapply(spec, function(x) is(x, "collector_logical"))
+        is_bad <- sapply(spec, function(x) methods::is(x, "collector_logical"))
         if (any(is_bad)) {
             ct <- structure(
                 as.list(rep("c", sum(is_bad))),

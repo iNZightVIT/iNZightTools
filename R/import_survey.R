@@ -38,7 +38,7 @@ import_survey <- function(file, data) {
                 nest = spec$nest,
                 weights = spec$weights,
                 repweights = spec$repweights,
-                type = spec$type,
+                reptype = spec$reptype,
                 scale = spec$scale,
                 rscales = spec$rscales,
                 ## this will become conditional on what fields are specified
@@ -89,7 +89,9 @@ make_survey <- function(.data, spec) {
     str_args <- c("type")
 
     if (type == "replicate") {
-        s <- s[names(s) %in% c("weights", "repweights", "type", "scale", "rscales")]
+        s <- s[names(s) %in% c("weights", "repweights", "reptype", "scale", "rscales")]
+        if (is.character(s$repweights) && length(s$repweights) > 1L)
+            s$repweights <- paste(s$repweights, collapse = " + ")
         # is repweights a formula or string?
         split <- trimws(strsplit(s$repweights, "+", fixed = TRUE)[[1]])
         if (all(split %in% names(.data))) {
@@ -99,6 +101,10 @@ make_survey <- function(.data, spec) {
             # string/something else ...
             str_args <- c(str_args, "repweights")
         }
+        if (all(diff(s$rscales) == 0)) s$rscales <- s$rscales[1]
+        s$rscales <- paste(capture.output(dput(s$rscales)), collapse = "")
+        s$type <- s$reptype
+        s$reptype <- NULL
     }
 
     if (type == "survey") {
@@ -124,7 +130,6 @@ make_survey <- function(.data, spec) {
             list(sep = ", ")
         )
     )
-
     exp <- replaceVars(exp, terms = terms)
     spec$data <- .data
     spec$design <- interpolate(exp, .data = dataname)

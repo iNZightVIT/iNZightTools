@@ -131,8 +131,40 @@ make_survey <- function(.data, spec) {
         )
     )
     exp <- replaceVars(exp, terms = terms)
+
+    if (!is.null(s$poststrat)) {
+        pop.totals <- structure(
+            do.call(c,
+                c(
+                    list(sum(s$poststrat[[1]]$Freq)),
+                    lapply(s$poststrat, function(df) df$Freq[-1])
+                )
+            ),
+            .Names = do.call(c,
+                c(
+                    list("(Intercept)"),
+                    lapply(s$poststrat, function(df)
+                        paste0(names(df)[1], as.character(df[-1,1]))
+                    )
+                )
+            )
+        )
+        cal_exp <- sprintf(
+            "%s %>% survey::calibrate(~%s, pop.totals)",
+            exp,
+            paste(names(s$poststrat), collapse = " + ")
+        )
+    }
+
     spec$data <- .data
     spec$design <- interpolate(exp, .data = dataname)
+    # if (!is.null(s$poststrat)) {
+    #     # calibrate design:
+    #     design_obj <- spec$design
+    #     ## Note: if allowing continuous variables in future,
+    #     ##       this needs a better name:
+
+    # }
     spec
 }
 

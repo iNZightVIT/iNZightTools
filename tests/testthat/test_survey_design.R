@@ -89,3 +89,7 @@ test_that("Replicate weight designs", {
     )
 
 })
+
+test_that("Poststratification", {
+
+})

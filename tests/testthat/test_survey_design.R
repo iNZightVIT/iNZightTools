@@ -64,7 +64,7 @@ test_that("Replicate weight designs", {
         data.frame(
             repweights = "rakedw[1-9]",
             weights = "rakedw0",
-            type = "other",
+            reptype = "other",
             scale = 1,
             rscales = 1
         ),
@@ -74,9 +74,9 @@ test_that("Replicate weight designs", {
     dchis <- svrepdesign(
         weights = ~rakedw0,
         repweights = "rakedw[1-9]",
-        type = "other",
         scale = 1,
         rscales = 1,
+        type = "other",
         data = data
     )
 

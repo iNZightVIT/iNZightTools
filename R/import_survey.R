@@ -40,7 +40,7 @@ import_survey <- function(file, data) {
                 repweights = spec$repweights,
                 reptype = spec$reptype,
                 scale = spec$scale,
-                rscales = spec$rscales,
+                rscales = as.numeric(spec$rscales),
                 ## this will become conditional on what fields are specified
                 type = ifelse("repweights" %in% names(spec), "replicate", "survey")
             )

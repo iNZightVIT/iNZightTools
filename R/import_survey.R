@@ -1,12 +1,23 @@
 #' Import survey information from a file
 #'
-#' The survey information should be in DCF format, with fields
+#' The survey information should be in TOML format, with fields
 #' corresponding to survey design components. For example,
 #' ```
-#' strata: strata_var
-#' clusters: cluster_var
-#' weights: wt_var
+#' strata = strata_var
+#' clusters = cluster_var
+#' weights = wt_var
 #' ```
+#'
+#' For replicate weight designs, vectors (if necessary) are declared with
+#' square brackets, like so:
+#' ```
+#' repweights = ['w01', 'w02', 'w03', 'w04', ..., 'w20']
+#' ```
+#' although this would be better expressed using a regular expression,
+#' ```
+#' repweights = '^w[0-2]'
+#' ```
+#' which matches all variables starting with a `w` followed by digits between 0 and 2 (inclusive).
 #'
 #' Additionally, the information can contain a `file` specification
 #' indicating the path to the data, which will be imported using
@@ -23,7 +34,8 @@
 #' @export
 #' @md
 import_survey <- function(file, data) {
-    spec <- as.data.frame(read.dcf(file), stringsAsFactors = FALSE)
+    # spec <- as.data.frame(read.dcf(file), stringsAsFactors = FALSE)
+    spec <- RcppTOML::parseTOML(file)
 
     svyspec <- structure(
         list(
@@ -42,7 +54,8 @@ import_survey <- function(file, data) {
                 scale = spec$scale,
                 rscales = as.numeric(spec$rscales),
                 ## this will become conditional on what fields are specified
-                type = ifelse("repweights" %in% names(spec), "replicate", "survey")
+                type = ifelse("repweights" %in% names(spec), "replicate", "survey"),
+                calibrate = spec$calibrate
             )
         ),
         class = "inzsvyspec"
@@ -132,39 +145,43 @@ make_survey <- function(.data, spec) {
     )
     exp <- replaceVars(exp, terms = terms)
 
-    if (!is.null(s$poststrat)) {
-        pop.totals <- structure(
-            do.call(c,
-                c(
-                    list(sum(s$poststrat[[1]]$Freq)),
-                    lapply(s$poststrat, function(df) df$Freq[-1])
-                )
-            ),
-            .Names = do.call(c,
-                c(
-                    list("(Intercept)"),
-                    lapply(s$poststrat, function(df)
-                        paste0(names(df)[1], as.character(df[-1,1]))
-                    )
-                )
+    if (!is.null(spec$spec$calibrate)) {
+        cal <- spec$spec$calibrate
+        # put cal into a more useful format
+        vnames <- names(cal)
+        pop.totals <- do.call(c,
+            lapply(seq_along(vnames),
+                function(i) {
+                    x <- cal[[i]]
+                    z <- paste0(vnames[[i]], names(x))
+                    z[1] <- "(Intercept)"
+                    x <- as.numeric(x)
+                    x[1] <- sum(x)
+                    names(x) <- z
+                    if (i > 1L) x <- x[-1]
+                    x
+                }
             )
         )
-        cal_exp <- sprintf(
-            "%s %>% survey::calibrate(~%s, pop.totals)",
-            exp,
-            paste(names(s$poststrat), collapse = " + ")
+
+        cal_exp <- ~survey::calibrate(.design, ~.vars, .totals)
+        cal_exp <- replaceVars(cal_exp,
+            .vars = paste(vnames, collapse = " + ")
         )
     }
 
     spec$data <- .data
     spec$design <- interpolate(exp, .data = dataname)
-    # if (!is.null(s$poststrat)) {
-    #     # calibrate design:
-    #     design_obj <- spec$design
-    #     ## Note: if allowing continuous variables in future,
-    #     ##       this needs a better name:
-
-    # }
+    if (!is.null(spec$spec$calibrate)) {
+        # calibrate design:
+        design_obj <- spec$design
+        spec$design <- (function() {
+            interpolate(cal_exp,
+                .totals = pop.totals,
+                .design = ~design_obj
+            )
+        })()
+    }
     spec
 }
 
@@ -181,7 +198,14 @@ print.inzsvyspec <- function(x, ...) {
     lapply(names(s),
         function(y) {
             if (is.null(s[[y]])) return()
-            cat(sprintf(" * %s: %s\n", y, s[[y]]))
+            if (y == "calibrate") {
+                cat(sprintf(" * %s: %s\n",
+                    y,
+                    paste(names(s[[y]]), collapse = " + ")
+                ))
+            } else {
+                cat(sprintf(" * %s: %s\n", y, s[[y]]))
+            }
         }
     )
 

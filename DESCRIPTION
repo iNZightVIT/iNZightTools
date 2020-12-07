@@ -22,7 +22,8 @@ Imports:
     lubridate,
     utils,
     validate,
-    zoo
+    zoo,
+    RcppTOML
 Suggests:
     covr,
     jsonlite,

@@ -54,8 +54,9 @@ test_that("Invalid parts are returned with NA", {
 })
 
 months <- as.Date(paste("2019", 1:12, "01", sep = "-"))
-weekdays <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
-  "Saturday", "Sunday")
+weekdays <- as.character(
+  lubridate::wday(as.Date("2020-12-07") + 0:6, label = TRUE, abbr = FALSE)
+)
 
 test_that("Factor levels have correct order", {
   expect_equal(

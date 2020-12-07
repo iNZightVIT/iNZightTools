@@ -11,6 +11,7 @@ Imports:
     haven,
     magrittr,
     methods,
+    RcppTOML,
     readr (>= 1.2.0),
     readxl,
     stats,
@@ -22,8 +23,7 @@ Imports:
     lubridate,
     utils,
     validate,
-    zoo,
-    RcppTOML
+    zoo
 Suggests:
     covr,
     jsonlite,

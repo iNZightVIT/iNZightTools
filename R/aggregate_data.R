@@ -58,6 +58,8 @@ aggregateData <- function(.data, vars, summaries,
     mc <- match.call()
     dataname <- mc$.data
 
+    if (inherits(.data, "survey.design")) stop("Survey designs not yet supported")
+
     if (missing(vars)) stop("Variables to aggregate over required")
 
     if (missing(summary_vars)) {

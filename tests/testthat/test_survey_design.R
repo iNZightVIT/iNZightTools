@@ -126,3 +126,11 @@ M = 1018
 
     expect_output(print(s), "survey::calibrate")
 })
+
+
+# Aggregation
+test_that("Survey aggregation is correct", {
+    des <- svydesign(~dnum, weights = ~pw, data = apiclus1)
+
+    expect_error(aggregateData(des, vars = "stype", summaries = "sum"))
+})

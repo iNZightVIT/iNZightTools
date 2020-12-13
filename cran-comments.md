@@ -10,4 +10,4 @@
 
 ## Downstream dependencies
 
-There are currently no downstream dependencies for this package.
+I have run R CMD CHECK on downstream dependencies of iNZightTools, and all passed.

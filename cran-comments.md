@@ -1,8 +1,8 @@
 ## Test environments
-* local ubuntu 18.04, R 3.6.3
-* ubuntu 18.04 (on travis-ci) R oldrel, release, and devel
-* macos (on travis-ci), R release
-* win-builder (devel and release)
+* ubuntu 18.04 (local), R 4.0.2
+* ubuntu 20.04 (travis-ci), R release
+* macos (travis-ci) R release and devel
+* windows (win-builder), R release and devel
 
 ## R CMD check results
 

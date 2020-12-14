@@ -34,13 +34,13 @@ test_that("Aggregating survey data is valid", {
         svy_agg <- aggregateData(svy, "stype", c("count", "mean"), c("api99", "api00"))
     )
 
-    svy_tbl <- as_survey_design(svy)
+    svy_tbl <- srvyr::as_survey_design(svy)
     svy_tbl_agg <- svy_tbl %>%
         dplyr::group_by(stype) %>%
         dplyr::summarize(
-            count = survey_total(),
-            api99_mean = survey_mean(api99),
-            api00_mean = survey_mean(api00)
+            count = srvyr::survey_total(),
+            api99_mean = srvyr::survey_mean(api99),
+            api00_mean = sryvr::survey_mean(api00)
         )
 
     expect_equivalent(svy_agg, svy_tbl_agg)

@@ -4,7 +4,15 @@
 \alias{aggregateData}
 \title{Aggregate data by categorical variables}
 \usage{
-aggregateData(.data, vars, summaries)
+aggregateData(
+  .data,
+  vars,
+  summaries,
+  summary_vars,
+  varnames = NULL,
+  quantiles = c(0.25, 0.75),
+  custom_funs = NULL
+)
 }
 \arguments{
 \item{.data}{a dataframe to aggregate}
@@ -13,18 +21,44 @@ aggregateData(.data, vars, summaries)
 to group by}
 
 \item{summaries}{summaries to generate for the groups generated
-in \code{vars}.
-Valid summaries are "iqr" , mean", "median", "sd", "sum"}
+in \code{vars}. See details.}
+
+\item{summary_vars}{names of variables in the dataset to calculate summaries of}
+
+\item{varnames}{name templates for created variables (see details).}
+
+\item{quantiles}{if requesting quantiles, specify the desired quantiles here}
+
+\item{custom_funs}{a list of custom functions (see details).}
 }
 \value{
 aggregated dataframe containing the summaries
-        with tidyverse code attached
+with tidyverse code attached
 }
 \description{
 Aggregate a dataframe into summaries of all numeric variables by grouping
 them by specified categorical variables
 and returns the result along with tidyverse code used to generate it.
 }
+\section{Calculating variable summaries}{
+
+The \code{aggregateData} function accepts any R function which returns a single-value (such as \code{mean}, \code{var}, \code{sd}, \code{sum}, \code{IQR}). The default name of new variables will be \verb{\{var\}_\{fun\}}, where \code{{var}} is the variable name and \code{{fun}} is the summary function used. You may pass new names via the \code{varnames} argument, which should be either a vector the same length as \code{summary_vars}, or a named list (where the names are the summary function). In either case, use \code{{var}} to represent the variable name. e.g., \verb{\{var\}_mean} or \verb{min_\{var\}}.
+
+You can also include the summary \code{missing}, which will count the number of missing values in the variable. It has default name \verb{\{var\}_missing}.
+
+For the \code{quantile} summary, there is the additional argument \code{quantiles}. A new variable will be created for each specified quantile 'p'. To name these variables, use \code{{p}} in \code{varnames} (the default is \verb{\{var\}_q\{p\}}).
+
+Custom functions can be passed via the \code{custom_funs} argument. This should be a list, and each element should have a \code{name} and either an \code{expr} or \code{fun} element. Expressions should operate on a variable \code{x}. The function should be a function of \code{x} and return a single value.\if{html}{\out{<div class="r">}}\preformatted{cust_funs <- list(name = '\{var\}_width', expr = diff(range(x), na.rm = TRUE))
+cust_funs <- list(name = '\{var\}_stderr',
+  fun = function(x) \{
+    s <- sd(x)
+    n <- length(x)
+    s / sqrt(n)
+  \}
+)
+}\if{html}{\out{</div>}}
+}
+
 \examples{
 aggregated <-
     aggregateData(iris,
@@ -41,5 +75,5 @@ head(aggregated)
 \code{\link{countMissing}}
 }
 \author{
-Owen Jin
+Tom Elliott, Owen Jin
 }

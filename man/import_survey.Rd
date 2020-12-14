@@ -18,13 +18,22 @@ a \code{inzsvyspec} object containing the design parameters and, if data supplie
 the created survey object
 }
 \description{
-The survey information should be in DCF format, with fields
-corresponding to survey design components. For example,\preformatted{strata: strata_var
-clusters: cluster_var
-weights: wt_var
+The survey information should be in TOML format, with fields
+corresponding to survey design components. For example,\preformatted{strata = strata_var
+clusters = cluster_var
+weights = wt_var
 }
 }
 \details{
+For replicate weight designs, vectors (if necessary) are declared with
+square brackets, like so:\preformatted{repweights = ['w01', 'w02', 'w03', 'w04', ..., 'w20']
+}
+
+although this would be better expressed using a regular expression,\preformatted{repweights = '^w[0-2]'
+}
+
+which matches all variables starting with a \code{w} followed by digits between 0 and 2 (inclusive).
+
 Additionally, the information can contain a \code{file} specification
 indicating the path to the data, which will be imported using
 \code{iNZightTools::smart_read} if it exists in the same directory

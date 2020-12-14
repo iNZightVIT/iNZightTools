@@ -1,12 +1,23 @@
 #' Import survey information from a file
 #'
-#' The survey information should be in DCF format, with fields
+#' The survey information should be in TOML format, with fields
 #' corresponding to survey design components. For example,
 #' ```
-#' strata: strata_var
-#' clusters: cluster_var
-#' weights: wt_var
+#' strata = strata_var
+#' clusters = cluster_var
+#' weights = wt_var
 #' ```
+#'
+#' For replicate weight designs, vectors (if necessary) are declared with
+#' square brackets, like so:
+#' ```
+#' repweights = ['w01', 'w02', 'w03', 'w04', ..., 'w20']
+#' ```
+#' although this would be better expressed using a regular expression,
+#' ```
+#' repweights = '^w[0-2]'
+#' ```
+#' which matches all variables starting with a `w` followed by digits between 0 and 2 (inclusive).
 #'
 #' Additionally, the information can contain a `file` specification
 #' indicating the path to the data, which will be imported using
@@ -23,7 +34,8 @@
 #' @export
 #' @md
 import_survey <- function(file, data) {
-    spec <- as.data.frame(read.dcf(file), stringsAsFactors = FALSE)
+    # spec <- as.data.frame(read.dcf(file), stringsAsFactors = FALSE)
+    spec <- RcppTOML::parseTOML(file)
 
     svyspec <- structure(
         list(
@@ -38,11 +50,12 @@ import_survey <- function(file, data) {
                 nest = spec$nest,
                 weights = spec$weights,
                 repweights = spec$repweights,
-                type = spec$type,
+                reptype = spec$reptype,
                 scale = spec$scale,
-                rscales = spec$rscales,
+                rscales = as.numeric(spec$rscales),
                 ## this will become conditional on what fields are specified
-                svy_type = ifelse("repweights" %in% names(spec), "replicate", "survey")
+                type = ifelse("repweights" %in% names(spec), "replicate", "survey"),
+                calibrate = spec$calibrate
             )
         ),
         class = "inzsvyspec"
@@ -77,20 +90,21 @@ make_survey <- function(.data, spec) {
     mc <- match.call()
     dataname <- mc$.data
 
-    type <- spec$spec$svy_type
+    type <- spec$spec$type
     exp <- switch(type,
         "replicate" = ~survey::svrepdesign(terms, data = .data),
         "survey" = ~survey::svydesign(terms, data = .data)
     )
 
-
     s <- spec$spec
-    s$svy_type <- NULL
+    s$type <- NULL
     fmla_args <- c("ids", "probs", "strata", "fpc", "weights")
     str_args <- c("type")
 
     if (type == "replicate") {
-        s <- s[names(s) %in% c("weights", "repweights", "type", "scale", "rscales")]
+        s <- s[names(s) %in% c("weights", "repweights", "reptype", "scale", "rscales")]
+        if (is.character(s$repweights) && length(s$repweights) > 1L)
+            s$repweights <- paste(s$repweights, collapse = " + ")
         # is repweights a formula or string?
         split <- trimws(strsplit(s$repweights, "+", fixed = TRUE)[[1]])
         if (all(split %in% names(.data))) {
@@ -100,6 +114,10 @@ make_survey <- function(.data, spec) {
             # string/something else ...
             str_args <- c(str_args, "repweights")
         }
+        if (all(diff(s$rscales) == 0)) s$rscales <- s$rscales[1]
+        s$rscales <- paste(capture.output(dput(s$rscales)), collapse = "")
+        s$type <- s$reptype
+        s$reptype <- NULL
     }
 
     if (type == "survey") {
@@ -125,10 +143,45 @@ make_survey <- function(.data, spec) {
             list(sep = ", ")
         )
     )
-
     exp <- replaceVars(exp, terms = terms)
+
+    if (!is.null(spec$spec$calibrate)) {
+        cal <- spec$spec$calibrate
+        # put cal into a more useful format
+        vnames <- names(cal)
+        pop.totals <- do.call(c,
+            lapply(seq_along(vnames),
+                function(i) {
+                    x <- cal[[i]]
+                    z <- paste0(vnames[[i]], names(x))
+                    z[1] <- "(Intercept)"
+                    x <- as.numeric(x)
+                    x[1] <- sum(x)
+                    names(x) <- z
+                    if (i > 1L) x <- x[-1]
+                    x
+                }
+            )
+        )
+
+        cal_exp <- ~survey::calibrate(.design, ~.vars, .totals)
+        cal_exp <- replaceVars(cal_exp,
+            .vars = paste(vnames, collapse = " + ")
+        )
+    }
+
     spec$data <- .data
     spec$design <- interpolate(exp, .data = dataname)
+    if (!is.null(spec$spec$calibrate)) {
+        # calibrate design:
+        design_obj <- spec$design
+        spec$design <- (function() {
+            interpolate(cal_exp,
+                .totals = pop.totals,
+                .design = ~design_obj
+            )
+        })()
+    }
     spec
 }
 
@@ -145,7 +198,14 @@ print.inzsvyspec <- function(x, ...) {
     lapply(names(s),
         function(y) {
             if (is.null(s[[y]])) return()
-            cat(sprintf(" * %s: %s\n", y, s[[y]]))
+            if (y == "calibrate") {
+                cat(sprintf(" * %s: %s\n",
+                    y,
+                    paste(names(s[[y]]), collapse = " + ")
+                ))
+            } else {
+                cat(sprintf(" * %s: %s\n", y, s[[y]]))
+            }
         }
     )
 

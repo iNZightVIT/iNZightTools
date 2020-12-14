@@ -5,7 +5,12 @@ data(api)
 
 test_that("Survey design file parsed correctly", {
     svyfile <- tempfile("apistrat", fileext = ".svydesign")
-    write.dcf(data.frame(strata = "stype", weights = "pw", fpc = "fpc"), svyfile)
+    svytoml <-
+'strata = "stype"
+weights = "pw"
+fpc = "fpc"
+'
+    writeLines(svytoml, svyfile)
 
     s <- import_survey(svyfile)
     expect_is(s, "inzsvyspec")
@@ -26,7 +31,12 @@ test_that("Survey design file parsed correctly", {
 
 test_that("Survey design file parsed correctly", {
     svyfile <- tempfile("apiclus2", fileext = ".svydesign")
-    write.dcf(data.frame(ids = "dnum + snum", weights = "pw", fpc = "fpc1+fpc2"), svyfile)
+    svytoml <-
+'ids = "dnum + snum"
+weights = "pw"
+fpc = "fpc1 + fpc2"
+'
+    writeLines(svytoml, svyfile)
 
     s <- import_survey(svyfile)
     expect_is(s, "inzsvyspec")
@@ -45,7 +55,12 @@ test_that("Survey design file parsed correctly", {
     expect_output(print(s2), "2 - level Cluster Sampling design")
 
     svyfile <- tempfile("apiclus2", fileext = ".svydesign")
-    write.dcf(data.frame(clusters = "dnum + snum", weights = "pw", fpc = "fpc1+fpc2"), svyfile)
+    svytoml <-
+'clusters = "dnum + snum"
+weights = "pw"
+fpc = "fpc1 + fpc2"
+'
+    writeLines(svytoml, svyfile)
     s3 <- import_survey(svyfile, apiclus2)
     expect_equal(s2, s3)
 })
@@ -60,32 +75,54 @@ test_that("Replicate weight designs", {
     data <- smart_read(chis_url)
 
     svyfile <- tempfile("chis", fileext = ".svydesign")
-    write.dcf(
-        data.frame(
-            repweights = "rakedw[1-9]",
-            weights = "rakedw0",
-            type = "other",
-            scale = 1,
-            rscales = 1
-        ),
-        svyfile
-    )
+    svytoml <-
+'repweights = "rakedw[1-9]"
+weights = "rakedw0"
+reptype = "other"
+scale = 1
+rscales = 1
+'
+    writeLines(svytoml, svyfile)
 
     dchis <- svrepdesign(
         weights = ~rakedw0,
         repweights = "rakedw[1-9]",
-        type = "other",
         scale = 1,
         rscales = 1,
+        type = "other",
         data = data
     )
 
     s <- import_survey(svyfile, data)
     expect_is(s, "inzsvyspec")
+
     expect_is(s$design, "svyrep.design")
     expect_equivalent(
         make_survey(data, s)$design,
         dchis
     )
+})
 
+test_that("Poststratification", {
+    svyfile <- tempfile("apistrat", fileext = ".svydesign")
+    svyTOML <- 'strata = "stype"
+weights = "pw"
+fpc = "fpc"
+
+[calibrate.stype]
+E = 4421
+H = 755
+M = 1018
+
+[calibrate."sch.wide"]
+"No" = 1072
+"Yes" = 5122
+'
+    writeLines(svyTOML, svyfile)
+
+    s <- import_survey(svyfile, apistrat)
+    expect_is(s, "inzsvyspec")
+    expect_is(s$design, "survey.design")
+
+    expect_output(print(s), "survey::calibrate")
 })

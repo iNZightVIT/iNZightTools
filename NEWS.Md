@@ -1,4 +1,9 @@
-# iNZightTools 1.9.1
+# iNZightTools 1.10
+
+* refactor `aggregateData` function to improve flexibility
+* new `import_survey()` function for importing a survey design (and data) from a specification file (in TOML format)
+
+## iNZightTools 1.9.1
 - fix bug in reading delim files where, if first 1000+ rows of a column were `NA`, the column was read as logical instead of character (this is a fixed behaviour of `readr`, so cannot be overridden)
 
 

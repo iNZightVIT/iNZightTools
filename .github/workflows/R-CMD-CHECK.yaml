@@ -51,18 +51,13 @@ jobs:
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
-          sudo add-apt-repository ppa:c2d4u.team/c2d4u4.0+
-          sudo apt-get update
-          sudo apt-get install -y r-cran-bspm
-          # Rscript -e "remotes::install_github('r-hub/sysreqs')"
-          # sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
-          # sudo -s eval "$sysreqs"
+          Rscript -e "remotes::install_github('r-hub/sysreqs')"
+          sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
+          sudo -s eval "$sysreqs"
+          sudo apt-get install -y libicu-dev
 
       - name: Install dependencies
-        env:
-          OS_TYPE: ${{ runner.os }}
         run: |
-          if (Sys.getenv('OS_TYPE') == 'Linux') bspm::enable()
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}

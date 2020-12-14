@@ -58,7 +58,11 @@ aggregateData <- function(.data, vars, summaries,
     mc <- match.call()
     dataname <- mc$.data
 
-    if (inherits(.data, "survey.design")) stop("Survey designs not yet supported")
+    is_survey <- inherits(.data, "survey.design")
+    if (is_survey) {
+        .data <- srvyr::as_survey_design(.data)
+        dataname <- glue::glue("srvyr::as_survey_design({dataname})")
+    }
 
     if (missing(vars)) stop("Variables to aggregate over required")
 
@@ -74,20 +78,29 @@ aggregateData <- function(.data, vars, summaries,
                 name <- varnames[[smry]]
                 # functions that don't take na.rm argument
                 na <- ifelse(smry %in% c("count"), "", ", na.rm = TRUE")
+                svy <- if (is_survey) "srvyr::survey_" else ""
                 fun <- switch(smry,
-                    "count" = "dplyr::n()",
-                    "iqr" = "IQR({var}, na.rm = TRUE)",
+                    "count" =
+                        if (is_survey) "srvyr::survey_total()"
+                        else "dplyr::n()",
+                    "iqr" =
+                        if (is_survey) "survey_IQR({var})"
+                        else "IQR({var}, na.rm = TRUE)",
                     "missing" = "iNZightTools::countMissing({var})",
-                    paste0(smry, "({var}", na, ")")
+                    "sum" =
+                        if (is_survey) "srvyr::survey_total({var}, na.rm = TRUE)"
+                        else "sum({var}, na.rm = TRUE)",
+                    paste0(svy, smry, "({var}", na, ")")
                 )
 
                 var <- summary_vars
                 if (smry == "quantile") {
+                    qfun <- if (is_survey) "srvyr::survey_quantile" else "quantile"
                     z <- do.call(rbind,
                         lapply(quantiles,
                             function(p) {
                                 n <- glue::glue(name)
-                                f <- glue::glue("quantile({var}, probs = {p / 100}, na.rm = TRUE)")
+                                f <- glue::glue("{qfun}({var}, probs = {p / 100}, na.rm = TRUE)")
                                 data.frame(n = n, f = f)
                             }
                         )
@@ -110,7 +123,8 @@ aggregateData <- function(.data, vars, summaries,
     exp <- ~.data %>%
         dplyr::group_by(.EVAL_GROUPBY) %>%
         dplyr::summarize(
-            .EVAL_SUMMARIZE
+            .EVAL_SUMMARIZE,
+            .groups = "drop"
         )
 
     exp <- replaceVars(exp,

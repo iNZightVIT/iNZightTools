@@ -40,9 +40,9 @@ test_that("Aggregating survey data is valid", {
         dplyr::summarize(
             count = srvyr::survey_total(),
             api99_mean = srvyr::survey_mean(api99),
-            api00_mean = sryvr::survey_mean(api00)
+            api00_mean = srvyr::survey_mean(api00)
         )
 
     expect_equivalent(svy_agg, svy_tbl_agg)
-    code(svy_agg)
+    # code(svy_agg)
 })

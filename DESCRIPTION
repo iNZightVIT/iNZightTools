@@ -1,7 +1,7 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for 'iNZight'
-Version: 1.9.1.9000
+Version: 1.10
 Imports:
     chron,
     dplyr,

@@ -4,7 +4,7 @@
 #' them by specified categorical variables
 #' and returns the result along with tidyverse code used to generate it.
 #'
-#' @param .data a dataframe to aggregate
+#' @param .data a dataframe or survey design object to aggregate
 #' @param vars  a character vector of categorical variables in \code{.data}
 #'        to group by
 #' @param summaries summaries to generate for the groups generated

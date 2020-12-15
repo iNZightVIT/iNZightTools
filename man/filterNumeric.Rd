@@ -7,7 +7,7 @@
 filterNumeric(.data, var, op, num)
 }
 \arguments{
-\item{.data}{a dataframe to filter}
+\item{.data}{a dataframe or survey design object to filter}
 
 \item{var}{character of the column in \code{.data} to filter by}
 
@@ -28,10 +28,16 @@ filtered <- filterNumeric(iris, var = "Sepal.Length", op = "<=", num = 5)
 cat(code(filtered))
 head(filtered)
 
+require(survey)
+data(api)
+svy <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
+(svy_filtered <- filterNumeric(svy, var = "api00", op = "<", num = 700))
+cat(code(svy_filtered))
+
 }
 \seealso{
 \code{\link{code}}
 }
 \author{
-Owen Jin
+Owen Jin, Tom Elliott
 }

@@ -3,7 +3,7 @@
 #' Filter a dataframe by some levels of one categorical variable
 #' and returns the result along with tidyverse code used to generate it.
 #'
-#' @param .data a dataframe to filter
+#' @param .data a dataframe or survey design object to filter
 #' @param var character of the column in \code{.data} to filter by
 #' @param levels a character vector of levels in \code{var} to filter by
 #'
@@ -20,6 +20,12 @@
 filterLevels <- function(.data, var, levels) {
     mc <- match.call()
     dataname <- mc$.data
+
+    is_survey <- inherits(.data, "survey.design")
+    if (is_survey) {
+        .data <- srvyr::as_survey_design(.data)
+        dataname <- glue::glue("srvyr::as_survey_design({dataname})")
+    }
 
     exp <- ~.DATA %>%
         dplyr::filter(.VARNAME %in% .LEVELS) %>%

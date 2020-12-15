@@ -7,7 +7,7 @@
 filterLevels(.data, var, levels)
 }
 \arguments{
-\item{.data}{a dataframe to filter}
+\item{.data}{a dataframe or survey design object to filter}
 
 \item{var}{character of the column in \code{.data} to filter by}
 

@@ -56,3 +56,11 @@ test_that("Filtering surveys is valid", {
         eval(parse(text = code(svy_filtered)))
     )
 })
+
+# test_that("Filtering by survey structure variables prohibited ... ?", {
+#     expect_error(
+#         filterNumeric(svy, "dnum", "<", 1000)
+#     )
+
+#     subset(svy, dnum < 1000)
+# })

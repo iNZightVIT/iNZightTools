@@ -172,6 +172,7 @@ agg_default_name <- function(fun) {
 #'
 #' @examples
 #' library(survey)
+#' library(srvyr)
 #' data(api)
 #'
 #' dstrata <- apistrat %>%

@@ -158,3 +158,12 @@ agg_default_name <- function(fun) {
         paste("{var}", fun, sep = "_")
     )
 }
+
+survey_IQR <- function(x, na.rm = TRUE) {
+    .svy <- srvyr::set_survey_vars(srvyr::cur_svy(), x)
+    qs <- survey::svyquantile(~`__SRVYR_TEMP_VAR__`,
+        quantiles = c(0.25, 0.75),
+        na.rm = na.rm, design = .svy)
+    out <- apply(qs, 1, diff)
+    out
+}

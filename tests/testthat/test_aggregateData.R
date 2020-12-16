@@ -45,4 +45,13 @@ test_that("Aggregating survey data is valid", {
 
     expect_equivalent(svy_agg, svy_tbl_agg)
     # code(svy_agg)
+
+    # IQR
+    expect_silent(
+        svy_agg <- aggregateData(svy, "stype", c("iqr"), c("api99", "api00"))
+    )
+    # expect_equivalent(
+    #     svy_agg$api99_iqr,
+    #     apply(svyby(~api99, ~stype, svy, svyquantile, quantiles = c(0.25, 0.75)), 1, diff)
+    # )
 })

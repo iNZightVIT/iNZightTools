@@ -21,6 +21,7 @@ and meant to be called from within \code{summarize} (see \link{srvyr} package).
 }
 \examples{
 library(survey)
+library(srvyr)
 data(api)
 
 dstrata <- apistrat \%>\%

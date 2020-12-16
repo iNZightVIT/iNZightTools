@@ -84,7 +84,7 @@ aggregateData <- function(.data, vars, summaries,
                         if (is_survey) "srvyr::survey_total()"
                         else "dplyr::n()",
                     "iqr" =
-                        if (is_survey) "survey_IQR({var})"
+                        if (is_survey) "iNZightTools::survey_IQR({var})"
                         else "IQR({var}, na.rm = TRUE)",
                     "missing" = "iNZightTools::countMissing({var})",
                     "sum" =
@@ -159,6 +159,30 @@ agg_default_name <- function(fun) {
     )
 }
 
+#' Interquartile range function for surveys
+#'
+#' Calculates the interquartile range from complex survey data.
+#' A wrapper for taking differences of `svyquantile` at 0.25 and 0.75 quantiles,
+#' and meant to be called from within `summarize` (see [srvyr] package).
+#'
+#' @param x A variable or expression
+#' @param na.rm logical, if `TRUE` missing values are removed
+#'
+#' @return a vector of interquartile ranges
+#'
+#' @examples
+#' library(survey)
+#' data(api)
+#'
+#' dstrata <- apistrat %>%
+#' as_survey_design(strata = stype, weights = pw)
+#'
+#' dstrata %>%
+#'   summarise(api99_iqr = survey_IQR(api99))
+#'
+#' @author Tom Elliott
+#' @md
+#' @export
 survey_IQR <- function(x, na.rm = TRUE) {
     .svy <- srvyr::set_survey_vars(srvyr::cur_svy(), x)
     qs <- survey::svyquantile(~`__SRVYR_TEMP_VAR__`,

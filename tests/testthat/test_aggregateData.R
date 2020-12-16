@@ -54,4 +54,8 @@ test_that("Aggregating survey data is valid", {
     #     svy_agg$api99_iqr,
     #     apply(svyby(~api99, ~stype, svy, svyquantile, quantiles = c(0.25, 0.75)), 1, diff)
     # )
+    expect_equivalent(
+        svy_agg,
+        eval(parse(text = code(svy_agg)))
+    )
 })

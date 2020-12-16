@@ -1,5 +1,5 @@
 * use `srvyr` package to handle survey designs using `dplyr`-like syntax
-  * `aggregateData()`, `filterNumeric()`, `filterLevels()`, ...
+  * `aggregateData()`, `filterNumeric()`, `filterLevels()`, `filterRows()`, ...
 
 
 # iNZightTools 1.10

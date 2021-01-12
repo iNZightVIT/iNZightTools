@@ -34,9 +34,10 @@ filterLevels <- function(.data, var, levels) {
     # remove levels from factor (and ensure correct order)
     if (length(levels) > 1)
         exp <- paste(paste(exp, collapse = ""),
-            " %>% droplevels()")
-            # "%>% dplyr::mutate(.VARNAME = factor(.VARNAME, levels = .LEVELS))")
-
+            ifelse (is_survey,
+                " %>% dplyr::mutate(.VARNAME = droplevels(.VARNAME))",
+                " %>% droplevels()")
+        )
     exp <- replaceVars(exp,
         .VARNAME = var,
         .OP = operator,

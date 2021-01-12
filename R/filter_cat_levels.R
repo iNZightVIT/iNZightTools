@@ -27,14 +27,21 @@ filterLevels <- function(.data, var, levels) {
         dataname <- glue::glue("srvyr::as_survey_design({dataname})")
     }
 
+    operator <- if (length(levels) == 1) " == " else " %in% "
+
     exp <- ~.DATA %>%
-        dplyr::filter(.VARNAME %in% .LEVELS) %>%
-        dplyr::mutate(.VARNAME = factor(.VARNAME, levels = .LEVELS))
+        dplyr::filter(.VARNAME.OP.LEVELS)
+    # remove levels from factor (and ensure correct order)
+    if (length(levels) > 1)
+        exp <- paste(paste(exp, collapse = ""),
+            " %>% droplevels()")
+            # "%>% dplyr::mutate(.VARNAME = factor(.VARNAME, levels = .LEVELS))")
+
     exp <- replaceVars(exp,
         .VARNAME = var,
-        .LEVELS = as.list(levels),
+        .OP = operator,
         .DATA = dataname
     )
 
-    interpolate(exp)
+    interpolate(exp, .LEVELS = levels)
 }

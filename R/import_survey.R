@@ -185,6 +185,38 @@ make_survey <- function(.data, spec) {
     spec
 }
 
+#' Parse survey to survey spec
+#'
+#' @param x an object which can be converted to a survey spec (e.g., survey.design)
+#' @return an `inzsvydesign` file
+#' @author Tom Elliott
+#' @md
+#' @export
+as_survey_spec <- function(x) UseMethod("as_survey_spec")
+
+#' @describeIn as_survey_spec Method for survey.design objects
+#' @export
+as_survey_spec.survey.design <- function(x) {
+    get_arg <- function(x, arg) {
+        x <- x$call
+        orNULL(x[[arg]], as.character(x[[arg]])[2])
+    }
+    spec <- list(
+        spec = list(
+            ids = get_arg(x, 2),
+            probs = get_arg(x, "probs"),
+            strata = get_arg(x, "strata"),
+            fpc = get_arg(x, "fpc"),
+            nest = get_arg(x, "nest"),
+            weights = get_arg(x, "weights")
+        ),
+        data = x$variables,
+        design = x
+    )
+    class(spec) <- "inzsvyspec"
+    spec
+}
+
 #' Print iNZight Survey Spec
 #'
 #' @param x a `inzsvyspec` object

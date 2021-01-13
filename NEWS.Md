@@ -1,6 +1,7 @@
 * use `srvyr` package to handle survey designs using `dplyr`-like syntax
   * `aggregateData()`, `filterNumeric()`, `filterLevels()`, `filterRows()`, ...
 * remove redundant code from `filterLevels()` to make it more concise (using `droplevels()`)
+* add method to convert survey design-like objects to iNZight's `inzsvyspec` format
 
 
 # iNZightTools 1.10

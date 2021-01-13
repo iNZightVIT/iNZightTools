@@ -24,7 +24,7 @@ filterLevels <- function(.data, var, levels) {
     is_survey <- inherits(.data, "survey.design")
     if (is_survey) {
         .data <- srvyr::as_survey_design(.data)
-        dataname <- glue::glue("srvyr::as_survey_design({dataname})")
+        dataname <- glue::glue("srvyr::as_survey({dataname})")
     }
 
     operator <- if (length(levels) == 1) " == " else " %in% "

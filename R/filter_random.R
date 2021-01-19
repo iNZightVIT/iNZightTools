@@ -21,7 +21,7 @@ filterRandom <- function(.data, n, sample_size) {
     mc <- match.call()
     dataname <- mc$.data
 
-    is_survey <- inherits(.data, "survey.design")
+    is_survey <- is_survey(.data)
     if (is_survey) {
         stop("Survey data cannot be randomly filtered at this stage.")
         # .data <- srvyr::as_survey_design(.data)

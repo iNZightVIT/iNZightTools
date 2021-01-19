@@ -25,8 +25,7 @@ collapseLevels <- function(.data, var, levels,
     mc <- match.call()
     dataname <- mc$.data
 
-    is_survey <- is_survey(.data)
-    if (is_survey) {
+    if (is_survey(.data)) {
         exp <- ~update(.DATA,
             .NAME = forcats::fct_collapse(
                 .VARNAME,

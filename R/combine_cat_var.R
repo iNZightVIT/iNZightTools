@@ -44,18 +44,20 @@ combineCatVars <- function(.data, vars, sep = ".",
     mc <- match.call()
     dataname <- mc$.data
 
+    if (is_survey(.data)) {
+        exp <- ~update(.data, .FMLA)
+    }
+
     # paste together the new variable made from the old variable names
     to_be_combined <- paste(vars, collapse = ", ")
 
-    exp <- ~.DATA %>%
-        dplyr::mutate(
-            .NEWVAR = forcats::fct_cross(
-                .VARS,
-                sep = .SEP,
-                keep_empty = .KEEP
-            )
-        )
+    exp <- ~.DATA %>% dplyr::mutate(.FMLA)
     exp <- replaceVars(exp,
+        .FMLA = ".NEWVAR = forcats::fct_cross(
+            .VARS,
+            sep = .SEP,
+            keep_empty = .KEEP
+        )",
         .DATA = dataname,
         .NEWVAR = name,
         .VARS = to_be_combined

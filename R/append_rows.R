@@ -13,6 +13,11 @@ appendrows <- function(.data, imported_data, date) {
     dataname <- mc$.data
     importname <- mc$imported_data
 
+    if (is_survey(.data)) {
+        warning("Cannot append rows to surveys")
+        return(.data)
+    }
+
     if (date) {
         exp <- ~.DATA %>%
             dplyr::bind_rows(

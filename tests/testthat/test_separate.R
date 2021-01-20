@@ -47,4 +47,6 @@ test_that("Survey designs work", {
     suppressWarnings(eval(parse(text = code(d)))),
     d
   )
+
+  expect_error(separate(svy, "avg.ed", "ed.a", "ed.b", sep = ".", check = "Row"))
 })

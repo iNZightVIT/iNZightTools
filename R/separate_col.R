@@ -22,6 +22,7 @@ separate <- function(.data, col, left, right, sep, check) {
     fmla <- "tidyr::separate(col = col_name, into = into_cols, sep = separator, extra = \"merge\")"
 
     if (is_survey(.data)) {
+        if (check == "Row") stop("Cannot create new rows in surveys")
         # .data <- srvyr::as_survey_design(.data)
         # dataname <- glue::glue("srvyr::as_survey_design({dataname})")
 

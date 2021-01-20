@@ -15,6 +15,11 @@ selectVars <- function(.data, keep) {
 
     keep <- paste(keep, collapse = ", ")
 
+    if (is_survey(.data)) {
+        .data <- srvyr::as_survey_design(.data)
+        dataname <- glue::glue("srvyr::as_survey_design({dataname})")
+    }
+
     exp <- ~.DATA %>% dplyr::select(.KEEP)
     exp <- replaceVars(exp,
         .DATA = dataname,

@@ -24,6 +24,8 @@ stackVars <- function(.data, vars,
                      key = "stack.variable",
                      value = "stack.value") {
 
+    if (is_survey(.data)) stop('Cannot stack data in a survey design')
+
     mc <- match.call()
     dataname <- mc$.data
 

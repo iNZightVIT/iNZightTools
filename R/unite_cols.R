@@ -23,10 +23,20 @@ unite <- function(.data, name, col, sep) {
 
     remove <- ", remove = FALSE"
 
-    exp <- ~.DATA %>%
-        tidyr::unite(.NAME.COL.SEP.REMOVE)
+    fmla <- "tidyr::unite(.NAME.COL.SEP.REMOVE)"
+    if (is_survey(.data)) {
+        exp <- ~.DATA %>%
+            {
+                d <- (.)
+                d$variables <- d$variables %>% .FMLA
+                d
+            }
+    } else {
+        exp <- ~.DATA %>% .FMLA
+    }
 
     exp <- replaceVars(exp,
+        .FMLA = fmla,
         .DATA = dataname,
         .NAME = name,
         .COL = colnames,

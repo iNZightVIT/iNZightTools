@@ -21,6 +21,16 @@ test_that("Aggregation over single variable works", {
         iris_agg,
         eval(parse(text = code(iris_agg)))
     )
+
+    # quantiles
+    expect_silent(
+        iris_agg <- aggregateData(iris, "Species", c("quantile"))
+    )
+    expect_equivalent(
+        iris_agg$Sepal.Width_q25,
+        tapply(iris$Sepal.Width, iris$Species, quantile, probs = 0.25)
+    )
+    expect_equivalent(eval(parse(text = code(iris_agg))), iris_agg)
 })
 
 

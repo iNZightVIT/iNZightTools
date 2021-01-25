@@ -103,7 +103,7 @@ aggregateData <- function(.data, vars, summaries,
                             lapply(quantiles,
                                 function(p) {
                                     n <- glue::glue(name)
-                                    f <- glue::glue("quantile({var}, probs = {p / 100}, na.rm = TRUE)")
+                                    f <- glue::glue("quantile({var}, probs = {p}, na.rm = TRUE)")
                                     data.frame(n = n, f = f)
                                 }
                             )
@@ -156,7 +156,7 @@ make_varnames <- function(summaries, varnames) {
 agg_default_name <- function(fun) {
     switch(fun,
         "count" = "count",
-        "quantile" = "{var}_q{p}",
+        "quantile" = "{var}_q{100*p}",
         "missing" = "{var}_missing",
         paste("{var}", fun, sep = "_")
     )

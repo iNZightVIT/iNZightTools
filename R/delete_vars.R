@@ -12,7 +12,7 @@ deleteVars <- function(.data, vars) {
 
     if (is_survey(.data)) {
         todelete <- paste(vars, " = NULL", collapse = ", ")
-        exp <- ~update(.DATA, .VARS)
+        exp <- ~.DATA %>% update(.VARS)
     } else {
         todelete <- paste("-", vars, collapse = ", ")
         exp <- ~.DATA %>% dplyr::select(.VARS)

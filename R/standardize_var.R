@@ -15,7 +15,7 @@
 #' cat(code(standardized))
 #' head(standardized)
 #'
-#' @author Owen Jin
+#' @author Owen Jin, Tom Elliott
 #' @export
 standardizeVars <- function(.data, vars,
                             names = paste(sep = ".", vars, "std")) {

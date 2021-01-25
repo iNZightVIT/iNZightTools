@@ -22,22 +22,35 @@ standardizeVars <- function(.data, vars,
     mc <- match.call()
     dataname <- mc$.data
 
-    formulae <- list(~.DATA)
-
-    for (i in seq_along(vars)) {
+    if (is_survey(.data)) {
+        formulae <- ""
         formula <-
-            ~tibble::add_column(
-                .NAME = scale(.DATA$.VARNAME)[, 1],
-                .after = ".VARNAME"
-            )
-        formulae[[i + 1]] <-
-            replaceVars(formula,
-                .VARNAME = vars[i],
-                .NAME = names[i]
-            )
+            "%s = (%s - svymean(~%s, .DATA, na.rm = TRUE)) /
+  sqrt(svyvar(~%s, .DATA, na.rm = TRUE))"
+        fmla <- sapply(seq_along(vars),
+            function(i)
+                sprintf(formula, names[i], vars[i], vars[i], vars[i])
+        )
+        fmla <- paste(fmla, collapse = ",\n")
+        exp <- ~.DATA %>% update(.FMLA)
+        exp <- replaceVars(exp, .FMLA = fmla)
+    } else {
+        formulae <- list(~.DATA)
+        for (i in seq_along(vars)) {
+            formula <-
+                ~tibble::add_column(
+                    .NAME = scale(.DATA$.VARNAME)[, 1],
+                    .after = ".VARNAME"
+                )
+            formulae[[i + 1]] <-
+                replaceVars(formula,
+                    .VARNAME = vars[i],
+                    .NAME = names[i]
+                )
+        }
+        exp <- pasteFormulae(formulae)
     }
 
-    exp <- pasteFormulae(formulae)
     exp <- replaceVars(exp, .DATA = dataname)
 
     interpolate(exp)

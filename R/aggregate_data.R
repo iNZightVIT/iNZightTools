@@ -95,19 +95,22 @@ aggregateData <- function(.data, vars, summaries,
 
                 var <- summary_vars
                 if (smry == "quantile") {
-                    qfun <- if (is_survey) "srvyr::survey_quantile" else "quantile"
-                    z <- do.call(rbind,
-                        lapply(quantiles,
-                            function(p) {
-                                n <- glue::glue(name)
-                                f <- glue::glue("{qfun}({var}, probs = {p / 100}, na.rm = TRUE)")
-                                data.frame(n = n, f = f)
-                            }
+                    if (is_survey) {
+                        name <- glue::glue(gsub("\\_q\\{p\\}$", "", name))
+                        fun <- glue::glue("srvyr::survey_quantile({var}, quantiles = .QUANTILES, na.rm = TRUE)")
+                    } else {
+                        z <- do.call(rbind,
+                            lapply(quantiles,
+                                function(p) {
+                                    n <- glue::glue(name)
+                                    f <- glue::glue("quantile({var}, probs = {p / 100}, na.rm = TRUE)")
+                                    data.frame(n = n, f = f)
+                                }
+                            )
                         )
-                    )
-
-                    name <- z[,1]
-                    fun <- z[,2]
+                        name <- z[,1]
+                        fun <- z[,2]
+                    }
                 } else {
                     name <- glue::glue(name)
                     fun <- glue::glue(fun)
@@ -133,7 +136,7 @@ aggregateData <- function(.data, vars, summaries,
         .data = dataname
     )
 
-    interpolate(exp)
+    interpolate(exp, .QUANTILES = quantiles)
 }
 
 make_varnames <- function(summaries, varnames) {

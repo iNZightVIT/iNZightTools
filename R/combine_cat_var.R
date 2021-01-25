@@ -45,7 +45,7 @@ combineCatVars <- function(.data, vars, sep = ".",
     dataname <- mc$.data
 
     if (is_survey(.data)) {
-        exp <- ~update(.data, .FMLA)
+        exp <- ~.data %>% update(.FMLA)
     }
 
     # paste together the new variable made from the old variable names

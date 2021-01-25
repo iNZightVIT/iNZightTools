@@ -23,3 +23,9 @@ test_that("NAs in either variable return an NA", {
         0
     )
 })
+
+
+
+require(survey)
+data(api)
+svy <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)

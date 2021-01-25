@@ -42,7 +42,7 @@ rankVars <- function(.data, vars) {
     )
 
     if (is_survey(.data)) {
-        exp <- ~update(.DATA, .FMLA)
+        exp <- ~.DATA %>% update(.FMLA)
         formula <- paste(formulae, collapse = ", ")
         exp <- replaceVars(exp, .FMLA = formula)
     } else {

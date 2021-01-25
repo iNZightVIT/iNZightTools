@@ -49,7 +49,7 @@ missingToCat <- function(.data, vars, names = paste0(vars, "_miss")) {
     )
 
     if (is_survey(.data)) {
-        exp <- ~update(.DATA, .FMLA)
+        exp <- ~.DATA %>% update(.FMLA)
         formula <- paste(formulae, collapse = ", ")
         exp <- replaceVars(exp, .FMLA = formula)
     } else {

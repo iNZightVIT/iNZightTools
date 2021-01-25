@@ -32,7 +32,7 @@ transformVar <- function(.data, var, transformation,
     )
 
     if (is_survey(.data)) {
-        exp <-  ~update(.DATA, .NAME = .FUNEXP)
+        exp <-  ~.DATA %>% update(.NAME = .FUNEXP)
         funexp <- gsub(".DATA$", "", funexp, fixed = TRUE)
     } else {
         exp <- ~.DATA %>%

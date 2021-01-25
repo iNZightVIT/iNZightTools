@@ -50,7 +50,7 @@ reorderLevels <- function(.data, var,
     )
 
     if (is_survey(.data)) {
-        exp <- ~update(.DATA, .FMLA)
+        exp <- ~.DATA %>% update(.FMLA)
     } else {
         exp <- ~.DATA %>% tibble::add_column(.FMLA, .after = ".AFTER")
     }

@@ -26,12 +26,13 @@ collapseLevels <- function(.data, var, levels,
     dataname <- mc$.data
 
     if (is_survey(.data)) {
-        exp <- ~update(.DATA,
-            .NAME = forcats::fct_collapse(
-                .VARNAME,
-                .COLLAPSENAME = .LEVELS
+        exp <- ~.DATA %>%
+            update(
+                .NAME = forcats::fct_collapse(
+                    .VARNAME,
+                    .COLLAPSENAME = .LEVELS
+                )
             )
-        )
     } else {
         exp <- ~.DATA %>%
             tibble::add_column(

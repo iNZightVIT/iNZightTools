@@ -25,7 +25,7 @@ createNewVar <- function(.data, new_var = "new.variable", R_exp) {
     dataname <- mc$.data
 
     if (is_survey(.data)) {
-        exp <- ~update(.DATA, .VARNAME = .EVAL)
+        exp <- ~.DATA %>% update(.VARNAME = .EVAL)
     } else {
         exp <- ~.DATA %>%
             dplyr::mutate(.VARNAME = .EVAL)

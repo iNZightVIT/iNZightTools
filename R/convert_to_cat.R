@@ -21,7 +21,7 @@ convertToCat <- function(.data, vars, names = paste(vars, "cat", sep = ".")) {
 
     is_survey <- is_survey(.data)
     if (is_survey) {
-        exp <- ~update(.design, .VARS)
+        exp <- ~.design %>% update(.VARS)
         exp <- replaceVars(exp,
             .VARS = paste(paste0(names, " = factor(", vars, ")"), collapse = ", "),
             .design = dataname

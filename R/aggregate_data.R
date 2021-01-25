@@ -96,7 +96,7 @@ aggregateData <- function(.data, vars, summaries,
                 var <- summary_vars
                 if (smry == "quantile") {
                     if (is_survey) {
-                        name <- glue::glue(gsub("\\_q\\{100*p\\}$", "", name))
+                        name <- glue::glue(gsub("\\_q\\{100\\*p\\}$", "", name))
                         fun <- glue::glue("srvyr::survey_quantile({var}, quantiles = .QUANTILES, na.rm = TRUE)")
                     } else {
                         z <- do.call(rbind,

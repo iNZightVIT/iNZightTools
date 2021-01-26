@@ -43,3 +43,10 @@ test_that("Survey collapsing works", {
     )
     expect_equivalent(eval(parse(text = code(d))), d)
 })
+
+test_that("Survey collapse 'number' factors", {
+    svy2 <- convertToCat(svy, "dnum")
+    expect_silent(d <- collapseLevels(svy2, "dnum.cat", as.character(c(15, 63, 83))))
+    expect_true("dnum.cat.coll" %in% names(d$variables))
+    expect_equivalent(eval(parse(text = code(d))), d)
+})

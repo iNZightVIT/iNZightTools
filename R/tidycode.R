@@ -35,9 +35,10 @@ tidy_code <- function(codeline, width, indent) {
     cf <- tempfile(fileext = ".R")
     on.exit(unlink(cf))
     writeLines(codeline, cf)
-    suppressMessages(
+    z <- capture.output(
         styler::style_file(cf, indent = indent, scope = "tokens")
     )
+    rm(z)
     return(readLines(cf))
 
     if (!grepl("<-|%<>%|&>%|=", codeline)){

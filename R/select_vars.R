@@ -15,7 +15,7 @@ selectVars <- function(.data, keep) {
 
     keep <- paste(keep, collapse = ", ")
 
-    if (is_survey(.data)) {
+    if (is_survey(.data) && !inherits(.data, "tbl_svy")) {
         .data <- srvyr::as_survey_design(.data)
         dataname <- glue::glue("{dataname} %>% srvyr::as_survey_design()")
     }

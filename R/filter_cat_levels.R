@@ -22,7 +22,7 @@ filterLevels <- function(.data, var, levels) {
     dataname <- mc$.data
 
     is_survey <- is_survey(.data)
-    if (is_survey) {
+    if (is_survey && !inherits(.data, "tbl_svy")) {
         .data <- srvyr::as_survey_design(.data)
         dataname <- glue::glue("srvyr::as_survey({dataname})")
     }

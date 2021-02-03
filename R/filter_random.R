@@ -25,7 +25,7 @@ filterRandom <- function(.data, n, sample_size) {
     if (is_survey) {
         stop("Survey data cannot be randomly filtered at this stage.")
         # .data <- srvyr::as_survey_design(.data)
-        # dataname <- glue::glue("srvyr::as_survey_design({dataname})")
+        # dataname <- glue::glue("{dataname} %>% srvyr::as_survey_design()")
     }
 
     exp <- ~ .DATA %>%

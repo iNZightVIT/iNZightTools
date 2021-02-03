@@ -33,7 +33,7 @@ renameVars <- function(.data, to_be_renamed_list) {
 
     if (is_survey(.data)) {
         .data <- srvyr::as_survey_design(.data)
-        dataname <- glue::glue("srvyr::as_survey_design({dataname})")
+        dataname <- glue::glue("{dataname} %>% srvyr::as_survey_design()")
     }
 
     exp <- ~.DATA %>%

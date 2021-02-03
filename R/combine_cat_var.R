@@ -46,7 +46,7 @@ combineCatVars <- function(.data, vars, sep = ".",
 
     if (is_survey(.data)) {
         .data <- srvyr::as_survey_design(.data)
-        dataname <- glue::glue("srvyr::as_survey_design({dataname})")
+        dataname <- glue::glue("{dataname} %>% srvyr::as_survey_design()")
     }
 
     # paste together the new variable made from the old variable names

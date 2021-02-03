@@ -17,6 +17,7 @@ Imports:
     srvyr,
     stats,
     stringr,
+    styler,
     survey,
     tibble,
     tidyr,

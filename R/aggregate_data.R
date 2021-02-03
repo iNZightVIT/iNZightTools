@@ -59,9 +59,9 @@ aggregateData <- function(.data, vars, summaries,
     dataname <- mc$.data
 
     is_survey <- is_survey(.data)
-    if (is_survey) {
+    if (is_survey && !inherits(.data, "tbl_svy")) {
         .data <- srvyr::as_survey_design(.data)
-        dataname <- glue::glue("srvyr::as_survey_design({dataname})")
+        dataname <- glue::glue("{dataname} %>% srvyr::as_survey_design()")
     }
 
     if (missing(vars)) stop("Variables to aggregate over required")

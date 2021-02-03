@@ -33,12 +33,19 @@ renameLevels <- function(.data, var, to_be_renamed,
         collapse = ", "
     )
 
-    exp <- ~.DATA %>%
-        tibble::add_column(
-            .NAME = forcats::fct_recode(.DATA$.VARNAME, .RENAME),
-            .after = ".VARNAME"
-        )
+    fmla <- ".NAME = forcats::fct_recode(.VNAME, .RENAME)"
+    fmla <- gsub(".VNAME",
+        ifelse(is_survey(.data), ".VARNAME", ".DATA$.VARNAME"),
+        fmla
+    )
+
+    if (is_survey(.data)) {
+        exp <- ~.DATA %>% update(.FMLA)
+    } else {
+        exp <- ~.DATA %>% tibble::add_column(.FMLA, .after = ".VARNAME")
+    }
     exp <- replaceVars(exp,
+        .FMLA = fmla,
         .DATA = dataname ,
         .RENAME = to_be_renamed,
         .VARNAME = var,

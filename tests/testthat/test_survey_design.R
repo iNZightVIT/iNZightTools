@@ -126,3 +126,22 @@ M = 1018
 
     expect_output(print(s), "survey::calibrate")
 })
+
+test_that("Survey designs can be parsed as survey spec", {
+    dclus2 <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
+    dsvy <- as_survey_spec(dclus2)
+    expect_is(dsvy, "inzsvyspec")
+    expect_equal(dsvy$design, dclus2)
+    expect_equal(dsvy$data, apiclus2)
+    expect_equal(
+        dsvy$spec,
+        list(
+            ids = "dnum + snum",
+            probs = NULL,
+            strata = NULL,
+            fpc = "fpc1 + fpc2",
+            nest = NULL,
+            weights = "pw"
+        )
+    )
+})

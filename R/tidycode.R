@@ -29,6 +29,18 @@ tidy_all_code <- function(x, width = 80, indent = 4, outfile,
 
 ### tidy a single piece of code
 tidy_code <- function(codeline, width, indent) {
+    commentlines <- grepl("^#", codeline)
+    if (all(commentlines)) return(codeline)
+    codeline[!commentlines] <- gsub(",\ +", ",\n", codeline[!commentlines])
+    cf <- tempfile(fileext = ".R")
+    on.exit(unlink(cf))
+    writeLines(codeline, cf)
+    z <- capture.output(
+        styler::style_file(cf, indent = indent, scope = "tokens")
+    )
+    rm(z)
+    return(readLines(cf))
+
     if (!grepl("<-|%<>%|&>%|=", codeline)){
         return (codeline)
     }

@@ -15,7 +15,7 @@ aggregateData(
 )
 }
 \arguments{
-\item{.data}{a dataframe to aggregate}
+\item{.data}{a dataframe or survey design object to aggregate}
 
 \item{vars}{a character vector of categorical variables in \code{.data}
 to group by}

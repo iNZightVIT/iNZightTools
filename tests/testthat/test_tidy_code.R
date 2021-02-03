@@ -1,8 +1,15 @@
 library(magrittr)
 context("test-test_tidy_code")
 
-messy_code <-
-  getText(readLines("messy_code_test.txt"),TRUE)
+messy_code <- getText(readLines("messy_code_test.txt"), TRUE)
+
+test_that("Tidying code works, and is silent", {
+  expect_silent(tidied <- tidy_all_code(messy_code))
+  expect_is(tidied, "character")
+})
+
+
+skip("No longer using custom code tidying")
 
 output <-
   c(
@@ -59,5 +66,3 @@ test_that("test tidy code" , {
   expect_equal(tidy_code(output[1], width = 200, indent = 2), width_200)
   expect_equal(tidy_code(output[1], width = 200, indent = 4), indent_4)
 })
-
-

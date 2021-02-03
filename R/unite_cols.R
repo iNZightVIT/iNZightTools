@@ -12,27 +12,28 @@ unite <- function(.data, name, col, sep) {
     mc <- match.call()
     dataname <- mc$.data
 
-    colnames <- ", c("
-    for (i in seq_along(col)) {
-        colnames <- paste0(colnames, "'", col[i], "'", ", ")
+    fmla <- "tidyr::unite(.NAME, .COL, sep = .SEP, remove = FALSE)"
+    if (is_survey(.data)) {
+        exp <- ~.DATA %>%
+            {
+                d <- (.)
+                d$variables <- d$variables %>% .FMLA %>% .FACTOR
+                d
+            }
+    } else {
+        exp <- ~.DATA %>% .FMLA %>% .FACTOR
     }
 
-    colnames <- paste0(substr(colnames, 1, nchar(colnames) - 2), ")")
-
-    sep <- paste0(", sep = '", sep, "'")
-
-    remove <- ", remove = FALSE"
-
-    exp <- ~.DATA %>%
-        tidyr::unite(.NAME.COL.SEP.REMOVE)
-
     exp <- replaceVars(exp,
+        .FMLA = fmla,
+        .FACTOR = "dplyr::mutate(.VNAME = as.factor(.VNAME))",
         .DATA = dataname,
-        .NAME = name,
-        .COL = colnames,
-        .SEP = sep,
-        .REMOVE = remove
+        .VNAME = name
     )
 
-    interpolate(exp)
+    interpolate(exp,
+        .NAME = name,
+        .COL = col,
+        .SEP = sep
+    )
 }

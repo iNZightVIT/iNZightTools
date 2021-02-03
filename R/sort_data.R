@@ -26,8 +26,17 @@ sortVars <- function(.data, vars, asc = rep(TRUE, length(vars))) {
     eval_str <- ifelse(asc, vars, str_c("desc(", vars, ")", sep = "")) %>%
         str_c(collapse = ", ")
 
-    exp <- ~.DATA %>%
-        dplyr::arrange(.EVAL)
+    if (is_survey(.data)) {
+        exp <- ~.DATA %>%
+            {
+                d <- (.)
+                d$variables <- d$variables %>% dplyr::arrange(.EVAL)
+                d
+            }
+    } else {
+        exp <- ~.DATA %>%
+            dplyr::arrange(.EVAL)
+    }
     exp <- replaceVars(exp,
         .DATA = dataname,
         .EVAL = eval_str

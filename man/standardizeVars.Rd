@@ -31,5 +31,5 @@ head(standardized)
 \code{\link{code}}
 }
 \author{
-Owen Jin
+Owen Jin, Tom Elliott
 }

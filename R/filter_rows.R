@@ -20,8 +20,8 @@ filterRows <- function(.data, rows) {
 
     is_survey <- is_survey(.data)
     if (is_survey) {
-        # .data <- srvyr::as_survey_design(.data)
-        # dataname <- glue::glue("{dataname} %>% srvyr::as_survey_design()")
+        # .data <- srvyr::as_survey(.data)
+        # dataname <- glue::glue("{dataname} %>% srvyr::as_survey()")
 
         exp <- ~ .DATA[-.ROWS, ]
     } else {

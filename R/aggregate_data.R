@@ -60,8 +60,8 @@ aggregateData <- function(.data, vars, summaries,
 
     is_survey <- is_survey(.data)
     if (is_survey && !inherits(.data, "tbl_svy")) {
-        .data <- srvyr::as_survey_design(.data)
-        dataname <- glue::glue("{dataname} %>% srvyr::as_survey_design()")
+        .data <- srvyr::as_survey(.data)
+        dataname <- glue::glue("{dataname} %>% srvyr::as_survey()")
     }
 
     if (missing(vars)) stop("Variables to aggregate over required")
@@ -179,7 +179,7 @@ agg_default_name <- function(fun) {
 #' data(api)
 #'
 #' dstrata <- apistrat %>%
-#' as_survey_design(strata = stype, weights = pw)
+#' as_survey(strata = stype, weights = pw)
 #'
 #' dstrata %>%
 #'   summarise(api99_iqr = survey_IQR(api99))

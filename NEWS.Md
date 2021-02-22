@@ -3,6 +3,7 @@
 * remove redundant code from `filterLevels()` to make it more concise (using `droplevels()`)
 * add method to convert survey design-like objects to iNZight's `inzsvyspec` format
 * suppress printing of dataset when joining data
+* fix bug where special characters in levels during `collapseLevels()` cause error
 
 # iNZightTools 1.10
 

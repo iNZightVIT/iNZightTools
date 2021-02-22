@@ -27,6 +27,15 @@ test_that("Collapsing 'number' factors", {
     )
 })
 
+test_that("Levels with special characters", {
+    expect_is(
+        cas3 <- collapseLevels(cas, "travel", c("bike", "bus"), "bike/bus"),
+        "data.frame"
+    )
+    expect_true("bike/bus" %in% levels(cas3$travel.coll))
+    expect_equivalent(cas3, eval(parse(text = code(cas3))))
+})
+
 
 require(survey)
 data(api)

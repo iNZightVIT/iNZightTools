@@ -44,7 +44,7 @@ collapseLevels <- function(.data, var, levels,
     }
 
     # cannot start a variable name with a number
-    if (grepl("^[0-9]", collapse) || grepl(" ", collapse))
+    if (grepl("^[0-9]", collapse) || grepl("[^a-zA-Z0-9_.]", collapse))
         collapse <- sprintf("`%s`", collapse)
 
     exp <- replaceVars(exp,

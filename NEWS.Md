@@ -4,6 +4,7 @@
 * add method to convert survey design-like objects to iNZight's `inzsvyspec` format
 * suppress printing of dataset when joining data
 * fix bug where special characters in levels during `collapseLevels()` cause error
+* add new `form_class_intervals()` function
 
 # iNZightTools 1.10
 

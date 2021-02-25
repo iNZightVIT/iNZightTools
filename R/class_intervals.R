@@ -29,14 +29,14 @@ form_class_intervals <- function(.data, variable,
         xr[1] <- floor(xr[1])
         xr[2] <- ceiling(xr[2])
     }
-    isinteger <- all(round(x) == x)
+    isinteger <- all(round(x) == x, na.rm = TRUE)
     if (isinteger) format <- gsub("(", "[", gsub(")", "]", format, fixed = TRUE), fixed = TRUE)
 
     # 1. Generate BREAK points - this algorithm can be improved separately; should return an expression that, evaluated, gives break points
     breaks_expr <- switch(method,
         "equal" =
             sprintf("seq(%s, %s, length.out = %iL)",
-                xr[1], xr[2], n_intervals),
+                xr[1], xr[2], n_intervals + 1L),
         "width" =
             sprintf("seq(%s, %s, by = %d)",
                 xr[1], xr[2], interval_width),

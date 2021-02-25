@@ -1,3 +1,24 @@
+#' Form Class Intervals
+#'
+#' Create categorical intervals from a numeric variable.
+#'
+#' @param .data the data set
+#' @param variable name of the variable to convert
+#' @param method one of 'equal' for equal-width interavls, 'width' for intervals of a specific width, 'count' for equal-count intervals, and 'manual' to specify break points manually
+#' @param n_intervals for methods 'equal' and 'count', this is the number of intervals to create
+#' @param interval_width for method 'width', this is the width of intervals
+#' @param format the format for intervals; use 'a' and 'b' to represent the min/max of each interval, respectively.
+#' @param range the range of the data; use this to adjust the labels (e.g., for continuous data, set this to floor/ceiling of the min/max of the data to get prettier intervals). If `range` does not cover the range of the data, values outside will be placed into 'less than a' and 'greater than b' categories
+#' @param format.lowest values lower than the min of `range` will have this label format
+#' @param format.highest values higher than the max of `range` will have this label format
+#' @param break_points for `method` 'manual', specify breakpoints here (as a numeric vector)
+#' @param name the name of the new variable in the resulting data set
+#' @return a dataframe with an additional column with categorical class intervals
+#' @md
+#' @author Tom Elliott
+#' @export
+#' @examples
+#' form_class_intervals(iris, 'Sepal.Length', 'equal', 5L)
 form_class_intervals <- function(.data, variable,
                                  method = c("equal", "width", "count", "manual"),
                                  n_intervals = 4L,

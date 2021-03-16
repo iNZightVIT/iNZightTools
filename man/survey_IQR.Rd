@@ -25,7 +25,7 @@ library(srvyr)
 data(api)
 
 dstrata <- apistrat \%>\%
-as_survey_design(strata = stype, weights = pw)
+as_survey(strata = stype, weights = pw)
 
 dstrata \%>\%
   summarise(api99_iqr = survey_IQR(api99))

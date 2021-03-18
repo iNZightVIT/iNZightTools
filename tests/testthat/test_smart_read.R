@@ -42,11 +42,11 @@ test_that("smart_read returns code with necessary conversions included", {
     )
     expect_equal(
         code(smart_read("test.sas7bdat")),
-        "haven::read_sas(\"test.sas7bdat\") %>% dplyr::mutate(\"gender\" = as.factor(gender))"
+        "haven::read_sas(\"test.sas7bdat\") %>% dplyr::mutate_at(\"gender\", as.factor)"
     )
     expect_equal(
         code(smart_read("cars.xpt")),
-        "haven::read_xpt(\"cars.xpt\") %>% dplyr::mutate(\"MAKE\" = as.factor(MAKE))"
+        "haven::read_xpt(\"cars.xpt\") %>% dplyr::mutate_at(\"MAKE\", as.factor)"
     )
 })
 
@@ -96,8 +96,13 @@ test_that("smart_read can handle datetimes", {
 })
 
 
-test_that("conversion to categorical works for datetimes", {
-    expect_silent(dt <- smart_read("dt.csv", column_types = c(x = "c")))
+test_that("conversion to character or factor works for datetimes", {
+    expect_silent(dt <- smart_read("dt.csv", column_types = c(x = "c", y = "c", z = "c")))
+    expect_is(dt$x, "Date")
+    expect_is(dt$y, "hms")
+    expect_is(dt$z, "POSIXct")
+
+    expect_silent(dt <- smart_read("dt.csv", column_types = c(x = "f")))
     expect_is(dt$x, "factor")
 })
 

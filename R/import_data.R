@@ -201,7 +201,7 @@ read_excel <- function(file,
                        ...) {
     named.args <- list(...)
 
-    if (!missing(column_types))
+    if (!missing(column_types) && !is.null(column_types))
         named.args <- c(list(col_types = column_types), named.args)
 
     if (preview)
@@ -312,9 +312,19 @@ convert_strings <- function(x, ctypes) {
     charnames <- names(TEMP_RESULT)[chars]
 
     types <- sapply(TEMP_RESULT[charnames], readr::guess_parser)
-    types <- ifelse(types == "character", "factor", types)
+    convert_fn <- sapply(types,
+        function(type)
+            switch(type,
+                "date" = "as.Date",
+                "time" = "hms::as.hms",
+                "datetime" = "as.POSIXct",
+                "double" = "as.numeric",
+                "character" = ,
+                "as.factor"
+            )
+    )
 
-    convert_fun <- as.factor(paste("as", types, sep = "."))
+    convert_fun <- as.factor(convert_fn)
     convert_list <- tapply(charnames, convert_fun, c)
     convert_exprs <- lapply(names(convert_list),
         function(fn) {

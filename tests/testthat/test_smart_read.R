@@ -193,11 +193,20 @@ test_that("JSON supported", {
     expect_error(smart_read(t), "Unable to read file")
 })
 
-test_that("Columns with first >1000 rows NA are read as character", {
+test_that("Columns with first >1000 rows NA are read as character, converted correctly", {
     skip_if_offline()
     url <- "https://www.stat.auckland.ac.nz/~wild/data/FutureLearn/NHANES2009-2012.csv"
     skip_if_not(RCurl::url.exists(url))
     expect_is(d <- smart_read(url), "data.frame")
     expect_is(d$Race3, "factor")
     expect_false(all(is.na(d$Race3)))
+    expect_is(d$Testosterone, "numeric")
+})
+
+test_that("Variable names are quoted as necessary", {
+    expect_equal(quote_varname("hello"), "hello")
+    expect_equal(quote_varname("9hello"), "`9hello`")
+    expect_equal(quote_varname("hello-world"), "`hello-world`")
+    expect_equal(quote_varname("hello_world"), "hello_world")
+    expect_equal(quote_varname("_hello"), "`_hello`")
 })

@@ -62,10 +62,10 @@ import_survey <- function(file, data) {
     )
 
     if (!is.null(spec$data)) {
-        if (grepl("^https?://", spec$data)) return()
-
-        data <- file.path(dirname(file), spec$data)
-        if (!file.exists(data)) data <- NULL
+        if (!grepl("^https?://", spec$data)) {
+            data <- file.path(dirname(file), spec$data)
+            if (!file.exists(data)) data <- NULL
+        }
     }
 
     if (!missing(data) && !is.null(data) && is.character(data)) {

@@ -5,6 +5,7 @@
 * suppress printing of dataset when joining data
 * fix bug where special characters in levels during `collapseLevels()` cause error
 * add new `form_class_intervals()` function
+* update `import_survey()` to handle URL as the data argument
 
 # iNZightTools 1.10
 

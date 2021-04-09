@@ -22,7 +22,7 @@
 #' Additionally, the information can contain a `file` specification
 #' indicating the path to the data, which will be imported using
 #' `iNZightTools::smart_read` if it exists in the same directory
-#' as `file`.
+#' as `file`, or alternatively a URL to a data file that will be downloaded.
 #'
 #' @param file the file containing survey information (see Details)
 #' @param data optional, if supplied the survey object will be created with the supplied data.
@@ -62,11 +62,14 @@ import_survey <- function(file, data) {
     )
 
     if (!is.null(spec$data)) {
+        if (grepl("^https?://", spec$data)) return()
+
         data <- file.path(dirname(file), spec$data)
-        if (file.exists(data))
-            data <- smart_read(data)
-    } else if (!missing(data)) {
-        if (is.character(data) && file.exists(data)) {
+        if (!file.exists(data)) data <- NULL
+    }
+
+    if (!missing(data) && !is.null(data) && is.character(data)) {
+        if (file.exists(data) || grepl("^https?://", data)) {
             data <- smart_read(data)
         }
     }

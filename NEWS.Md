@@ -6,6 +6,7 @@
 * fix bug where special characters in levels during `collapseLevels()` cause error
 * add new `form_class_intervals()` function
 * update `import_survey()` to handle URL as the data argument
+* fix bug in `reorderLevels(..., freq = TRUE)` (#165, @tmelliott)
 
 # iNZightTools 1.10
 

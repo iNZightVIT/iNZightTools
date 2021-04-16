@@ -12,6 +12,11 @@ test_that("Reordering levels works", {
         "data.frame"
     )
     expect_true("getlunch.reord" %in% names(cas1))
+
+    expect_equal(
+        levels(reorderLevels(cas, "getlunch", freq = TRUE)$getlunch.reord),
+        names(sort(table(cas$getlunch), decreasing = TRUE))
+    )
 })
 
 test_that("Reordering respects name argument", {

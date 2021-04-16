@@ -41,7 +41,7 @@ reorderLevels <- function(.data, var,
 
 
     fmla <- ifelse(freq,
-        ".NEWNAME = forcats::fct_infreq(.VAR)",
+        ".NEWNAME = forcats::fct_infreq(.VNAME)",
         ".NEWNAME = factor(.VNAME, levels = .NEWLEVELS)"
     )
     fmla <- gsub(".VNAME",

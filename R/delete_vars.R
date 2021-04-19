@@ -10,8 +10,13 @@ deleteVars <- function(.data, vars) {
     mc <- match.call()
     dataname <- mc$.data
 
-    todelete <- paste("-", vars, collapse = ", ")
-    exp <- ~.DATA %>% dplyr::select(.VARS)
+    if (is_survey(.data)) {
+        todelete <- paste(vars, " = NULL", collapse = ", ")
+        exp <- ~.DATA %>% update(.VARS)
+    } else {
+        todelete <- paste("-", vars, collapse = ", ")
+        exp <- ~.DATA %>% dplyr::select(.VARS)
+    }
     exp <- replaceVars(exp,
         .VARS = todelete,
         .DATA = dataname

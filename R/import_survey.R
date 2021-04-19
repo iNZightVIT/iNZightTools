@@ -22,7 +22,7 @@
 #' Additionally, the information can contain a `file` specification
 #' indicating the path to the data, which will be imported using
 #' `iNZightTools::smart_read` if it exists in the same directory
-#' as `file`.
+#' as `file`, or alternatively a URL to a data file that will be downloaded.
 #'
 #' @param file the file containing survey information (see Details)
 #' @param data optional, if supplied the survey object will be created with the supplied data.
@@ -62,11 +62,16 @@ import_survey <- function(file, data) {
     )
 
     if (!is.null(spec$data)) {
-        data <- file.path(dirname(file), spec$data)
-        if (file.exists(data))
-            data <- smart_read(data)
-    } else if (!missing(data)) {
-        if (is.character(data) && file.exists(data)) {
+        if (grepl("^https?://", spec$data)) {
+            data <- spec$data
+        } else {
+            data <- file.path(dirname(file), spec$data)
+            if (!file.exists(data)) data <- NULL
+        }
+    }
+
+    if (!missing(data) && !is.null(data) && is.character(data)) {
+        if (file.exists(data) || grepl("^https?://", data)) {
             data <- smart_read(data)
         }
     }
@@ -182,6 +187,38 @@ make_survey <- function(.data, spec) {
             )
         })()
     }
+    spec
+}
+
+#' Parse survey to survey spec
+#'
+#' @param x an object which can be converted to a survey spec (e.g., survey.design)
+#' @return an `inzsvydesign` file
+#' @author Tom Elliott
+#' @md
+#' @export
+as_survey_spec <- function(x) UseMethod("as_survey_spec")
+
+#' @describeIn as_survey_spec Method for survey.design objects
+#' @export
+as_survey_spec.survey.design <- function(x) {
+    get_arg <- function(x, arg) {
+        x <- x$call
+        orNULL(x[[arg]], as.character(x[[arg]])[2])
+    }
+    spec <- list(
+        spec = list(
+            ids = get_arg(x, 2),
+            probs = get_arg(x, "probs"),
+            strata = get_arg(x, "strata"),
+            fpc = get_arg(x, "fpc"),
+            nest = get_arg(x, "nest"),
+            weights = get_arg(x, "weights")
+        ),
+        data = x$variables,
+        design = x
+    )
+    class(spec) <- "inzsvyspec"
     spec
 }
 

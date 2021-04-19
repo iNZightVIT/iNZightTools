@@ -44,18 +44,21 @@ combineCatVars <- function(.data, vars, sep = ".",
     mc <- match.call()
     dataname <- mc$.data
 
+    if (is_survey(.data) && !inherits(.data, "tbl_svy")) {
+        .data <- srvyr::as_survey(.data)
+        dataname <- glue::glue("{dataname} %>% srvyr::as_survey()")
+    }
+
     # paste together the new variable made from the old variable names
     to_be_combined <- paste(vars, collapse = ", ")
 
-    exp <- ~.DATA %>%
-        dplyr::mutate(
-            .NEWVAR = forcats::fct_cross(
-                .VARS,
-                sep = .SEP,
-                keep_empty = .KEEP
-            )
-        )
+    exp <- ~.DATA %>% dplyr::mutate(.FMLA)
     exp <- replaceVars(exp,
+        .FMLA = ".NEWVAR = forcats::fct_cross(
+            .VARS,
+            sep = .SEP,
+            keep_empty = .KEEP
+        )",
         .DATA = dataname,
         .NEWVAR = name,
         .VARS = to_be_combined

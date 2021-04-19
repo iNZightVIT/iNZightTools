@@ -42,11 +42,11 @@ test_that("smart_read returns code with necessary conversions included", {
     )
     expect_equal(
         code(smart_read("test.sas7bdat")),
-        "haven::read_sas(\"test.sas7bdat\") %>% dplyr::mutate(\"gender\" = as.factor(gender))"
+        "haven::read_sas(\"test.sas7bdat\") %>% dplyr::mutate_at(\"gender\", as.factor)"
     )
     expect_equal(
         code(smart_read("cars.xpt")),
-        "haven::read_xpt(\"cars.xpt\") %>% dplyr::mutate(\"MAKE\" = as.factor(MAKE))"
+        "haven::read_xpt(\"cars.xpt\") %>% dplyr::mutate_at(\"MAKE\", as.factor)"
     )
 })
 
@@ -96,8 +96,13 @@ test_that("smart_read can handle datetimes", {
 })
 
 
-test_that("conversion to categorical works for datetimes", {
-    expect_silent(dt <- smart_read("dt.csv", column_types = c(x = "c")))
+test_that("conversion to character or factor works for datetimes", {
+    expect_silent(dt <- smart_read("dt.csv", column_types = c(x = "c", y = "c", z = "c")))
+    expect_is(dt$x, "Date")
+    expect_is(dt$y, "hms")
+    expect_is(dt$z, "POSIXct")
+
+    expect_silent(dt <- smart_read("dt.csv", column_types = c(x = "f")))
     expect_is(dt$x, "factor")
 })
 
@@ -193,11 +198,20 @@ test_that("JSON supported", {
     expect_error(smart_read(t), "Unable to read file")
 })
 
-test_that("Columns with first >1000 rows NA are read as character", {
+test_that("Columns with first >1000 rows NA are read as character, converted correctly", {
     skip_if_offline()
     url <- "https://www.stat.auckland.ac.nz/~wild/data/FutureLearn/NHANES2009-2012.csv"
     skip_if_not(RCurl::url.exists(url))
     expect_is(d <- smart_read(url), "data.frame")
     expect_is(d$Race3, "factor")
     expect_false(all(is.na(d$Race3)))
+    expect_is(d$Testosterone, "numeric")
+})
+
+test_that("Variable names are quoted as necessary", {
+    expect_equal(quote_varname("hello"), "hello")
+    expect_equal(quote_varname("9hello"), "`9hello`")
+    expect_equal(quote_varname("hello-world"), "`hello-world`")
+    expect_equal(quote_varname("hello_world"), "hello_world")
+    expect_equal(quote_varname("_hello"), "`_hello`")
 })

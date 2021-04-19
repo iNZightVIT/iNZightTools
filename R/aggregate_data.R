@@ -4,7 +4,7 @@
 #' them by specified categorical variables
 #' and returns the result along with tidyverse code used to generate it.
 #'
-#' @param .data a dataframe to aggregate
+#' @param .data a dataframe or survey design object to aggregate
 #' @param vars  a character vector of categorical variables in \code{.data}
 #'        to group by
 #' @param summaries summaries to generate for the groups generated
@@ -58,6 +58,12 @@ aggregateData <- function(.data, vars, summaries,
     mc <- match.call()
     dataname <- mc$.data
 
+    is_survey <- is_survey(.data)
+    if (is_survey && !inherits(.data, "tbl_svy")) {
+        .data <- srvyr::as_survey(.data)
+        dataname <- glue::glue("{dataname} %>% srvyr::as_survey()")
+    }
+
     if (missing(vars)) stop("Variables to aggregate over required")
 
     if (missing(summary_vars)) {
@@ -72,27 +78,39 @@ aggregateData <- function(.data, vars, summaries,
                 name <- varnames[[smry]]
                 # functions that don't take na.rm argument
                 na <- ifelse(smry %in% c("count"), "", ", na.rm = TRUE")
+                svy <- if (is_survey) "srvyr::survey_" else ""
                 fun <- switch(smry,
-                    "count" = "dplyr::n()",
-                    "iqr" = "IQR({var}, na.rm = TRUE)",
+                    "count" =
+                        if (is_survey) "srvyr::survey_total()"
+                        else "dplyr::n()",
+                    "iqr" =
+                        if (is_survey) "iNZightTools::survey_IQR({var})"
+                        else "IQR({var}, na.rm = TRUE)",
                     "missing" = "iNZightTools::countMissing({var})",
-                    paste0(smry, "({var}", na, ")")
+                    "sum" =
+                        if (is_survey) "srvyr::survey_total({var}, na.rm = TRUE)"
+                        else "sum({var}, na.rm = TRUE)",
+                    paste0(svy, smry, "({var}", na, ")")
                 )
 
                 var <- summary_vars
                 if (smry == "quantile") {
-                    z <- do.call(rbind,
-                        lapply(quantiles,
-                            function(p) {
-                                n <- glue::glue(name)
-                                f <- glue::glue("quantile({var}, probs = {p / 100}, na.rm = TRUE)")
-                                data.frame(n = n, f = f)
-                            }
+                    if (is_survey) {
+                        name <- glue::glue(gsub("\\_q\\{100\\*p\\}$", "", name))
+                        fun <- glue::glue("srvyr::survey_quantile({var}, quantiles = .QUANTILES, na.rm = TRUE)")
+                    } else {
+                        z <- do.call(rbind,
+                            lapply(quantiles,
+                                function(p) {
+                                    n <- glue::glue(name)
+                                    f <- glue::glue("quantile({var}, probs = {p}, na.rm = TRUE)")
+                                    data.frame(n = n, f = f)
+                                }
+                            )
                         )
-                    )
-
-                    name <- z[,1]
-                    fun <- z[,2]
+                        name <- z[,1]
+                        fun <- z[,2]
+                    }
                 } else {
                     name <- glue::glue(name)
                     fun <- glue::glue(fun)
@@ -108,7 +126,8 @@ aggregateData <- function(.data, vars, summaries,
     exp <- ~.data %>%
         dplyr::group_by(.EVAL_GROUPBY) %>%
         dplyr::summarize(
-            .EVAL_SUMMARIZE
+            .EVAL_SUMMARIZE,
+            .groups = "drop"
         )
 
     exp <- replaceVars(exp,
@@ -117,7 +136,7 @@ aggregateData <- function(.data, vars, summaries,
         .data = dataname
     )
 
-    interpolate(exp)
+    interpolate(exp, .QUANTILES = quantiles)
 }
 
 make_varnames <- function(summaries, varnames) {
@@ -137,8 +156,42 @@ make_varnames <- function(summaries, varnames) {
 agg_default_name <- function(fun) {
     switch(fun,
         "count" = "count",
-        "quantile" = "{var}_q{p}",
+        "quantile" = "{var}_q{100*p}",
         "missing" = "{var}_missing",
         paste("{var}", fun, sep = "_")
     )
+}
+
+#' Interquartile range function for surveys
+#'
+#' Calculates the interquartile range from complex survey data.
+#' A wrapper for taking differences of `svyquantile` at 0.25 and 0.75 quantiles,
+#' and meant to be called from within `summarize` (see [srvyr] package).
+#'
+#' @param x A variable or expression
+#' @param na.rm logical, if `TRUE` missing values are removed
+#'
+#' @return a vector of interquartile ranges
+#'
+#' @examples
+#' library(survey)
+#' library(srvyr)
+#' data(api)
+#'
+#' dstrata <- apistrat %>%
+#' as_survey(strata = stype, weights = pw)
+#'
+#' dstrata %>%
+#'   summarise(api99_iqr = survey_IQR(api99))
+#'
+#' @author Tom Elliott
+#' @md
+#' @export
+survey_IQR <- function(x, na.rm = TRUE) {
+    .svy <- srvyr::set_survey_vars(srvyr::cur_svy(), x)
+    qs <- survey::svyquantile(~`__SRVYR_TEMP_VAR__`,
+        quantiles = c(0.25, 0.75),
+        na.rm = na.rm, design = .svy)
+    out <- apply(qs, 1, diff)
+    out
 }

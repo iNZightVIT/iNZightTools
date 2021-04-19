@@ -1,5 +1,17 @@
 # iNZightTools 1.10
 
+* use `srvyr` package to handle survey designs using `dplyr`-like syntax
+  * `aggregateData()`, `filterNumeric()`, `filterLevels()`, `filterRows()`, ...
+* remove redundant code from `filterLevels()` to make it more concise (using `droplevels()`)
+* add method to convert survey design-like objects to iNZight's `inzsvyspec` format
+* suppress printing of dataset when joining data
+* fix bug where special characters in levels during `collapseLevels()` cause error
+* add new `form_class_intervals()` function
+* update `import_survey()` to handle URL as the data argument
+* fix bug in `reorderLevels(..., freq = TRUE)` (#165, @tmelliott)
+
+# iNZightTools 1.10
+
 * refactor `aggregateData` function to improve flexibility
 * new `import_survey()` function for importing a survey design (and data) from a specification file (in TOML format)
 

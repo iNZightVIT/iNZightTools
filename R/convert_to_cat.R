@@ -19,19 +19,28 @@ convertToCat <- function(.data, vars, names = paste(vars, "cat", sep = ".")) {
     mc <- match.call()
     dataname <- mc$.data
 
-    formulae <- list(~.DATA)
-
-    for (i in seq_along(vars)) {
-        formula <- ~tibble::add_column(
-            .NAME = factor(.DATA$.VARNAME),
-            .after = ".VARNAME"
+    is_survey <- is_survey(.data)
+    if (is_survey) {
+        exp <- ~.design %>% update(.VARS)
+        exp <- replaceVars(exp,
+            .VARS = paste(paste0(names, " = factor(", vars, ")"), collapse = ", "),
+            .design = dataname
         )
-        formula <- replaceVars(formula, .VARNAME = vars[i], .NAME = names[i])
-        formulae[[i + 1]] <- formula
-    }
+    } else {
+        formulae <- list(~.DATA)
 
-    exp <- pasteFormulae(formulae)
-    exp <- replaceVars(exp, .DATA = dataname)
+        for (i in seq_along(vars)) {
+            formula <- ~tibble::add_column(
+                .NAME = factor(.DATA$.VARNAME),
+                .after = ".VARNAME"
+            )
+            formula <- replaceVars(formula, .VARNAME = vars[i], .NAME = names[i])
+            formulae[[i + 1]] <- formula
+        }
+
+        exp <- pasteFormulae(formulae)
+        exp <- replaceVars(exp, .DATA = dataname)
+    }
 
     interpolate(exp)
 }

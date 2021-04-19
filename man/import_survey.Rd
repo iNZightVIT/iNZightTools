@@ -37,7 +37,7 @@ which matches all variables starting with a \code{w} followed by digits between 
 Additionally, the information can contain a \code{file} specification
 indicating the path to the data, which will be imported using
 \code{iNZightTools::smart_read} if it exists in the same directory
-as \code{file}.
+as \code{file}, or alternatively a URL to a data file that will be downloaded.
 }
 \author{
 Tom Elliott

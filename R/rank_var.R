@@ -22,19 +22,33 @@ rankVars <- function(.data, vars) {
     mc <- match.call()
     dataname <- mc$.data
 
-    formulae <- list(~.DATA)
-
-    for (i in seq_along(vars)) {
-        formula <-
-            ~tibble::add_column(
-                .VARNAME.rank = dplyr::min_rank(.DATA$.VARNAME),
-                .after = ".VARNAME"
+    formulae <- sapply(vars,
+        function(var) {
+            fmla <- ".VNAME.rank = dplyr::min_rank(.VAR)"
+            fmla <- gsub(".VAR",
+                ifelse(is_survey(.data), ".VNAME", ".DATA$.VNAME"),
+                fmla
             )
-        formulae[[i + 1]] <- replaceVars(formula, .VARNAME = vars[i])
+            if (!is_survey(.data)) {
+                fmla <- sprintf(
+                    "tibble::add_column(%s, .after = \".VNAME\")",
+                    fmla
+                )
+            }
+            fmla <- gsub(".VNAME", var, fmla)
+            if (is_survey(.data)) return(fmla)
+            eval(parse(text = sprintf("~%s", fmla)))
+        }
+    )
+
+    if (is_survey(.data)) {
+        exp <- ~.DATA %>% update(.FMLA)
+        formula <- paste(formulae, collapse = ", ")
+        exp <- replaceVars(exp, .FMLA = formula)
+    } else {
+        exp <- pasteFormulae(c(list(~.DATA), as.list(formulae)))
     }
 
-    exp <- pasteFormulae(formulae)
     exp <- replaceVars(exp, .DATA = dataname)
-
     interpolate(exp)
 }

@@ -9,7 +9,7 @@
 #'
 #' @return separated dataset
 #' @export
-#' @author Yiwen He
+#' @author Yiwen He, Tom Elliott
 separate <- function(.data, col, left, right, sep, check) {
     mc <- match.call()
     dataname <- mc$.data
@@ -19,22 +19,28 @@ separate <- function(.data, col, left, right, sep, check) {
         sep <- paste0("\\", sep)
     }
 
-    if (check == "Column") {
+    fmla <- "tidyr::separate(col = col_name, into = into_cols, sep = separator, extra = \"merge\")"
+
+    if (is_survey(.data)) {
+        if (check == "Row") stop("Cannot create new rows in surveys")
+        # .data <- srvyr::as_survey(.data)
+        # dataname <- glue::glue("{dataname} %>% srvyr::as_survey()")
+
         exp <- ~.DATA %>%
-            tidyr::separate(
-                col = col_name,
-                into = into_cols,
-                sep = separator,
-                extra = "merge"
-            )
+            {
+                d <- (.)
+                d$variables <- d$variables %>% .FMLA
+                d
+            }
+    } else if (check == "Column") {
+        exp <- ~.DATA %>% .FMLA
+
     } else if (check == "Row") {
         exp <- ~.DATA %>%
             tidyr::separate_rows(col = col_name, sep = separator)
     }
 
-    exp <- replaceVars(exp,
-        .DATA = dataname
-    )
+    exp <- replaceVars(exp, .FMLA = fmla, .DATA = dataname)
 
     interpolate(exp,
         col_name = col,

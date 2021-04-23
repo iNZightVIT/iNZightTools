@@ -12,7 +12,7 @@ form_class_intervals(
   interval_width,
   format = "(a,b]",
   range = NULL,
-  format.lowest = ifelse(isinteger, "< a", "≤ a"),
+  format.lowest = ifelse(isinteger, "< a", "<= a"),
   format.highest = "> b",
   break_points = NULL,
   name = sprintf("\%s.f", variable)

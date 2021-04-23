@@ -6,7 +6,4 @@
 *.DS_Store
 *.Rcheck
 *.tar.gz
-revdep
-
 *~
-/revdep/.cache.rds

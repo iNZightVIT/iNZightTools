@@ -11,7 +11,8 @@ check:
 	@$(RCMD) -e "devtools::check()"
 
 revcheck:
-	@$(RCMD) -e "devtools::use_revdep()"
+	@$(RCMD) -e "if (!requireNamespace('revdepcheck')) install.packages('revdepcheck')"
+	@$(RCMD) -e "revdepcheck::revdep_check()"
 	@$(RCMD) -f "revdep/check.R"
 
 crancheck: document

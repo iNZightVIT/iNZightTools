@@ -25,7 +25,7 @@ form_class_intervals <- function(.data, variable,
                                  interval_width,
                                  format = "(a,b]",
                                  range = NULL,
-                                 format.lowest = ifelse(isinteger, "< a", "\U2264 a"),
+                                 format.lowest = ifelse(isinteger, "< a", "<= a"),
                                  format.highest = "> b",
                                  break_points = NULL,
                                  name = sprintf("%s.f", variable)) {

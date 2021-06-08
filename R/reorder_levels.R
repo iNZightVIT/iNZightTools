@@ -39,21 +39,24 @@ reorderLevels <- function(.data, var,
         name <- sprintf("%s.reord%i", var, i)
     }
 
-    if (freq) {
-        exp <- ~.DATA %>%
-            tibble::add_column(
-                .NEWNAME = forcats::fct_infreq(.DATA$.VARNAME),
-                .after = ".AFTER"
-            )
+
+    fmla <- ifelse(freq,
+        ".NEWNAME = forcats::fct_infreq(.VNAME)",
+        ".NEWNAME = factor(.VNAME, levels = .NEWLEVELS)"
+    )
+    fmla <- gsub(".VNAME",
+        ifelse(is_survey(.data), ".VARNAME", ".DATA$.VARNAME"),
+        fmla
+    )
+
+    if (is_survey(.data)) {
+        exp <- ~.DATA %>% update(.FMLA)
     } else {
-        exp <- ~.DATA %>%
-            tibble::add_column(
-                .NEWNAME = factor(.DATA$.VARNAME, levels = .NEWLEVELS),
-                .after = ".AFTER"
-            )
+        exp <- ~.DATA %>% tibble::add_column(.FMLA, .after = ".AFTER")
     }
 
     exp <- replaceVars(exp,
+        .FMLA = fmla,
         .NEWNAME = name,
         .AFTER = after,
         .VARNAME = var,

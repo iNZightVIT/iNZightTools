@@ -1,6 +1,6 @@
 library(magrittr)
 context("test if tidycode function can produce prett printing code")
-
+skip("No longer using custom code tidying")
 tempf <- function(file) file.path(tempdir(), file)
 tidy_all_code(
     "messy_gapminder.txt",

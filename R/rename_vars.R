@@ -25,10 +25,16 @@ renameVars <- function(.data, to_be_renamed_list) {
     dataname <- mc$.data
 
     # paste together the variables to be renamed into one string
-    to_be_renamed <- str_c(
-        to_be_renamed_list, "=", names(to_be_renamed_list),
+    vnames <- names(to_be_renamed_list)
+    to_be_renamed_list <- create_varname(to_be_renamed_list)
+    to_be_renamed <- stringr::str_c(to_be_renamed_list, "=", vnames,
         collapse = ", "
     )
+
+    if (is_survey(.data) && !inherits(.data, "tbl_svy")) {
+        .data <- srvyr::as_survey(.data)
+        dataname <- glue::glue("{dataname} %>% srvyr::as_survey()")
+    }
 
     exp <- ~.DATA %>%
         dplyr::rename(.RENAME)

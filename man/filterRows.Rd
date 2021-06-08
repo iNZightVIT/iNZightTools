@@ -7,7 +7,7 @@
 filterRows(.data, rows)
 }
 \arguments{
-\item{.data}{a dataframe to filter}
+\item{.data}{a dataframe or a survey design object to filter}
 
 \item{rows}{a numeric vector of row numbers to slice off}
 }

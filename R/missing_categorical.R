@@ -25,41 +25,37 @@ missingToCat <- function(.data, vars, names = paste0(vars, "_miss")) {
     mc <- match.call()
     dataname <- mc$.data
 
-    formulae <- list(~.DATA)
+    .d <- if (is_survey(.data)) .data$variables else .data
+    numCols <- sapply(.d[, vars], is.numeric)
 
-    numCols <- sapply(.data[, vars], is.numeric)
+    formulae <- sapply(seq_along(vars),
+        function(i) {
+            if (numCols[i]) {
+                ## it's a number
+                fmla <- ".NAME = factor(ifelse(is.na(.VAR), \"missing\", \"observed\"))"
+            }
+            else {
+                fmla <- ".NAME = forcats::fct_explicit_na(.VAR, na_level = \"missing\")"
+            }
+            fmla <- gsub(".VAR", ifelse(is_survey(.data), ".VARNAME", ".DATA$.VARNAME"), fmla)
+            if (!is_survey(.data)) {
+                fmla <- sprintf("tibble::add_column(%s, .after = \".VARNAME\")", fmla)
+            }
+            fmla <- gsub(".VARNAME", vars[i], fmla)
+            fmla <- gsub(".NAME", names[i], fmla)
+            if (is_survey(.data)) return(fmla)
+            eval(parse(text = sprintf("~%s", fmla)))
+        }
+    )
 
-    for (i in seq_along(vars)) {
-        if (numCols[i]) {
-            ## it's a number
-            formula <-
-                ~tibble::add_column(
-                    .NAME = factor(
-                        ifelse(is.na(.DATA$.VARNAME),
-                            "missing", "observed"
-                        )
-                    ),
-                    .after = ".VARNAME"
-                )
-        }
-        else {
-            formula <-
-                ~tibble::add_column(
-                    .NAME = forcats::fct_explicit_na(
-                        .DATA$.VARNAME,
-                        na_level = "missing"
-                    ),
-                    .after = ".VARNAME"
-                )
-        }
-        formula <- replaceVars(formula,
-            .VARNAME = vars[i],
-            .NAME = names[i]
-        )
-        formulae[[i + 1]] <- formula
+    if (is_survey(.data)) {
+        exp <- ~.DATA %>% update(.FMLA)
+        formula <- paste(formulae, collapse = ", ")
+        exp <- replaceVars(exp, .FMLA = formula)
+    } else {
+        exp <- pasteFormulae(c(list(~.DATA), as.list(formulae)))
     }
 
-    exp <- pasteFormulae(formulae)
     exp <- replaceVars(exp, .DATA = dataname)
 
     interpolate(exp)

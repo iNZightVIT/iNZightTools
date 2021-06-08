@@ -64,12 +64,14 @@ joindata <- function(.data, imported_data,
         .SUFFIX = suf
     )
 
+
     if (all(origin_join_col == "") & all(import_join_col == "")) {
         res <- suppressMessages(interpolate(exp))
         vars <- capture.output(
-            dplyr::inner_join(.data, imported_data),
+            tmp <- dplyr::inner_join(.data, imported_data),
             type = "message"
         )
+        rm(tmp)
         origin_join_col <-
             eval(parse(text = gsub(".+ = ", "", vars)))
         import_join_col <- origin_join_col

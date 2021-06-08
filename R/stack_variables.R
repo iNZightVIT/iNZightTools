@@ -1,6 +1,6 @@
 #' Stack variables
 #'
-#' Collapse columns by converting from a long format to a tall format
+#' Collapse columns by converting from a wide to a long format
 #' and returns the result along with tidyverse code used to generate it.
 #'
 #' @param .data a dataframe to stack
@@ -21,8 +21,10 @@
 #' @author Owen Jin
 #' @export
 stackVars <- function(.data, vars,
-                     key = "stack.variable",
-                     value = "stack.value") {
+                      key = "stack.variable",
+                      value = "stack.value") {
+
+    if (is_survey(.data)) stop('Cannot stack data in a survey design')
 
     mc <- match.call()
     dataname <- mc$.data

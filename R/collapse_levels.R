@@ -25,16 +25,26 @@ collapseLevels <- function(.data, var, levels,
     mc <- match.call()
     dataname <- mc$.data
 
-    exp <- ~.DATA %>%
-        tibble::add_column(
-            .NAME = forcats::fct_collapse(
-                .DATA$.VARNAME,
-                .COLLAPSENAME = .LEVELS
-            ),
-            .after = ".VARNAME")
+    if (is_survey(.data)) {
+        exp <- ~.DATA %>%
+            update(
+                .NAME = forcats::fct_collapse(
+                    .VARNAME,
+                    .COLLAPSENAME = .LEVELS
+                )
+            )
+    } else {
+        exp <- ~.DATA %>%
+            tibble::add_column(
+                .NAME = forcats::fct_collapse(
+                    .DATA$.VARNAME,
+                    .COLLAPSENAME = .LEVELS
+                ),
+                .after = ".VARNAME")
+    }
 
     # cannot start a variable name with a number
-    if (grepl("^[0-9]", collapse))
+    if (grepl("^[0-9]", collapse) || grepl("[^a-zA-Z0-9_.]", collapse))
         collapse <- sprintf("`%s`", collapse)
 
     exp <- replaceVars(exp,

@@ -23,3 +23,13 @@ test_that("NAs in either variable return an NA", {
         0
     )
 })
+
+require(survey)
+data(api)
+svy <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
+
+test_that("Survey cat vars can be combined", {
+    d <- combineCatVars(svy, c("both", "awards"))
+    expect_equal(levels(d$variables$both.awards), c("No.No", "Yes.No", "Yes.Yes"))
+    expect_equivalent(eval(parse(text = code(d))), d)
+})

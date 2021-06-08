@@ -5,19 +5,24 @@ cas <- smart_read("cas500.csv")
 
 test_that("Reordering levels works", {
     expect_is(
-        cas1 <- reorderLevels(cas, "getlunch", 
-            new_levels = 
+        cas1 <- reorderLevels(cas, "getlunch",
+            new_levels =
                 c("dairy", "friend", "home", "school", "tuckshop", "none")
         ),
         "data.frame"
     )
     expect_true("getlunch.reord" %in% names(cas1))
+
+    expect_equal(
+        levels(reorderLevels(cas, "getlunch", freq = TRUE)$getlunch.reord),
+        names(sort(table(cas$getlunch), decreasing = TRUE))
+    )
 })
 
 test_that("Reordering respects name argument", {
     expect_is(
-        cas1 <- reorderLevels(cas, "getlunch", 
-            new_levels = 
+        cas1 <- reorderLevels(cas, "getlunch",
+            new_levels =
                 c("dairy", "friend", "home", "school", "tuckshop", "none"),
             name = "getlunch.reordered"
         ),
@@ -27,13 +32,13 @@ test_that("Reordering respects name argument", {
 })
 
 test_that("Reordering twice works", {
-    cas1 <- reorderLevels(cas, "getlunch", 
-        new_levels = 
+    cas1 <- reorderLevels(cas, "getlunch",
+        new_levels =
             c("dairy", "friend", "home", "school", "tuckshop", "none")
     )
     expect_is(
-        cas2 <- reorderLevels(cas1, "getlunch", 
-            new_levels = 
+        cas2 <- reorderLevels(cas1, "getlunch",
+            new_levels =
                 c("home", "dairy", "friend", "school", "tuckshop", "none")
         ),
         "data.frame"
@@ -48,3 +53,12 @@ test_that("Reordering twice works", {
     )
 })
 
+require(survey)
+data(api)
+svy <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
+
+test_that("Reordering survey variables works", {
+    d <- reorderLevels(svy, "stype", c("H", "M", "E"))
+    expect_equal(levels(d$variables$stype.reord), c("H", "M", "E"))
+    expect_equivalent(eval(parse(text = code(d))), d)
+})

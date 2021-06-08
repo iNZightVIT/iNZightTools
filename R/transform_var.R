@@ -31,8 +31,13 @@ transformVar <- function(.data, var, transformation,
         ".FUNNAME(.DATA$.VARNAME)"
     )
 
-    exp <- ~.DATA %>%
-        tibble::add_column(.NAME = .FUNEXP, .after = ".VARNAME")
+    if (is_survey(.data)) {
+        exp <-  ~.DATA %>% update(.NAME = .FUNEXP)
+        funexp <- gsub(".DATA$", "", funexp, fixed = TRUE)
+    } else {
+        exp <- ~.DATA %>%
+            tibble::add_column(.NAME = .FUNEXP, .after = ".VARNAME")
+    }
 
     exp <- replaceVars(exp,
         .FUNEXP = funexp,

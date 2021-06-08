@@ -30,6 +30,17 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
     d <- fun(file, ext = ext, preview = preview,
         column_types = column_types, ...
     )
+    # if the first 1000+ rows are missing (NA), they are by default
+    # read as logical - here we re-read as character:
+    if (!is.null(attr(d, "bad_guess"))) {
+        column_types <- c(
+            column_types,
+            attr(d, "bad_guess")
+        )
+        d <- fun(file, ext = ext, preview = preview,
+            column_types = column_types, ...
+        )
+    }
     attrs <- attributes(d)
     attr_to_keep <- c("available.sheets")
     if (any(names(attrs) %in% attr_to_keep))
@@ -38,7 +49,7 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
         attrs <- NULL
 
     ## now the data is read, convert things to factors etc
-    d <- strings_to_factors(d)
+    d <- convert_strings(d)
 
     ## ensure any numeric->categorical changes retain numeric order of levels
     d <- validate_type_changes(d, column_types)
@@ -130,7 +141,10 @@ read_dlm <- function(file,
         named.args <- c(named.args, list(col_types = "COLTYPES"))
 
     if (is.null(named.args$col_types))
-        named.args <- c(named.args, list(col_types = "readr::cols()"))
+        named.args <- c(
+            named.args,
+            list(col_types = "readr::cols()")
+        )
 
     if (length(locale) > 0)
         named.args$locale <- sprintf("readr::locale(%s)",
@@ -160,7 +174,22 @@ read_dlm <- function(file,
         COLTYPES = ctypes
     )
 
-    interpolate(exp, file = file)
+    x <- suppressWarnings(
+        interpolate(exp, file = file)
+    )
+    if (!is.null(attr(x, "problems"))) {
+        # logical -> character
+        spec <- attr(x, "spec")$cols
+        is_bad <- sapply(spec, function(x) methods::is(x, "collector_logical"))
+        if (any(is_bad)) {
+            ct <- structure(
+                as.list(rep("c", sum(is_bad))),
+                .Names = names(spec)[is_bad]
+            )
+            attr(x, "bad_guess") <- ct
+        }
+    }
+    x
 }
 
 #' @import readxl
@@ -172,7 +201,7 @@ read_excel <- function(file,
                        ...) {
     named.args <- list(...)
 
-    if (!missing(column_types))
+    if (!missing(column_types) && !is.null(column_types))
         named.args <- c(list(col_types = column_types), named.args)
 
     if (preview)
@@ -256,7 +285,7 @@ escape_string <- function(x) sprintf("\"%s\"", x)
 quote_varname <- function(x, q = "`") {
     ## contains any non alphanumeric characters,
     ## OR first character is number
-    xs <- grepl("[^a-zA-Z0-9]", x) | grepl("^[0-9]", x)
+    xs <- grepl("[^a-zA-Z0-9_]", x) | grepl("^[0-9_]", x)
     if (any(xs)) {
         x[xs] <- paste0(q, x[xs], q)
     }
@@ -273,7 +302,7 @@ is_preview <- function(df) inherits(df, "inz.preview")
 
 ## Convert string/character columns of a dataframe to factors,
 ## adding the necessary code along the way.
-strings_to_factors <- function(x, ctypes) {
+convert_strings <- function(x, ctypes) {
     chars <- sapply(x, is.character)
     if (!any(chars)) return(x)
 
@@ -282,16 +311,32 @@ strings_to_factors <- function(x, ctypes) {
     rm(x) # clean up
     charnames <- names(TEMP_RESULT)[chars]
 
+    types <- sapply(TEMP_RESULT[charnames], readr::guess_parser)
+    convert_fn <- sapply(types,
+        function(type)
+            switch(type,
+                "date" = "as.Date",
+                "time" = "hms::as.hms",
+                "datetime" = "as.POSIXct",
+                "double" = "as.numeric",
+                "character" = ,
+                "as.factor"
+            )
+    )
+
+    convert_fun <- as.factor(convert_fn)
+    convert_list <- tapply(charnames, convert_fun, c)
+    convert_exprs <- lapply(names(convert_list),
+        function(fn) {
+            sprintf("dplyr::mutate_at(%s, %s)",
+                paste(capture.output(dput(convert_list[[fn]])), collapse = " "),
+                fn)
+        }
+    )
+
     expr <- paste(
-        "TEMP_RESULT %>% dplyr::mutate(",
-        paste("\"", charnames, "\" = as.factor(",
-            quote_varname(charnames),
-            ")",
-            sep = "",
-            collapse = ", "
-        ),
-        ")",
-        sep = ""
+        "TEMP_RESULT %>%",
+        paste(convert_exprs, collapse = " %>% ")
     )
 
     res <- eval(parse(text = expr))

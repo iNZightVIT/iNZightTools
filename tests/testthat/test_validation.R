@@ -1,14 +1,12 @@
-context("Dataset validation")
-
 data("women")
 v <- validate::validator(height/weight < 0.5, mean(height) >= 0)
 cf <- validate::confront(women, v)
 
 test_that("confrontation summary percentages are correct", {
   orig.summary <- validate::summary(cf)
-  
+
   expect_equal(
-    validation_summary(cf)[["Fails (%)"]], 
+    validation_summary(cf)[["Fails (%)"]],
     sprintf("%1.2f%%", orig.summary$fails / orig.summary$items * 100)
   )
 })

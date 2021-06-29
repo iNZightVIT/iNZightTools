@@ -1,6 +1,4 @@
 # iNZightTools/tests/test_separate.R
-context("Separate columns by a string")
-
 stripattr <- function(x) {
   attributes(x)$code <- NULL
   x
@@ -40,12 +38,13 @@ test_that("Survey designs work", {
   suppressWarnings(
     d <- separate(svy, "avg.ed", "ed.a", "ed.b", sep = ".", check = "Column")
   )
-  expect_is(d, "survey.design2")
+  expect_s3_class(d, "survey.design2")
   expect_true(all(c("ed.a", "ed.b") %in% names(d$variables)))
   expect_false("avg.ed" %in% names(d$variables))
-  expect_equivalent(
+  expect_equal(
     suppressWarnings(eval(parse(text = code(d)))),
-    d
+    d,
+    ignore_attr = TRUE
   )
 
   expect_error(separate(svy, "avg.ed", "ed.a", "ed.b", sep = ".", check = "Row"))

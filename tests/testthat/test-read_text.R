@@ -1,5 +1,3 @@
-context("Read text from clipboard")
-
 text <- "x\ty\tz
 1\ta\t34
 2\tb\t28

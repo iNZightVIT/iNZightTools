@@ -1,14 +1,13 @@
-context("Stacking variables")
-
 cas <- smart_read("cas500.csv")
 
 test_that("Stack variables in a data frame", {
     cas2 <- stackVars(cas, c("height", "rightfoot", "armspan"), "what", "measurement")
-    expect_equivalent(
+    expect_equal(
         cas2,
-        tidyr::gather(cas, key = "what", value = "measurement", height, rightfoot, armspan)
+        tidyr::gather(cas, key = "what", value = "measurement", height, rightfoot, armspan),
+        ignore_attr = TRUE
     )
-    expect_equivalent(eval(parse(text = code(cas2))), cas2)
+    expect_equal(eval(parse(text = code(cas2))), cas2, ignore_attr = TRUE)
 })
 
 require(survey)

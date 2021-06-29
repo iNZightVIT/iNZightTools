@@ -1,10 +1,8 @@
-context("Reorder levels")
-
 cas <- smart_read("cas500.csv")
 # cas <- smart_read("tests/testthat/cas500.csv")
 
 test_that("Reordering levels works", {
-    expect_is(
+    expect_s3_class(
         cas1 <- reorderLevels(cas, "getlunch",
             new_levels =
                 c("dairy", "friend", "home", "school", "tuckshop", "none")
@@ -20,7 +18,7 @@ test_that("Reordering levels works", {
 })
 
 test_that("Reordering respects name argument", {
-    expect_is(
+    expect_s3_class(
         cas1 <- reorderLevels(cas, "getlunch",
             new_levels =
                 c("dairy", "friend", "home", "school", "tuckshop", "none"),
@@ -36,7 +34,7 @@ test_that("Reordering twice works", {
         new_levels =
             c("dairy", "friend", "home", "school", "tuckshop", "none")
     )
-    expect_is(
+    expect_s3_class(
         cas2 <- reorderLevels(cas1, "getlunch",
             new_levels =
                 c("home", "dairy", "friend", "school", "tuckshop", "none")
@@ -60,5 +58,5 @@ svy <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
 test_that("Reordering survey variables works", {
     d <- reorderLevels(svy, "stype", c("H", "M", "E"))
     expect_equal(levels(d$variables$stype.reord), c("H", "M", "E"))
-    expect_equivalent(eval(parse(text = code(d))), d)
+    expect_equal(eval(parse(text = code(d))), d, ignore_attr = TRUE)
 })

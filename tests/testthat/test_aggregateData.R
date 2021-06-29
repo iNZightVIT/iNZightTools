@@ -69,9 +69,10 @@ test_that("Aggregating survey data is valid", {
     expect_silent(
         svy_agg <- aggregateData(svy, "stype", "quantile", c("api99", "api00"))
     )
+    # -- srvyr::survey_quantile passing methods for old svyquantile
     expect_equal(
         svy_agg$api99_q25,
-        svyby(~api99, ~stype, svy, svyquantile, quantiles = 0.25, keep.var = FALSE)$statistic
+        svyby(~api99, ~stype, svy, oldsvyquantile, quantiles = 0.25, keep.var = FALSE)$statistic
     )
     expect_equivalent(eval(parse(text = code(svy_agg))), svy_agg)
 })

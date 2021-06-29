@@ -1,4 +1,6 @@
+## iNZightTools 1.11.1
 
+* update `survey_IQR` (and some tests) to work with 'survey' 4.1 (new `svyquantile` function)
 
 
 # iNZightTools 1.11

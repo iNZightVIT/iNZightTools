@@ -191,7 +191,8 @@ survey_IQR <- function(x, na.rm = TRUE) {
     .svy <- srvyr::set_survey_vars(srvyr::cur_svy(), x)
     qs <- survey::svyquantile(~`__SRVYR_TEMP_VAR__`,
         quantiles = c(0.25, 0.75),
+        se = FALSE,
         na.rm = na.rm, design = .svy)
-    out <- apply(qs, 1, diff)
+    out <- sapply(qs, function(qx) diff(qx[,1]))
     out
 }

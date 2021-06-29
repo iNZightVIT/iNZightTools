@@ -8,6 +8,8 @@
 
 0 errors | 0 warnings | 0 notes
 
+This patch fixes failures introduced by changes in the forthcoming version 4.1 of 'survey'.
+
 ## Downstream dependencies
 
 I have run R CMD CHECK on downstream dependencies of iNZightTools, and all passed.

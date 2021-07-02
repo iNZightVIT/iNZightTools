@@ -44,7 +44,9 @@ form_class_intervals <- function(.data, variable,
     dataname <- mc$.data
     method <- match.arg(method)
 
-    x <- .data[[variable]]
+    d <- if (is_survey(.data)) .data$variables else .data
+
+    x <- d[[variable]]
     xr <- range(x, na.rm = TRUE)
     if (!is.null(range)) xr <- range else {
         xr[1] <- floor(xr[1])
@@ -68,7 +70,7 @@ form_class_intervals <- function(.data, variable,
         "manual" = sprintf("%s", list(break_points))
     )
     if (isinteger) breaks_expr <- sprintf("round(%s)", breaks_expr)
-    breaks <- eval(parse(text = breaks_expr), envir = .data)
+    breaks <- eval(parse(text = breaks_expr), envir = d)
 
     # 2. Generate LABELS
     labels <- apply(

@@ -25,3 +25,15 @@ test_that("Equal-count intervals work", {
 test_that("Manual break points work", {
     expect_is(form_class_intervals(d, "x", method = "manual", break_points = c(0, 30, 40, 80, 100)), "data.frame")
 })
+
+
+# Class intervals with survey designs
+
+require(survey)
+data(api)
+svy <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
+
+test_that("Survey vars can form class intervals", {
+    d <- form_class_intervals(svy, "api00", method = "width", interval_width = 100)
+    expect_equal(length(levels(d$variables$api00.f)), 5L)
+})

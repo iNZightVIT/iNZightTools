@@ -1,4 +1,5 @@
-NOTE: This patch fixes issues in test files causing R CMD check failure, required to fix by CRAN before 2021-07-18.
+This patch fixes issues in tests exposed by M1 mac causing `R CMD check` failure.
+Asked to fix by CRAN before 2021-07-18.
 
 ## Test environments
 * ubuntu 21.04 (local), R 4.1.0
@@ -8,9 +9,7 @@ NOTE: This patch fixes issues in test files causing R CMD check failure, require
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-
+0 errors | 0 warnings | 0 notes
 
 ## Downstream dependencies
 

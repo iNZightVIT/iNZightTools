@@ -1,6 +1,9 @@
+* fix `form_class_intervals` to work with survey designs (count not yet working)
+
 ## iNZightTools 1.11.2
 
 * prevents tests from failing during CRAN checks when resources unavailable
+
 
 ## iNZightTools 1.11.1
 

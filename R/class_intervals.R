@@ -4,7 +4,7 @@
 #'
 #' @param .data the data set
 #' @param variable name of the variable to convert
-#' @param method one of 'equal' for equal-width interavls, 'width' for intervals of a specific width, 'count' for equal-count intervals, and 'manual' to specify break points manually
+#' @param method one of 'equal' for equal-width intervals, 'width' for intervals of a specific width, 'count' for equal-count intervals, and 'manual' to specify break points manually
 #' @param n_intervals for methods 'equal' and 'count', this is the number of intervals to create
 #' @param interval_width for method 'width', this is the width of intervals
 #' @param format the format for intervals; use 'a' and 'b' to represent the min/max of each interval, respectively.

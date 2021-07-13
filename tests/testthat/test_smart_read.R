@@ -153,7 +153,9 @@ test_that("URLs are supported", {
     url <- "https://www.stat.auckland.ac.nz/~wild/data/test/Census%20at%20School-500.xls"
     skip_if( !RCurl::url.exists(url), "URL not available." )
 
-    file <- url_to_temp(url)
+    file <- try(url_to_temp(url), silent = TRUE)
+    skip_if(inherits(file, "try-error"))
+
     expect_match(file, "Census.at.School.500.xls")
     expect_true(file.exists(file))
 })
@@ -202,7 +204,10 @@ test_that("Columns with first >1000 rows NA are read as character, converted cor
     skip_if_offline()
     url <- "https://www.stat.auckland.ac.nz/~wild/data/FutureLearn/NHANES2009-2012.csv"
     skip_if_not(RCurl::url.exists(url))
-    expect_is(d <- smart_read(url), "data.frame")
+    d <- try(smart_read(url), silent = TRUE)
+    skip_if(inherits(d, "try-error"))
+
+    expect_is(d, "data.frame")
     expect_is(d$Race3, "factor")
     expect_false(all(is.na(d$Race3)))
     expect_is(d$Testosterone, "numeric")

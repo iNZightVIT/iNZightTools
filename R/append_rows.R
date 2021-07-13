@@ -2,7 +2,7 @@
 #'
 #' @param .data original dataset
 #' @param imported_data imported dataset
-#' @param date whether a "When_Added“ column is required (deafult `FALSE`)
+#' @param date whether a "When_Added“ column is required (default `FALSE`)
 #'
 #' @return dataset with new rows appended
 #' @md

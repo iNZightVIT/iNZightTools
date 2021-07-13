@@ -23,7 +23,7 @@ form_class_intervals(
 
 \item{variable}{name of the variable to convert}
 
-\item{method}{one of 'equal' for equal-width interavls, 'width' for intervals of a specific width, 'count' for equal-count intervals, and 'manual' to specify break points manually}
+\item{method}{one of 'equal' for equal-width intervals, 'width' for intervals of a specific width, 'count' for equal-count intervals, and 'manual' to specify break points manually}
 
 \item{n_intervals}{for methods 'equal' and 'count', this is the number of intervals to create}
 

@@ -26,3 +26,10 @@ test_that("First row is read if no title/description given", {
     expect_equal(length(readMetaComments("meta.txt")$columns), 2)
     expect_equal(levels(smart_read("meta.txt")$gender), c("male", "female"))
 })
+
+test_that("Special characters are handled", {
+    expect_equal(
+        levels(smart_read('meta_chars.csv')$var2),
+        c("māori", "english", "français")
+    )
+})

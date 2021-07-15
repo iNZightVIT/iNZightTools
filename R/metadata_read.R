@@ -250,6 +250,7 @@ cleanstring <- function(x) {
             levels[i] <- lvl[1]
             labels[i] <- lvl[length(lvl)]
         }
+        levels <- iconv(levels, from = "UTF-8", to = "ASCII//TRANSLIT")
     } else {
         levels <- labels <- NULL
     }

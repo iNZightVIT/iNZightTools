@@ -1,7 +1,7 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for 'iNZight'
-Version: 1.11.2
+Version: 1.11.3
 Depends: R (>= 3.6)
 Imports:
     chron,

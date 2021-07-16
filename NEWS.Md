@@ -1,3 +1,4 @@
+## iNZightTools 1.11.3
 * fix `form_class_intervals` to work with survey designs (count not yet working)
 * remove accents/special chars from factor levels when parsing metadata (due to Windows encoding issues)
 

@@ -45,3 +45,41 @@ test_that("Multiple response data read correctly", {
     )
     expect_equal(m$tech_phone, c(1L, 1L, 1L, 0L))
 })
+
+
+## gist
+library(tibble)
+library(dplyr)
+library(tidyr)
+
+d <- tibble(
+    x = 1:4,
+    y = list(
+        c("a", "b"),
+        c("a", "c", "d"),
+        c("b", "c"),
+        c("d")
+    ),
+    z = list(
+        c("one", "two", "four"),
+        c("three"),
+        c("two", "three"),
+        c("three", "four")
+    )
+)
+
+mutate(d,
+    y_a = sapply(y, function(z) as.integer("a" %in% z)),
+    y_b = sapply(y, function(z) as.integer("b" %in% z)),
+    y_c = sapply(y, function(z) as.integer("c" %in% z)),
+    y_d = sapply(y, function(z) as.integer("d" %in% z)),
+    y = NULL
+)
+
+d %>%
+    unnest(y) %>%
+        mutate(n = 1) %>%
+        pivot_wider(names_from = y, values_from = n, values_fill = 0, names_prefix = "y_") %>%
+    unnest(z) %>%
+        mutate(n = 1) %>%
+        pivot_wider(names_from = z, values_from = n, values_fill = 0, names_prefix = "z_")

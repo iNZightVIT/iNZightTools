@@ -117,13 +117,13 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
             function(v) {
                 lvls <- unique(unlist(data[[v]]))
                 cnames <- paste(sep = "_", v, lvls)
-                str <- paste0(
-                    v, "_", lvls, " = sapply(.$", v, ", function(z) as.integer('", lvls, "' %in% z))",
-                    collapse = ",\n"
-                )
                 sprintf(
-                    "tibble::add_column(%s, .after = '%s') %s dplyr::mutate(%s = NULL)",
-                    str, v, "%>%", v
+                    "unnest(%s) %s
+                    mutate(n = 1) %s
+                    pivot_wider(names_from = %s, values_from = n, values_fill = 0, names_prefix = \"%s_\")",
+                    v, "%>%",
+                    "%>%",
+                    v, v
                 )
             }
         )

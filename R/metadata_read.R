@@ -110,6 +110,35 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
         attr(data, "code") <- gsub(".dataset", dcode, code(data))
     }
 
+    ## convert any Lists to binary matrices (within the df)
+    if (any(sapply(data, class) == "list")) {
+        list_vars <- names(data)[sapply(data, class) == "list"]
+        new_cols <- sapply(list_vars,
+            function(v) {
+                lvls <- unique(unlist(data[[v]]))
+                cnames <- paste(sep = "_", v, lvls)
+                str <- paste0(
+                    v, "_", lvls, " = sapply(.$", v, ", function(z) as.integer('", lvls, "' %in% z))",
+                    collapse = ",\n"
+                )
+                sprintf(
+                    "tibble::add_column(%s, .after = '%s') %s dplyr::mutate(%s = NULL)",
+                    str, v, "%>%", v
+                )
+            }
+        )
+        mexp <- eval(parse(
+            text = sprintf("~.dataset %s %s", "%>%", paste(new_cols, collapse = " %>% "))
+        ))
+
+        e <- new.env()
+        e$.dataset <- data
+        dcode <- paste(code(data), collapse = " ")
+        data <- suppressWarnings(interpolate(mexp, "_env" = e))
+        attr(data, "code") <- gsub(".dataset", dcode, code(data))
+    }
+
+
     attr(data, "name") <- meta$title
     attr(data, "description") <- meta$desc
 
@@ -276,6 +305,31 @@ cleanstring <- function(x) {
 
     metaFun(
         type = "factor",
+        name = vname,
+        fun = eval(parse(text = fun))
+    )
+}
+
+.processLine.inz.meta.multi <- function(x) {
+    # a method for parsing multiple-response columns, where choices are separated by some separator
+    # e.g., # @multi tech sep=;
+
+    ## The name of the variable
+    vname <- x[1]
+    sep <- x[grepl("^sep=", x)]
+    if (length(x) == 0L) sep <- "," else sep <- gsub("^sep=", "", sep)
+
+    fun <-
+        "function(x, vname)
+            sprintf(
+                \"stringr::str_split(%s, '%s')\",
+                vname,
+                sep
+            )
+        "
+
+    metaFun(
+        type = "multi",
         name = vname,
         fun = eval(parse(text = fun))
     )

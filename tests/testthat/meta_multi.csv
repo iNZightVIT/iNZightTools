@@ -1,0 +1,7 @@
+#' @multi tech sep=;
+#' @multi lunch sep=;
+age,tech,lunch
+10,phone,home;shop
+15,pc;phone;tablet,home;school
+20,pc;phone;tablet;watch,none
+12,tablet;watch,shop;school

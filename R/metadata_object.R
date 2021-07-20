@@ -44,10 +44,14 @@ rename <- function(x) !is.null(x$rename)
 getrename <- function(x) x$rename
 gettype <- function(x, abbr = FALSE) {
     if (abbr) {
-        return(switch(x$type,
-            "integer" = "i",
-            "numeric" = "n",
-            "factor" = "c"))
+        return(
+            switch(x$type,
+                "integer" = "i",
+                "numeric" = "n",
+                "factor" = "c",
+                "multi" = "c"
+            )
+        )
     }
     x$type
 }

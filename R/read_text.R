@@ -13,6 +13,6 @@ read_text <- function(txt, delim = "\t", ...) {
     if (txt == "clipboard")
         txt <- readr::clipboard()
 
-    readr::read_delim(txt, delim = delim) %>%
+    readr::read_delim(txt, delim = delim, show_col_types = FALSE) %>%
         dplyr::mutate_if(is.character, as.factor)
 }

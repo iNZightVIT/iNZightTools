@@ -165,6 +165,9 @@ read_dlm <- function(file,
     else
         args <- "file"
 
+    if (utils::packageVersion("readr") >= numeric_version('2.0.0'))
+        args <- paste0(args, ", lazy = FALSE")
+
     exp <- ~FUN(ARGS)
     exp <- replaceVars(exp,
         FUN = sprintf("readr::read_%s",

@@ -1,4 +1,6 @@
-* add metadata format for multiple-reponse variables
+* add metadata formats
+  * multiple-reponse variables (using `@multi`)
+  * numeric na codes (using `@numeric x na=99`)
 * pass `lazy = FALSE` to `readr::read_delim()` to prevent lazy loading of data
 * prevent showing col types with `read_text()`
 

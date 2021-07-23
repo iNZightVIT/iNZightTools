@@ -282,18 +282,43 @@ cleanstring <- function(x) {
     vname <- x[1]
 
     ## some other calculations? perhaps ...
+    na_codes <- x[grepl("^na=", x)]
+    na_codes <- if (length(na_codes) == 0L) NULL
+        else strsplit(gsub("^na=", "", na_codes), ",")[[1]]
+
+    fn <- sprintf(
+        "function(x, vname) {
+            %s
+            if (is.numeric(x)) return(NULL)
+            sprintf('as.numeric(%s)', vname)
+        }",
+        if (!is.null(na_codes)) {
+            Xa <- "if (is.numeric(x)) vname else sprintf('as.numeric(%s)', vname)"
+            Xin <- "IN_"
+            Xb <- capture.output(dput(as.numeric(na_codes)))
+            Xc <- Xa
+            glue::glue(
+                "return(sprintf(\"ifelse(%s %s {Xb}, NA, %s)\",
+                    {Xa},
+                    \"{Xin}\",
+                    {Xc}
+                ))"
+            )
+        } else {
+            ""
+        },
+        "%s"
+    )
+    fn <- eval(parse(
+        text =
+            gsub("IN_", "%in%", fn)
+    ))
 
     ## and return a meta object
     metaFun(
         type = "numeric",
         name = vname,
-        fun = eval(parse(
-            text =
-                "function(x, vname) {
-                    if (is.numeric(x)) return(NULL)
-                    sprintf('as.numeric(%s)', vname)
-                }"
-        ))
+        fun = fn
     )
 }
 
@@ -363,7 +388,7 @@ extract_levels <- function(vname) {
     vname <- ll$vname
 
     sep <- x[grepl("^sep=", x)]
-    if (length(x) == 0L) sep <- "," else sep <- gsub("^sep=", "", sep)
+    if (length(sep) == 0L) sep <- "," else sep <- gsub("^sep=", "", sep)
 
     fun <-
         "function(x, vname)

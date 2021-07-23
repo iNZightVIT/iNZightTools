@@ -1,3 +1,4 @@
+* add metadata format for multiple-reponse variables
 * pass `lazy = FALSE` to `readr::read_delim()` to prevent lazy loading of data
 * prevent showing col types with `read_text()`
 

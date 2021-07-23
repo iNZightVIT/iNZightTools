@@ -33,3 +33,15 @@ test_that("Special characters are removed from factor levels", {
         c("maori", "english", "francais")
     )
 })
+
+test_that("Multiple response data read correctly", {
+    m <- smart_read("meta_multi.csv")
+    expect_equal(
+        names(m),
+        c(
+            "age", "tech_phone", "tech_pc", "tech_tablet", "tech_watch",
+            "lunch_home", "lunch_shop", "lunch_school", "lunch_none"
+        )
+    )
+    expect_equal(m$tech_phone, c(1L, 1L, 1L, 0L))
+})

@@ -117,7 +117,8 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
             function(v) {
                 lvls <- unique(unlist(data[[v]]))
                 mc <- which(sapply(meta$columns, function(x) x$name == v))
-                lbls <- if (length(mc)) meta$columns[[mc]]$labels else NULL
+                lbls <- if (length(mc) && !is.null(meta$columns[[mc]]$labels))
+                    meta$columns[[mc]]$labels else NULL
 
                 cnames <- paste(sep = "_", v, lvls)
                 sprintf(
@@ -150,7 +151,7 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
                     "%>%",
                     if (is.null(lbls$labels)) ""
                     else "
-    select(-labels) %>%",
+    dplyr::select(-labels) %>%",
                     v, v
                 )
             }

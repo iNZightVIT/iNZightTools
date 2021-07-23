@@ -116,19 +116,50 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
         new_cols <- sapply(list_vars,
             function(v) {
                 lvls <- unique(unlist(data[[v]]))
+                mc <- which(sapply(meta$columns, function(x) x$name == v))
+                lbls <- if (length(mc)) meta$columns[[mc]]$labels else NULL
+
                 cnames <- paste(sep = "_", v, lvls)
                 sprintf(
-                    "tidyr::unnest(%s) %s
-                    dplyr::mutate(n = 1) %s
-                    tidyr::pivot_wider(names_from = %s, values_from = n, values_fill = 0, names_prefix = \"%s_\")",
+                    "tidyr::unnest(%s) %s%s
+    dplyr::mutate(n = 1%s) %s%s
+    tidyr::pivot_wider(
+        names_from = %s,
+        values_from = n,
+        values_fill = 0,
+        names_prefix = \"%s_\"
+    )",
                     v, "%>%",
+                    if (is.null(lbls$labels)) ""
+                    else sprintf("
+    dplyr::left_join(
+        data.frame(
+            %s = %s,
+            labels = %s
+        ),
+        by = '%s'
+    ) %s",
+                        v,
+                        capture.output(dput(lbls$labels)),
+                        capture.output(dput(lbls$levels)),
+                        v,
+                        " %>%"
+                    ),
+                    if (is.null(lbls$labels)) ""
+                    else sprintf(", %s = labels", v),
                     "%>%",
+                    if (is.null(lbls$labels)) ""
+                    else "
+    select(-labels) %>%",
                     v, v
                 )
             }
         )
+
         mexp <- eval(parse(
-            text = sprintf("~.dataset %s %s", "%>%", paste(new_cols, collapse = " %>% "))
+            text = sprintf("~.dataset %s %s",
+                "%>%", paste(new_cols, collapse = " %>% ")
+            )
         ))
 
         e <- new.env()
@@ -265,24 +296,34 @@ cleanstring <- function(x) {
     )
 }
 
+extract_levels <- function(vname) {
+    out <- list(levels = NULL, labels = NULL, vname = vname)
+
+    if (!grepl("\\[", vname)) return(out)
+
+    f <- strsplit(vname, "\\[")[[1]]
+    vname <- f[1]
+    lvlstr <- trimws(strsplit(gsub("\\]", "", f[2]), ",")[[1]])
+    labels <- levels <- character(length(lvlstr))
+    for (i in seq_along(lvlstr)) {
+        lvl <- strsplit(lvlstr[i], "=")[[1]]
+        levels[i] <- lvl[1]
+        labels[i] <- lvl[length(lvl)]
+    }
+    levels <- iconv(levels, from = "UTF-8", to = "ASCII//TRANSLIT")
+
+    list(levels = levels, labels = labels, vname = vname)
+}
+
 .processLine.inz.meta.factor <- function(x) {
     vname <- x[1]
 
     ## extract levels=labels (level in output, label in dataset)
-    if (grepl("\\[", vname)) {
-        f <- strsplit(vname, "\\[")[[1]]
-        vname <- f[1]
-        lvlstr <- trimws(strsplit(gsub("\\]", "", f[2]), ",")[[1]])
-        labels <- levels <- character(length(lvlstr))
-        for (i in seq_along(lvlstr)) {
-            lvl <- strsplit(lvlstr[i], "=")[[1]]
-            levels[i] <- lvl[1]
-            labels[i] <- lvl[length(lvl)]
-        }
-        levels <- iconv(levels, from = "UTF-8", to = "ASCII//TRANSLIT")
-    } else {
-        levels <- labels <- NULL
-    }
+    ll <- extract_levels(vname)
+    levels <- ll$levels
+    labels <- ll$labels
+    vname <- ll$vname
+
     if (is.null(levels)) {
         fun <- "function(x, vname) {
              if (is.factor(x)) return(NULL)
@@ -311,11 +352,15 @@ cleanstring <- function(x) {
 }
 
 .processLine.inz.meta.multi <- function(x) {
-    # a method for parsing multiple-response columns, where choices are separated by some separator
+    # a method for parsing multiple-response columns,
+    # where choices are separated by some separator
     # e.g., # @multi tech sep=;
 
     ## The name of the variable
     vname <- x[1]
+    ll <- extract_levels(vname)
+    vname <- ll$vname
+
     sep <- x[grepl("^sep=", x)]
     if (length(x) == 0L) sep <- "," else sep <- gsub("^sep=", "", sep)
 
@@ -331,6 +376,7 @@ cleanstring <- function(x) {
     metaFun(
         type = "multi",
         name = vname,
-        fun = eval(parse(text = fun))
+        fun = eval(parse(text = fun)),
+        labels = ll
     )
 }

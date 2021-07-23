@@ -1,4 +1,4 @@
-metaFun <- function(type, name, fun) {
+metaFun <- function(type, name, fun, labels) {
     if (!is.character(type) || length(type) != 1)
         stop("type must be a character string of length 1")
     if (!is.character(name) || length(name) != 1)
@@ -20,7 +20,8 @@ metaFun <- function(type, name, fun) {
             type = type,
             name = name,
             rename = rename,
-            fun = fun
+            fun = fun,
+            labels = labels
         ),
         class = "inzmetafun"
     )

@@ -42,7 +42,7 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
     })
 
     ## columns in meta not in dataset:
-    mvars <- sapply(meta$columns, getname)
+    mvars <- gsub("_missing", "", sapply(meta$columns, getname))
     dvars <- names(dtop)
     if (any(!mvars %in% dvars)) {
         stop("Some variables defined in metadata not in dataset: ",
@@ -299,18 +299,18 @@ cleanstring <- function(x) {
             sprintf('as.numeric(%s)', vname)
         }",
         if (!is.null(na_codes)) {
-            Xa <- "if (is.numeric(x)) vname else sprintf('as.numeric(%s)', vname)"
+            Xa <- "if (is.numeric(x)) vname else sprintf(\"as.numeric(%s)\", gsub(\"_missing\", \"\", vname))"
             if (is.list(na_codes)) {
                 # case_when(x == 88 ~ 'Refused', x == 99 ~ 'Dont_Know', TRUE ~ 'observed'), c = ifelse(c_missing == 'observed', c, NA)
-                codes <- paste0(vname, " == ", na_codes$labels, " ~ \"", na_codes$levels, "\"", collapse = ", ")
-                # glue::glue(
-                #     "return(sprintf(
-                #         'dplyr::case_when({codes},
-                #             TRUE ~ \"observed\"
-                #         ),
-                #         %s = ifelse(%s_missing == \"observed\", %s, NA)
-                #     ), {Xa}, vname, 'x', vname)"
-                # )
+                codes <- paste0(gsub("_missing", "", vname), " == ", na_codes$labels, " ~ \"", na_codes$levels, "\"", collapse = ", ")
+                glue::glue(
+                    "return(sprintf(
+                        'dplyr::case_when({codes},
+                            TRUE ~ \"observed\"
+                        ),
+                        %s = ifelse(%s == \"observed\", %s, NA)',
+                    gsub(\"_missing\", \"\", vname), vname, {Xa}))"
+                )
             } else {
                 Xin <- "IN_"
                 Xb <- capture.output(dput(as.numeric(na_codes)))

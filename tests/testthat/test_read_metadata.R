@@ -45,3 +45,11 @@ test_that("Multiple response data read correctly", {
     )
     expect_equal(m$tech_phone, c(1L, 1L, 1L, 0L))
 })
+
+test_that("NA codes converted to NA", {
+    m <- smart_read("meta_nacodes.csv")
+
+    expect_equal(m$b, c(4, NA, 6, NA))
+    expect_equal(m$c, c(10, 12, NA, NA))
+    expect_equal(m$c_missing, c("observed", "observed", "Refused", "Dont_Know"))
+})

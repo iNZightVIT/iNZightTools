@@ -286,6 +286,12 @@ cleanstring <- function(x) {
     na_codes <- if (length(na_codes) == 0L) NULL
         else strsplit(gsub("^na=", "", na_codes), ",")[[1]]
 
+    if (is.null(na_codes) && any(grepl("^na\\[", x))) {
+        # alternatively, NA codes can be specifed for an additional column
+        na_codes <- extract_levels(x[grepl("^na\\[", x)])
+        vname <- glue::glue("{vname}_missing")
+    }
+
     fn <- sprintf(
         "function(x, vname) {
             %s
@@ -294,16 +300,29 @@ cleanstring <- function(x) {
         }",
         if (!is.null(na_codes)) {
             Xa <- "if (is.numeric(x)) vname else sprintf('as.numeric(%s)', vname)"
-            Xin <- "IN_"
-            Xb <- capture.output(dput(as.numeric(na_codes)))
-            Xc <- Xa
-            glue::glue(
-                "return(sprintf(\"ifelse(%s %s {Xb}, NA, %s)\",
-                    {Xa},
-                    \"{Xin}\",
-                    {Xc}
-                ))"
-            )
+            if (is.list(na_codes)) {
+                # case_when(x == 88 ~ 'Refused', x == 99 ~ 'Dont_Know', TRUE ~ 'observed'), c = ifelse(c_missing == 'observed', c, NA)
+                codes <- paste0(vname, " == ", na_codes$labels, " ~ \"", na_codes$levels, "\"", collapse = ", ")
+                # glue::glue(
+                #     "return(sprintf(
+                #         'dplyr::case_when({codes},
+                #             TRUE ~ \"observed\"
+                #         ),
+                #         %s = ifelse(%s_missing == \"observed\", %s, NA)
+                #     ), {Xa}, vname, 'x', vname)"
+                # )
+            } else {
+                Xin <- "IN_"
+                Xb <- capture.output(dput(as.numeric(na_codes)))
+                Xc <- Xa
+                glue::glue(
+                    "return(sprintf(\"ifelse(%s %s {Xb}, NA, %s)\",
+                        {Xa},
+                        \"{Xin}\",
+                        {Xc}
+                    ))"
+                )
+            }
         } else {
             ""
         },

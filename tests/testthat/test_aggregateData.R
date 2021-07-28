@@ -41,6 +41,11 @@ test_that("Aggregating over fewer than all cat vars is OK", {
     )
 })
 
+test_that("Error if no variables to aggregate", {
+    d <- smart_read('cas500.csv')
+    d <- d[, c("gender", "travel", "getlunch")]
+    expect_error(aggregateData(d, "gender", "sum"))
+})
 
 require(survey)
 data(api)

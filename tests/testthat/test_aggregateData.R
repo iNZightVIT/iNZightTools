@@ -33,7 +33,19 @@ test_that("Aggregation over single variable works", {
     expect_equivalent(eval(parse(text = code(iris_agg))), iris_agg)
 })
 
+test_that("Aggregating over fewer than all cat vars is OK", {
+    d <- smart_read('cas500.csv')
+    expect_is(
+        aggregateData(d, c("travel", "gender"), c("sum")),
+        "data.frame"
+    )
+})
 
+test_that("Error if no variables to aggregate", {
+    d <- smart_read('cas500.csv')
+    d <- d[, c("gender", "travel", "getlunch")]
+    expect_error(aggregateData(d, "gender", "sum"))
+})
 
 require(survey)
 data(api)

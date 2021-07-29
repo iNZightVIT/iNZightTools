@@ -4,6 +4,9 @@
 * pass `lazy = FALSE` to `readr::read_delim()` to prevent lazy loading of data
 * prevent showing col types with `read_text()`
 
+## iNZightTools 1.11.4
+* fix bug in `aggregateData()` if `summary_vars` is not specified and there are factor columns in the dataset not showing up in `vars`
+
 ## iNZightTools 1.11.3
 * fix `form_class_intervals` to work with survey designs (count not yet working)
 * remove accents/special chars from factor levels when parsing metadata (due to Windows encoding issues)

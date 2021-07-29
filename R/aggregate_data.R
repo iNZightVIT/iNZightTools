@@ -68,6 +68,8 @@ aggregateData <- function(.data, vars, summaries,
 
     if (missing(summary_vars)) {
         cols <- colnames(.data)
+        cols <- cols[sapply(.data, is_num)]
+        if (length(cols) == 0) stop("No numeric variables to aggregate.")
         summary_vars <- cols[cols %notin% vars]
     }
 

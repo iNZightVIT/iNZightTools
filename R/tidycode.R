@@ -7,7 +7,7 @@
 #' @param indent how many spaces for one indent
 #' @param outfile the file name of the file containing formatted code
 #' @return formatted code, optionally written to `outfile`
-#' @author Lushi Cai
+#' @author Tom Elliott, Lushi Cai
 #' @export
 tidy_all_code <- function(x, width = 80, indent = 4, outfile,
                           incl_library = TRUE) {

@@ -15,6 +15,20 @@ test_that("Ranking works for iid data", {
     )
 })
 
+test_that("Spaces in new level names are OK", {
+    expect_silent(
+        d <- renameLevels(cas, "cellsource", list("pocket money" = "pocket", "parents" = "parent"))
+    )
+    expect_equal(
+        levels(d$cellsource.rename),
+        c("job", "other", "parent", "pocket money")
+    )
+    expect_equivalent(
+        eval(parse(text = attr(d, "code"))),
+        d
+    )
+})
+
 require(survey)
 data(api)
 svy <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)

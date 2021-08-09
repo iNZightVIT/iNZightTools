@@ -3,6 +3,7 @@
   * numeric na codes (using `@numeric x na=99`)
 * pass `lazy = FALSE` to `readr::read_delim()` to prevent lazy loading of data
 * prevent showing col types with `read_text()`
+* allow spaces in new factor level names (`renameLevels()`)
 
 ## iNZightTools 1.11.4
 * fix bug in `aggregateData()` if `summary_vars` is not specified and there are factor columns in the dataset not showing up in `vars`

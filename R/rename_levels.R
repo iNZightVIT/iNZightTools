@@ -28,8 +28,9 @@ renameLevels <- function(.data, var, to_be_renamed,
     dataname <- mc$.data
 
     # paste together the new and old factor levels names to be renamed
+    # names(to_be_renamed) <- ifelse(grepl(" ", names(to_be_renamed), ))
     to_be_renamed <- str_c(
-        names(to_be_renamed), ' = "', to_be_renamed, '"',
+        "`", names(to_be_renamed), '` = "', to_be_renamed, '"',
         collapse = ", "
     )
 

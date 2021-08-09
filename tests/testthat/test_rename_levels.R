@@ -21,7 +21,7 @@ test_that("Spaces in new level names are OK", {
     )
     expect_equal(
         levels(d$cellsource.rename),
-        c("job", "other", "parent", "pocket money")
+        c("job", "other", "parents", "pocket money")
     )
     expect_equivalent(
         eval(parse(text = attr(d, "code"))),

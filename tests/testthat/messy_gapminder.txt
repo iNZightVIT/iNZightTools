@@ -1,6 +1,4 @@
-gapminder_2008_ex <- read.csv('Gapminder-2008.csv',comment.char='#')
+gapminder_2008_ex <- read.csv('Gapminder-2008.csv', comment.char='#')
 
 
 gapminder_2008_ex %<>% tibble::add_column(Region.reord = factor(gapminder_2008_ex$Region, levels = c("East Asia & Pacific", "Europe & Central Asia", "Middle East & North Africa", "America", "Sub-Saharan Africa", "South Asia")), .after = "Region")
-
-gapminder_2008_ex

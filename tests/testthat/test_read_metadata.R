@@ -1,8 +1,6 @@
-context('Metadata - read')
-
 test_that('Metadata is read correctly', {
     data <- smart_read('meta.csv')
-    expect_is(data, 'data.frame')
+    expect_s3_class(data, 'data.frame')
     expect_equal(names(data),
         c('cellsource', 'rightfoot', 'travel', 'getlunch', 'height',
           'gender', 'age', 'year', 'armspan', 'cellcost', 'school', 'phonebill'))

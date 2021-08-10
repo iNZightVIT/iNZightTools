@@ -1,9 +1,8 @@
-context("Select vars")
-
 test_that("Correct vars are grabbed", {
-    expect_equivalent(
+    expect_equal(
         selectVars(iris, c("Sepal.Length", "Species", "Sepal.Width")),
-        iris[, c("Sepal.Length", "Species", "Sepal.Width")]
+        iris[, c("Sepal.Length", "Species", "Sepal.Width")],
+        ignore_attr = TRUE
     )
 })
 
@@ -21,5 +20,5 @@ svy <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
 test_that("Surveys supported", {
     d <- selectVars(svy, c("api00", "stype"))
     expect_equal(names(d$variables), c("api00", "stype"))
-    expect_equivalent(eval(parse(text = code(d))), d)
+    expect_equal(eval(parse(text = code(d))), d, ignore_attr = TRUE)
 })

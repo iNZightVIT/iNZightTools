@@ -3,20 +3,18 @@ census.at.school.500_ex <- read.csv('cas500.csv',comment.char='#')
 
 census.at.school.500_ex %<>% tibble::add_column(travel.reord = forcats::fct_infreq(census.at.school.500_ex$travel), .after = "travel")
 
- 
+
 
 census.at.school.500_ex %<>% dplyr::select(-travel.reord)
 
- 
+
 
 census.at.school.500_ex %<>% tibble::add_column(travel.reord = forcats::fct_infreq(census.at.school.500_ex$travel), .after = "travel")
 
- 
+
 
 census.at.school.500_ex %<>% tibble::add_column(getlunch.reord = factor(census.at.school.500_ex$getlunch, levels = c("home", "tuckshop", "dairy", "friend", "school", "none")), .after = "getlunch")
 
- 
+
 
 census.at.school.500_ex %<>% tibble::add_column(travel.coll = forcats::fct_collapse(census.at.school.500_ex$travel, publicTrans = c("bus", "train")), .after = "travel")
-
-census.at.school.500_ex

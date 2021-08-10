@@ -1,5 +1,3 @@
-context("Fit Model function")
-
 test_that("Linear model formula are generated correctly", {
     expect_equal(
         fitModel("response", "x1", "d"),
@@ -24,19 +22,19 @@ test_that("Negative binomial regression works", {
         fitModel("response", "x1", "d", family = "negbin"),
         "MASS::glm.nb(response ~ x1, data = d)"
     )
-    
+
     ## Link should be added if not log
     expect_equal(
         fitModel("response", "x1", "d", family = "negbin", link = "sqrt"),
         "MASS::glm.nb(response ~ x1, data = d, link = \"sqrt\")"
     )
-    
+
     ## xargs come through
     expect_equal(
         fitModel("response", "x1", "d", family = "negbin", model = FALSE),
         "MASS::glm.nb(response ~ x1, data = d, model = FALSE)"
     )
-    
+
     ## Survey designs currently unsupported
     expect_error(
         fitModel("response", "x1", "d", family = "negbin", design = "survey"),

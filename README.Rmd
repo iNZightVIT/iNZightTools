@@ -56,4 +56,4 @@ tidy_all_code(code(data))
 
 ### Surveys
 
-Being an important but tricker data type to work with, *iNZightTools* includes methods for easily importing surveys using a specification format.
+Being an important but tricker data type to work with, *iNZightTools* includes methods for easily importing surveys using a specification format. For details, check out https://inzight.nz/docs/survey-specification.html

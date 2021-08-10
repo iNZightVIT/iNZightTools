@@ -24,3 +24,6 @@ install:
 
 clean:
 	@rm -rf *.tar.gz *.Rcheck revdep
+
+README.md: README.Rmd
+	$(RCMD) -e "rmarkdown::render('$^')"

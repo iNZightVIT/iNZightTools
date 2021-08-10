@@ -11,7 +11,7 @@ appendrows(.data, imported_data, date = FALSE)
 
 \item{imported_data}{imported dataset}
 
-\item{date}{whether a "When_Added“ column is required (deafult \code{FALSE})}
+\item{date}{whether a "When_Added“ column is required (default \code{FALSE})}
 }
 \value{
 dataset with new rows appended

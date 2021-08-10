@@ -1,10 +1,8 @@
-context("Data aggregation")
-
 test_that("Aggregation over single variable works", {
     expect_silent(
         iris_agg <- aggregateData(iris, "Species", c("count", "mean"))
     )
-    expect_equivalent(
+    expect_equal(
         iris_agg,
         iris %>%
             dplyr::group_by(Species) %>%
@@ -15,25 +13,41 @@ test_that("Aggregation over single variable works", {
                 Petal.Length_mean = mean(Petal.Length),
                 Petal.Width_mean = mean(Petal.Width),
                 .groups = "drop"
-            )
+            ),
+        ignore_attr = TRUE
     )
-    expect_equivalent(
+    expect_equal(
         iris_agg,
-        eval(parse(text = code(iris_agg)))
+        eval(parse(text = code(iris_agg))),
+        ignore_attr = TRUE
     )
 
     # quantiles
     expect_silent(
         iris_agg <- aggregateData(iris, "Species", c("quantile"))
     )
-    expect_equivalent(
+    expect_equal(
         iris_agg$Sepal.Width_q25,
-        tapply(iris$Sepal.Width, iris$Species, quantile, probs = 0.25)
+        tapply(iris$Sepal.Width, iris$Species, quantile, probs = 0.25),
+        ignore_attr = TRUE
     )
-    expect_equivalent(eval(parse(text = code(iris_agg))), iris_agg)
+    expect_equal(eval(parse(text = code(iris_agg))), iris_agg,
+        ignore_attr = TRUE)
 })
 
+test_that("Aggregating over fewer than all cat vars is OK", {
+    d <- smart_read('cas500.csv')
+    expect_s3_class(
+        aggregateData(d, c("travel", "gender"), c("sum")),
+        "data.frame"
+    )
+})
 
+test_that("Error if no variables to aggregate", {
+    d <- smart_read('cas500.csv')
+    d <- d[, c("gender", "travel", "getlunch")]
+    expect_error(aggregateData(d, "gender", "sum"))
+})
 
 require(survey)
 data(api)
@@ -53,25 +67,32 @@ test_that("Aggregating survey data is valid", {
             api00_mean = srvyr::survey_mean(api00)
         )
 
-    expect_equivalent(svy_agg, svy_tbl_agg)
+    expect_equal(svy_agg, svy_tbl_agg, ignore_attr = TRUE)
     # code(svy_agg)
 
     # IQR
     expect_silent(
         svy_agg <- aggregateData(svy, "stype", c("iqr"), c("api99", "api00"))
     )
-    expect_equivalent(
+    expect_equal(
         svy_agg,
-        eval(parse(text = code(svy_agg)))
+        eval(parse(text = code(svy_agg))),
+        ignore_attr = TRUE
     )
 
     # Quantiles
     expect_silent(
         svy_agg <- aggregateData(svy, "stype", "quantile", c("api99", "api00"))
     )
+    # -- srvyr::survey_quantile passing methods for old svyquantile
+    if (utils::packageVersion("survey") >= "4.1") {
+        qf <- get("oldsvyquantile", asNamespace("survey"))
+    } else {
+        qf <- survey::svyquantile
+    }
     expect_equal(
         svy_agg$api99_q25,
-        svyby(~api99, ~stype, svy, svyquantile, quantiles = 0.25, keep.var = FALSE)$statistic
+        svyby(~api99, ~stype, svy, qf, quantiles = 0.25, keep.var = FALSE)$statistic
     )
-    expect_equivalent(eval(parse(text = code(svy_agg))), svy_agg)
+    expect_equal(eval(parse(text = code(svy_agg))), svy_agg, ignore_attr = TRUE)
 })

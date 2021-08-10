@@ -69,10 +69,11 @@ test_that("Replicate weight designs", {
     skip_if_offline()
     skip_on_cran()
 
-    chis_url <- "https://github.com/iNZightVIT/iNZight/raw/dev/tests/testthat/chis.csv"
+    chis_url <- "https://inzight.nz/testdata/chis.csv"
     skip_if_not(RCurl::url.exists(chis_url))
 
-    data <- smart_read(chis_url)
+    data <- try(smart_read(chis_url), silent = TRUE)
+    skip_if(inherits(data, "try-error"))
 
     svyfile <- tempfile("chis", fileext = ".svydesign")
     svytoml <-

@@ -13,6 +13,11 @@ read_text <- function(txt, delim = "\t", ...) {
     if (txt == "clipboard")
         txt <- readr::clipboard()
 
-    readr::read_delim(txt, delim = delim) %>%
-        dplyr::mutate_if(is.character, as.factor)
+    if (utils::packageVersion('readr') < numeric_version('2.0.0')) {
+        d <- readr::read_delim(I(txt), delim = delim)
+    } else {
+        d <- readr::read_delim(I(txt), delim = delim, show_col_types = FALSE)
+    }
+
+    d %>% dplyr::mutate_if(is.character, as.factor)
 }

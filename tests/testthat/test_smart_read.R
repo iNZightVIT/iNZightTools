@@ -93,9 +93,11 @@ test_that("smart_read can handle datetimes", {
     expect_s3_class(dt$z, "POSIXct")
 })
 
-
+devtools::load_all()
 test_that("conversion to character or factor works for datetimes", {
-    expect_silent(dt <- smart_read("dt.csv", column_types = c(x = "c", y = "c", z = "c")))
+    expect_silent(
+        dt <- smart_read("dt.csv", column_types = c(x = "c", y = "c", z = "c"))
+    )
     expect_s3_class(dt$x, "Date")
     expect_s3_class(dt$y, "hms")
     expect_s3_class(dt$z, "POSIXct")
@@ -124,16 +126,16 @@ test_that("changing column types in delimited file", {
 })
 
 test_that("Reading (excel) files converts strings to factor", {
-    dt <- smart_read("cas500.xls")
+    dt <- smart_read("cas500.xls", na = "NA")
     expect_s3_class(dt$travel, "factor")
     expect_s3_class(dt$gender, "factor")
 })
 
 test_that("Read excel returns list of sheets as attribute", {
-    dt <- smart_read("cas500.xls", preview = TRUE)
+    dt <- smart_read("cas500.xls", preview = TRUE, na = "NA")
     expect_equal(sheets(dt), "Census at School-500")
     expect_match(
-        code(smart_read("cas500.xls", sheet = "Census at School-500")),
+        code(smart_read("cas500.xls", sheet = "Census at School-500", na = "NA")),
         "sheet = \"Census at School-500\""
     )
 })
@@ -148,11 +150,13 @@ test_that("Reading RDS works", {
 })
 
 test_that("URLs are supported", {
-    url <- "https://www.stat.auckland.ac.nz/~wild/data/test/Census%20at%20School-500.xls"
+    url <- "https://www.stat.auckland.ac.nz/~wild/data/test/CensusAtSchool-500.xls"
     skip_if( !RCurl::url.exists(url), "URL not available." )
 
-    file <- url_to_temp(url)
-    expect_match(file, "Census.at.School.500.xls")
+    file <- try(url_to_temp(url), silent = TRUE)
+    skip_if(inherits(file, "try-error"))
+
+    expect_match(file, "CensusAtSchool\\.500.xls")
     expect_true(file.exists(file))
 })
 
@@ -200,7 +204,10 @@ test_that("Columns with first >1000 rows NA are read as character, converted cor
     skip_if_offline()
     url <- "https://www.stat.auckland.ac.nz/~wild/data/FutureLearn/NHANES2009-2012.csv"
     skip_if_not(RCurl::url.exists(url))
-    expect_s3_class(d <- smart_read(url), "data.frame")
+    d <- try(smart_read(url), silent = TRUE)
+    skip_if(inherits(d, "try-error"))
+
+    expect_s3_class(d, "data.frame")
     expect_s3_class(d$Race3, "factor")
     expect_false(all(is.na(d$Race3)))
     expect_type(d$Testosterone, "double")

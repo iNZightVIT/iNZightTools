@@ -68,6 +68,8 @@ aggregateData <- function(.data, vars, summaries,
 
     if (missing(summary_vars)) {
         cols <- colnames(.data)
+        cols <- cols[sapply(.data, is_num)]
+        if (length(cols) == 0) stop("No numeric variables to aggregate.")
         summary_vars <- cols[cols %notin% vars]
     }
 
@@ -191,7 +193,12 @@ survey_IQR <- function(x, na.rm = TRUE) {
     .svy <- srvyr::set_survey_vars(srvyr::cur_svy(), x)
     qs <- survey::svyquantile(~`__SRVYR_TEMP_VAR__`,
         quantiles = c(0.25, 0.75),
+        se = FALSE,
         na.rm = na.rm, design = .svy)
-    out <- apply(qs, 1, diff)
+    if (utils::packageVersion("survey") >= "4.1") {
+        out <- sapply(qs, function(qx) diff(qx[,1]))
+    } else {
+        out <- apply(qs, 1, diff)
+    }
     out
 }

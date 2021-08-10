@@ -4,7 +4,7 @@
 #'
 #' @param .data the data set
 #' @param variable name of the variable to convert
-#' @param method one of 'equal' for equal-width interavls, 'width' for intervals of a specific width, 'count' for equal-count intervals, and 'manual' to specify break points manually
+#' @param method one of 'equal' for equal-width intervals, 'width' for intervals of a specific width, 'count' for equal-count intervals, and 'manual' to specify break points manually
 #' @param n_intervals for methods 'equal' and 'count', this is the number of intervals to create
 #' @param interval_width for method 'width', this is the width of intervals
 #' @param format the format for intervals; use 'a' and 'b' to represent the min/max of each interval, respectively.
@@ -44,7 +44,9 @@ form_class_intervals <- function(.data, variable,
     dataname <- mc$.data
     method <- match.arg(method)
 
-    x <- .data[[variable]]
+    d <- if (is_survey(.data)) .data$variables else .data
+
+    x <- d[[variable]]
     xr <- range(x, na.rm = TRUE)
     if (!is.null(range)) xr <- range else {
         xr[1] <- floor(xr[1])
@@ -68,7 +70,7 @@ form_class_intervals <- function(.data, variable,
         "manual" = sprintf("%s", list(break_points))
     )
     if (isinteger) breaks_expr <- sprintf("round(%s)", breaks_expr)
-    breaks <- eval(parse(text = breaks_expr), envir = .data)
+    breaks <- eval(parse(text = breaks_expr), envir = d)
 
     # 2. Generate LABELS
     labels <- apply(

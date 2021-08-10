@@ -42,7 +42,7 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
     })
 
     ## columns in meta not in dataset:
-    mvars <- sapply(meta$columns, getname)
+    mvars <- gsub("_missing", "", sapply(meta$columns, getname))
     dvars <- names(dtop)
     if (any(!mvars %in% dvars)) {
         stop("Some variables defined in metadata not in dataset: ",
@@ -109,6 +109,67 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
         data <- suppressWarnings(interpolate(mexp, "_env" = e))
         attr(data, "code") <- gsub(".dataset", dcode, code(data))
     }
+
+    ## convert any Lists to binary matrices (within the df)
+    if (any(sapply(data, class) == "list")) {
+        list_vars <- names(data)[sapply(data, class) == "list"]
+        new_cols <- sapply(list_vars,
+            function(v) {
+                lvls <- unique(unlist(data[[v]]))
+                mc <- which(sapply(meta$columns, function(x) x$name == v))
+                lbls <- if (length(mc) && !is.null(meta$columns[[mc]]$labels))
+                    meta$columns[[mc]]$labels else NULL
+
+                cnames <- paste(sep = "_", v, lvls)
+                sprintf(
+                    "tidyr::unnest(%s) %s%s
+    dplyr::mutate(n = 1%s) %s%s
+    tidyr::pivot_wider(
+        names_from = %s,
+        values_from = n,
+        values_fill = 0,
+        names_prefix = \"%s_\"
+    )",
+                    v, "%>%",
+                    if (is.null(lbls$labels)) ""
+                    else sprintf("
+    dplyr::left_join(
+        data.frame(
+            %s = %s,
+            labels = %s
+        ),
+        by = '%s'
+    ) %s",
+                        v,
+                        capture.output(dput(lbls$labels)),
+                        capture.output(dput(lbls$levels)),
+                        v,
+                        " %>%"
+                    ),
+                    if (is.null(lbls$labels)) ""
+                    else sprintf(", %s = labels", v),
+                    "%>%",
+                    if (is.null(lbls$labels)) ""
+                    else "
+    dplyr::select(-labels) %>%",
+                    v, v
+                )
+            }
+        )
+
+        mexp <- eval(parse(
+            text = sprintf("~.dataset %s %s",
+                "%>%", paste(new_cols, collapse = " %>% ")
+            )
+        ))
+
+        e <- new.env()
+        e$.dataset <- data
+        dcode <- paste(code(data), collapse = " ")
+        data <- suppressWarnings(interpolate(mexp, "_env" = e))
+        attr(data, "code") <- gsub(".dataset", dcode, code(data))
+    }
+
 
     attr(data, "name") <- meta$title
     attr(data, "description") <- meta$desc
@@ -221,38 +282,93 @@ cleanstring <- function(x) {
     vname <- x[1]
 
     ## some other calculations? perhaps ...
+    na_codes <- x[grepl("^na=", x)]
+    na_codes <- if (length(na_codes) == 0L) NULL
+        else strsplit(gsub("^na=", "", na_codes), ",")[[1]]
+
+    if (is.null(na_codes) && any(grepl("^na\\[", x))) {
+        # alternatively, NA codes can be specifed for an additional column
+        na_codes <- extract_levels(x[grepl("^na\\[", x)])
+        vname <- glue::glue("{vname}_missing")
+    }
+
+    fn <- sprintf(
+        "function(x, vname) {
+            %s
+            if (is.numeric(x)) return(NULL)
+            sprintf('as.numeric(%s)', vname)
+        }",
+        if (!is.null(na_codes)) {
+            Xa <- "if (is.numeric(x)) vname else sprintf(\"as.numeric(%s)\", gsub(\"_missing\", \"\", vname))"
+            if (is.list(na_codes)) {
+                # case_when(x == 88 ~ 'Refused', x == 99 ~ 'Dont_Know', TRUE ~ 'observed'), c = ifelse(c_missing == 'observed', c, NA)
+                codes <- paste0(gsub("_missing", "", vname), " == ", na_codes$labels, " ~ \"", na_codes$levels, "\"", collapse = ", ")
+                glue::glue(
+                    "return(sprintf(
+                        'dplyr::case_when({codes},
+                            TRUE ~ \"observed\"
+                        ),
+                        %s = ifelse(%s == \"observed\", %s, NA)',
+                    gsub(\"_missing\", \"\", vname), vname, {Xa}))"
+                )
+            } else {
+                Xin <- "IN_"
+                Xb <- capture.output(dput(as.numeric(na_codes)))
+                Xc <- Xa
+                glue::glue(
+                    "return(sprintf(\"ifelse(%s %s {Xb}, NA, %s)\",
+                        {Xa},
+                        \"{Xin}\",
+                        {Xc}
+                    ))"
+                )
+            }
+        } else {
+            ""
+        },
+        "%s"
+    )
+    fn <- eval(parse(
+        text =
+            gsub("IN_", "%in%", fn)
+    ))
 
     ## and return a meta object
     metaFun(
         type = "numeric",
         name = vname,
-        fun = eval(parse(
-            text =
-                "function(x, vname) {
-                    if (is.numeric(x)) return(NULL)
-                    sprintf('as.numeric(%s)', vname)
-                }"
-        ))
+        fun = fn
     )
+}
+
+extract_levels <- function(vname) {
+    out <- list(levels = NULL, labels = NULL, vname = vname)
+
+    if (!grepl("\\[", vname)) return(out)
+
+    f <- strsplit(vname, "\\[")[[1]]
+    vname <- f[1]
+    lvlstr <- trimws(strsplit(gsub("\\]", "", f[2]), ",")[[1]])
+    labels <- levels <- character(length(lvlstr))
+    for (i in seq_along(lvlstr)) {
+        lvl <- strsplit(lvlstr[i], "=")[[1]]
+        levels[i] <- lvl[1]
+        labels[i] <- lvl[length(lvl)]
+    }
+    levels <- iconv(levels, from = "UTF-8", to = "ASCII//TRANSLIT")
+
+    list(levels = levels, labels = labels, vname = vname)
 }
 
 .processLine.inz.meta.factor <- function(x) {
     vname <- x[1]
 
     ## extract levels=labels (level in output, label in dataset)
-    if (grepl("\\[", vname)) {
-        f <- strsplit(vname, "\\[")[[1]]
-        vname <- f[1]
-        lvlstr <- trimws(strsplit(gsub("\\]", "", f[2]), ",")[[1]])
-        labels <- levels <- character(length(lvlstr))
-        for (i in seq_along(lvlstr)) {
-            lvl <- strsplit(lvlstr[i], "=")[[1]]
-            levels[i] <- lvl[1]
-            labels[i] <- lvl[length(lvl)]
-        }
-    } else {
-        levels <- labels <- NULL
-    }
+    ll <- extract_levels(vname)
+    levels <- ll$levels
+    labels <- ll$labels
+    vname <- ll$vname
+
     if (is.null(levels)) {
         fun <- "function(x, vname) {
              if (is.factor(x)) return(NULL)
@@ -277,5 +393,35 @@ cleanstring <- function(x) {
         type = "factor",
         name = vname,
         fun = eval(parse(text = fun))
+    )
+}
+
+.processLine.inz.meta.multi <- function(x) {
+    # a method for parsing multiple-response columns,
+    # where choices are separated by some separator
+    # e.g., # @multi tech sep=;
+
+    ## The name of the variable
+    vname <- x[1]
+    ll <- extract_levels(vname)
+    vname <- ll$vname
+
+    sep <- x[grepl("^sep=", x)]
+    if (length(sep) == 0L) sep <- "," else sep <- gsub("^sep=", "", sep)
+
+    fun <-
+        "function(x, vname)
+            sprintf(
+                \"stringr::str_split(%s, '%s')\",
+                vname,
+                sep
+            )
+        "
+
+    metaFun(
+        type = "multi",
+        name = vname,
+        fun = eval(parse(text = fun)),
+        labels = ll
     )
 }

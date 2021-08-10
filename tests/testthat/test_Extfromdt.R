@@ -1,5 +1,3 @@
-context("Extract from a date time variable")
-
 data <- data.frame(
   a = lubridate::parse_date_time("7th of July 2020 06:15:30 pm", "%d%m%y%H%M%S%p"),
   b = lubridate::parse_date_time("19700613", "%y%m%d")
@@ -41,16 +39,16 @@ test_that("Desired parts are extracted", {
   expect_true(is_dt(extract_part(data, "a", "Time only", "time")$time))
 })
 
-test_that("Invalid parts are returned with NA", {
+test_that("Invalid parts are handled", {
   ## now this "works" because its a datetime with empty time (so, midnight)
-  # expect_equal(
-  #   stripcode(extract_part(data, "b", "Hour", "b.dt")),
-  #   data %>% tibble::add_column(b.dt = NA, .after = "b")
-  # )
-  # expect_equal(
-  #   stripcode(extract_part(data, "b", "Time only", "b.dt")),
-  #   data %>% tibble::add_column(b.dt = NA, .after = "b")
-  # )
+  expect_equal(
+    stripcode(extract_part(data, "b", "Hour", "b.dt")),
+    data %>% tibble::add_column(b.dt = 0, .after = "b")
+  )
+  expect_equal(
+    stripcode(extract_part(data, "b", "Time only", "b.dt")),
+    data %>% tibble::add_column(b.dt = chron::times("00:00:00"), .after = "b")
+  )
 })
 
 months <- as.Date(paste("2019", 1:12, "01", sep = "-"))

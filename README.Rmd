@@ -53,3 +53,7 @@ data <- smart_read(system.file("extdata/cas500.xls", package = "iNZightTools"))
 str(data)
 tidy_all_code(code(data))
 ```
+
+### Surveys
+
+Being an important but tricker data type to work with, *iNZightTools* includes methods for easily importing surveys using a specification format.

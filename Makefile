@@ -27,3 +27,4 @@ clean:
 
 README.md: README.Rmd
 	$(RCMD) -e "rmarkdown::render('$^')"
+	rm README.html

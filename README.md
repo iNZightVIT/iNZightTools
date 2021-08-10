@@ -71,28 +71,58 @@ str(data)
 #>  $ year      : num [1:500] 7 6 6 5 10 7 8 11 8 9 ...
 #>  $ armspan   : num [1:500] 150 152 132 130 160 50 164 100 152 23 ...
 #>  $ cellcost  : num [1:500] 30 50 55 60 20 50 10 20 10 0 ...
-#>  - attr(*, "code")= chr "readxl::read_excel(\"/home/tom/R/x86_64-pc-linux-gnu-library/4.1/iNZightTools/extdata/cas500.xls\") %>% dplyr::"| __truncated__
+#>  - attr(*, "code")= chr "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %>% dplyr::mutate_at(c"| __truncated__
 tidy_all_code(code(data))
-#>  [1] "readxl::read_excel(\"/home/tom/R/x86_64-pc-linux-gnu-library/4.1/iNZightTools/extdata/cas500.xls\") %>%"
-#>  [2] "    dplyr::mutate_at("                                                                                  
-#>  [3] "        c("                                                                                             
-#>  [4] "            \"cellsource\","                                                                            
-#>  [5] "            \"travel\","                                                                                
-#>  [6] "            \"getlunch\","                                                                              
-#>  [7] "            \"gender\""                                                                                 
-#>  [8] "        ),"                                                                                             
-#>  [9] "        as.factor"                                                                                      
-#> [10] "    ) %>%"                                                                                              
-#> [11] "    dplyr::mutate_at("                                                                                  
-#> [12] "        c("                                                                                             
-#> [13] "            \"rightfoot\","                                                                             
-#> [14] "            \"height\","                                                                                
-#> [15] "            \"age\","                                                                                   
-#> [16] "            \"armspan\","                                                                               
-#> [17] "            \"cellcost\""                                                                               
-#> [18] "        ),"                                                                                             
-#> [19] "        as.numeric"                                                                                     
+#>  [1] "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %>%"
+#>  [2] "    dplyr::mutate_at("                                                                       
+#>  [3] "        c("                                                                                  
+#>  [4] "            \"cellsource\","                                                                 
+#>  [5] "            \"travel\","                                                                     
+#>  [6] "            \"getlunch\","                                                                   
+#>  [7] "            \"gender\""                                                                      
+#>  [8] "        ),"                                                                                  
+#>  [9] "        as.factor"                                                                           
+#> [10] "    ) %>%"                                                                                   
+#> [11] "    dplyr::mutate_at("                                                                       
+#> [12] "        c("                                                                                  
+#> [13] "            \"rightfoot\","                                                                  
+#> [14] "            \"height\","                                                                     
+#> [15] "            \"age\","                                                                        
+#> [16] "            \"armspan\","                                                                    
+#> [17] "            \"cellcost\""                                                                    
+#> [18] "        ),"                                                                                  
+#> [19] "        as.numeric"                                                                          
 #> [20] "    )"
+```
+
+### Surveys
+
+Being an important but tricker data type to work with, *iNZightTools*
+includes methods for easily importing surveys using a specification
+format. For details, check out
+<https://inzight.nz/docs/survey-specification.html>
+
+### Other
+
+There are many other data manipulation-focussed functions, such as
+filter, renaming variables, etc.
+
+``` r
+filterNumeric(data, "height", "<", 150)
+#> # A tibble: 127 × 10
+#>    cellsource rightfoot travel getlunch height gender   age  year armspan
+#>    <fct>          <dbl> <fct>  <fct>     <dbl> <fct>  <dbl> <dbl>   <dbl>
+#>  1 parent            21 motor  home        137 male      10     6     132
+#>  2 pocket            20 walk   home        115 male       9     5     130
+#>  3 parent            19 motor  home        137 female    11     7      50
+#>  4 other             30 walk   tuckshop    123 male      14     9      23
+#>  5 parent            11 bike   home        129 male      10     5     165
+#>  6 other             23 motor  home        145 male      10     6     144
+#>  7 parent            19 motor  home        146 female     9     4     140
+#>  8 pocket            22 bus    home        146 female    12     8     136
+#>  9 job               19 motor  home        130 female     9     6     130
+#> 10 parent            21 motor  home        135 female    11     6     137
+#> # … with 117 more rows, and 1 more variable: cellcost <dbl>
 ```
 
 1.  with others being modified in time

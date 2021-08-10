@@ -93,7 +93,6 @@ test_that("smart_read can handle datetimes", {
     expect_s3_class(dt$z, "POSIXct")
 })
 
-devtools::load_all()
 test_that("conversion to character or factor works for datetimes", {
     expect_silent(
         dt <- smart_read("dt.csv", column_types = c(x = "c", y = "c", z = "c"))

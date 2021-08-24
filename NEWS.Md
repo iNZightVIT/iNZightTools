@@ -6,6 +6,7 @@
 * allow spaces in new factor level names (`renameLevels()`)
 * add additional time formats for `extract_part()`
 
+
 ## iNZightTools 1.11.4
 * fix bug in `aggregateData()` if `summary_vars` is not specified and there are factor columns in the dataset not showing up in `vars`
 

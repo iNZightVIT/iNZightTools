@@ -147,3 +147,9 @@ test_that("Survey designs can be parsed as survey spec", {
         )
     )
 })
+
+test_that("Survey spec can be converted to survey design", {
+    dclus2 <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
+    dsvy <- as_survey_spec(dclus2)
+    expect_equal(as_survey(dsvy), dclus2)
+})

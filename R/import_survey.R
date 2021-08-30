@@ -222,6 +222,27 @@ as_survey_spec.survey.design <- function(x) {
     spec
 }
 
+#' as_survey method
+#'
+#' @importFrom srvyr as_survey
+#' @name as_survey
+#' @rdname as_survey.inzsvyspec
+#' @export
+NULL
+
+#' Coerce to survey design
+#'
+#' Coerce an object to a survey design by extracting the survey object
+#'
+#' @param .data an `inzsvyspec` object
+#' @param ... additional arguments, ignored
+#' @return a survey design object
+#' @export
+#' @md
+as_survey.inzsvyspec <- function(.data, ...) {
+    .data$design
+}
+
 #' Print iNZight Survey Spec
 #'
 #' @param x a `inzsvyspec` object

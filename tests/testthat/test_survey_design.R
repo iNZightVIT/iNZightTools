@@ -105,6 +105,40 @@ rscales = 1
     )
 })
 
+test_that("Replicate design has same defaults as survey::svrepdesign()", {
+    skip_if_offline()
+    skip_on_cran()
+
+    chis_url <- "https://inzight.nz/testdata/chis.csv"
+    skip_if_not(RCurl::url.exists(chis_url))
+
+    data <- try(smart_read(chis_url), silent = TRUE)
+    skip_if(inherits(data, "try-error"))
+
+    svyfile <- tempfile("chis", fileext = ".svydesign")
+    svytoml <-
+'repweights = "rakedw[1-9]"
+weights = "rakedw0"
+'
+    writeLines(svytoml, svyfile)
+
+    dchis <- svrepdesign(
+        weights = ~rakedw0,
+        repweights = "rakedw[1-9]",
+        data = data
+    )
+
+    s <- import_survey(svyfile, data)
+    expect_s3_class(s, "inzsvyspec")
+
+    expect_s3_class(s$design, "svyrep.design")
+    expect_equal(
+        make_survey(data, s)$design,
+        dchis,
+        ignore_attr = TRUE
+    )
+})
+
 test_that("Poststratification", {
     svyfile <- tempfile("apistrat", fileext = ".svydesign")
     svyTOML <- 'strata = "stype"

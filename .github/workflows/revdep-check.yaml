@@ -55,6 +55,7 @@ jobs:
 
       - name: Revdepcheck
         run: |
+          options(repos = "https://cloud.rstudio.com")
           revdepcheck::revdep_reset()
           revdepcheck::revdep_check(num_workers = 4L)
           revdepcheck::revdep_summary()

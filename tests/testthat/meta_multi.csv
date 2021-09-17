@@ -1,0 +1,7 @@
+#' @multi tech sep=;
+#' @multi lunch[home=1,shop=2,school=3,none=4] sep=;
+age,tech,lunch
+10,phone,1;2
+15,pc;phone;tablet,1;3
+20,pc;phone;tablet;watch,4
+12,tablet;watch,2;3

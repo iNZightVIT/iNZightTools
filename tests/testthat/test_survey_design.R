@@ -1,5 +1,3 @@
-context("Survey designs")
-
 require(survey)
 data(api)
 
@@ -13,16 +11,17 @@ fpc = "fpc"
     writeLines(svytoml, svyfile)
 
     s <- import_survey(svyfile)
-    expect_is(s, "inzsvyspec")
+    expect_s3_class(s, "inzsvyspec")
     expect_null(s$design)
 
     s2 <- import_survey(svyfile, apistrat)
-    expect_is(s2, "inzsvyspec")
-    expect_is(s2$design, "survey.design")
+    expect_s3_class(s2, "inzsvyspec")
+    expect_s3_class(s2$design, "survey.design")
 
     expect_equal(
         {data <- apistrat; make_survey(data, s)},
-        s2
+        s2,
+        ignore_formula_env = TRUE
     )
 
     expect_output(print(s), "empty")
@@ -39,16 +38,17 @@ fpc = "fpc1 + fpc2"
     writeLines(svytoml, svyfile)
 
     s <- import_survey(svyfile)
-    expect_is(s, "inzsvyspec")
+    expect_s3_class(s, "inzsvyspec")
     expect_null(s$design)
 
     s2 <- import_survey(svyfile, apiclus2)
-    expect_is(s2, "inzsvyspec")
-    expect_is(s2$design, "survey.design")
+    expect_s3_class(s2, "inzsvyspec")
+    expect_s3_class(s2$design, "survey.design")
 
     expect_equal(
         {data <- apiclus2; make_survey(data, s)},
-        s2
+        s2,
+        ignore_formula_env = TRUE
     )
 
     expect_output(print(s), "empty")
@@ -62,14 +62,14 @@ fpc = "fpc1 + fpc2"
 '
     writeLines(svytoml, svyfile)
     s3 <- import_survey(svyfile, apiclus2)
-    expect_equal(s2, s3)
+    expect_equal(s2, s3, ignore_formula_env = TRUE)
 })
 
 test_that("Replicate weight designs", {
     skip_if_offline()
     skip_on_cran()
 
-    chis_url <- "https://github.com/iNZightVIT/iNZight/raw/dev/tests/testthat/chis.csv"
+    chis_url <- "https://inzight.nz/testdata/chis.csv"
     skip_if_not(RCurl::url.exists(chis_url))
 
     data <- try(smart_read(chis_url), silent = TRUE)
@@ -95,12 +95,47 @@ rscales = 1
     )
 
     s <- import_survey(svyfile, data)
-    expect_is(s, "inzsvyspec")
+    expect_s3_class(s, "inzsvyspec")
 
-    expect_is(s$design, "svyrep.design")
-    expect_equivalent(
+    expect_s3_class(s$design, "svyrep.design")
+    expect_equal(
         make_survey(data, s)$design,
-        dchis
+        dchis,
+        ignore_attr = TRUE
+    )
+})
+
+test_that("Replicate design has same defaults as survey::svrepdesign()", {
+    skip_if_offline()
+    skip_on_cran()
+
+    chis_url <- "https://inzight.nz/testdata/chis.csv"
+    skip_if_not(RCurl::url.exists(chis_url))
+
+    data <- try(smart_read(chis_url), silent = TRUE)
+    skip_if(inherits(data, "try-error"))
+
+    svyfile <- tempfile("chis", fileext = ".svydesign")
+    svytoml <-
+'repweights = "rakedw[1-9]"
+weights = "rakedw0"
+'
+    writeLines(svytoml, svyfile)
+
+    dchis <- svrepdesign(
+        weights = ~rakedw0,
+        repweights = "rakedw[1-9]",
+        data = data
+    )
+
+    s <- import_survey(svyfile, data)
+    expect_s3_class(s, "inzsvyspec")
+
+    expect_s3_class(s$design, "svyrep.design")
+    expect_equal(
+        make_survey(data, s)$design,
+        dchis,
+        ignore_attr = TRUE
     )
 })
 
@@ -122,8 +157,8 @@ M = 1018
     writeLines(svyTOML, svyfile)
 
     s <- import_survey(svyfile, apistrat)
-    expect_is(s, "inzsvyspec")
-    expect_is(s$design, "survey.design")
+    expect_s3_class(s, "inzsvyspec")
+    expect_s3_class(s$design, "survey.design")
 
     expect_output(print(s), "survey::calibrate")
 })
@@ -131,7 +166,7 @@ M = 1018
 test_that("Survey designs can be parsed as survey spec", {
     dclus2 <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
     dsvy <- as_survey_spec(dclus2)
-    expect_is(dsvy, "inzsvyspec")
+    expect_s3_class(dsvy, "inzsvyspec")
     expect_equal(dsvy$design, dclus2)
     expect_equal(dsvy$data, apiclus2)
     expect_equal(
@@ -145,4 +180,10 @@ test_that("Survey designs can be parsed as survey spec", {
             weights = "pw"
         )
     )
+})
+
+test_that("Survey spec can be converted to survey design", {
+    dclus2 <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
+    dsvy <- as_survey_spec(dclus2)
+    expect_equal(as_survey(dsvy), dclus2)
 })

@@ -165,6 +165,9 @@ read_dlm <- function(file,
     else
         args <- "file"
 
+    if (utils::packageVersion("readr") >= numeric_version('2.0.0'))
+        args <- paste0(args, ", lazy = FALSE")
+
     exp <- ~FUN(ARGS)
     exp <- replaceVars(exp,
         FUN = sprintf("readr::read_%s",
@@ -209,6 +212,9 @@ read_excel <- function(file,
 
     if (!is.null(sheet))
         named.args <- c(list(sheet = "sheetname"), named.args)
+
+    if (!is.null(named.args$na))
+        named.args$na <- escape_string(named.args$na)
 
     if (length(named.args) > 0)
         args <- paste("file,",
@@ -316,7 +322,7 @@ convert_strings <- function(x, ctypes) {
         function(type)
             switch(type,
                 "date" = "as.Date",
-                "time" = "hms::as.hms",
+                "time" = "hms::as_hms",
                 "datetime" = "as.POSIXct",
                 "double" = "as.numeric",
                 "character" = ,

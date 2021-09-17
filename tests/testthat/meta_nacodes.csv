@@ -1,0 +1,8 @@
+#' @numeric a
+#' @numeric b na=88,99
+#' @numeric c na[Refused=88,Dont_Know=99]
+a,b,c
+1,4,10
+2,88,12
+3,6,88
+4,99,99

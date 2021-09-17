@@ -1,5 +1,3 @@
-context("Date time conversion functions")
-
 data <- data.frame(
   a = "7th of July 2020 06:15:30 pm",
   b = "19560612",

@@ -15,6 +15,7 @@ extract_part <- function(.data, varname, part, name) {
     dataname <- mc$.data
 
     extexp <- switch(part,
+        "Date" = ,
         "Date only" =
             "as.Date(.DATA$.VARNAME)",
         "Year" =
@@ -29,6 +30,7 @@ extract_part <- function(.data, varname, part, name) {
             "as.numeric(stringr::str_sub(zoo::as.yearqtr(.DATA$.VARNAME), -1))",
         "Year Month" =
             'factor(format(.DATA$.VARNAME, "%YM%m"))',
+        "Month" = ,
         "Month (full)" =
             "lubridate::month(.DATA$.VARNAME, label = TRUE, abbr = FALSE)",
         "Month (abbreviated)" =
@@ -37,6 +39,7 @@ extract_part <- function(.data, varname, part, name) {
             'as.numeric(format(.DATA$.VARNAME, "%m"))',
         "Year Week" =
             'factor(format(.DATA$.VARNAME, "%YW%W"))',
+        "Week" = ,
         "Week of the year (Monday as first day of the week)" =
             'as.numeric(format(.DATA$.VARNAME, "%W"))',
         "Week of the year (Sunday as first day of the week)" =
@@ -56,6 +59,7 @@ extract_part <- function(.data, varname, part, name) {
             'as.numeric(format(.DATA$.VARNAME, "%w"))',
         "Day" =
             'as.numeric(format(.DATA$.VARNAME, "%d"))',
+        "Time" = ,
         "Time only" =
             'chron::chron(times. = format(.DATA$.VARNAME, "%H:%M:%S"))',
         "Hours (decimal)" =

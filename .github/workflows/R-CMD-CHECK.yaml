@@ -12,10 +12,8 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: '3.6'}
           - {os: windows-latest, r: '4.0'}
           - {os: windows-latest, r: 'release'}
-          - {os: windows-latest, r: 'devel'}
           - {os: macOS-latest, r: 'release'}
           - {os: macOS-latest, r: 'devel'}
           - {os: ubuntu-20.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
@@ -60,6 +58,7 @@ jobs:
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
+          remotes::install_github("gergness/srvyr")
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 

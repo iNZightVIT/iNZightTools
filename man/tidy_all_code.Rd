@@ -24,5 +24,5 @@ formatted code, optionally written to `outfile`
 Tidy code with correct indents and limit the code to the specific width
 }
 \author{
-Lushi Cai
+Tom Elliott, Lushi Cai
 }

@@ -1,6 +1,4 @@
-context("Filter numeric variables")
-
-dat <- readr::read_csv("cas500.csv")
+dat <- readr::read_csv("cas500.csv", show_col_types = FALSE)
 
 # FOR "<"
 filtered.L <- filterNumeric(dat, "rightfoot", "<", 15)
@@ -51,9 +49,10 @@ test_that("Filtering surveys is valid", {
         svymean(~api00, svy_filtered_proper)
     )
 
-    expect_equivalent(
+    expect_equal(
         svy_filtered,
-        eval(parse(text = code(svy_filtered)))
+        eval(parse(text = code(svy_filtered))),
+        ignore_attr = TRUE
     )
 })
 

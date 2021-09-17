@@ -1,5 +1,3 @@
-context("Read text from clipboard")
-
 text <- "x\ty\tz
 1\ta\t34
 2\tb\t28
@@ -10,6 +8,6 @@ text <- "x\ty\tz
 test_that("Tab-delim text reads", {
     expect_equal(
         read_text(text),
-        readr::read_tsv(text) %>% dplyr::mutate(y = as.factor(y))
+        readr::read_tsv(I(text), show_col_types = FALSE) %>% dplyr::mutate(y = as.factor(y))
     )
 })

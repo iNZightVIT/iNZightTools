@@ -37,6 +37,7 @@ import_survey <- function(file, data) {
     # spec <- as.data.frame(read.dcf(file), stringsAsFactors = FALSE)
     spec <- RcppTOML::parseTOML(file)
 
+    no_scale_types <- c("BRR", "ACS", "successive-difference", "JK2")
     svyspec <- structure(
         list(
             spec = list(
@@ -51,8 +52,18 @@ import_survey <- function(file, data) {
                 weights = spec$weights,
                 repweights = spec$repweights,
                 reptype = spec$reptype,
-                scale = spec$scale,
-                rscales = as.numeric(spec$rscales),
+                scale =
+                    if (is.null(spec$reptype) || spec$reptype %in% c(no_scale_types)) {
+                        NULL
+                    } else {
+                        spec$scale
+                    },
+                rscales =
+                    if (is.null(spec$reptype) || spec$reptype %in% c(no_scale_types)) {
+                        NULL
+                    } else {
+                        as.numeric(spec$rscales)
+                    },
                 ## this will become conditional on what fields are specified
                 type = ifelse("repweights" %in% names(spec), "replicate", "survey"),
                 calibrate = spec$calibrate
@@ -119,8 +130,12 @@ make_survey <- function(.data, spec) {
             # string/something else ...
             str_args <- c(str_args, "repweights")
         }
-        if (all(diff(s$rscales) == 0)) s$rscales <- s$rscales[1]
-        s$rscales <- paste(capture.output(dput(s$rscales)), collapse = "")
+        if (is.null(s$rscales)) {
+            s$rscales <- NULL
+        } else {
+            if (all(diff(s$rscales) == 0)) s$rscales <- s$rscales[1]
+            s$rscales <- paste(capture.output(dput(s$rscales)), collapse = "")
+        }
         s$type <- s$reptype
         s$reptype <- NULL
     }
@@ -220,6 +235,27 @@ as_survey_spec.survey.design <- function(x) {
     )
     class(spec) <- "inzsvyspec"
     spec
+}
+
+#' as_survey method
+#'
+#' @importFrom srvyr as_survey
+#' @name as_survey
+#' @rdname as_survey.inzsvyspec
+#' @export
+NULL
+
+#' Coerce to survey design
+#'
+#' Coerce an object to a survey design by extracting the survey object
+#'
+#' @param .data an `inzsvyspec` object
+#' @param ... additional arguments, ignored
+#' @return a survey design object
+#' @export
+#' @md
+as_survey.inzsvyspec <- function(.data, ...) {
+    .data$design
 }
 
 #' Print iNZight Survey Spec

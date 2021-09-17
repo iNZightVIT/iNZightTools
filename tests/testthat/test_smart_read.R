@@ -1,5 +1,3 @@
-context("Importing data via smart_read")
-
 test_that("smart_read can figure out the file type", {
     expect_equal(guess_type("txt"), "meta")
     expect_equal(guess_type("dta"), "stata")
@@ -8,12 +6,12 @@ test_that("smart_read can figure out the file type", {
 })
 
 test_that("files parsed correctly", {
-    expect_is(smart_read("meta.txt"), "data.frame")
-    expect_is(smart_read("meta.csv"), "data.frame")
-    expect_is(smart_read("appbset1.sav"), "data.frame")
-    expect_is(smart_read("c5hw1.dta"), "data.frame")
-    expect_is(smart_read("test.sas7bdat"), "data.frame")
-    expect_is(smart_read("cars.xpt"), "data.frame")
+    expect_s3_class(smart_read("meta.txt"), "data.frame")
+    expect_s3_class(smart_read("meta.csv"), "data.frame")
+    expect_s3_class(smart_read("appbset1.sav"), "data.frame")
+    expect_s3_class(smart_read("c5hw1.dta"), "data.frame")
+    expect_s3_class(smart_read("test.sas7bdat"), "data.frame")
+    expect_s3_class(smart_read("cars.xpt"), "data.frame")
 })
 
 test_that("smart_read gets correct column types and dims", {
@@ -72,7 +70,7 @@ test_that("Column type overrides are respected", {
     )
 
     # null should also work
-    expect_is(smart_read("cas500.csv", column_types = NULL), "data.frame")
+    expect_s3_class(smart_read("cas500.csv", column_types = NULL), "data.frame")
 })
 
 test_that("SAS Import num to cat works", {
@@ -80,8 +78,8 @@ test_that("SAS Import num to cat works", {
         d <- smart_read("test.sas7bdat",
             column_types = c(q1 = "c", q2 = "c"))
     )
-    expect_is(d$q1, "factor")
-    expect_is(d$q2, "factor")
+    expect_s3_class(d$q1, "factor")
+    expect_s3_class(d$q2, "factor")
 })
 
 test_that("smart_read can handle spaces and comment-characters", {
@@ -90,20 +88,21 @@ test_that("smart_read can handle spaces and comment-characters", {
 
 test_that("smart_read can handle datetimes", {
     dt <- smart_read("dt.csv")
-    expect_is(dt$x, "Date")
-    expect_is(dt$y, "hms")
-    expect_is(dt$z, "POSIXct")
+    expect_s3_class(dt$x, "Date")
+    expect_s3_class(dt$y, "hms")
+    expect_s3_class(dt$z, "POSIXct")
 })
 
-
 test_that("conversion to character or factor works for datetimes", {
-    expect_silent(dt <- smart_read("dt.csv", column_types = c(x = "c", y = "c", z = "c")))
-    expect_is(dt$x, "Date")
-    expect_is(dt$y, "hms")
-    expect_is(dt$z, "POSIXct")
+    expect_silent(
+        dt <- smart_read("dt.csv", column_types = c(x = "c", y = "c", z = "c"))
+    )
+    expect_s3_class(dt$x, "Date")
+    expect_s3_class(dt$y, "hms")
+    expect_s3_class(dt$z, "POSIXct")
 
     expect_silent(dt <- smart_read("dt.csv", column_types = c(x = "f")))
-    expect_is(dt$x, "factor")
+    expect_s3_class(dt$x, "factor")
 })
 
 test_that("converting numeric with some string values to cat behaves appropriately", {
@@ -114,7 +113,7 @@ test_that("converting numeric with some string values to cat behaves appropriate
         tmp
     )
     expect_silent(d <- smart_read(tmp, column_types = c(y = "c")))
-    expect_is(d$y, "factor")
+    expect_s3_class(d$y, "factor")
     expect_true(all(levels(d) %in% c("1", "2", "text")))
 })
 
@@ -122,20 +121,20 @@ test_that("changing column types in delimited file", {
     expect_silent(
         dt <- smart_read("cas.txt", column_types = c(education = "c"))
     )
-    expect_is(dt$education, "factor")
+    expect_s3_class(dt$education, "factor")
 })
 
 test_that("Reading (excel) files converts strings to factor", {
-    dt <- smart_read("cas500.xls")
-    expect_is(dt$travel, "factor")
-    expect_is(dt$gender, "factor")
+    dt <- smart_read("cas500.xls", na = "NA")
+    expect_s3_class(dt$travel, "factor")
+    expect_s3_class(dt$gender, "factor")
 })
 
 test_that("Read excel returns list of sheets as attribute", {
-    dt <- smart_read("cas500.xls", preview = TRUE)
+    dt <- smart_read("cas500.xls", preview = TRUE, na = "NA")
     expect_equal(sheets(dt), "Census at School-500")
     expect_match(
-        code(smart_read("cas500.xls", sheet = "Census at School-500")),
+        code(smart_read("cas500.xls", sheet = "Census at School-500", na = "NA")),
         "sheet = \"Census at School-500\""
     )
 })
@@ -145,18 +144,18 @@ test_that("Reading RDS works", {
     on.exit(unlink(t))
 
     saveRDS(iris, t)
-    expect_equivalent(smart_read(t), iris)
+    expect_equal(smart_read(t), iris, ignore_attr = TRUE)
     expect_match(code(smart_read(t)), sprintf("readRDS\\(\"%s\"\\)", t))
 })
 
 test_that("URLs are supported", {
-    url <- "https://www.stat.auckland.ac.nz/~wild/data/test/Census%20at%20School-500.xls"
+    url <- "https://www.stat.auckland.ac.nz/~wild/data/test/CensusAtSchool-500.xls"
     skip_if( !RCurl::url.exists(url), "URL not available." )
 
     file <- try(url_to_temp(url), silent = TRUE)
     skip_if(inherits(file, "try-error"))
 
-    expect_match(file, "Census.at.School.500.xls")
+    expect_match(file, "CensusAtSchool\\.500.xls")
     expect_true(file.exists(file))
 })
 
@@ -194,7 +193,7 @@ test_that("JSON supported", {
     on.exit(unlink(t))
 
     jsonlite::write_json(iris, t)
-    expect_equivalent(smart_read(t), iris)
+    expect_equal(smart_read(t), iris, ignore_attr = TRUE)
 
     write.csv(iris, t, row.names = FALSE, quote = FALSE)
     expect_error(smart_read(t), "Unable to read file")
@@ -207,10 +206,10 @@ test_that("Columns with first >1000 rows NA are read as character, converted cor
     d <- try(smart_read(url), silent = TRUE)
     skip_if(inherits(d, "try-error"))
 
-    expect_is(d, "data.frame")
-    expect_is(d$Race3, "factor")
+    expect_s3_class(d, "data.frame")
+    expect_s3_class(d$Race3, "factor")
     expect_false(all(is.na(d$Race3)))
-    expect_is(d$Testosterone, "numeric")
+    expect_type(d$Testosterone, "double")
 })
 
 test_that("Variable names are quoted as necessary", {

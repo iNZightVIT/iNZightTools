@@ -1,7 +1,7 @@
 # iNZightTools 1.12.0
 
 - add new support for metadata formats:
-  - multiple-reponse variables (using `@multi`)
+  - multiple-response variables (using `@multi`)
   - numeric na codes (using `@numeric x na=99`)
 - allow spaces in new factor level names (`renameLevels()`)
 - add additional time formats for `extract_part()`

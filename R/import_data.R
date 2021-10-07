@@ -49,7 +49,7 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
         attrs <- NULL
 
     ## now the data is read, convert things to factors etc
-    d <- convert_strings(d)
+    d <- convert_strings(d, column_types)
 
     ## ensure any numeric->categorical changes retain numeric order of levels
     d <- validate_type_changes(d, column_types)
@@ -318,6 +318,8 @@ convert_strings <- function(x, ctypes) {
     charnames <- names(TEMP_RESULT)[chars]
 
     types <- sapply(TEMP_RESULT[charnames], readr::guess_parser)
+
+    types[names(types) %in% names(ctypes == "c")] <- "character"
     convert_fn <- sapply(types,
         function(type)
             switch(type,
@@ -374,7 +376,7 @@ validate_type_changes <- function(x, column_types) {
             "c" = {
                 ## Convert numeric to factor
                 ncol <- suppressWarnings(as.numeric(as.character(col)))
-                if (any(is.na(ncol)) || !all(ncol == col))
+                if (!identical(col, ncol))
                     return("")
                 lvls <- sort(unique(ncol))
                 if (is.factor(col)) {

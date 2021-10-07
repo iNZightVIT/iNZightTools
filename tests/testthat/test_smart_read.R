@@ -71,6 +71,15 @@ test_that("Column type overrides are respected", {
 
     # null should also work
     expect_s3_class(smart_read("cas500.csv", column_types = NULL), "data.frame")
+
+    # NA values in num to cat conversion is OK
+    cas_missing <- smart_read("cas500-missing.csv", column_types = c(gender = "c"))
+    expect_s3_class(cas_missing$gender, "factor")
+    expect_equal(
+        eval(parse(text = paste(code(cas_missing), collapse = "\n"))),
+        cas_missing,
+        ignore_attr = TRUE
+    )
 })
 
 test_that("SAS Import num to cat works", {

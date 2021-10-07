@@ -1,3 +1,5 @@
+- fix bug in `smart_read()` where parsing column types (numerc -> categorical) failed if `NA`s in column
+
 # iNZightTools 1.12.0
 
 - add new support for metadata formats:

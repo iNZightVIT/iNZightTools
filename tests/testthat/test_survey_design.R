@@ -10,16 +10,16 @@ fpc = "fpc"
 '
     writeLines(svytoml, svyfile)
 
-    s <- import_survey(svyfile)
+    s <- surveyspec::import_survey(svyfile)
     expect_s3_class(s, "inzsvyspec")
     expect_null(s$design)
 
-    s2 <- import_survey(svyfile, apistrat)
+    s2 <- surveyspec::import_survey(svyfile, apistrat)
     expect_s3_class(s2, "inzsvyspec")
     expect_s3_class(s2$design, "survey.design")
 
     expect_equal(
-        {data <- apistrat; make_survey(data, s)},
+        {data <- apistrat; surveyspec::make_survey(data, s)},
         s2,
         ignore_formula_env = TRUE
     )
@@ -37,16 +37,16 @@ fpc = "fpc1 + fpc2"
 '
     writeLines(svytoml, svyfile)
 
-    s <- import_survey(svyfile)
+    s <- surveyspec::import_survey(svyfile)
     expect_s3_class(s, "inzsvyspec")
     expect_null(s$design)
 
-    s2 <- import_survey(svyfile, apiclus2)
+    s2 <- surveyspec::import_survey(svyfile, apiclus2)
     expect_s3_class(s2, "inzsvyspec")
     expect_s3_class(s2$design, "survey.design")
 
     expect_equal(
-        {data <- apiclus2; make_survey(data, s)},
+        {data <- apiclus2; surveyspec::make_survey(data, s)},
         s2,
         ignore_formula_env = TRUE
     )
@@ -61,7 +61,7 @@ weights = "pw"
 fpc = "fpc1 + fpc2"
 '
     writeLines(svytoml, svyfile)
-    s3 <- import_survey(svyfile, apiclus2)
+    s3 <- surveyspec::import_survey(svyfile, apiclus2)
     expect_equal(s2, s3, ignore_formula_env = TRUE)
 })
 
@@ -94,12 +94,12 @@ rscales = 1
         data = data
     )
 
-    s <- import_survey(svyfile, data)
+    s <- surveyspec::import_survey(svyfile, data)
     expect_s3_class(s, "inzsvyspec")
 
     expect_s3_class(s$design, "svyrep.design")
     expect_equal(
-        make_survey(data, s)$design,
+        surveyspec::make_survey(data, s)$design,
         dchis,
         ignore_attr = TRUE
     )
@@ -128,12 +128,12 @@ weights = "rakedw0"
         data = data
     )
 
-    s <- import_survey(svyfile, data)
+    s <- surveyspec::import_survey(svyfile, data)
     expect_s3_class(s, "inzsvyspec")
 
     expect_s3_class(s$design, "svyrep.design")
     expect_equal(
-        make_survey(data, s)$design,
+        surveyspec::make_survey(data, s)$design,
         dchis,
         ignore_attr = TRUE
     )
@@ -156,7 +156,7 @@ M = 1018
 '
     writeLines(svyTOML, svyfile)
 
-    s <- import_survey(svyfile, apistrat)
+    s <- surveyspec::import_survey(svyfile, apistrat)
     expect_s3_class(s, "inzsvyspec")
     expect_s3_class(s$design, "survey.design")
 
@@ -165,7 +165,7 @@ M = 1018
 
 test_that("Survey designs can be parsed as survey spec", {
     dclus2 <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
-    dsvy <- as_survey_spec(dclus2)
+    dsvy <- surveyspec::as_survey_spec(dclus2)
     expect_s3_class(dsvy, "inzsvyspec")
     expect_equal(dsvy$design, dclus2)
     expect_equal(dsvy$data, apiclus2)
@@ -184,6 +184,6 @@ test_that("Survey designs can be parsed as survey spec", {
 
 test_that("Survey spec can be converted to survey design", {
     dclus2 <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
-    dsvy <- as_survey_spec(dclus2)
-    expect_equal(as_survey(dsvy), dclus2)
+    dsvy <- surveyspec::as_survey_spec(dclus2)
+    expect_equal(surveyspec::as_survey(dsvy), dclus2)
 })

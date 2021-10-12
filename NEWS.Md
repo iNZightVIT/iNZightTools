@@ -1,4 +1,5 @@
 - fix bug in `smart_read()` where parsing column types (numerc -> categorical) failed if `NA`s in column
+- relocate survey specification reading files to new package [`surveyspec`](github.com/tmelliott/surveyspec)
 
 # iNZightTools 1.12.0
 

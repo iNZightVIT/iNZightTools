@@ -1,3 +1,8 @@
+## iNZightTools 1.12.1
+
+- fix bug in `smart_read()` where parsing column types (numerc -> categorical) failed if `NA`s in column
+- fix test failing in new version of survey (2.4)
+
 # iNZightTools 1.12.0
 
 - add new support for metadata formats:

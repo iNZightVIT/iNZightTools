@@ -374,7 +374,10 @@ validate_type_changes <- function(x, column_types) {
             "c" = {
                 ## Convert numeric to factor
                 ncol <- suppressWarnings(as.numeric(as.character(col)))
-                if (any(is.na(ncol)) || !all(ncol == col))
+                # skip if ONE missing (not both)
+                colm <- ncol == col | (is.na(col) + is.na(ncol)) == 2L
+                colm <- ifelse(is.na(colm), FALSE, colm)
+                if (!all(colm))
                     return("")
                 lvls <- sort(unique(ncol))
                 if (is.factor(col)) {

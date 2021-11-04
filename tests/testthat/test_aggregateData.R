@@ -89,11 +89,11 @@ test_that("Aggregating survey data is valid", {
         skip("Old version of srvyr")
     }
 
-    qf <- survey::svyquantile
+    skip_if(packageVersion("survey") < package_version('4.2'))
     expect_equal(
         svy_agg$api99_q25,
         svyby(~api99, ~stype, svy, survey::svyquantile,
-            quantiles = 0.25, keep.var = FALSE)[1, c(2, 6, 10)] %>% as.double()
+            quantiles = 0.25, keep.var = FALSE, ci = FALSE)$statistic
     )
     expect_equal(eval(parse(text = code(svy_agg))), svy_agg, ignore_attr = TRUE)
 })

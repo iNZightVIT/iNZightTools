@@ -1,4 +1,4 @@
-## iNZightTools 1.12.1
+# iNZightTools 1.12.1
 
 - fix bug in `smart_read()` where parsing column types (numeric -> categorical) failed if `NA`s in column
 - fix test failing in new version of survey (2.4)
@@ -16,20 +16,20 @@
 - pass `lazy = FALSE` to `readr::read_delim()` to prevent lazy loading of data
 - handle missing 'reptype' argument in survey specification file (defaults to 'BRR', the `survey::svrepdesign()` default)
 
-## iNZightTools 1.11.4
+# iNZightTools 1.11.4
 
 - fix bug in `aggregateData()` if `summary_vars` is not specified and there are factor columns in the dataset not showing up in `vars`
 
-## iNZightTools 1.11.3
+# iNZightTools 1.11.3
 
 - fix `form_class_intervals` to work with survey designs (count not yet working)
 - remove accents/special chars from factor levels when parsing metadata (due to Windows encoding issues)
 
-## iNZightTools 1.11.2
+# iNZightTools 1.11.2
 
 - prevents tests from failing during CRAN checks when resources unavailable
 
-## iNZightTools 1.11.1
+# iNZightTools 1.11.1
 
 - update `survey_IQR` (and some tests) to work with 'survey' 4.1 (new `svyquantile` function)
 
@@ -50,7 +50,7 @@
 - refactor `aggregateData` function to improve flexibility
 - new `import_survey()` function for importing a survey design (and data) from a specification file (in TOML format)
 
-## iNZightTools 1.9.1
+# iNZightTools 1.9.1
 
 - fix bug in reading delim files where, if first 1000+ rows of a column were `NA`, the column was read as logical instead of character (this is a fixed behaviour of `readr`, so cannot be overridden)
 
@@ -66,38 +66,38 @@ Minor version bump to align with release of iNZight 4.0.
 
 ---
 
-## iNZightTools 1.8.6
+# iNZightTools 1.8.6
 
 - ensure non-numeric values are returned as factors by `read_text()`
 
-## iNZightTools 1.8.5
+# iNZightTools 1.8.5
 
 - increase nmax for previews to 100 (from 10)
 - use forcats::fct_cross() with optional argument `keep_empty`
 
-## iNZightTools 1.8.4
+# iNZightTools 1.8.4
 
 - fix handling of special characters in column names (spaces replaces with underscores, all others replaced with a period (.))
 - create make_names() function (previously from 'iNZight') to create unique
   new variable names for columns in a data.frame
 
-## iNZightTools 1.8.3
+# iNZightTools 1.8.3
 
 - new `add_suffix()` function to smartly add suffixes to object names and append counter if suffix is already present
 - edit package description to meet CRAN standards
 
-## iNZightTools 1.8.2
+# iNZightTools 1.8.2
 
 - fix issues from CRAN submission
 
-## iNZightTools 1.8.1
+# iNZightTools 1.8.1
 
 - new `read_text()` function to read from text string/clipboard
 - `smart_read()` now supports URLs by downloading to a temporary file, with the same name
 - Extract from datetime no longer includes space in `2010M01`, etc. so it works correctly with `iNZightTS`
 - Reshape (wide to long) returns a factor to work with the rest of iNZight
 
-## iNZightTools 1.8
+# iNZightTools 1.8
 
 **Release date**: 11 November 2019
 
@@ -108,27 +108,27 @@ Minor version bump to align with release of iNZight 4.0.
 - `smart_read()` now handles RDS files
 - add attribute to preview excel containing names of available sheets
 
-## iNZightTools 1.7.4
+# iNZightTools 1.7.4
 
 **Release date**: 2 September 2019
 
 - fix bug where collapsing a "numeric" factor was giving an error
 - fix bug in reordering same factor twice
 
-## iNZightTools 1.7.3
+# iNZightTools 1.7.3
 
 **Release date**: 26 August 2019
 
 - fixes bug where factor order specified by metadata wasn't being respected
 - fix bug preventing first row of metadata comments to be read if description was missing
 
-## iNZightTools 1.7.2
+# iNZightTools 1.7.2
 
 **Release date**: 15 July 2019
 
 - various bug fixes
 
-## iNZightTools 1.7.1
+# iNZightTools 1.7.1
 
 **Release date**: 30 April 2019
 
@@ -142,19 +142,19 @@ Minor version bump to align with release of iNZight 4.0.
 - convert characters to factors (this is how iNZight does things)
 - respect numerical order in factor conversions
 
-## iNZightTools 1.6.3
+# iNZightTools 1.6.3
 
 **Release date**: 15 November 2018
 
 - [fix] prefix `survey::` namespace to function calls
 
-## iNZightTools 1.6.2
+# iNZightTools 1.6.2
 
 **Release date**: 10 September 2018
 
 - fix a bug in reading csv files with spaces in the header
 
-## iNZightTools 1.6.1
+# iNZightTools 1.6.1
 
 **Release date**: 04 September 2018
 
@@ -164,11 +164,11 @@ Minor version bump to align with release of iNZight 4.0.
 
 **Release date**: 14 August 2018
 
-### Breaking Changes
+## Breaking Changes
 
 - data import is now performed by the `smart_read()` function
 
-### Minor Changes and Fixes
+## Minor Changes and Fixes
 
 - new function to generate R variable names (for code writing)
 - various bug fixes

@@ -97,15 +97,6 @@
 <p>Importing data is done using the <code><a href="reference/smart_read.html">smart_read()</a></code> function, which can read CSV, Excel, Stata, SAS, RData, and a few other formats based on the file extension.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/smart_read.html">smart_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/cas500.xls"</span>, package <span class="op">=</span> <span class="st">"iNZightTools"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</span>
-
-<span class="co">#&gt; Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</span>
-
-<span class="co">#&gt; Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</span>
-
-<span class="co">#&gt; Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</span>
-
-<span class="co">#&gt; Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>
 <span class="co">#&gt; tibble [500 × 10] (S3: tbl_df/tbl/data.frame)</span>
 <span class="co">#&gt;  $ cellsource: Factor w/ 5 levels "job","NA","other",..: 5 4 4 5 5 4 4 5 4 3 ...</span>
@@ -118,27 +109,27 @@
 <span class="co">#&gt;  $ year      : num [1:500] 7 6 6 5 10 7 8 11 8 9 ...</span>
 <span class="co">#&gt;  $ armspan   : num [1:500] 150 152 132 130 160 50 164 100 152 23 ...</span>
 <span class="co">#&gt;  $ cellcost  : num [1:500] 30 50 55 60 20 50 10 20 10 0 ...</span>
-<span class="co">#&gt;  - attr(*, "code")= chr "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %&gt;% dplyr::mutate_at(c"| __truncated__</span>
+<span class="co">#&gt;  - attr(*, "code")= chr "readxl::read_excel(\"/home/tom/R/x86_64-pc-linux-gnu-library/4.1/iNZightTools/extdata/cas500.xls\") %&gt;% dplyr::"| __truncated__</span>
 <span class="fu"><a href="reference/tidy_all_code.html">tidy_all_code</a></span><span class="op">(</span><span class="fu"><a href="reference/code.html">code</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;  [1] "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %&gt;%"</span>
-<span class="co">#&gt;  [2] "    dplyr::mutate_at("                                                                       </span>
-<span class="co">#&gt;  [3] "        c("                                                                                  </span>
-<span class="co">#&gt;  [4] "            \"cellsource\","                                                                 </span>
-<span class="co">#&gt;  [5] "            \"travel\","                                                                     </span>
-<span class="co">#&gt;  [6] "            \"getlunch\","                                                                   </span>
-<span class="co">#&gt;  [7] "            \"gender\""                                                                      </span>
-<span class="co">#&gt;  [8] "        ),"                                                                                  </span>
-<span class="co">#&gt;  [9] "        as.factor"                                                                           </span>
-<span class="co">#&gt; [10] "    ) %&gt;%"                                                                                   </span>
-<span class="co">#&gt; [11] "    dplyr::mutate_at("                                                                       </span>
-<span class="co">#&gt; [12] "        c("                                                                                  </span>
-<span class="co">#&gt; [13] "            \"rightfoot\","                                                                  </span>
-<span class="co">#&gt; [14] "            \"height\","                                                                     </span>
-<span class="co">#&gt; [15] "            \"age\","                                                                        </span>
-<span class="co">#&gt; [16] "            \"armspan\","                                                                    </span>
-<span class="co">#&gt; [17] "            \"cellcost\""                                                                    </span>
-<span class="co">#&gt; [18] "        ),"                                                                                  </span>
-<span class="co">#&gt; [19] "        as.numeric"                                                                          </span>
+<span class="co">#&gt;  [1] "readxl::read_excel(\"/home/tom/R/x86_64-pc-linux-gnu-library/4.1/iNZightTools/extdata/cas500.xls\") %&gt;%"</span>
+<span class="co">#&gt;  [2] "    dplyr::mutate_at("                                                                                  </span>
+<span class="co">#&gt;  [3] "        c("                                                                                             </span>
+<span class="co">#&gt;  [4] "            \"cellsource\","                                                                            </span>
+<span class="co">#&gt;  [5] "            \"travel\","                                                                                </span>
+<span class="co">#&gt;  [6] "            \"getlunch\","                                                                              </span>
+<span class="co">#&gt;  [7] "            \"gender\""                                                                                 </span>
+<span class="co">#&gt;  [8] "        ),"                                                                                             </span>
+<span class="co">#&gt;  [9] "        as.factor"                                                                                      </span>
+<span class="co">#&gt; [10] "    ) %&gt;%"                                                                                              </span>
+<span class="co">#&gt; [11] "    dplyr::mutate_at("                                                                                  </span>
+<span class="co">#&gt; [12] "        c("                                                                                             </span>
+<span class="co">#&gt; [13] "            \"rightfoot\","                                                                             </span>
+<span class="co">#&gt; [14] "            \"height\","                                                                                </span>
+<span class="co">#&gt; [15] "            \"age\","                                                                                   </span>
+<span class="co">#&gt; [16] "            \"armspan\","                                                                               </span>
+<span class="co">#&gt; [17] "            \"cellcost\""                                                                               </span>
+<span class="co">#&gt; [18] "        ),"                                                                                             </span>
+<span class="co">#&gt; [19] "        as.numeric"                                                                                     </span>
 <span class="co">#&gt; [20] "    )"</span></code></pre></div>
 </div>
 <div id="surveys" class="section level3">

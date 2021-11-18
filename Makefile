@@ -36,5 +36,5 @@ releasePRs:
 	@echo Creating PR to dev
 	@gh pr create -a "@me" -b "" -B dev -l "release" -p "Tom" -t "Release $(BRANCH) into dev"
 
-site:
+site: README.md
 	$(RCMD) -e "pkgdown::build_site()"

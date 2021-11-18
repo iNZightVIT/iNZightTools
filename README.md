@@ -50,15 +50,6 @@ extension.
 
 ``` r
 data <- smart_read(system.file("extdata/cas500.xls", package = "iNZightTools"))
-#> Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-#> Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-#> Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-#> Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-#> Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
 str(data)
 #> tibble [500 × 10] (S3: tbl_df/tbl/data.frame)
 #>  $ cellsource: Factor w/ 5 levels "job","NA","other",..: 5 4 4 5 5 4 4 5 4 3 ...
@@ -71,27 +62,27 @@ str(data)
 #>  $ year      : num [1:500] 7 6 6 5 10 7 8 11 8 9 ...
 #>  $ armspan   : num [1:500] 150 152 132 130 160 50 164 100 152 23 ...
 #>  $ cellcost  : num [1:500] 30 50 55 60 20 50 10 20 10 0 ...
-#>  - attr(*, "code")= chr "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %>% dplyr::mutate_at(c"| __truncated__
+#>  - attr(*, "code")= chr "readxl::read_excel(\"/home/tom/R/x86_64-pc-linux-gnu-library/4.1/iNZightTools/extdata/cas500.xls\") %>% dplyr::"| __truncated__
 tidy_all_code(code(data))
-#>  [1] "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %>%"
-#>  [2] "    dplyr::mutate_at("                                                                       
-#>  [3] "        c("                                                                                  
-#>  [4] "            \"cellsource\","                                                                 
-#>  [5] "            \"travel\","                                                                     
-#>  [6] "            \"getlunch\","                                                                   
-#>  [7] "            \"gender\""                                                                      
-#>  [8] "        ),"                                                                                  
-#>  [9] "        as.factor"                                                                           
-#> [10] "    ) %>%"                                                                                   
-#> [11] "    dplyr::mutate_at("                                                                       
-#> [12] "        c("                                                                                  
-#> [13] "            \"rightfoot\","                                                                  
-#> [14] "            \"height\","                                                                     
-#> [15] "            \"age\","                                                                        
-#> [16] "            \"armspan\","                                                                    
-#> [17] "            \"cellcost\""                                                                    
-#> [18] "        ),"                                                                                  
-#> [19] "        as.numeric"                                                                          
+#>  [1] "readxl::read_excel(\"/home/tom/R/x86_64-pc-linux-gnu-library/4.1/iNZightTools/extdata/cas500.xls\") %>%"
+#>  [2] "    dplyr::mutate_at("                                                                                  
+#>  [3] "        c("                                                                                             
+#>  [4] "            \"cellsource\","                                                                            
+#>  [5] "            \"travel\","                                                                                
+#>  [6] "            \"getlunch\","                                                                              
+#>  [7] "            \"gender\""                                                                                 
+#>  [8] "        ),"                                                                                             
+#>  [9] "        as.factor"                                                                                      
+#> [10] "    ) %>%"                                                                                              
+#> [11] "    dplyr::mutate_at("                                                                                  
+#> [12] "        c("                                                                                             
+#> [13] "            \"rightfoot\","                                                                             
+#> [14] "            \"height\","                                                                                
+#> [15] "            \"age\","                                                                                   
+#> [16] "            \"armspan\","                                                                               
+#> [17] "            \"cellcost\""                                                                               
+#> [18] "        ),"                                                                                             
+#> [19] "        as.numeric"                                                                                     
 #> [20] "    )"
 ```
 

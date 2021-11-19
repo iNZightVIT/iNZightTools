@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>iNZight Smart Read — smart_read • iNZightTools</title>
+<title>Read a data file — smart_read • iNZightTools</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,13 @@
 
 
 
-<meta property="og:title" content="iNZight Smart Read — smart_read" />
-<meta property="og:description" content="A simple function that magically imports a file, irrespective of type." />
+<meta property="og:title" content="Read a data file — smart_read" />
+<meta property="og:description" content="A simple function that imports a file without the users needing to
+specify information about the file type (see Details for more).
+The smart_read() function uses the file's extension to determine
+the appropriate function to read the data.
+Additionally, characters are converted to factors by default,
+mostly for compatibility with iNZight." />
 
 
 
@@ -111,13 +116,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>iNZight Smart Read</h1>
+    <h1>Read a data file</h1>
     <small class="dont-index">Source: <a href='https://github.com/iNZightVIT/iNZightTools/blob/master/R/import_data.R'><code>R/import_data.R</code></a></small>
     <div class="hidden name"><code>smart_read.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A simple function that magically imports a file, irrespective of type.</p>
+    <p>A simple function that imports a file without the users needing to
+specify information about the file type (see Details for more).
+The <code>smart_read()</code> function uses the file's extension to determine
+the appropriate function to read the data.
+Additionally, characters are converted to factors by default,
+mostly for compatibility with iNZight.</p>
     </div>
 
     <pre class="usage"><span class='fu'>smart_read</span><span class='op'>(</span>
@@ -156,17 +166,22 @@ the data will be returned</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a dataframe with attributes</p>
+    <p>A dataframe with some additional attributes:</p><ul>
+<li><p><code>name</code> is the name of the file</p></li>
+<li><p><code>code</code> contains the tidyverse code used to read the data</p></li>
+<li><p><code>sheets</code> contains names of sheets if 'file' is an Excel file (can be retrieved using the <code><a href='sheets.html'>sheets()</a></code> helper function)</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The smart read function understands the following:</p><ul>
+    <p>Currently, <code>smart_read()</code> understands the following file types:</p><ul>
 <li><p>delimited (.csv, .txt)</p></li>
-<li><p>excel files (.xls, .xlsx)</p></li>
-<li><p>spss files (.sav)</p></li>
-<li><p>stata files (.dta)</p></li>
-<li><p>SAS files (.sas7bdat, .xpt)</p></li>
-<li><p>R data files (.rds)</p></li>
-<li><p>JSON files (.json)</p></li>
+<li><p>Excel (.xls, .xlsx)</p></li>
+<li><p>SPSS (.sav)</p></li>
+<li><p>Stata (.dta)</p></li>
+<li><p>SAS (.sas7bdat, .xpt)</p></li>
+<li><p>R data (.rds)</p></li>
+<li><p>JSON (.json)</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
@@ -183,12 +198,20 @@ the data will be returned</p></td>
 
 
       <footer>
-      <div class="copyright">
-  <p>Developed by Tom Elliott, Owen Jin, Yiwen He, Daniel Barnett.</p>
-</div>
+      <div
+  style="
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  "
+>
+  <div>Developed by <a href='https://tomelliott.co.nz'>Tom Elliott</a>, Owen Jin, Yiwen He, Daniel Barnett</div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <div style="text-align: right">
+    iNZightTools is part of the
+    <a href="https://inzight.nz">iNZight</a> project.
+  </div>
 </div>
 
       </footer>

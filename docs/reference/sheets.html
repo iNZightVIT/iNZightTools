@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>List of available sheets from a file — sheets • iNZightTools</title>
+<title>List available sheets within a file — sheets • iNZightTools</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="List of available sheets from a file — sheets" />
-<meta property="og:description" content="List of available sheets from a file" />
+<meta property="og:title" content="List available sheets within a file — sheets" />
+<meta property="og:description" content="Useful when reading an Excel file to quickly check what
+other sheets are available." />
 
 
 
@@ -111,13 +112,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>List of available sheets from a file</h1>
+    <h1>List available sheets within a file</h1>
     <small class="dont-index">Source: <a href='https://github.com/iNZightVIT/iNZightTools/blob/master/R/import_data.R'><code>R/import_data.R</code></a></small>
     <div class="hidden name"><code>sheets.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>List of available sheets from a file</p>
+    <p>Useful when reading an Excel file to quickly check what
+other sheets are available.</p>
     </div>
 
     <pre class="usage"><span class='fu'>sheets</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
@@ -127,17 +129,28 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a dataframe from <code>smart_read</code></p></td>
+      <td><p>a dataframe, presumably returned by <code>smart_read</code></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>vector of sheet names, or NULL</p>
+    <p>vector of sheet names, or NULL if the file was not an Excel workbook</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Tom Elliott</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='r-in'><span class='va'>cas_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/cas500.xls'</span>, package <span class='op'>=</span> <span class='st'>'iNZightTools'</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>cas</span> <span class='op'>&lt;-</span> <span class='fu'><a href='smart_read.html'>smart_read</a></span><span class='op'>(</span><span class='va'>cas_file</span><span class='op'>)</span></span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>NAs introduced by coercion</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>NAs introduced by coercion</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>NAs introduced by coercion</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>NAs introduced by coercion</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>NAs introduced by coercion</span>
+<span class='r-in'><span class='fu'>sheets</span><span class='op'>(</span><span class='va'>cas</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "Census at School-500"</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -148,12 +161,20 @@
 
 
       <footer>
-      <div class="copyright">
-  <p>Developed by Tom Elliott, Owen Jin, Yiwen He, Daniel Barnett.</p>
-</div>
+      <div
+  style="
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  "
+>
+  <div>Developed by <a href='https://tomelliott.co.nz'>Tom Elliott</a>, Owen Jin, Yiwen He, Daniel Barnett</div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <div style="text-align: right">
+    iNZightTools is part of the
+    <a href="https://inzight.nz">iNZight</a> project.
+  </div>
 </div>
 
       </footer>

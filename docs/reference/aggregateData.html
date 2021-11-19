@@ -180,7 +180,7 @@ with tidyverse code attached</p>
 <p>The <code>aggregateData</code> function accepts any R function which returns a single-value (such as <code>mean</code>, <code>var</code>, <code>sd</code>, <code>sum</code>, <code>IQR</code>). The default name of new variables will be <code>{var}_{fun}</code>, where <code>{var}</code> is the variable name and <code>{fun}</code> is the summary function used. You may pass new names via the <code>varnames</code> argument, which should be either a vector the same length as <code>summary_vars</code>, or a named list (where the names are the summary function). In either case, use <code>{var}</code> to represent the variable name. e.g., <code>{var}_mean</code> or <code>min_{var}</code>.</p>
 <p>You can also include the summary <code>missing</code>, which will count the number of missing values in the variable. It has default name <code>{var}_missing</code>.</p>
 <p>For the <code>quantile</code> summary, there is the additional argument <code>quantiles</code>. A new variable will be created for each specified quantile 'p'. To name these variables, use <code>{p}</code> in <code>varnames</code> (the default is <code>{var}_q{p}</code>).</p>
-<p>Custom functions can be passed via the <code>custom_funs</code> argument. This should be a list, and each element should have a <code>name</code> and either an <code>expr</code> or <code>fun</code> element. Expressions should operate on a variable <code>x</code>. The function should be a function of <code>x</code> and return a single value.<div class="r"></p><pre><span class='va'>cust_funs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>'{var}_width'</span>, expr <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/diff.html'>diff</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
+<p>Custom functions can be passed via the <code>custom_funs</code> argument. This should be a list, and each element should have a <code>name</code> and either an <code>expr</code> or <code>fun</code> element. Expressions should operate on a variable <code>x</code>. The function should be a function of <code>x</code> and return a single value.<div class="sourceCode r"></p><pre><span class='va'>cust_funs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>'{var}_width'</span>, expr <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/diff.html'>diff</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>cust_funs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>'{var}_stderr'</span>,
   fun <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>{</span>
     <span class='va'>s</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
@@ -227,12 +227,20 @@ with tidyverse code attached</p>
 
 
       <footer>
-      <div class="copyright">
-  <p>Developed by Tom Elliott, Owen Jin, Yiwen He, Daniel Barnett.</p>
-</div>
+      <div
+  style="
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  "
+>
+  <div>Developed by <a href='https://tomelliott.co.nz'>Tom Elliott</a>, Owen Jin, Yiwen He, Daniel Barnett</div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <div style="text-align: right">
+    iNZightTools is part of the
+    <a href="https://inzight.nz">iNZight</a> project.
+  </div>
 </div>
 
       </footer>

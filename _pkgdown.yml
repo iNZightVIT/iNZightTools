@@ -1,1 +1,82 @@
 url: https://inzightvit.github.io/iNZightTools/
+
+template:
+  package: iNZightTools
+
+authors:
+  Tom Elliott:
+    href: https://tomelliott.co.nz
+
+reference:
+  - title: Data wrangling
+    desc: Functions for performing common data wrangling procedures.
+  - subtitle: Data Import
+    desc: Functions for working with data files.
+  - contents:
+      - smart_read
+      - starts_with("read_")
+      - starts_with("load_")
+      - starts_with("save_")
+      - sheets
+  - subtitle: Dataset operations
+    desc: >
+      Methods for working with entire datasets at once. For users coming from the iNZight GUI, these operations would be found in the *Dataset* menu.
+  - contents:
+      - aggregateData
+      - aggregatedt
+      - appendrows
+      - starts_with("filter")
+      - joindata
+      - separate
+      - unite
+      - reshape_data
+      - selectVars
+      - sortVars
+      - stackVars
+      - starts_with("validation_")
+  - subtitle: Variable operations
+    desc: >
+      Methods for working with one or several variables (columns) in a dataset. iNZight GUI users will be familiar with these operations from the *Variables* menu.
+  - contents:
+      - collapseLevels
+      - combineCatVars
+      - convertToCat
+      - convert_to_datetime
+      - countMissing
+      - createNewVar
+      - deleteVars
+      - extract_part
+      - form_class_intervals
+      - missingToCat
+      - rankVars
+      - renameLevels
+      - renameVars
+      - reorderLevels
+      - standardizeVars
+      - transformVar
+  - title: Working with data in R
+  - subtitle: Code writing
+    desc: Functions for accessing and working with code returned by iNZightTools functions.
+  - contents:
+      - code
+      - tidy_all_code
+  - subtitle: Working with dataset objects in R
+    desc: >
+      Many of these functions are only useful in scripts, and are provided more for GUIs that R users.
+  - contents:
+      - add_suffix
+      - create_varname
+      - make_names
+  - subtitle: Helper functions
+    desc: >
+      A set of helper functions for checking variable types and reducing code elsewhere.
+  - contents:
+      - starts_with("is_")
+      - vartype
+      - "%notin%"
+      - survey_IQR
+  - title: Other wrapper functions
+  - contents:
+      - fitModel
+      - fitDesign
+      - newdevice

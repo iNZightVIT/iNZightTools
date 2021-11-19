@@ -124,11 +124,20 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-data-wrangling" class="hasAnchor"><a href="#section-data-wrangling" class="anchor"></a>Data wrangling</h2>
+          <p class="section-desc"><p>Functions for performing common data wrangling procedures.</p></p>
         </th>
       </tr>
       
+      
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-data-import" class="hasAnchor"><a href="#section-data-import" class="anchor"></a>Data Import</h3>
+          <p class="section-desc"><p>Functions for working with data files.</p></p>
+        </th>
+      </tr>
       
     </tbody><tbody>
       
@@ -136,10 +145,53 @@
       <tr>
         
         <td>
-          <p><code><a href="add_suffix.html">add_suffix()</a></code> </p>
+          <p><code><a href="smart_read.html">smart_read()</a></code> </p>
         </td>
-        <td><p>Add suffix to string</p></td>
+        <td><p>Read a data file</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="read_meta.html">read_meta()</a></code> </p>
+        </td>
+        <td><p>Read CSV with iNZight metadata</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="read_text.html">read_text()</a></code> </p>
+        </td>
+        <td><p>Read text as data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="load_rda.html">load_rda()</a></code> </p>
+        </td>
+        <td><p>Load object(s) from an Rdata file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="save_rda.html">save_rda()</a></code> </p>
+        </td>
+        <td><p>Save an object with, optionally, a (valid) name</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sheets.html">sheets()</a></code> </p>
+        </td>
+        <td><p>List available sheets within a file</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-dataset-operations" class="hasAnchor"><a href="#section-dataset-operations" class="anchor"></a>Dataset operations</h3>
+          <p class="section-desc"><p>Methods for working with entire datasets at once. For users coming from the iNZight GUI, these operations would be found in the <em>Dataset</em> menu.</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="aggregateData.html">aggregateData()</a></code> </p>
@@ -160,22 +212,95 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="as_survey.inzsvyspec.html">as_survey(<i>&lt;inzsvyspec&gt;</i>)</a></code> </p>
+          <p><code><a href="filterLevels.html">filterLevels()</a></code> </p>
         </td>
-        <td><p>as_survey method</p></td>
+        <td><p>Filter data by levels of a categorical variables</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="as_survey_spec.html">as_survey_spec()</a></code> </p>
+          <p><code><a href="filterNumeric.html">filterNumeric()</a></code> </p>
         </td>
-        <td><p>Parse survey to survey spec</p></td>
+        <td><p>Filter data by levels of a numeric variables</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="code.html">code()</a></code> </p>
+          <p><code><a href="filterRandom.html">filterRandom()</a></code> </p>
         </td>
-        <td><p>Get Data's Code</p></td>
+        <td><p>Random sampling without replacement</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="filterRows.html">filterRows()</a></code> </p>
+        </td>
+        <td><p>Filter data by row numbers</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="joindata.html">joindata()</a></code> </p>
+        </td>
+        <td><p>Join data with another dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="separate.html">separate()</a></code> </p>
+        </td>
+        <td><p>Separate columns</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="unite.html">unite()</a></code> </p>
+        </td>
+        <td><p>Unite columns in a dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="reshape_data.html">reshape_data()</a></code> </p>
+        </td>
+        <td><p>Reshaping dataset from wide to long or from long to wide</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="selectVars.html">selectVars()</a></code> </p>
+        </td>
+        <td><p>Select variables from a dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sortVars.html">sortVars()</a></code> </p>
+        </td>
+        <td><p>Sort data by variables</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="stackVars.html">stackVars()</a></code> </p>
+        </td>
+        <td><p>Stack variables</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="validation_details.html">validation_details()</a></code> </p>
+        </td>
+        <td><p>Details of Validation Rule Results</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="validation_summary.html">validation_summary()</a></code> </p>
+        </td>
+        <td><p>Validation Confrontation Summary</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-variable-operations" class="hasAnchor"><a href="#section-variable-operations" class="anchor"></a>Variable operations</h3>
+          <p class="section-desc"><p>Methods for working with one or several variables (columns) in a dataset. iNZight GUI users will be familiar with these operations from the <em>Variables</em> menu.</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="collapseLevels.html">collapseLevels()</a></code> </p>
@@ -214,12 +339,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="create_varname.html">create_varname()</a></code> </p>
-        </td>
-        <td><p>Create variable name</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="deleteVars.html">deleteVars()</a></code> </p>
         </td>
         <td><p>Delete variables</p></td>
@@ -232,64 +351,130 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="filterLevels.html">filterLevels()</a></code> </p>
-        </td>
-        <td><p>Filter data by levels of a categorical variables</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="filterNumeric.html">filterNumeric()</a></code> </p>
-        </td>
-        <td><p>Filter data by levels of a numeric variables</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="filterRandom.html">filterRandom()</a></code> </p>
-        </td>
-        <td><p>Random sampling without replacement</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="filterRows.html">filterRows()</a></code> </p>
-        </td>
-        <td><p>Filter data by row numbers</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fitDesign.html">fitDesign()</a></code> </p>
-        </td>
-        <td><p>Fit a survey design</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fitModel.html">fitModel()</a></code> </p>
-        </td>
-        <td><p>Fit models</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="form_class_intervals.html">form_class_intervals()</a></code> </p>
         </td>
         <td><p>Form Class Intervals</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="grapes-notin-grapes.html">`%notin%`</a></code> </p>
+          <p><code><a href="missingToCat.html">missingToCat()</a></code> </p>
         </td>
-        <td><p>Anti value matching</p></td>
+        <td><p>Convert missing values to categorical variables</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="iNZightTools.html">iNZightTools</a></code> </p>
+          <p><code><a href="rankVars.html">rankVars()</a></code> </p>
         </td>
-        <td><p>Tools for data processing with iNZight</p></td>
+        <td><p>Rank the data of a numeric variables</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="import_survey.html">import_survey()</a></code> </p>
+          <p><code><a href="renameLevels.html">renameLevels()</a></code> </p>
         </td>
-        <td><p>Import survey information from a file</p></td>
+        <td><p>Rename the levels of a categorical variable</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="renameVars.html">renameVars()</a></code> </p>
+        </td>
+        <td><p>Rename column names</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="reorderLevels.html">reorderLevels()</a></code> </p>
+        </td>
+        <td><p>Reorder a categorical</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="standardizeVars.html">standardizeVars()</a></code> </p>
+        </td>
+        <td><p>Standardize the data of a numeric variable</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="transformVar.html">transformVar()</a></code> </p>
+        </td>
+        <td><p>Transform data of a numeric variable</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-working-with-data-in-r" class="hasAnchor"><a href="#section-working-with-data-in-r" class="anchor"></a>Working with data in R</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-code-writing" class="hasAnchor"><a href="#section-code-writing" class="anchor"></a>Code writing</h3>
+          <p class="section-desc"><p>Functions for accessing and working with code returned by iNZightTools functions.</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="code.html">code()</a></code> </p>
+        </td>
+        <td><p>Get Data's Code</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tidy_all_code.html">tidy_all_code()</a></code> </p>
+        </td>
+        <td><p>iNZight Tidy Code</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-working-with-dataset-objects-in-r" class="hasAnchor"><a href="#section-working-with-dataset-objects-in-r" class="anchor"></a>Working with dataset objects in R</h3>
+          <p class="section-desc"><p>Many of these functions are only useful in scripts, and are provided more for GUIs that R users.</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="add_suffix.html">add_suffix()</a></code> </p>
+        </td>
+        <td><p>Add suffix to string</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_varname.html">create_varname()</a></code> </p>
+        </td>
+        <td><p>Create variable name</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="make_names.html">make_names()</a></code> </p>
+        </td>
+        <td><p>Make unique variable names</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-helper-functions" class="hasAnchor"><a href="#section-helper-functions" class="anchor"></a>Helper functions</h3>
+          <p class="section-desc"><p>A set of helper functions for checking variable types and reducing code elsewhere.</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="is_cat.html">is_cat()</a></code> </p>
@@ -334,183 +519,52 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="joindata.html">joindata()</a></code> </p>
+          <p><code><a href="vartype.html">vartype()</a></code> </p>
         </td>
-        <td><p>Join data with another dataset</p></td>
+        <td><p>Get variable type name</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="load_rda.html">load_rda()</a></code> </p>
+          <p><code><a href="grapes-notin-grapes.html">`%notin%`</a></code> </p>
         </td>
-        <td><p>Load object(s) from an Rdata file</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_names.html">make_names()</a></code> </p>
-        </td>
-        <td><p>Make unique variable names</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_survey.html">make_survey()</a></code> </p>
-        </td>
-        <td><p>Make a survey object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="missingToCat.html">missingToCat()</a></code> </p>
-        </td>
-        <td><p>Convert missing values to categorical variables</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="newdevice.html">newdevice()</a></code> </p>
-        </td>
-        <td><p>Open a New Graphics Device</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.inzsvyspec.html">print(<i>&lt;inzsvyspec&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print iNZight Survey Spec</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rankVars.html">rankVars()</a></code> </p>
-        </td>
-        <td><p>Rank the data of a numeric variables</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="read_meta.html">read_meta()</a></code> </p>
-        </td>
-        <td><p>Read CSV with iNZight metadata</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="read_text.html">read_text()</a></code> </p>
-        </td>
-        <td><p>Read text as data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="renameLevels.html">renameLevels()</a></code> </p>
-        </td>
-        <td><p>Rename the levels of a categorical variable</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="renameVars.html">renameVars()</a></code> </p>
-        </td>
-        <td><p>Rename column names</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="reorderLevels.html">reorderLevels()</a></code> </p>
-        </td>
-        <td><p>Reorder a categorical</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="reshape_data.html">reshape_data()</a></code> </p>
-        </td>
-        <td><p>Reshaping dataset from wide to long or from long to wide</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="save_rda.html">save_rda()</a></code> </p>
-        </td>
-        <td><p>Save an object with, optionally, a (valid) name</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="selectVars.html">selectVars()</a></code> </p>
-        </td>
-        <td><p>Select variables from a dataset</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="separate.html">separate()</a></code> </p>
-        </td>
-        <td><p>Separate columns</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sheets.html">sheets()</a></code> </p>
-        </td>
-        <td><p>List of available sheets from a file</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="smart_read.html">smart_read()</a></code> </p>
-        </td>
-        <td><p>iNZight Smart Read</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sortVars.html">sortVars()</a></code> </p>
-        </td>
-        <td><p>Sort data by variables</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="stackVars.html">stackVars()</a></code> </p>
-        </td>
-        <td><p>Stack variables</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="standardizeVars.html">standardizeVars()</a></code> </p>
-        </td>
-        <td><p>Standardize the data of a numeric variable</p></td>
+        <td><p>Anti value matching</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="survey_IQR.html">survey_IQR()</a></code> </p>
         </td>
         <td><p>Interquartile range function for surveys</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-other-wrapper-functions" class="hasAnchor"><a href="#section-other-wrapper-functions" class="anchor"></a>Other wrapper functions</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="fitModel.html">fitModel()</a></code> </p>
+        </td>
+        <td><p>Fit models</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="tidy_all_code.html">tidy_all_code()</a></code> </p>
+          <p><code><a href="fitDesign.html">fitDesign()</a></code> </p>
         </td>
-        <td><p>iNZight Tidy Code</p></td>
+        <td><p>Fit a survey design</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="transformVar.html">transformVar()</a></code> </p>
+          <p><code><a href="newdevice.html">newdevice()</a></code> </p>
         </td>
-        <td><p>Transform data of a numeric variable</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="unite.html">unite()</a></code> </p>
-        </td>
-        <td><p>Unite columns in a dataset</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="url_to_temp.html">url_to_temp()</a></code> </p>
-        </td>
-        <td><p>Download URL to temp file</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="validation_details.html">validation_details()</a></code> </p>
-        </td>
-        <td><p>Details of Validation Rule Results</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="validation_summary.html">validation_summary()</a></code> </p>
-        </td>
-        <td><p>Validation Confrontation Summary</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="vartype.html">vartype()</a></code> </p>
-        </td>
-        <td><p>Get variable type name</p></td>
+        <td><p>Open a New Graphics Device</p></td>
       </tr>
     </tbody>
     </table>
@@ -525,12 +579,20 @@
 
 
       <footer>
-      <div class="copyright">
-  <p>Developed by Tom Elliott, Owen Jin, Yiwen He, Daniel Barnett.</p>
-</div>
+      <div
+  style="
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  "
+>
+  <div>Developed by <a href='https://tomelliott.co.nz'>Tom Elliott</a>, Owen Jin, Yiwen He, Daniel Barnett</div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <div style="text-align: right">
+    iNZightTools is part of the
+    <a href="https://inzight.nz">iNZight</a> project.
+  </div>
 </div>
 
       </footer>

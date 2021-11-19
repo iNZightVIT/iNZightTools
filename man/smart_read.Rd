@@ -20,7 +20,7 @@ smart_read(
 \item{preview}{logical, if \code{TRUE} only the first few rows of
 the data will be returned}
 
-\item{column_types}{vector of column types (see \code{?readr::read_csv})}
+\item{column_types}{vector of column types (see ?readr::read_csv)}
 
 \item{...}{additional parameters passed to read_* functions}
 }
@@ -28,7 +28,7 @@ the data will be returned}
 A dataframe with some additional attributes:
 \itemize{
 \item \code{name} is the name of the file
-\item \code{code} contains the \link{tidyverse} code used to read the data
+\item \code{code} contains the \link[pkg]{tidyverse} code used to read the data
 \item \code{sheets} contains names of sheets if 'file' is an Excel file (can be retrieved using the \code{sheets()} helper function)
 }
 }
@@ -38,7 +38,7 @@ specify information about the file type (see Details for more).
 The \code{smart_read()} function uses the file's extension to determine
 the appropriate function to read the data.
 Additionally, characters are converted to factors by default,
-mostly for compatibility with \link{iNZight}.
+mostly for compatibility with \link[pkg]{iNZight}.
 }
 \details{
 Currently, \code{smart_read()} understands the following file types:

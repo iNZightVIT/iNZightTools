@@ -5,7 +5,7 @@
 #' The `smart_read()` function uses the file's extension to determine
 #' the appropriate function to read the data.
 #' Additionally, characters are converted to factors by default,
-#' mostly for compatibility with [iNZight].
+#' mostly for compatibility with \link[pkg]{iNZight}.
 #'
 #' Currently, `smart_read()` understands the following file types:
 #' * delimited (.csv, .txt)
@@ -20,12 +20,12 @@
 #' @param ext file extension, namely "csv" or "txt"
 #' @param preview logical, if \code{TRUE} only the first few rows of
 #'   the data will be returned
-#' @param column_types vector of column types (see \code{?readr::read_csv})
+#' @param column_types vector of column types (see ?readr::read_csv)
 #' @param ... additional parameters passed to read_* functions
 #' @return
 #' A dataframe with some additional attributes:
 #' * `name` is the name of the file
-#' * `code` contains the [tidyverse] code used to read the data
+#' * `code` contains the \link[pkg]{tidyverse} code used to read the data
 #' * `sheets` contains names of sheets if 'file' is an Excel file (can be retrieved using the `sheets()` helper function)
 #' @author Tom Elliott
 #' @md

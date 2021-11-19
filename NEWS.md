@@ -1,3 +1,5 @@
+- add new function `print_code()` to extract, tidy, and print code attached to an object
+
 # iNZightTools 1.12.1
 
 - fix bug in `smart_read()` where parsing column types (numeric -> categorical) failed if `NA`s in column

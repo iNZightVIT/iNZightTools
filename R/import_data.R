@@ -5,7 +5,7 @@
 #' The `smart_read()` function uses the file's extension to determine
 #' the appropriate function to read the data.
 #' Additionally, characters are converted to factors by default,
-#' mostly for compatibility with \link[pkg]{iNZight}.
+#' mostly for compatibility with \link[iNZight]{iNZight}.
 #'
 #' Currently, `smart_read()` understands the following file types:
 #' * delimited (.csv, .txt)
@@ -25,7 +25,7 @@
 #' @return
 #' A dataframe with some additional attributes:
 #' * `name` is the name of the file
-#' * `code` contains the \link[pkg]{tidyverse} code used to read the data
+#' * `code` contains the \link[tidyverse]{tidyverse} code used to read the data
 #' * `sheets` contains names of sheets if 'file' is an Excel file (can be retrieved using the `sheets()` helper function)
 #' @author Tom Elliott
 #' @md

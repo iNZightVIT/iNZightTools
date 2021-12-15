@@ -49,4 +49,9 @@ test_that("print_code works OK", {
         dat,
         ignore_attr = TRUE
     )
+
+    expect_message(
+        print_code(iris),
+        "No code attached to this object."
+    )
 })

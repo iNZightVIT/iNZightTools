@@ -26,7 +26,7 @@ jobs:
       - name: Update Documentation
         run: Rscript -e 'roxygen2::roxygenise()'
       - name: Build Site
-        run: Rscript -e 'pkgdown::build_site()'
+        run: Rscript -e 'if (requireNamespace("surveyspec", quietly = TRUE)) pkgdown::build_site()'
       - name: Commit results
         run: |
           git config --local user.email "actions@github.com"

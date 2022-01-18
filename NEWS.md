@@ -1,4 +1,7 @@
+# iNZightTools 1.12.2
+
 - add new function `print_code()` to extract, tidy, and print code attached to an object
+- allow more than one character as 'sep' argument to `combineCatVars()`
 
 # iNZightTools 1.12.1
 

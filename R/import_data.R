@@ -5,7 +5,7 @@
 #' The `smart_read()` function uses the file's extension to determine
 #' the appropriate function to read the data.
 #' Additionally, characters are converted to factors by default,
-#' mostly for compatibility with \link[iNZight]{iNZight}.
+#' mostly for compatibility with iNZight (https://inzight.nz).
 #'
 #' Currently, `smart_read()` understands the following file types:
 #' * delimited (.csv, .txt)

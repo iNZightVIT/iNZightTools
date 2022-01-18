@@ -15,6 +15,9 @@ revcheck:
 	@$(RCMD) -e "revdepcheck::revdep_check()"
 	@$(RCMD) -f "revdep/check.R"
 
+revcheck_reset:
+	@$(RCMD) -e "revdepcheck::revdep_reset()"
+
 crancheck: document
 	@$(R) CMD build .
 	@$(R) CMD check *.tar.gz
@@ -37,4 +40,5 @@ releasePRs:
 	@gh pr create -a "@me" -b "" -B dev -l "release" -p "Tom" -t "Release $(BRANCH) into dev"
 
 site: README.md document install
-	$(RCMD) -e "pkgdown::build_site()"
+	@cp NEWS.Md NEWS.md
+	@$(RCMD) -e "pkgdown::build_site()"

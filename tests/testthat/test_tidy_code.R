@@ -41,3 +41,17 @@ test_that("Cody tidying does not break code 2", {
 
     expect_equal(d1, d2)
 })
+
+test_that("print_code works OK", {
+    dat <- filterRows(iris, c(10, 20, 30))
+    expect_equal(
+        eval(parse(text = capture.output(print_code(dat)))),
+        dat,
+        ignore_attr = TRUE
+    )
+
+    expect_message(
+        print_code(iris),
+        "No code attached to this object."
+    )
+})

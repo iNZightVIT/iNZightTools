@@ -59,6 +59,7 @@ reference:
     desc: Functions for accessing and working with code returned by iNZightTools functions.
   - contents:
       - code
+      - print_code
       - tidy_all_code
   - subtitle: Working with dataset objects in R
     desc: >

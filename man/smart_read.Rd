@@ -38,7 +38,7 @@ specify information about the file type (see Details for more).
 The \code{smart_read()} function uses the file's extension to determine
 the appropriate function to read the data.
 Additionally, characters are converted to factors by default,
-mostly for compatibility with \link[iNZight]{iNZight}.
+mostly for compatibility with iNZight (https://inzight.nz).
 }
 \details{
 Currently, \code{smart_read()} understands the following file types:

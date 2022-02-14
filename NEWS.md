@@ -1,3 +1,5 @@
+- allow 'readr' to use automatic delimiter guessing (csv files) instead of forcing `,` (#187)
+
 # iNZightTools 1.12.2
 
 - add new function `print_code()` to extract, tidy, and print code attached to an object

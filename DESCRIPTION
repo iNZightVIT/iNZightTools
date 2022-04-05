@@ -26,7 +26,8 @@ Imports:
     lubridate,
     utils,
     validate,
-    zoo
+    zoo,
+    units
 Suggests:
     covr,
     jsonlite,

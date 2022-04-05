@@ -1,17 +1,23 @@
 cas <- smart_read("cas500.csv")
 
 test_that("Dictionary read and parsed correctly", {
-    dict <- read_dictionary("casdict.csv", id = "var")
+    devtools::load_all()
+    dict <- read_dictionary("casdict.csv",
+        name = "variable",
+        title = "friendly_name"
+    )
     expect_true("id" %in% names(dict))
 
     expect_error(read_dictionary("casdict.csv"))
 })
 
 test_that("Dictionaries can be added to datasets", {
-    dict <- read_dictionary("casdict.csv", id = "var")
+    dict <- read_dictionary("casdict.csv", name = "variable", title = "friendly_name")
 
-    cas_dict <- cas %>% add_dictionary(dict)
-    expect_false(has_dictionary(cas))
-    expect_true(has_dictionary(cas_dict))
-    expect_equal(get_dictionary(cas_dict), dict)
+    cas_dict <- cas %>% apply_dictionary(dict)
+    expect_s3_class(cas_dict$rightfoot, "units")
 })
+
+# cas2 <- apply_labels(cas,
+#     travel = "Travel method"
+# )

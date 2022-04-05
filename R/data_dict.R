@@ -1,4 +1,8 @@
-#' Read a file as a data dictionary
+#' Data dictionaries
+#'
+#' Read a data dictionary from file, attach to a dataset (plus utility functions).
+#' These can then be used by other methods (such as plots) to automatically create
+#' axes, etc.
 #'
 #' @section
 #' Columns:
@@ -11,6 +15,7 @@
 #' @param name name of the column containing the human-readable variable name
 #' @param description name of the column containing the variable description
 #' @md
+#' @rdname dictionary
 #' @export
 read_dictionary <- function(file, id, name, description, ...) {
     dict <- smart_read(file, ...)
@@ -31,3 +36,27 @@ read_dictionary <- function(file, id, name, description, ...) {
 
     dict
 }
+
+#' Add data dictionary to dataset
+#'
+#' @param data a dataset (dataframe, tibble)
+#' @param dict a dictionary (created using `read_dictionary()`)
+#' @md
+#' @export
+#' @rdname dictionary
+add_dictionary <- function(data, dict) {
+    attr(data, "dictionary") <- dict
+    data
+}
+
+#' Check data has dictionary attached
+#' @rdname dictionary
+#' @export
+has_dictionary <- function(data)
+    !is.null(attr(data, "dictionary")) &&
+    is.data.frame(attr(data, "dictionary"))
+
+#' Get data dictionary from data
+#' @rdname dictionary
+#' @export
+get_dictionary <- function(data) attr(data, "dictionary", exact = TRUE)

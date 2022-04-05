@@ -1,7 +1,7 @@
 cas <- smart_read("cas500.csv")
 
 test_that("Dictionary read and parsed correctly", {
-    devtools::load_all()
+    # devtools::load_all()
     dict <- read_dictionary("casdict.csv",
         name = "variable",
         title = "friendly_name"

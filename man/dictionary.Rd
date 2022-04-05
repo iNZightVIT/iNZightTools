@@ -45,6 +45,8 @@ get_dictionary(data)
 
 \item{level_separator}{the separator used to separate levels in \code{codes} and \code{values} columns, default "|". Can optionally be a vector of length 2, in which case the first is used for \code{codes} and the second for \code{values}.}
 
+\item{...}{additional arguments, passed to \code{smart_read}}
+
 \item{data}{a dataset (dataframe, tibble)}
 
 \item{dict}{a dictionary (created using \code{read_dictionary()})}

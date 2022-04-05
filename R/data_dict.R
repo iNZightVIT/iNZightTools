@@ -22,6 +22,7 @@
 #' @param codes column containing factor codes
 #' @param values column containing factor values - these should be in the same order
 #' @param level_separator the separator used to separate levels in `codes` and `values` columns, default "|". Can optionally be a vector of length 2, in which case the first is used for `codes` and the second for `values`.
+#' @param ... additional arguments, passed to `smart_read`
 #' @md
 #' @rdname dictionary
 #' @export

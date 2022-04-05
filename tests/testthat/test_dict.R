@@ -6,7 +6,7 @@ test_that("Dictionary read and parsed correctly", {
         name = "variable",
         title = "friendly_name"
     )
-    expect_true("id" %in% names(dict))
+    expect_true("name" %in% names(dict))
 
     expect_error(read_dictionary("casdict.csv"))
 })

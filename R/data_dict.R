@@ -38,6 +38,14 @@ read_dictionary <- function(file,
                             ...) {
     dict <- smart_read(file, ...)
 
+    # convert all factors to strings
+    dict <- do.call(data.frame,
+        c(
+            lapply(dict, function(x) if (is.factor(x)) as.character(x) else x),
+            list(stringsAsFactors = FALSE)
+        )
+    )
+
     ## TODO: explore use of packages:
     # * 'units'
     # * 'expss'
@@ -55,6 +63,12 @@ read_dictionary <- function(file,
 
     if (!missing(description) && description != "description")
         dict <- dplyr::rename(dict, decription = !!description)
+
+    if (!missing(codes) && codes != "codes")
+        dict <- dplyr::rename(dict, codes = !!codes)
+
+    if (!missing(values) && values != "values")
+        dict <- dplyr::rename(dict, values = !!values)
 
     # TODO: all the other columns too
 

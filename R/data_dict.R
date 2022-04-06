@@ -116,6 +116,12 @@ apply_dictionary <- function(data, dict) {
         data[[d$name]] <- add_var_attributes(data[[d$name]], d)
     }
 
+    # apply labels
+    lbls <- lapply(dict, function(x) x$title)
+    names(lbls) <- names(dict)
+
+    data <- do.call(expss::apply_labels, c(list(data), lbls))
+
     data
 }
 

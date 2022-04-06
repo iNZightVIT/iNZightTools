@@ -20,7 +20,11 @@ test_that("Dictionaries can be added to datasets", {
     )
 
     cas_dict <- cas %>% apply_dictionary(dict)
+
     expect_s3_class(cas_dict$rightfoot, "units")
     expect_s3_class(cas_dict$cellsource, "factor")
     expect_equal(levels(cas_dict$cellsource), c("job", "other", "parent", "pocket"))
+
+    expect_s3_class(cas_dict[[1]], "labelled")
+    expect_equal(expss::var_lab(cas_dict$cellsource), "Cellphone money source")
 })

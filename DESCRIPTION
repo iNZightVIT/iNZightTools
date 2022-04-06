@@ -6,6 +6,7 @@ Depends: R (>= 4.0)
 Imports:
     chron,
     dplyr,
+    expss,
     forcats,
     glue,
     grDevices,
@@ -24,10 +25,10 @@ Imports:
     tidyr,
     tools,
     lubridate,
+    units,
     utils,
     validate,
-    zoo,
-    units
+    zoo
 Suggests:
     covr,
     jsonlite,

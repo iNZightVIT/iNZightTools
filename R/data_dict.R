@@ -139,7 +139,7 @@ add_var_attributes.numeric <- function(x, d) {
 
 #' @export
 add_var_attributes.factor <- function(x, d) {
-    lbls <- lapply(d$coding$code, \(x) x)
+    lbls <- lapply(d$coding$code, function(x) x)
     names(lbls) <- d$coding$value
     do.call(forcats::fct_recode, c(list(x), lbls))
 }

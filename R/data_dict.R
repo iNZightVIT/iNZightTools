@@ -69,13 +69,17 @@ dict_row <- function(x, sep) {
     cn <- colnames(x)
     row <- list(
         name = as.character(x$name),
-        type = if ("type" %in% cn) as.character(x$type) else NULL,
+        type = if ("type" %in% cn) as.character(x$type) else {
+            if ("units" %in% cn && !is.na(x$units)) "numeric"
+            else if (all(c("codes", "values") %in% cn) && !is.na(x$codes) && !is.na(x$values)) "factor"
+            else NULL
+        },
         title = if ("title" %in% cn) as.character(x$title) else as.character(x$name),
         description = if ("description" %in% cn) as.character(x$description) else NULL
     )
     if ("units" %in% cn && !is.na(x$units)) {
         row$units <- as.character(x$units)
-    } else if (all(c("codes", "values") %in% cn)) {
+    } else if (all(c("codes", "values") %in% cn) && !is.na(x$codes) && !is.na(x$values)) {
         row$coding <- data.frame(
             code = trimws(strsplit(as.character(x$codes), sep[1], fixed = TRUE)[[1]]),
             value = trimws(strsplit(as.character(x$values), sep[2], fixed = TRUE)[[1]])
@@ -123,6 +127,11 @@ add_var_attributes.default <- function(x, d) x
 
 #' @export
 add_var_attributes.numeric <- function(x, d) {
+    if (!is.null(d$type) && d$type %in% c("factor", "categorical")) {
+        x <- factor(x)
+        return(add_var_attributes(x, d))
+    }
+
     # add units
     try(units(x) <- d$units, silent = TRUE)
     x
@@ -130,7 +139,9 @@ add_var_attributes.numeric <- function(x, d) {
 
 #' @export
 add_var_attributes.factor <- function(x, d) {
-    x
+    lbls <- lapply(d$coding$code, \(x) x)
+    names(lbls) <- d$coding$value
+    do.call(forcats::fct_recode, c(list(x), lbls))
 }
 
 #' Check data has dictionary attached

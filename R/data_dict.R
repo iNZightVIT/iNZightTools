@@ -133,6 +133,7 @@ apply_dictionary <- function(data, dict) {
     # apply labels
     lbls <- lapply(dict, function(x) x$title)
     names(lbls) <- names(dict)
+    lbls <- lbls[names(lbls) %in% names(data)]
 
     data <- do.call(expss::apply_labels, c(list(data), lbls))
 
@@ -168,7 +169,28 @@ add_var_attributes.numeric <- function(x, d) {
 add_var_attributes.factor <- function(x, d) {
     lbls <- lapply(d$coding$code, function(x) x)
     names(lbls) <- d$coding$value
-    do.call(forcats::fct_recode, c(list(x), lbls))
+
+    if (!all(levels(x) %in% d$coding$code)) {
+        message("----- Mismatching levels")
+        print(d)
+        # print(d$coding)
+        # print(levels(x))
+
+        levels(x) <- unique(c(d$coding$code, levels(x)))
+    } else {
+        levels(x) <- d$coding$code
+    }
+
+    res <- x
+    tryCatch(res <- do.call(forcats::fct_recode, c(list(x), lbls)),
+        warning = function(e) {
+            message("------------------", e)
+            print(d)
+            print(d$coding)
+            print(levels(x))
+        }
+    )
+    res
 }
 
 #' Check data has dictionary attached
@@ -182,3 +204,7 @@ has_dictionary <- function(data)
 #' @rdname dictionary
 #' @export
 get_dictionary <- function(data) attr(data, "dictionary", exact = TRUE)
+
+
+# a new data type for numeric variables *with codes*
+# e.g., -1 = not applicable; 100 = 100+

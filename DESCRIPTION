@@ -32,6 +32,7 @@ Imports:
 Suggests:
     covr,
     jsonlite,
+    knitr,
     RCurl,
     testthat (>= 3.0.0)
 Authors@R: c(

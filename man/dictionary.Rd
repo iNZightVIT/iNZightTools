@@ -2,6 +2,8 @@
 % Please edit documentation in R/data_dict.R
 \name{read_dictionary}
 \alias{read_dictionary}
+\alias{print.dictionary}
+\alias{as_tibble.dictionary}
 \alias{apply_dictionary}
 \alias{has_dictionary}
 \alias{get_dictionary}
@@ -19,6 +21,10 @@ read_dictionary(
   level_separator = "|",
   ...
 )
+
+\method{print}{dictionary}(x, kable = FALSE, ...)
+
+\method{as_tibble}{dictionary}(x, n = length(x), code_sep = ifelse(interactive(), "|", "\\n"), ...)
 
 apply_dictionary(data, dict)
 
@@ -46,6 +52,14 @@ get_dictionary(data)
 \item{level_separator}{the separator used to separate levels in \code{codes} and \code{values} columns, default "|". Can optionally be a vector of length 2, in which case the first is used for \code{codes} and the second for \code{values}.}
 
 \item{...}{additional arguments, passed to \code{smart_read}}
+
+\item{x}{a `dictionary` object}
+
+\item{kable}{if `TRUE` outputs a kable instead}
+
+\item{n}{number of rows to convert}
+
+\item{code_sep}{the separator used between codes and values}
 
 \item{data}{a dataset (dataframe, tibble)}
 

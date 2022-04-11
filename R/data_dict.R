@@ -75,7 +75,40 @@ read_dictionary <- function(file,
     dict_list <- lapply(seq_along(dict$name),
         function(x) dict_row(dict[x, ], sep = level_separator))
     names(dict_list) <- dict$name
-    dict_list
+    structure(dict_list, class = "dictionary")
+}
+
+#' Print a dictionary object
+#' @param x a `dictionary` object
+#' @param kable if `TRUE` outputs a kable instead
+#' @export
+#' @rdname dictionary
+print.dictionary <- function(x, kable = FALSE, ...) {
+    if (kable && requireNamespace("knitr", quietly = TRUE)) {
+        knitr::kable(as_tibble(x, code_sep = "<br/>", ...), ...)
+    } else {
+        print(as_tibble(x, ...), ...)
+    }
+}
+
+#' Convert dictionary object to a 'tibble'
+#' @param x a `dictionary` object
+#' @param n number of rows to convert
+#' @param code_sep the separator used between codes and values
+#' @rdname dictionary
+#' @importFrom tibble as_tibble
+#' @export
+as_tibble.dictionary <- function(x, n = length(x), code_sep = ifelse(interactive(), "|", "\n"), ...) {
+    x <- lapply(x[1:n], function(y) {
+        if (!is.null(y$coding)) {
+            coding <- lapply(y$coding, paste, collapse = code_sep)
+            y$coding <- NULL
+            y$code <- coding$code
+            y$value <- coding$value
+        }
+        do.call(tibble::tibble, y)
+    })
+    do.call(dplyr::bind_rows, x)
 }
 
 dict_row <- function(x, sep) {
@@ -106,7 +139,7 @@ dict_row <- function(x, sep) {
 #' @export
 print.dict_var <- function(x, ...) {
     cat(
-        sprintf("%s: %s %s\n", x$name, x$title,
+        sprintf("{%s}: %s %s\n", x$name, x$title,
             ifelse(is.null(x$type), "",
                 sprintf("[%s]", x$type)
             )
@@ -114,6 +147,10 @@ print.dict_var <- function(x, ...) {
     )
     if (!is.null(x$description)) cat(x$description, "\n")
     if (!is.null(x$units)) cat(sprintf("Units: %s\n", x$units))
+    if (!is.null(x$coding)) {
+        cat("Factor codes:\n")
+        print(x$coding, row.names = FALSE)
+    }
 }
 
 #' Apply a data dictionary to dataset

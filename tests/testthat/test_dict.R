@@ -6,10 +6,13 @@ test_that("Dictionary read and parsed correctly", {
         name = "variable",
         title = "friendly_name"
     )
+    expect_s3_class(dict, "dictionary")
     expect_s3_class(dict[[1]], "dict_var")
     expect_equal(names(dict), names(cas))
 
     expect_error(read_dictionary("casdict.csv"))
+
+    expect_s3_class(as_tibble(dict), "tbl_df")
 })
 
 test_that("Dictionaries can be added to datasets", {

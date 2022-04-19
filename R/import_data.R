@@ -547,6 +547,6 @@ url_to_temp <- function(url) {
     name <- create_varname(name)
     dir <- tempdir()
     file <- file.path(dir, name)
-    utils::download.file(url, file, quiet = TRUE)
+    utils::download.file(url, file, quiet = TRUE, mode = "wb")
     file
 }

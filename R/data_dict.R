@@ -84,8 +84,12 @@ read_dictionary <- function(file,
 #' @export
 #' @rdname dictionary
 print.dictionary <- function(x, kable = FALSE, ...) {
+    dots <- list(...)
     if (kable && requireNamespace("knitr", quietly = TRUE)) {
-        knitr::kable(as_tibble(x, code_sep = "<br/>", ...), ...)
+        if (is.null(dots$code_sep))
+            knitr::kable(as_tibble(x, code_sep = "<br/>", ...), ...)
+        else
+            knitr::kable(as_tibble(x, ...), ...)
     } else {
         print(as_tibble(x, ...), ...)
     }

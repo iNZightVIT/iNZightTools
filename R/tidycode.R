@@ -37,7 +37,7 @@ tidy_code <- function(codeline, width, indent) {
     on.exit(unlink(cf))
     writeLines(codeline, cf)
     z <- capture.output(
-        styler::style_file(cf, indent = indent, scope = "tokens")
+        styler::style_file(path = cf, indent = indent, scope = "tokens")
     )
     rm(z)
     readLines(cf)

@@ -83,15 +83,15 @@ read_dictionary <- function(file,
 #' @param kable if `TRUE` outputs a kable instead
 #' @export
 #' @rdname dictionary
-print.dictionary <- function(x, kable = FALSE, ...) {
+print.dictionary <- function(x, kable = FALSE, include_other = TRUE, ...) {
     dots <- list(...)
     if (kable && requireNamespace("knitr", quietly = TRUE)) {
         if (is.null(dots$code_sep))
-            knitr::kable(as_tibble(x, code_sep = "<br/>", ...), ...)
+            knitr::kable(as_tibble(x, include_other = include_other, code_sep = "<br/>", ...), ...)
         else
-            knitr::kable(as_tibble(x, ...), ...)
+            knitr::kable(as_tibble(x, include_other = include_other, ...), ...)
     } else {
-        print(as_tibble(x, ...), ...)
+        print(as_tibble(x, include_other = include_other, ...), ...)
     }
 }
 
@@ -102,13 +102,21 @@ print.dictionary <- function(x, kable = FALSE, ...) {
 #' @rdname dictionary
 #' @importFrom tibble as_tibble
 #' @export
-as_tibble.dictionary <- function(x, n = length(x), code_sep = ifelse(interactive(), "|", "\n"), ...) {
+as_tibble.dictionary <- function(x, n = length(x),
+                                 include_other = TRUE,
+                                 code_sep = ifelse(interactive(), "|", "\n"),
+                                 ...) {
     x <- lapply(x[1:n], function(y) {
         if (!is.null(y$coding)) {
             coding <- lapply(y$coding, paste, collapse = code_sep)
             y$coding <- NULL
             y$code <- coding$code
             y$value <- coding$value
+        }
+        if (include_other && !is.null(y$other)) {
+            other <- y$other
+            y$other <- NULL
+            y <- c(y, other)
         }
         do.call(tibble::tibble, y)
     })
@@ -135,6 +143,10 @@ dict_row <- function(x, sep) {
             code = trimws(strsplit(as.character(x$codes), sep[1], fixed = TRUE)[[1]]),
             value = trimws(strsplit(as.character(x$values), sep[2], fixed = TRUE)[[1]])
         )
+    }
+    cols <- c("name", "type", "title", "description", "units", "codes", "values")
+    if (any(!cn %in% cols)) {
+        row$other <- as.list(x[!cn %in% cols])
     }
     class(row) <- "dict_var"
     row

@@ -97,13 +97,22 @@ print.dictionary <- function(x, kable = FALSE, include_other = TRUE, ...) {
     }
 }
 
+#' as_tibble
+#'
+#' @name as_tibble
+#' @rdname as_tibble
+#' @keywords internal
+#' @export
+#' @importFrom tibble as_tibble
+NULL
+
+
 #' Convert dictionary object to a 'tibble'
 #' @param x a `dictionary` object
 #' @param n number of rows to convert
 #' @param include_other if `TRUE` other variables with be included in the tibble
 #' @param code_sep the separator used between codes and values
-#' @rdname dictionary
-#' @importFrom tibble as_tibble
+#' @rdname as_tibble
 #' @export
 as_tibble.dictionary <- function(x, n = length(x),
                                  include_other = TRUE,

@@ -3,7 +3,6 @@
 \name{read_dictionary}
 \alias{read_dictionary}
 \alias{print.dictionary}
-\alias{as_tibble.dictionary}
 \alias{apply_dictionary}
 \alias{has_dictionary}
 \alias{get_dictionary}
@@ -23,14 +22,6 @@ read_dictionary(
 )
 
 \method{print}{dictionary}(x, kable = FALSE, include_other = TRUE, ...)
-
-\method{as_tibble}{dictionary}(
-  x,
-  n = length(x),
-  include_other = TRUE,
-  code_sep = ifelse(interactive(), "|", "\\n"),
-  ...
-)
 
 apply_dictionary(data, dict)
 
@@ -59,15 +50,11 @@ get_dictionary(data)
 
 \item{...}{additional arguments, passed to \code{smart_read}}
 
-\item{x}{a `dictionary` object}
+\item{x}{a \code{dictionary} object}
 
 \item{kable}{if \code{TRUE} outputs a kable instead}
 
-\item{include_other}{if `TRUE` other variables with be included in the tibble}
-
-\item{n}{number of rows to convert}
-
-\item{code_sep}{the separator used between codes and values}
+\item{include_other}{if \code{TRUE} additional variables will be included in the output}
 
 \item{data}{a dataset (dataframe, tibble)}
 

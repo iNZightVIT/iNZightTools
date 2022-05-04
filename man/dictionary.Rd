@@ -22,9 +22,15 @@ read_dictionary(
   ...
 )
 
-\method{print}{dictionary}(x, kable = FALSE, ...)
+\method{print}{dictionary}(x, kable = FALSE, include_other = TRUE, ...)
 
-\method{as_tibble}{dictionary}(x, n = length(x), code_sep = ifelse(interactive(), "|", "\\n"), ...)
+\method{as_tibble}{dictionary}(
+  x,
+  n = length(x),
+  include_other = TRUE,
+  code_sep = ifelse(interactive(), "|", "\\n"),
+  ...
+)
 
 apply_dictionary(data, dict)
 
@@ -55,7 +61,9 @@ get_dictionary(data)
 
 \item{x}{a `dictionary` object}
 
-\item{kable}{if `TRUE` outputs a kable instead}
+\item{kable}{if \code{TRUE} outputs a kable instead}
+
+\item{include_other}{if `TRUE` other variables with be included in the tibble}
 
 \item{n}{number of rows to convert}
 

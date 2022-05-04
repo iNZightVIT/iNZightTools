@@ -81,6 +81,8 @@ read_dictionary <- function(file,
 #' Print a dictionary object
 #' @param x a `dictionary` object
 #' @param kable if `TRUE` outputs a kable instead
+#' @param include_other if `TRUE` additional variables will be included in the output
+#' @md
 #' @export
 #' @rdname dictionary
 print.dictionary <- function(x, kable = FALSE, include_other = TRUE, ...) {
@@ -98,6 +100,7 @@ print.dictionary <- function(x, kable = FALSE, include_other = TRUE, ...) {
 #' Convert dictionary object to a 'tibble'
 #' @param x a `dictionary` object
 #' @param n number of rows to convert
+#' @param include_other if `TRUE` other variables with be included in the tibble
 #' @param code_sep the separator used between codes and values
 #' @rdname dictionary
 #' @importFrom tibble as_tibble
@@ -214,7 +217,7 @@ add_var_attributes.numeric <- function(x, d) {
     #     warning("Unable to create units", d$uinits)
     #     return(x)
     # }
-    try(units(x) <- d$units, silent = TRUE)
+    try(units(x) <- units::as_units(d$units), silent = TRUE)
     x
 }
 

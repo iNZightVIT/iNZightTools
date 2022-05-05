@@ -118,7 +118,7 @@ as_tibble.dictionary <- function(x, n = length(x),
                                  include_other = TRUE,
                                  code_sep = ifelse(interactive(), "|", "\n"),
                                  ...) {
-    x <- lapply(x[1:n], function(y) {
+    x <- lapply(x[1:min(n, length(x))], function(y) {
         if (!is.null(y$coding)) {
             coding <- lapply(y$coding, paste, collapse = code_sep)
             y$coding <- NULL

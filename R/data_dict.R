@@ -62,7 +62,7 @@ read_dictionary <- function(file,
         dict <- dplyr::rename(dict, title = !!title)
 
     if (!missing(description) && description != "description")
-        dict <- dplyr::rename(dict, decription = !!description)
+        dict <- dplyr::rename(dict, description = !!description)
 
     if (!missing(codes) && codes != "codes")
         dict <- dplyr::rename(dict, codes = !!codes)

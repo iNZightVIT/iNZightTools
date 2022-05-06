@@ -135,6 +135,12 @@ as_tibble.dictionary <- function(x, n = length(x),
     do.call(dplyr::bind_rows, x)
 }
 
+#' @rdname dictionary
+#' @param i Subset index
+#' @export
+`[.dictionary` <- function(x, i, ...)
+    structure(unclass(x)[i], class = class(x))
+
 dict_row <- function(x, sep) {
     sep <- rep(sep, length = 2L)
     cn <- colnames(x)

@@ -3,6 +3,7 @@
 \name{read_dictionary}
 \alias{read_dictionary}
 \alias{print.dictionary}
+\alias{[.dictionary}
 \alias{apply_dictionary}
 \alias{has_dictionary}
 \alias{get_dictionary}
@@ -22,6 +23,8 @@ read_dictionary(
 )
 
 \method{print}{dictionary}(x, kable = FALSE, include_other = TRUE, ...)
+
+\method{[}{dictionary}(x, i, ...)
 
 apply_dictionary(data, dict)
 
@@ -55,6 +58,8 @@ get_dictionary(data)
 \item{kable}{if \code{TRUE} outputs a kable instead}
 
 \item{include_other}{if \code{TRUE} additional variables will be included in the output}
+
+\item{i}{Subset index}
 
 \item{data}{a dataset (dataframe, tibble)}
 

@@ -145,7 +145,7 @@ dict_row <- function(x, sep) {
     sep <- rep(sep, length = 2L)
     cn <- colnames(x)
     row <- list(
-        name = as.character(x$name),
+        name = tolower(as.character(x$name)),
         type = if ("type" %in% cn) as.character(x$type) else {
             if ("units" %in% cn && !is.na(x$units)) "numeric"
             else if (all(c("codes", "values") %in% cn) && !is.na(x$codes) && !is.na(x$values)) "factor"
@@ -196,6 +196,9 @@ print.dict_var <- function(x, ...) {
 #' @rdname dictionary
 apply_dictionary <- function(data, dict) {
 
+    dnames <- names(data)
+    names(data) <- tolower(names(data))
+
     for (d in dict) {
         if (!d$name %in% names(data)) next
         data[[d$name]] <- add_var_attributes(data[[d$name]], d)
@@ -207,6 +210,7 @@ apply_dictionary <- function(data, dict) {
     lbls <- lbls[names(lbls) %in% names(data)]
 
     data <- do.call(expss::apply_labels, c(list(data), lbls))
+    names(data) <- dnames
 
     data
 }

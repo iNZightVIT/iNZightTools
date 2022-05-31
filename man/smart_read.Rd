@@ -57,8 +57,10 @@ Currently, \code{smart_read()} understands the following file types:
 
 By default, \code{smart_read()} will detect the delimiter used in the file
 if the argument \code{delimiter = NULL} is passed in (the default).
-If this does not work, you can override this argument:\preformatted{smart_read('path/to/file', delimiter = '+')
-}
+If this does not work, you can override this argument:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{smart_read('path/to/file', delimiter = '+')
+}\if{html}{\out{</div>}}
 }
 
 \author{

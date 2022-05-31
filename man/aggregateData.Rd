@@ -48,7 +48,9 @@ You can also include the summary \code{missing}, which will count the number of 
 
 For the \code{quantile} summary, there is the additional argument \code{quantiles}. A new variable will be created for each specified quantile 'p'. To name these variables, use \code{{p}} in \code{varnames} (the default is \verb{\{var\}_q\{p\}}).
 
-Custom functions can be passed via the \code{custom_funs} argument. This should be a list, and each element should have a \code{name} and either an \code{expr} or \code{fun} element. Expressions should operate on a variable \code{x}. The function should be a function of \code{x} and return a single value.\if{html}{\out{<div class="sourceCode r">}}\preformatted{cust_funs <- list(name = '\{var\}_width', expr = diff(range(x), na.rm = TRUE))
+Custom functions can be passed via the \code{custom_funs} argument. This should be a list, and each element should have a \code{name} and either an \code{expr} or \code{fun} element. Expressions should operate on a variable \code{x}. The function should be a function of \code{x} and return a single value.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{cust_funs <- list(name = '\{var\}_width', expr = diff(range(x), na.rm = TRUE))
 cust_funs <- list(name = '\{var\}_stderr',
   fun = function(x) \{
     s <- sd(x)

@@ -91,7 +91,7 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
 }
 
 guess_type <- function(ext) {
-    switch(ext,
+    switch(tolower(ext),
         "xls" = "excel",
         "xlsx" = "excel",
         "sav" = "spss",

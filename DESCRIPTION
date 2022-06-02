@@ -6,6 +6,8 @@ Depends: R (>= 4.0)
 Imports:
     chron,
     dplyr,
+    DBI,
+    dbplyr,
     expss,
     forcats,
     glue,
@@ -34,6 +36,7 @@ Suggests:
     jsonlite,
     knitr,
     RCurl,
+    RSQLite,
     testthat (>= 3.0.0)
 Authors@R: c(
     person("Tom", "Elliott", role = c("aut", "cre"), email = "tom.elliott@auckland.ac.nz", comment = c(ORCID = "0000-0002-7815-6318")),
@@ -51,5 +54,5 @@ Description: Provides a collection of wrapper functions for common variable and 
 License: GPL-3
 Encoding: UTF-8
 Language: en-GB
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Config/testthat/edition: 3

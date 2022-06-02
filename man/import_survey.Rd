@@ -19,18 +19,24 @@ the created survey object
 }
 \description{
 The survey information should be in TOML format, with fields
-corresponding to survey design components. For example,\preformatted{strata = strata_var
+corresponding to survey design components. For example,
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{strata = strata_var
 clusters = cluster_var
 weights = wt_var
-}
+}\if{html}{\out{</div>}}
 }
 \details{
 For replicate weight designs, vectors (if necessary) are declared with
-square brackets, like so:\preformatted{repweights = ['w01', 'w02', 'w03', 'w04', ..., 'w20']
-}
+square brackets, like so:
 
-although this would be better expressed using a regular expression,\preformatted{repweights = '^w[0-2]'
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{repweights = ['w01', 'w02', 'w03', 'w04', ..., 'w20']
+}\if{html}{\out{</div>}}
+
+although this would be better expressed using a regular expression,
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{repweights = '^w[0-2]'
+}\if{html}{\out{</div>}}
 
 which matches all variables starting with a \code{w} followed by digits between 0 and 2 (inclusive).
 

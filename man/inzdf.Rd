@@ -26,3 +26,9 @@ an \code{inzdf} object
 This object allows the data to be either a standard R \code{data.frame} or
 a connection to a database.
 }
+\details{
+TODO:
+It is possible to specify a linking structure between multiple datasets,
+and when variables are selected the dataset will be linked 'on-the-fly'.
+This, when used with databases, will significantly reduce the size of data in memory.
+}

@@ -107,10 +107,20 @@ select.inzdf_db <- function(.data, ..., table) {
         dplyr::select(...)
 }
 
-#' @inheritParams dplyr::filter
+#' Filter
+#' @name filter
 #' @importFrom dplyr filter
 #' @export
-filter.inzdf_db <- function(.data, ..., table) {
+NULL
+
+#' Filter inzdf
+#' @inheritParams dplyr::filter
+#' @param table name of the table to use, defaults to first in list
+#' @param .preserve ignored
+#' @importFrom dplyr filter
+#' @export
+#' @rdname filter
+filter.inzdf_db <- function(.data, ..., table, .preserve = FALSE) {
     get_tbl(.data, table) %>%
         dplyr::filter(...)
 }

@@ -18,11 +18,15 @@ inzdf <- function(x, name, ...) {
     UseMethod("inzdf")
 }
 
-inzdf.tbl_df <- function(x, name = deparse(substitute(x)), ...) {
+inzdf.tbl_df <- function(x, name, ...) {
+    if (missing(name)) {
+        if (is.null(attr(x, "name", exact = TRUE))) name <- deparse(substitute(x))
+        else name <- attr(x, "name", exact = TRUE)
+    }
     structure(
         tibble::as_tibble(x),
         class = c("inzdf_tbl_df", "inzdf", class(x)),
-        data_name = name
+        name = name
     )
 }
 
@@ -41,13 +45,13 @@ inzdf.SQLiteConnection <- function(x, name = deparse(substitute(x)), ...) {
             type = "SQLite"
         ),
         class = c("inzdf_sqlite", "inzdf_db", "inzdf"),
-        data_name = name
+        name = name
     )
 }
 
 #' @export
 print.inzdf <- function(x, ...) {
-    cat("Data:", attr(x, "data_name", exact = TRUE), "\n\n")
+    cat("Data:", attr(x, "name", exact = TRUE), "\n\n")
 }
 
 #' @export

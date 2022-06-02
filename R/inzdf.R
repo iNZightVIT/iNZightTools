@@ -32,7 +32,7 @@ inzdf.tbl_df <- function(x, name, ...) {
 
 #' @rdname inzdf
 #' @export
-inzdf.data.frame <- function(x, name = deparse(substitute(x)), ...) {
+inzdf.data.frame <- function(x, name, ...) {
     inzdf(tibble::as_tibble(x), name = name)
 }
 

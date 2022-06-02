@@ -8,7 +8,7 @@
 \usage{
 inzdf(x, name, ...)
 
-\method{inzdf}{data.frame}(x, name = deparse(substitute(x)), ...)
+\method{inzdf}{data.frame}(x, name, ...)
 
 \method{inzdf}{SQLiteConnection}(x, name = deparse(substitute(x)), ...)
 }

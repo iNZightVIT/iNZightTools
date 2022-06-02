@@ -18,6 +18,7 @@ Imports:
     RcppTOML,
     readr (>= 1.2.0),
     readxl,
+    rlang,
     srvyr,
     stats,
     stringr,

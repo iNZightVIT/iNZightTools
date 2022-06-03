@@ -25,6 +25,11 @@ inzdf.tbl_df <- function(x, name, ...) {
     }
     structure(
         tibble::as_tibble(x),
+        db = list(
+            connection = NA_character_,
+            schema = NULL,
+            type = NA_character_
+        ),
         class = c("inzdf_tbl_df", "inzdf", class(x)),
         name = name
     )
@@ -41,14 +46,27 @@ inzdf.data.frame <- function(x, name, ...) {
 #' @export
 inzdf.SQLiteConnection <- function(x, name = deparse(substitute(x)), schema = NULL, ...) {
     structure(
-        list(
+        list(),
+        db = list(
             connection = x,
             schema = schema,
             type = "SQLite"
         ),
         class = c("inzdf_sqlite", "inzdf_db", "inzdf"),
-        name = name
+        name = name,
+        row.names = NA_integer_
     )
+}
+
+con <- function(x) {
+    db <- attr(x, "db", exact = TRUE)
+    if (is.null(db)) return(NULL)
+    db$connection
+}
+schema <- function(x) {
+    db <- attr(x, "db", exact = TRUE)
+    if (is.null(db)) return(NULL)
+    db$schema
 }
 
 #' @export
@@ -67,24 +85,20 @@ print.inzdf_tbl_df <- function(x, ...) {
 print.inzdf_db <- function(x, ...) {
     NextMethod()
 
-    tbls <- DBI::dbListTables(x$connection)
+    tbls <- DBI::dbListTables(con(x))
     if (length(tbls) == 0L) {
         cat("No tables\n")
         return()
     }
 
-    if (length(tbls) > 1L) {
-        cat("Tables:\n")
-        cat(paste("  -", DBI::dbListTables(x$connection), collapse = "\n"))
-        cat("\n\n")
-    } else {
-        print(dplyr::tbl(x$connection, tbls[1]))
-    }
+    cat("Tables:\n")
+    cat(paste("  -", DBI::dbListTables(con(x)), collapse = "\n"))
+    cat("\n\n")
 }
 
 #' @export
-`[.inzdf_db` <- function(x, i, j, table = DBI::dbListTables(x$connection)[1]) {
-    e <- rlang::expr(dplyr::tbl(x$connection, !!table))
+`[.inzdf_db` <- function(x, i, j, table = DBI::dbListTables(con(x))[1]) {
+    e <- rlang::expr(dplyr::tbl(con(x), !!table))
 
     if (!missing(j)) {
         e <- rlang::expr(
@@ -103,22 +117,22 @@ print.inzdf_db <- function(x, ...) {
 
 get_tbl <- function(x, table = NULL, include_links = TRUE) {
     if (is.null(table))
-        table <- if (is.null(x$schema)) DBI::dbListTables(x$connection)[1]
-            else names(x$schema)[1]
+        table <- if (is.null(schema(x))) DBI::dbListTables(con(x))[1]
+            else names(schema(x))[1]
 
     if (!include_links ||
-        is.null(x$schema) ||
-        is.null(x$schema[[table]]) ||
-        is.null(x$schema[[table]]$links_to)
+        is.null(schema(x)) ||
+        is.null(schema(x)[[table]]) ||
+        is.null(schema(x)[[table]]$links_to)
     ) {
         return(
-            dplyr::tbl(x$connection, table)
+            dplyr::tbl(con(x), table)
         )
     }
 
     # do magic linking:
-    links <- x$schema[[table]]$links_to
-    d <- dplyr::tbl(x$connection, table)
+    links <- schema(x)[[table]]$links_to
+    d <- dplyr::tbl(con(x), table)
 
     for (link in names(links)) {
         d <- link_table(d,

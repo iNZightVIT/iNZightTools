@@ -5,7 +5,7 @@
 \alias{filter.inzdf_db}
 \title{Filter}
 \usage{
-\method{filter}{inzdf_db}(.data, ..., table, .preserve = FALSE)
+\method{filter}{inzdf_db}(.data, ..., table = NULL, .preserve = FALSE)
 }
 \arguments{
 \item{.data}{A data frame, data frame extension (e.g. a tibble), or a

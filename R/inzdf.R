@@ -36,12 +36,14 @@ inzdf.data.frame <- function(x, name, ...) {
     inzdf(tibble::as_tibble(x), name = name)
 }
 
+#' @param schema a list specifying the schema of the database (used for linking)
 #' @rdname inzdf
 #' @export
-inzdf.SQLiteConnection <- function(x, name = deparse(substitute(x)), ...) {
+inzdf.SQLiteConnection <- function(x, name = deparse(substitute(x)), schema = NULL, ...) {
     structure(
         list(
             connection = x,
+            schema = schema,
             type = "SQLite"
         ),
         class = c("inzdf_sqlite", "inzdf_db", "inzdf"),
@@ -99,14 +101,48 @@ print.inzdf_db <- function(x, ...) {
     eval(e)
 }
 
-get_tbl <- function(x, table = DBI::dbListTables(x)[1]) {
-    dplyr::tbl(x$connection, DBI::dbListTables(x$connection)[1])
+get_tbl <- function(x, table = NULL, include_links = TRUE) {
+    if (is.null(table))
+        table <- if (is.null(x$schema)) DBI::dbListTables(x$connection)[1]
+            else names(x$schema)[1]
+
+    if (!include_links ||
+        is.null(x$schema) ||
+        is.null(x$schema[[table]]) ||
+        is.null(x$schema[[table]]$links_to)
+    ) {
+        return(
+            dplyr::tbl(x$connection, table)
+        )
+    }
+
+    # do magic linking:
+    links <- x$schema[[table]]$links_to
+    d <- dplyr::tbl(x$connection, table)
+
+    for (link in names(links)) {
+        d <- link_table(d,
+            get_tbl(x, link, include_links = TRUE),
+            links[[link]]
+        )
+    }
+
+    d
+}
+
+link_table <- function(data, table, schema, join = "inner") {
+    join_fun <- eval(parse(text = sprintf("dplyr::%s_join", join)))
+
+    if (is.null(schema))
+        return(join_fun(data, table))
+
+    join_fun(data, table, by = schema)
 }
 
 #' @inheritParams dplyr::select
 #' @importFrom dplyr select
 #' @export
-select.inzdf_db <- function(.data, ..., table) {
+select.inzdf_db <- function(.data, ..., table = NULL) {
     get_tbl(.data, table) %>%
         dplyr::select(...)
 }
@@ -124,7 +160,18 @@ NULL
 #' @importFrom dplyr filter
 #' @export
 #' @rdname filter
-filter.inzdf_db <- function(.data, ..., table, .preserve = FALSE) {
+filter.inzdf_db <- function(.data, ..., table = NULL, .preserve = FALSE) {
     get_tbl(.data, table) %>%
         dplyr::filter(...)
+}
+
+#' @export
+as_tibble.inzdf_db <- function(x, table = NULL, ...) {
+    get_tbl(x, table) %>%
+        dplyr::collect()
+}
+
+#' @export
+as.data.frame.inzdf_db <- function(x, row.names = NULL, optional = FALSE, table = NULL, ...) {
+    as.data.frame(as_tibble(x, table))
 }

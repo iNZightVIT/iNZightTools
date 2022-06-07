@@ -45,6 +45,7 @@ inzdf.data.frame <- function(x, name, ...) {
 #' @rdname inzdf
 #' @export
 inzdf.SQLiteConnection <- function(x, name = deparse(substitute(x)), schema = NULL, ...) {
+    # TODO: add col types to schema (if missing)
     structure(
         list(),
         db = list(

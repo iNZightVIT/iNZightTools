@@ -115,6 +115,11 @@ print.inzdf_db <- function(x, ...) {
     eval(e)
 }
 
+#' @export
+`[[.inzdf_db` <- function(x, ..., exact = TRUE) {
+    select(x, ...)
+}
+
 get_tbl <- function(x, table = NULL, include_links = TRUE) {
     if (is.null(table))
         table <- if (is.null(schema(x))) DBI::dbListTables(con(x))[1]
@@ -188,4 +193,23 @@ as_tibble.inzdf_db <- function(x, table = NULL, ...) {
 #' @export
 as.data.frame.inzdf_db <- function(x, row.names = NULL, optional = FALSE, table = NULL, ...) {
     as.data.frame(as_tibble(x, table))
+}
+
+#' @export
+names.inzdf_db <- function(x) {
+    colnames(get_tbl(x))
+}
+
+#' @importFrom utils head
+#' @export
+head.inzdf_db <- function(x, ...) {
+    head(get_tbl(x), ...)
+}
+
+#' @export
+dim.inzdf_db <- function(x) {
+    c(
+        dplyr::collect(dplyr::count(get_tbl(x)))$n,
+        length(names(x))
+    )
 }

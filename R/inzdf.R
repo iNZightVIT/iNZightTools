@@ -116,9 +116,11 @@ print.inzdf_db <- function(x, ...) {
 }
 
 #' @export
-`[[.inzdf_db` <- function(x, i, exact = TRUE) {
-    get_tbl(x) %>%
+`[[.inzdf_db` <- function(x, i, exact = TRUE, stringsAsFactors = TRUE) {
+    z <- get_tbl(x) %>%
         dplyr::pull(!!i)
+    if (stringsAsFactors && is.character(z)) z <- as.factor(z)
+    z
 }
 
 get_tbl <- function(x, table = NULL, include_links = TRUE) {
@@ -186,10 +188,15 @@ filter.inzdf_db <- function(.data, ..., table = NULL, .preserve = FALSE) {
 }
 
 #' @export
-as_tibble.inzdf_db <- function(x, table = NULL, ...) {
+as_tibble.inzdf_db <- function(x, table = NULL, ..., stringsAsFactors = TRUE) {
     d <- get_tbl(x, table) %>%
         dplyr::collect()
     attr(d, "name") <- attr(x, "name", exact = TRUE)
+    if (stringsAsFactors) {
+        for (col in names(d)) {
+            if (is.character(d[[col]])) d[[col]] <- as.factor(d[[col]])
+        }
+    }
     d
 }
 

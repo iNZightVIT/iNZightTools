@@ -116,8 +116,9 @@ print.inzdf_db <- function(x, ...) {
 }
 
 #' @export
-`[[.inzdf_db` <- function(x, ..., exact = TRUE) {
-    select(x, ...)
+`[[.inzdf_db` <- function(x, i, exact = TRUE) {
+    get_tbl(x) %>%
+        dplyr::pull(!!i)
 }
 
 get_tbl <- function(x, table = NULL, include_links = TRUE) {

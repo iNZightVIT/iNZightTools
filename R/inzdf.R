@@ -187,8 +187,10 @@ filter.inzdf_db <- function(.data, ..., table = NULL, .preserve = FALSE) {
 
 #' @export
 as_tibble.inzdf_db <- function(x, table = NULL, ...) {
-    get_tbl(x, table) %>%
+    d <- get_tbl(x, table) %>%
         dplyr::collect()
+    attr(d, "name") <- attr(x, "name", exact = TRUE)
+    d
 }
 
 #' @export

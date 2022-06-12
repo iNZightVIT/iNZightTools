@@ -101,6 +101,8 @@ print.inzdf_db <- function(x, ...) {
 `[.inzdf_db` <- function(x, i, j, table = DBI::dbListTables(con(x))[1]) {
     e <- rlang::expr(dplyr::tbl(con(x), !!table))
 
+    if (missing(j) && !missing(i)) j <- i
+
     if (!missing(j)) {
         e <- rlang::expr(
             !!rlang::enexpr(e) %>%
@@ -108,7 +110,7 @@ print.inzdf_db <- function(x, ...) {
         )
     }
 
-    if (!missing(i)) {
+    if (!missing(i) && !missing(j)) {
         warning('row subsetting not supported')
     }
 
@@ -214,7 +216,7 @@ names.inzdf_db <- function(x) {
 #' @importFrom utils head
 #' @export
 head.inzdf_db <- function(x, ...) {
-    head(get_tbl(x), ...)
+    head(get_tbl(x), ...) %>% dplyr::collect()
 }
 
 #' @export

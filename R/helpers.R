@@ -53,7 +53,7 @@ vartype <- function(x) {
 }
 
 #' Get all variable types from data object
-#' @param a data object (data.frame or inzdf)
+#' @param x data object (data.frame or inzdf)
 #' @return a named vector of variable types
 #' @export
 vartypes <- function(x) UseMethod("vartypes")

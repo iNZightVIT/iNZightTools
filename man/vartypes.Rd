@@ -7,7 +7,7 @@
 vartypes(x)
 }
 \arguments{
-\item{a}{data object (data.frame or inzdf)}
+\item{x}{data object (data.frame or inzdf)}
 }
 \value{
 a named vector of variable types

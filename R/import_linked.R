@@ -21,9 +21,19 @@ load_linked <- function(x, schema, con, name = deparse(substitute(con)), ...) {
     if (is.null(x$schema)) stop("Need to specify a schema")
     if (missing(con)) stop("Please specify a database connection")
 
+    if (!is.null(x$dictionary)) {
+        message("Loading dictionary ...")
+        dict <- do.call(read_dictionary, x$dictionary)
+        x$dictionary <- dict
+        message("Dictionary loaded!")
+    }
+
     lapply(names(x$files),
         function(f) {
             d <- smart_read(x$files[f], ...)
+            if (!is.null(x$dictionary))
+                d <- apply_dictionary(d, x$dictionary)
+
             on.exit(rm(d))
             DBI::dbWriteTable(con, f, d)
         }
@@ -39,19 +49,19 @@ table_spec <- function(x) {
 
 read_link_spec <- function(x, name = deparse(substitute(x))) {
     z <- yaml::read_yaml(x)
-    spec <- list(
-        files = unlist(z$files),
-        schema = setNames(lapply(z$schema, table_spec), names(z$schema))
-    )
+    files <- unlist(z$files)
+    schema <- setNames(lapply(z$schema, table_spec), names(z$schema))
+    dictionary <- z$dictionary
 
-    link_spec(spec$files, spec$schema, name)
+    link_spec(files, schema, dictionary, name)
 }
 
-link_spec <- function(files, schema, name) {
+link_spec <- function(files, schema, dictionary, name) {
     structure(
         list(
             files = files,
             schema = schema,
+            dictionary = dictionary,
             name = name
         ),
         class = "inzlnk_spec"

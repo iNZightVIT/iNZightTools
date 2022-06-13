@@ -32,8 +32,18 @@ load_linked <- function(x, schema, con, name = deparse(substitute(con)), ...) {
     inzdf(con, name = name, schema = x$schema)
 }
 
+table_spec <- function(x) {
+    x$links_to <- lapply(x$links_to, unlist)
+    x
+}
+
 read_link_spec <- function(x) {
-    spec <- RcppTOML::parseTOML(x)
+    x <- yaml::read_yaml(x)
+    spec <- list(
+        files = x$files,
+        schema = setNames(lapply(x$schema, table_spec), names(x$schema))
+    )
+
     link_spec(x$files, x$schema, deparse(substitute(x)))
 }
 

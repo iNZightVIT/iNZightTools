@@ -50,13 +50,13 @@ table_spec <- function(x) {
 read_link_spec <- function(x, name = deparse(substitute(x))) {
     z <- yaml::read_yaml(x)
     files <- unlist(z$files)
-    schema <- setNames(lapply(z$schema, table_spec), names(z$schema))
+    schema <- stats::setNames(lapply(z$schema, table_spec), names(z$schema))
     dictionary <- z$dictionary
 
     link_spec(files, schema, dictionary, name)
 }
 
-link_spec <- function(files, schema, dictionary, name) {
+link_spec <- function(files, schema, dictionary = NULL, name) {
     structure(
         list(
             files = files,

@@ -29,16 +29,32 @@ t0 <- tempfile(fileext = ".sql")
 t1 <- tempfile(fileext = ".csv")
 t2 <- tempfile(fileext = ".csv")
 t3 <- tempfile(fileext = ".csv")
-on.exit(unlink(c(t0, t1, t2, t3)))
-
-con <- DBI::dbConnect(RSQLite::SQLite(), t0)
-on.exit(DBI::dbDisconnect(con), add = TRUE, after = FALSE)
+t4 <- tempfile(fileext = ".inzlnk")
+on.exit(unlink(c(t1, t2, t3, t4)))
 
 write.csv(iris_species, file = t1, row.names = FALSE, quote = FALSE)
 write.csv(iris_data, file = t2, row.names = FALSE, quote = FALSE)
 write.csv(iris_extra, file = t3, row.names = FALSE, quote = FALSE)
+writeLines(
+"schema:
+  iris_data:
+    links_to:
+      iris_species: species_id
+  iris_species:
+    links_to:
+      iris_extra:
+        type_id: id
+",
+    t4
+)
 
-test_that("Link spec", {
+test_that("Linked data loading", {
+    con <- DBI::dbConnect(RSQLite::SQLite(), t0)
+    on.exit({
+        DBI::dbDisconnect(con)
+        unlink(t0)
+    })
+
     dl <- load_linked(
         c(iris_species = t1, iris_data = t2, iris_extra = t3),
         schema = iris_schema,
@@ -46,4 +62,23 @@ test_that("Link spec", {
         name = "iris"
     )
     expect_s3_class(dl, "inzdf_db")
+})
+
+test_that("Link spec file", {
+    con <- DBI::dbConnect(RSQLite::SQLite(), t0)
+    on.exit({
+        DBI::dbDisconnect(con)
+        unlink(t0)
+    })
+
+    dl <- read_link_spec(t4)
+    expect_s3_class(dl, "inzlnk_spec")
+    expect_equal(dl$schema, iris_schema)
+
+    d <- load_linked(dl, con = con)
+    expect_s3_class(d, "inzdf_db")
+})
+
+test_that("Dicionaries load", {
+
 })

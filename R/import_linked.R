@@ -40,7 +40,7 @@ table_spec <- function(x) {
 read_link_spec <- function(x) {
     x <- yaml::read_yaml(x)
     spec <- list(
-        files = x$files,
+        files = unlist(x$files),
         schema = setNames(lapply(x$schema, table_spec), names(x$schema))
     )
 

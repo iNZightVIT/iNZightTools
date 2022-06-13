@@ -37,14 +37,14 @@ table_spec <- function(x) {
     x
 }
 
-read_link_spec <- function(x) {
-    x <- yaml::read_yaml(x)
+read_link_spec <- function(x, name = deparse(substitute(x))) {
+    z <- yaml::read_yaml(x)
     spec <- list(
-        files = unlist(x$files),
-        schema = setNames(lapply(x$schema, table_spec), names(x$schema))
+        files = unlist(z$files),
+        schema = setNames(lapply(z$schema, table_spec), names(z$schema))
     )
 
-    link_spec(x$files, x$schema, deparse(substitute(x)))
+    link_spec(spec$files, spec$schema, name)
 }
 
 link_spec <- function(files, schema, name) {

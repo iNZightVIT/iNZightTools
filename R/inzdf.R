@@ -66,8 +66,8 @@ con <- function(x) {
 }
 schema <- function(x) {
     db <- attr(x, "db", exact = TRUE)
-    if (is.null(db)) return(NULL)
-    db$schema
+    if (!is.null(db)) return(db$schema)
+    NULL
 }
 
 #' @export

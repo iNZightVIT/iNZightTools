@@ -35,8 +35,12 @@ on.exit(unlink(c(t1, t2, t3, t4)))
 write.csv(iris_species, file = t1, row.names = FALSE, quote = FALSE)
 write.csv(iris_data, file = t2, row.names = FALSE, quote = FALSE)
 write.csv(iris_extra, file = t3, row.names = FALSE, quote = FALSE)
-writeLines(
-"schema:
+writeLines(sprintf(
+"files:
+    iris_species: %s
+    iris_data: %s
+    iris_extra: %s
+schema:
   iris_data:
     links_to:
       iris_species: species_id
@@ -44,7 +48,7 @@ writeLines(
     links_to:
       iris_extra:
         type_id: id
-",
+", t1, t2, t3),
     t4
 )
 
@@ -77,8 +81,31 @@ test_that("Link spec file", {
 
     d <- load_linked(dl, con = con)
     expect_s3_class(d, "inzdf_db")
+    expect_equal(dim(d), c(150L, 8L))
 })
 
 test_that("Dicionaries load", {
+    tc <- tempfile(fileext = ".inzlnk")
+    con <- DBI::dbConnect(RSQLite::SQLite(), t0)
+    on.exit({
+        DBI::dbDisconnect(con)
+        unlink(tc)
+        unlink(t0)
+    })
+    writeLines(
+"files:
+    cas: cas500_coded.csv
+schema:
+    cas:
+dictionary:
+    file: casdict.csv
+    name: variable
+",
+        tc
+    )
 
+    d <- load_linked(tc, con = con)
+    expect_equal(dim(d), c(500L, 10L))
+    expect_s3_class(d[["travel"]], "factor")
+    expect_equal(levels(d[["gender"]]), c("female", "male"))
 })

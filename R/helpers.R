@@ -65,6 +65,9 @@ vartypes.default <- function(x) stop("Unsupported data object.")
 vartypes.data.frame <- function(x) sapply(x, vartype)
 
 #' @export
+vartypes.tbl_lazy <- function(x) sapply(dplyr::collect(head(x)), vartype)
+
+#' @export
 vartypes.inzdf_db <- function(x) {
     if (!is.null(attr(x, "vartypes", exact = TRUE)))
         return(attr(x, "vartypes", exact = TRUE))

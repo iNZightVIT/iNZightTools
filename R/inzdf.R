@@ -164,6 +164,12 @@ link_table <- function(data, table, schema, join = "inner") {
     join_fun(data, table, by = schema)
 }
 
+#' Select
+#' @name select
+#' @importFrom dplyr select
+#' @export
+NULL
+
 #' @inheritParams dplyr::select
 #' @importFrom dplyr select
 #' @export

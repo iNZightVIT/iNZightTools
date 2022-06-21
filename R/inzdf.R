@@ -198,7 +198,7 @@ filter.inzdf_db <- function(.data, ..., table = NULL, .preserve = FALSE) {
 
 #' @export
 as_tibble.inzdf_db <- function(x, table = NULL, ..., stringsAsFactors = TRUE) {
-    print("--as tibble")
+    if (isTRUE(Sys.getenv("DEBUG"))) print("--as tibble")
     d <- get_tbl(x, table) %>%
         dplyr::collect()
     attr(d, "name") <- attr(x, "name", exact = TRUE)

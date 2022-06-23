@@ -130,9 +130,15 @@ as_tibble.dictionary <- function(x, n = length(x),
             y$other <- NULL
             y <- c(y, other)
         }
-        do.call(tibble::tibble, y)
     })
-    do.call(dplyr::bind_rows, x)
+    vars <- unique(do.call(c, lapply(x, names)))
+    x <- lapply(x, function(z) {
+        lapply(
+            stats::setNames(z[vars], vars),
+            function(y) if(is.null(y)) NA else (y)
+        )
+    })
+    tibble::as_tibble(lapply(purrr::transpose(x), unlist))
 }
 
 #' @rdname dictionary

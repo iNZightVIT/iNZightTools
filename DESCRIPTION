@@ -15,6 +15,7 @@ Imports:
     haven,
     magrittr,
     methods,
+    purrr,
     RcppTOML,
     readr (>= 1.2.0),
     readxl,

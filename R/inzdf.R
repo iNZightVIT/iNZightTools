@@ -28,10 +28,12 @@ inzdf.tbl_df <- function(x, name, ...) {
         db = list(
             connection = NA_character_,
             schema = NULL,
-            type = NA_character_
+            type = NA_character_,
+            var_attrs = list()
         ),
         class = c("inzdf_tbl_df", "inzdf", class(x)),
-        name = name
+        name = name,
+        dictionary = NULL
     )
 }
 
@@ -42,20 +44,29 @@ inzdf.data.frame <- function(x, name, ...) {
 }
 
 #' @param schema a list specifying the schema of the database (used for linking)
+#' @param var_attrs nested list of variables attributes for each table > variable
+#' @param dictionary an inzdict object
 #' @rdname inzdf
 #' @export
-inzdf.SQLiteConnection <- function(x, name = deparse(substitute(x)), schema = NULL, ...) {
+inzdf.SQLiteConnection <- function(x,
+                                   name = deparse(substitute(x)),
+                                   schema = NULL,
+                                   var_attrs = list(),
+                                   dictionary = NULL,
+                                   ...) {
     # TODO: add col types to schema (if missing)
     structure(
         list(),
         db = list(
             connection = x,
             schema = schema,
-            type = "SQLite"
+            type = "SQLite",
+            var_attrs = var_attrs
         ),
         class = c("inzdf_sqlite", "inzdf_db", "inzdf"),
         name = name,
-        row.names = NA_integer_
+        row.names = NA_integer_,
+        dictionary = dictionary
     )
 }
 
@@ -120,9 +131,13 @@ print.inzdf_db <- function(x, ...) {
 
 #' @export
 `[[.inzdf_db` <- function(x, i, exact = TRUE, stringsAsFactors = TRUE) {
-    z <- get_tbl(x) %>%
-        dplyr::pull(!!i)
-    if (stringsAsFactors && is.character(z)) z <- as.factor(z)
+    z <- get_tbl(x)
+
+    vari <- i
+    if (is.numeric(i)) vari <- as.character(dplyr::tbl_vars(z))[i]
+    z <- dplyr::pull(z, !!i) %>%
+        set_attributes(x, var = vari)
+
     z
 }
 
@@ -174,8 +189,13 @@ NULL
 #' @importFrom dplyr select
 #' @export
 select.inzdf_db <- function(.data, ..., table = NULL) {
-    get_tbl(.data, table) %>%
-        dplyr::select(...)
+    x <- get_tbl(.data, table) %>%
+            dplyr::select(...)
+    structure(
+        x,
+        class = c("inzdf_lazydb", class(x)),
+        data = .data
+    )
 }
 
 #' Filter
@@ -198,16 +218,59 @@ filter.inzdf_db <- function(.data, ..., table = NULL, .preserve = FALSE) {
 
 #' @export
 as_tibble.inzdf_db <- function(x, table = NULL, ..., stringsAsFactors = TRUE) {
-    if (isTRUE(Sys.getenv("DEBUG"))) print("--as tibble")
+    if (isTRUE(as.logical(Sys.getenv("DEBUG")))) print("--as tibble")
+
     d <- get_tbl(x, table) %>%
-        dplyr::collect()
+        dplyr::collect() %>%
+        set_attributes(x)
+
     attr(d, "name") <- attr(x, "name", exact = TRUE)
-    if (stringsAsFactors) {
-        for (col in names(d)) {
-            if (is.character(d[[col]])) d[[col]] <- as.factor(d[[col]])
-        }
-    }
+    # if (stringsAsFactors) {
+    #     for (col in names(d)) {
+    #         if (is.character(d[[col]])) d[[col]] <- as.factor(d[[col]])
+    #     }
+    # }
     d
+}
+
+#' @export
+as_tibble.inzdf_lazydb <- function(x, ...) {
+    d <- dplyr::collect(x) %>%
+        set_attributes(attr(x, "data", exact = TRUE))
+    attr(d, "name") <- attr(attr(x, "data", exact = TRUE), "name", exact = TRUE)
+    d
+}
+
+set_attributes <- function(x, from, var = names(x)) {
+    db <- attr(from, "db")
+    if (is.null(db) || is.null(db$var_attrs) || length(db$var_attrs) == 0) return(x)
+
+    attrs <- db$var_attrs
+    if (is.data.frame(x)) {
+        for (v in names(x))
+            x[[v]] <- set_var_attributes(x[[v]], v, attrs)
+    } else {
+        x <- set_var_attributes(x, var, attrs)
+    }
+
+    x
+}
+
+set_var_attributes <- function(x, var, attrs) {
+    tbl_names <- lapply(attrs, names)
+
+    # TODO: this needs to be moved to 'get_tbl' to be more precise ...
+    # find a column with the same name
+    var <- as.character(var)
+    vi <- sapply(tbl_names, function(n) var %in% n)
+    if (!any(vi)) return(x)
+
+    mi <- as.integer(which(vi)[1])
+    xa <- attrs[[mi]][[var]]
+
+    # set the class
+    if (is.character(x) && any(xa$class == "factor")) x <- factor(x)
+    do.call(structure, c(list(x), xa))
 }
 
 #' @export
@@ -223,7 +286,7 @@ names.inzdf_db <- function(x) {
 #' @importFrom utils head
 #' @export
 head.inzdf_db <- function(x, ...) {
-    head(get_tbl(x), ...) %>% dplyr::collect()
+    head(get_tbl(x), ...) %>% dplyr::collect() %>% set_attributes(x)
 }
 
 #' @export

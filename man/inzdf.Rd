@@ -10,7 +10,14 @@ inzdf(x, name, ...)
 
 \method{inzdf}{data.frame}(x, name, ...)
 
-\method{inzdf}{SQLiteConnection}(x, name = deparse(substitute(x)), schema = NULL, ...)
+\method{inzdf}{SQLiteConnection}(
+  x,
+  name = deparse(substitute(x)),
+  schema = NULL,
+  var_attrs = list(),
+  dictionary = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{a data.frame or db connection}
@@ -20,6 +27,10 @@ inzdf(x, name, ...)
 \item{...}{additional arguments passed to methods}
 
 \item{schema}{a list specifying the schema of the database (used for linking)}
+
+\item{var_attrs}{nested list of variables attributes for each table > variable}
+
+\item{dictionary}{an inzdict object}
 }
 \value{
 an \code{inzdf} object

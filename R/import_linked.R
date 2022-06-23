@@ -28,18 +28,22 @@ load_linked <- function(x, schema, con, name = deparse(substitute(con)), ...) {
         message("Dictionary loaded!")
     }
 
-    lapply(names(x$files),
+    var_attrs <- lapply(names(x$files),
         function(f) {
             d <- smart_read(x$files[f], ...)
             if (!is.null(x$dictionary))
                 d <- apply_dictionary(d, x$dictionary)
-
+            vf <- lapply(d, function(x)
+                utils::modifyList(list(class = class(x)), as.list(attributes(x)))
+            )
             on.exit(rm(d))
             DBI::dbWriteTable(con, f, d)
+            vf
         }
     )
+    names(var_attrs) <- names(x$files)
 
-    inzdf(con, name = name, schema = x$schema)
+    inzdf(con, name = name, schema = x$schema, var_attrs, dictionary = x$dictionary)
 }
 
 table_spec <- function(x) {

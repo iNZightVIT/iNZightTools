@@ -94,11 +94,11 @@ test_that("Dicionaries load", {
     })
     writeLines(
 "files:
-    cas: cas500_coded.csv
+    cas: ./cas500_coded.csv
 schema:
     cas:
 dictionary:
-    file: casdict.csv
+    file: ./casdict.csv
     name: variable
 ",
         tc

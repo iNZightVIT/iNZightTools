@@ -10,8 +10,10 @@
 #' @md
 #' @export
 load_linked <- function(x, schema, con, name = deparse(substitute(con)), ...) {
+    fdir <- NULL
     if (!inherits(x, "inzlnk_spec")) {
         if (length(x) == 1L && tools::file_ext(x) == "inzlnk") {
+            fdir <- dirname(x)
             x <- read_link_spec(x)
         } else {
             x <- link_spec(x, schema, name = name)
@@ -22,15 +24,19 @@ load_linked <- function(x, schema, con, name = deparse(substitute(con)), ...) {
     if (missing(con)) stop("Please specify a database connection")
 
     if (!is.null(x$dictionary)) {
-        message("Loading dictionary ...")
+        dict_path <- x$dictionary$file
+        if (!is.null(fdir) && !grepl("^https?://", dict_path) && !grepl("/", dict_path))
+            x$dictionary$file <- file.path(fdir, dict_path)
         dict <- do.call(read_dictionary, x$dictionary)
         x$dictionary <- dict
-        message("Dictionary loaded!")
     }
 
     var_attrs <- lapply(names(x$files),
         function(f) {
-            d <- smart_read(x$files[f], ...)
+            fpath <- x$files[f]
+            if (!is.null(fdir) && !grepl("^https?://", fpath) && !grepl("/", fpath))
+                fpath <- file.path(fdir, fpath)
+            d <- smart_read(fpath, ...)
             if (!is.null(x$dictionary))
                 d <- apply_dictionary(d, x$dictionary)
             vf <- lapply(d, function(x)

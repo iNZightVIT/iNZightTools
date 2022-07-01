@@ -270,7 +270,7 @@ set_var_attributes <- function(x, var, attrs) {
 
     # set the class
     if (is.character(x) && any(xa$class == "factor")) x <- factor(x)
-    do.call(structure, c(list(x), xa))
+    do.call(structure, c(list(x), xa, list(table = names(tbl_names)[mi])))
 }
 
 #' @export

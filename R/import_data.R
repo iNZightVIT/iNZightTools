@@ -346,7 +346,10 @@ convert_strings <- function(x, ctypes) {
         function(type)
             switch(type,
                 "date" = "as.Date",
-                "time" = "hms::as_hms",
+                "time" = {
+                    # handle both 12:01:02 and 12:01 (i.e., missing seconds)
+                    "function(x) hms::as_hms(format(lubridate::parse_date_time(x, c('%H:%M', '%H:%M:%S')), '%H:%M:%S'))"
+                },
                 "datetime" = "as.POSIXct",
                 "double" = "as.numeric",
                 "character" = ,

@@ -1,6 +1,7 @@
 - allow 'readr' to use automatic delimiter guessing (csv files) instead of forcing `,` (#187)
 - fix Windows bug in `url_to_temp()` adding extra lines, causing importing files with more than one line of comments to fail delimiter-guessing
 - fix bug where extension guess failed if file extension was not lower case (e.g., `file.CSV`)
+- fix bug in converting times with missing seconds (e.g., '08:30')
 
 - `read_dictionary()` and `apply_dictionary()` functions to import a data dictionary from a rectangular data file and apply it to a dataset
 

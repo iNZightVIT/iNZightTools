@@ -110,7 +110,7 @@ print.inzdf_db <- function(x, ...) {
 
 #' @export
 `[.inzdf_db` <- function(x, i, j, table = DBI::dbListTables(con(x))[1]) {
-    e <- rlang::expr(dplyr::tbl(con(x), !!table))
+    e <- rlang::expr(get_tbl(x, !!table))
 
     if (missing(j) && !missing(i)) j <- i
 

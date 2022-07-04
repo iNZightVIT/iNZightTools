@@ -125,8 +125,12 @@ print.inzdf_db <- function(x, ...) {
         warning('row subsetting not supported')
     }
 
-    # e
-    eval(e)
+    x <- eval(e)
+    structure(
+        x,
+        class = c("inzdf_lazydb", class(x)),
+        data = .data
+    )
 }
 
 #' @export
@@ -268,8 +272,10 @@ set_var_attributes <- function(x, var, attrs) {
     mi <- as.integer(which(vi)[1])
     xa <- attrs[[mi]][[var]]
 
+    levels <- if (is.null(xa$levels)) unique(x) else xa$levels
+
     # set the class
-    if (is.character(x) && any(xa$class == "factor")) x <- factor(x)
+    if (is.character(x) && any(xa$class == "factor")) x <- factor(x, levels = levels)
     do.call(structure, c(list(x), xa, list(table = names(tbl_names)[mi])))
 }
 

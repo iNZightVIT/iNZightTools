@@ -4,12 +4,13 @@
 #' @param schema a list describing the schema/relationships between the files
 #' @param con a database connection to load the linked data into
 #' @param name the name of the data set collection
+#' @param keep_con if `TRUE` data will remain in DB (use for very large data)
 #' @param ... additional arguments passed to data reading function `smart_read()`
 #'
 #' @return an `inzdf` object
 #' @md
 #' @export
-load_linked <- function(x, schema, con, name = deparse(substitute(con)), ...) {
+load_linked <- function(x, schema, con, name = deparse(substitute(con)), keep_con = FALSE, ...) {
     fdir <- NULL
     if (!inherits(x, "inzlnk_spec")) {
         if (length(x) == 1L && tools::file_ext(x) == "inzlnk") {
@@ -49,7 +50,13 @@ load_linked <- function(x, schema, con, name = deparse(substitute(con)), ...) {
     )
     names(var_attrs) <- names(x$files)
 
-    inzdf(con, name = name, schema = x$schema, var_attrs, dictionary = x$dictionary)
+    inzdf(con,
+        name = name,
+        schema = x$schema,
+        var_attrs,
+        dictionary = x$dictionary,
+        keep_con = keep_con
+    )
 }
 
 table_spec <- function(x) {

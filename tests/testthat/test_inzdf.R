@@ -11,7 +11,7 @@ test_that("SQLite database supported", {
     on.exit({DBI::dbDisconnect(con); unlink(db)})
     DBI::dbWriteTable(con, "iris", iris)
 
-    d <- inzdf(con, "iris")
+    d <- inzdf(con, "iris", keep_con = TRUE)
     expect_s3_class(d, "inzdf_db")
 
     expect_s3_class(as.data.frame(d), "data.frame")
@@ -27,6 +27,7 @@ test_that("Linked data in database supported", {
     )
     iris_data <- iris %>%
         dplyr::mutate(
+            id = seq_len(dplyr::n()),
             species_id = as.integer(iris$Species),
             Species = NULL
         )
@@ -56,7 +57,8 @@ test_that("Linked data in database supported", {
                     iris_extra = c("type_id" = "id")
                 )
             )
-        )
+        ),
+        keep_con = TRUE
     )
 
     ds <- d %>% select(species_name, type, Sepal.Length)

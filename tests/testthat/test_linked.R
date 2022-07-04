@@ -5,6 +5,7 @@ iris_species <- data.frame(
 )
 iris_data <- iris %>%
     dplyr::mutate(
+        id = seq_len(dplyr::n()),
         species_id = as.integer(iris$Species),
         Species = NULL
     )
@@ -63,7 +64,8 @@ test_that("Linked data loading", {
         c(iris_species = t1, iris_data = t2, iris_extra = t3),
         schema = iris_schema,
         con = con,
-        name = "iris"
+        name = "iris",
+        keep_con = TRUE
     )
     expect_s3_class(dl, "inzdf_db")
 })
@@ -79,9 +81,9 @@ test_that("Link spec file", {
     expect_s3_class(dl, "inzlnk_spec")
     expect_equal(dl$schema, iris_schema)
 
-    d <- load_linked(dl, con = con)
+    d <- load_linked(dl, con = con, keep_con = TRUE)
     expect_s3_class(d, "inzdf_db")
-    expect_equal(dim(d), c(150L, 8L))
+    expect_equal(dim(d), c(150L, 9L))
 })
 
 test_that("Dicionaries load", {
@@ -104,7 +106,7 @@ dictionary:
         tc
     )
 
-    d <- load_linked(tc, con = con)
+    d <- load_linked(tc, con = con, keep_con = TRUE)
     expect_equal(dim(d), c(500L, 10L))
     expect_s3_class(d[["travel"]], "factor")
     expect_equal(levels(d[["gender"]]), c("female", "male"))

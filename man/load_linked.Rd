@@ -4,7 +4,14 @@
 \alias{load_linked}
 \title{Import linked data into an \code{inzdf} object}
 \usage{
-load_linked(x, schema, con, name = deparse(substitute(con)), ...)
+load_linked(
+  x,
+  schema,
+  con,
+  name = deparse(substitute(con)),
+  keep_con = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{a linked specification file or vector of data set paths}
@@ -14,6 +21,8 @@ load_linked(x, schema, con, name = deparse(substitute(con)), ...)
 \item{con}{a database connection to load the linked data into}
 
 \item{name}{the name of the data set collection}
+
+\item{keep_con}{if \code{TRUE} data will remain in DB (use for very large data)}
 
 \item{...}{additional arguments passed to data reading function \code{smart_read()}}
 }

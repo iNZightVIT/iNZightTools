@@ -46,6 +46,7 @@ inzdf.data.frame <- function(x, name, ...) {
 #' @param schema a list specifying the schema of the database (used for linking)
 #' @param var_attrs nested list of variables attributes for each table > variable
 #' @param dictionary an inzdict object
+#' @param keep_con if `TRUE` data will remain in DB (use for very large data)
 #' @rdname inzdf
 #' @export
 inzdf.SQLiteConnection <- function(x,
@@ -53,9 +54,10 @@ inzdf.SQLiteConnection <- function(x,
                                    schema = NULL,
                                    var_attrs = list(),
                                    dictionary = NULL,
+                                   keep_con = FALSE,
                                    ...) {
     # TODO: add col types to schema (if missing)
-    structure(
+    x <- structure(
         list(),
         db = list(
             connection = x,
@@ -66,6 +68,21 @@ inzdf.SQLiteConnection <- function(x,
         class = c("inzdf_sqlite", "inzdf_db", "inzdf"),
         name = name,
         row.names = NA_integer_,
+        dictionary = dictionary
+    )
+    if (keep_con) return(x)
+
+    x <- as_tibble(x)
+    structure(
+        x,
+        db = list(
+            connection = NA_character_,
+            schema = NULL,
+            type = NA_character_,
+            var_attrs = list()
+        ),
+        class = c("inzdf_tbl_df", "inzdf", class(x)),
+        name = name,
         dictionary = dictionary
     )
 }
@@ -125,27 +142,29 @@ print.inzdf_db <- function(x, ...) {
         warning('row subsetting not supported')
     }
 
-    x <- eval(e)
+    d <- eval(e)
     structure(
-        x,
-        class = c("inzdf_lazydb", class(x)),
-        data = .data
+        d,
+        class = c("inzdf_lazydb", class(d)),
+        data = x
     )
 }
 
 #' @export
 `[[.inzdf_db` <- function(x, i, exact = TRUE, stringsAsFactors = TRUE) {
-    z <- get_tbl(x)
+    if (is.numeric(i)) {
+        vari <- names(x)[i]
+    } else vari <- i
 
-    vari <- i
-    if (is.numeric(i)) vari <- as.character(dplyr::tbl_vars(z))[i]
-    z <- dplyr::pull(z, !!i) %>%
+    z <- get_tbl(x, vars = vari)
+
+    z <- dplyr::pull(z, vari) %>%
         set_attributes(x, var = vari)
 
     z
 }
 
-get_tbl <- function(x, table = NULL, include_links = TRUE) {
+get_tbl <- function(x, table = NULL, include_links = TRUE, vars) {
     if (is.null(table))
         table <- if (is.null(schema(x))) DBI::dbListTables(con(x))[1]
             else names(schema(x))[1]
@@ -155,18 +174,27 @@ get_tbl <- function(x, table = NULL, include_links = TRUE) {
         is.null(schema(x)[[table]]) ||
         is.null(schema(x)[[table]]$links_to)
     ) {
-        return(
-            dplyr::tbl(con(x), table)
-        )
+        d <- dplyr::tbl(con(x), table)
+        if (!missing(vars)) {
+            tbl_vars <- colnames(d)
+            d <- dplyr::select(d, vars[vars %in% tbl_vars])
+        }
+        return(d)
     }
 
     # do magic linking:
     links <- schema(x)[[table]]$links_to
     d <- dplyr::tbl(con(x), table)
+    if (!missing(vars)) {
+        tbl_vars <- colnames(d)
+        link_vars <- do.call(c, lapply(links, function(x) c(names(x), as.character(x))))
+        vars <- c(vars, as.character(link_vars))
+        d <- dplyr::select(d, vars[vars %in% tbl_vars])
+    }
 
     for (link in names(links)) {
         d <- link_table(d,
-            get_tbl(x, link, include_links = TRUE),
+            get_tbl(x, link, include_links = TRUE, vars = vars),
             links[[link]]
         )
     }
@@ -174,7 +202,7 @@ get_tbl <- function(x, table = NULL, include_links = TRUE) {
     d
 }
 
-link_table <- function(data, table, schema, join = "inner") {
+link_table <- function(data, table, schema, join = "left") {
     join_fun <- eval(parse(text = sprintf("dplyr::%s_join", join)))
 
     if (is.null(schema))

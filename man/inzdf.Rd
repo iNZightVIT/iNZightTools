@@ -16,6 +16,7 @@ inzdf(x, name, ...)
   schema = NULL,
   var_attrs = list(),
   dictionary = NULL,
+  keep_con = FALSE,
   ...
 )
 }
@@ -31,6 +32,8 @@ inzdf(x, name, ...)
 \item{var_attrs}{nested list of variables attributes for each table > variable}
 
 \item{dictionary}{an inzdict object}
+
+\item{keep_con}{if `TRUE` data will remain in DB (use for very large data)}
 }
 \value{
 an \code{inzdf} object

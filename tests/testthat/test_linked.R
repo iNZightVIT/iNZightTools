@@ -76,7 +76,7 @@ test_that("Non-db linking", {
         schema = iris_schema,
         name = "iris"
     )
-    expect_s3_class(dl, "inzdf_tbl")
+    expect_s3_class(dl, "inzdf_tbl_df")
 })
 
 test_that("Link spec file", {

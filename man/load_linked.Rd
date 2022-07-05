@@ -8,7 +8,7 @@ load_linked(
   x,
   schema,
   con,
-  name = deparse(substitute(con)),
+  name = ifelse(missing(con), deparse(substitute(x)), deparse(substitute(con))),
   keep_con = FALSE,
   ...
 )

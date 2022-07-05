@@ -206,9 +206,9 @@ link_table <- function(data, table, schema, join = "left") {
     join_fun <- eval(parse(text = sprintf("dplyr::%s_join", join)))
 
     if (is.null(schema))
-        return(join_fun(data, table))
+        return(join_fun(data, table, copy = TRUE))
 
-    join_fun(data, table, by = schema)
+    join_fun(data, table, by = schema, copy = TRUE)
 }
 
 #' Select

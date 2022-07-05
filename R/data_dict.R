@@ -251,8 +251,8 @@ add_var_attributes.factor <- function(x, d) {
     names(lbls) <- d$coding$value
 
     if (!all(levels(x) %in% d$coding$code)) {
-        message("----- Mismatching levels")
-        print(d)
+        # message("----- Mismatching levels")
+        # print(d)
         # print(d$coding)
         # print(levels(x))
 

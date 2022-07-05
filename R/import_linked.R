@@ -10,7 +10,15 @@
 #' @return an `inzdf` object
 #' @md
 #' @export
-load_linked <- function(x, schema, con, name = deparse(substitute(con)), keep_con = FALSE, ...) {
+load_linked <- function(x, schema, con,
+                        name = ifelse(missing(con),
+                            deparse(substitute(x)),
+                            deparse(substitute(con))
+                        ),
+                        keep_con = FALSE,
+                        ...
+                        ) {
+
     fdir <- NULL
     if (!inherits(x, "inzlnk_spec")) {
         if (length(x) == 1L && tools::file_ext(x) == "inzlnk") {
@@ -22,7 +30,6 @@ load_linked <- function(x, schema, con, name = deparse(substitute(con)), keep_co
     }
 
     if (is.null(x$schema)) stop("Need to specify a schema")
-    if (missing(con)) stop("Please specify a database connection")
 
     if (!is.null(x$dictionary)) {
         dict_path <- x$dictionary$file
@@ -30,6 +37,35 @@ load_linked <- function(x, schema, con, name = deparse(substitute(con)), keep_co
             x$dictionary$file <- file.path(fdir, dict_path)
         dict <- do.call(read_dictionary, x$dictionary)
         x$dictionary <- dict
+    }
+
+    if (missing(con)) {
+        data <- lapply(names(x$files), function(fname) {
+            f <- x$files[[fname]]
+            if (!is.null(fdir) && !grepl("^https?://", f) && !grepl("/", f))
+                f <- file.path(fdir, f)
+            d <- smart_read(f, ...)
+            if (!is.null(x$dictionary))
+                d <- apply_dictionary(d, x$dictionary)
+            for (c in names(d)) attr(d[[c]], "table") <- fname
+            d
+        })
+        names(data) <- names(x$files)
+        dat <- link_data(data, schema = x$schema)
+
+        dat <- structure(
+            dat,
+            db = list(
+                connection = NA_character_,
+                schema = NULL,
+                type = NA_character_,
+                var_attrs = list()
+            ),
+            class = c("inzdf_tbl_df", "inzdf", class(dat)),
+            name = name,
+            dictionary = x$dictionary
+        )
+        return(dat)
     }
 
     var_attrs <- lapply(names(x$files),
@@ -57,6 +93,30 @@ load_linked <- function(x, schema, con, name = deparse(substitute(con)), keep_co
         dictionary = x$dictionary,
         keep_con = keep_con
     )
+}
+
+link_data <- function(x, table, schema) {
+    if (missing(table)) table <- names(schema)[1]
+
+    links <- schema[[table]]$links_to
+    d <- x[[table]]
+
+    # convert linking cols to character
+    link_cols <- do.call(c,
+        lapply(links, function(l) if (is.null(names(l))) l else names(l))
+    )
+    for (c in as.character(link_cols))
+        if (is.factor(d[[c]])) d[[c]] <- as.character(d[[c]])
+
+    for (link in names(links)) {
+        ld <- link_data(x, link, schema)
+        for (c in as.character(links[[link]]))
+            if (is.factor(ld[[c]])) ld[[c]] <- as.character(ld[[c]])
+
+        d <- link_table(d, ld, links[[link]])
+    }
+
+    d
 }
 
 table_spec <- function(x) {

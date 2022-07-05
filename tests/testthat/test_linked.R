@@ -70,6 +70,15 @@ test_that("Linked data loading", {
     expect_s3_class(dl, "inzdf_db")
 })
 
+test_that("Non-db linking", {
+    dl <- load_linked(
+        c(iris_species = t1, iris_data = t2, iris_extra = t3),
+        schema = iris_schema,
+        name = "iris"
+    )
+    expect_s3_class(dl, "inzdf_tbl")
+})
+
 test_that("Link spec file", {
     con <- DBI::dbConnect(RSQLite::SQLite(), t0)
     on.exit({

@@ -33,21 +33,35 @@ load_linked <- function(x, schema, con,
 
     if (!is.null(x$dictionary)) {
         dict_path <- x$dictionary$file
-        if (!is.null(fdir) && !grepl("^https?://", dict_path) && !grepl("/", dict_path))
-            x$dictionary$file <- file.path(fdir, dict_path)
+        if (!is.null(fdir) && !grepl("^https?://", dict_path)) {
+            if (!file.exists(dict_path))
+                dict_path <- file.path(fdir, dict_path)
+            if (!file.exists(dict_path))
+                stop('cannot find', dict_path)
+        }
+        dict_path <- normalizePath(dict_path)
+        x$dictionary$file <- dict_path
         dict <- do.call(read_dictionary, x$dictionary)
         x$dictionary <- dict
     }
 
     if (missing(con)) {
-        data <- lapply(names(x$files), function(fname) {
-            f <- x$files[[fname]]
-            if (!is.null(fdir) && !grepl("^https?://", f) && !grepl("/", f))
-                f <- file.path(fdir, f)
+        pb <- txtProgressBar(0, length(x$files), style = 3)
+        data <- lapply(seq_along(x$files), function(i) {
+            fname <- names(x$files)[i]
+            f <- x$files[[i]]
+            if (!is.null(fdir) && !grepl("^https?://", f)) {
+                if (!file.exists(f))
+                    f <- file.path(fdir, f)
+                if (!file.exists(f))
+                    stop('cannot find', f)
+            }
+            f <- normalizePath(f)
             d <- smart_read(f, ...)
             if (!is.null(x$dictionary))
                 d <- apply_dictionary(d, x$dictionary)
             for (c in names(d)) attr(d[[c]], "table") <- fname
+            setTxtProgressBar(pb, i)
             d
         })
         names(data) <- names(x$files)

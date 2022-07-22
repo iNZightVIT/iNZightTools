@@ -5,6 +5,7 @@
 #' @param con a database connection to load the linked data into
 #' @param name the name of the data set collection
 #' @param keep_con if `TRUE` data will remain in DB (use for very large data)
+#' @param progress either `TRUE` or `FALSE` to enable/disable the default progress bar, or a list of three functions to `x <- create(from, to)`, `set(x, i)`, and `destroy(x)` a progress bar.
 #' @param ... additional arguments passed to data reading function `smart_read()`
 #'
 #' @return an `inzdf` object
@@ -16,6 +17,7 @@ load_linked <- function(x, schema, con,
                             deparse(substitute(con))
                         ),
                         keep_con = FALSE,
+                        progress = FALSE,
                         ...
                         ) {
 
@@ -46,7 +48,19 @@ load_linked <- function(x, schema, con,
     }
 
     if (missing(con)) {
-        pb <- txtProgressBar(0, length(x$files), style = 3)
+        if (is.logical(progress)) {
+            if (progress) {
+                progress <- list(
+                    create = function(from, to) txtProgressBar(from, to, style = 3L),
+                    set = function(x, i) setTxtProgressBar(x, i),
+                    destroy = function(x) close(x)
+                )
+            } else {
+                progress <- NULL
+            }
+        }
+
+        if (!is.null(progress)) try(pb <- progress$create(0, length(x$files)), silent = TRUE)
         data <- lapply(seq_along(x$files), function(i) {
             fname <- names(x$files)[i]
             f <- x$files[[i]]
@@ -61,9 +75,10 @@ load_linked <- function(x, schema, con,
             if (!is.null(x$dictionary))
                 d <- apply_dictionary(d, x$dictionary)
             for (c in names(d)) attr(d[[c]], "table") <- fname
-            setTxtProgressBar(pb, i)
+            if (!is.null(progress)) progress$set(pb, i)
             d
         })
+
         names(data) <- names(x$files)
         dat <- link_data(data, schema = x$schema)
 
@@ -79,6 +94,9 @@ load_linked <- function(x, schema, con,
             name = name,
             dictionary = x$dictionary
         )
+
+        if (!is.null(progress)) progress$destroy(pb)
+
         return(dat)
     }
 

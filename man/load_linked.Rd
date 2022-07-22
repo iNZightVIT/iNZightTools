@@ -10,6 +10,7 @@ load_linked(
   con,
   name = ifelse(missing(con), deparse(substitute(x)), deparse(substitute(con))),
   keep_con = FALSE,
+  progress = FALSE,
   ...
 )
 }
@@ -23,6 +24,8 @@ load_linked(
 \item{name}{the name of the data set collection}
 
 \item{keep_con}{if \code{TRUE} data will remain in DB (use for very large data)}
+
+\item{progress}{either \code{TRUE} or \code{FALSE} to enable/disable the default progress bar, or a list of three functions to \code{x <- create(from, to)}, \code{set(x, i)}, and \code{destroy(x)} a progress bar.}
 
 \item{...}{additional arguments passed to data reading function \code{smart_read()}}
 }

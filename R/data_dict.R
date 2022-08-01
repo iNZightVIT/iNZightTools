@@ -130,6 +130,7 @@ as_tibble.dictionary <- function(x, n = length(x),
             y$other <- NULL
             y <- c(y, other)
         }
+        y
     })
     vars <- unique(do.call(c, lapply(x, names)))
     x <- lapply(x, function(z) {

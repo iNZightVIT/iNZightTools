@@ -35,7 +35,7 @@
 #' @return
 #' A dataframe with some additional attributes:
 #' * `name` is the name of the file
-#' * `code` contains the \link[tidyverse]{tidyverse} code used to read the data
+#' * `code` contains the 'tidyverse' code used to read the data
 #' * `sheets` contains names of sheets if 'file' is an Excel file (can be retrieved using the `sheets()` helper function)
 #' @author Tom Elliott
 #' @md

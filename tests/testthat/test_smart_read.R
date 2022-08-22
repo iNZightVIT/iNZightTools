@@ -22,6 +22,8 @@ test_that("smart_read gets correct column types and dims", {
 })
 
 test_that("smart_read can handle various encoding", {
+    skip_on_ci()
+    skip_on_cran()
     data <- smart_read("enc-latin.csv", encoding = "ISO-8859-1")
     expect_identical(as.character(data$summer[2]), "\u00e9t\u00e9")
 

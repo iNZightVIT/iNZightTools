@@ -69,7 +69,7 @@ validation_details <-  function(cf, v, var, id.var, df) {
             details.table <- "No observations failed this rule."
         }
     } else {
-        if (class(validate::values(cf)) == "list") {
+        if (inherits(validate::values(cf), "list")) {
             rule.names <- lapply(validate::values(cf), colnames)
 
             which.list <- Position(function(x) var %in% x, rule.names)

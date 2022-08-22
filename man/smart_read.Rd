@@ -28,7 +28,7 @@ the data will be returned}
 A dataframe with some additional attributes:
 \itemize{
 \item \code{name} is the name of the file
-\item \code{code} contains the \link[tidyverse]{tidyverse} code used to read the data
+\item \code{code} contains the 'tidyverse' code used to read the data
 \item \code{sheets} contains names of sheets if 'file' is an Excel file (can be retrieved using the \code{sheets()} helper function)
 }
 }
@@ -52,6 +52,17 @@ Currently, \code{smart_read()} understands the following file types:
 \item JSON (.json)
 }
 }
+\section{Reading delimited files}{
+
+
+By default, \code{smart_read()} will detect the delimiter used in the file
+if the argument \code{delimiter = NULL} is passed in (the default).
+If this does not work, you can override this argument:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{smart_read('path/to/file', delimiter = '+')
+}\if{html}{\out{</div>}}
+}
+
 \author{
 Tom Elliott
 }

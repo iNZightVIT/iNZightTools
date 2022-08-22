@@ -16,6 +16,16 @@
 #' * R data (.rds)
 #' * JSON (.json)
 #'
+#' @section
+#' Reading delimited files:
+#'
+#' By default, `smart_read()` will detect the delimiter used in the file
+#' if the argument `delimiter = NULL` is passed in (the default).
+#' If this does not work, you can override this argument:
+#' ```
+#' smart_read('path/to/file', delimiter = '+')
+#' ```
+#'
 #' @param file the file path to read
 #' @param ext file extension, namely "csv" or "txt"
 #' @param preview logical, if \code{TRUE} only the first few rows of
@@ -25,7 +35,7 @@
 #' @return
 #' A dataframe with some additional attributes:
 #' * `name` is the name of the file
-#' * `code` contains the \link[tidyverse]{tidyverse} code used to read the data
+#' * `code` contains the 'tidyverse' code used to read the data
 #' * `sheets` contains names of sheets if 'file' is an Excel file (can be retrieved using the `sheets()` helper function)
 #' @author Tom Elliott
 #' @md
@@ -81,7 +91,7 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
 }
 
 guess_type <- function(ext) {
-    switch(ext,
+    switch(tolower(ext),
         "xls" = "excel",
         "xlsx" = "excel",
         "sav" = "spss",
@@ -106,7 +116,7 @@ read_dlm <- function(file,
                      preview = FALSE,
                      column_types = NULL,
                      encoding,
-                     delimiter,
+                     delimiter = "auto",
                      decimal_mark,
                      grouping_mark,
                      convert.to.factor = TRUE,
@@ -120,10 +130,7 @@ read_dlm <- function(file,
     if (preview)
         named.args <- c(list(n_max = 100), named.args)
 
-    if (missing(delimiter))
-        delimiter <- ifelse(ext == "csv", ",", " ")
-
-    if (ext != "csv" || delimiter != ",")
+    if (delimiter != "auto")
         named.args <- c(list(delim = delimiter), named.args)
     else if (ext == "txt")
         named.args <- c(list(delim = " "), named.args)
@@ -180,9 +187,10 @@ read_dlm <- function(file,
 
     exp <- ~FUN(ARGS)
     exp <- replaceVars(exp,
-        FUN = sprintf("readr::read_%s",
-            ifelse(ext == "csv" && delimiter == ",", "csv", "delim")
-        ),
+        FUN = "readr::read_delim",
+        # FUN = sprintf("readr::read_%s",
+        #     ifelse(ext == "csv" && delimiter == ",", "csv", "delim")
+        # ),
         ARGS = args,
         COLTYPES = ctypes
     )
@@ -539,6 +547,6 @@ url_to_temp <- function(url) {
     name <- create_varname(name)
     dir <- tempdir()
     file <- file.path(dir, name)
-    utils::download.file(url, file, quiet = TRUE)
+    utils::download.file(url, file, quiet = TRUE, mode = "wb")
     file
 }

@@ -102,19 +102,19 @@ filter, renaming variables, etc.
 ``` r
 filterNumeric(data, "height", "<", 150)
 #> # A tibble: 127 × 10
-#>    cellsource rightfoot travel getlunch height gender   age  year armspan
-#>    <fct>          <dbl> <fct>  <fct>     <dbl> <fct>  <dbl> <dbl>   <dbl>
-#>  1 parent            21 motor  home        137 male      10     6     132
-#>  2 pocket            20 walk   home        115 male       9     5     130
-#>  3 parent            19 motor  home        137 female    11     7      50
-#>  4 other             30 walk   tuckshop    123 male      14     9      23
-#>  5 parent            11 bike   home        129 male      10     5     165
-#>  6 other             23 motor  home        145 male      10     6     144
-#>  7 parent            19 motor  home        146 female     9     4     140
-#>  8 pocket            22 bus    home        146 female    12     8     136
-#>  9 job               19 motor  home        130 female     9     6     130
-#> 10 parent            21 motor  home        135 female    11     6     137
-#> # … with 117 more rows, and 1 more variable: cellcost <dbl>
+#>    cellsource rightfoot travel getlu…¹ height gender   age  year armspan cellc…²
+#>    <fct>          <dbl> <fct>  <fct>    <dbl> <fct>  <dbl> <dbl>   <dbl>   <dbl>
+#>  1 parent            21 motor  home       137 male      10     6     132      55
+#>  2 pocket            20 walk   home       115 male       9     5     130      60
+#>  3 parent            19 motor  home       137 female    11     7      50      50
+#>  4 other             30 walk   tucksh…    123 male      14     9      23       0
+#>  5 parent            11 bike   home       129 male      10     5     165       0
+#>  6 other             23 motor  home       145 male      10     6     144      25
+#>  7 parent            19 motor  home       146 female     9     4     140      25
+#>  8 pocket            22 bus    home       146 female    12     8     136      10
+#>  9 job               19 motor  home       130 female     9     6     130      45
+#> 10 parent            21 motor  home       135 female    11     6     137      20
+#> # … with 117 more rows, and abbreviated variable names ¹​getlunch, ²​cellcost
 ```
 
 1.  with others being modified in time

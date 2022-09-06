@@ -213,7 +213,7 @@ apply_dictionary <- function(data, dict) {
 
     # apply labels
     lbls <- lapply(dict, function(x) x$title)
-    names(lbls) <- names(dict)
+    names(lbls) <- tolower(names(dict))
     lbls <- lbls[names(lbls) %in% names(data)]
 
     data <- do.call(expss::apply_labels, c(list(data), lbls))

@@ -74,7 +74,7 @@ read_dictionary <- function(file,
 
     dict_list <- lapply(seq_along(dict$name),
         function(x) dict_row(dict[x, ], sep = level_separator))
-    names(dict_list) <- dict$name
+    names(dict_list) <- tolower(dict$name)
     structure(dict_list, class = "dictionary")
 }
 

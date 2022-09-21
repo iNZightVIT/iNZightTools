@@ -31,7 +31,6 @@ combineCatVars <- function(.data, vars, sep = ".",
         warning("only one separator allowed")
         sep <- sep[1]
     }
-    sep <- substr(sep, 1, 1)
     valid_sep <- grepl("[.]|_|[a-zA-Z0-9]", sep)
     if (!valid_sep) {
         warning(paste(

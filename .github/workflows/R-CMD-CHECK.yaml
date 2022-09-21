@@ -14,8 +14,9 @@ jobs:
         config:
           - { os: windows-latest, r: "4.0" }
           - { os: windows-latest, r: "release" }
+          - { os: windows-latest, r: "devel" }
           - { os: macOS-latest, r: "release" }
-          - { os: macOS-latest, r: "devel" }
+          # - {os: macOS-latest, r: 'devel'}
           - {
               os: ubuntu-20.04,
               r: "release",
@@ -65,8 +66,10 @@ jobs:
 
       - name: Install dependencies
         run: |
+          if (.Platform$OS.type == "windows" && getRversion() < numeric_version('4.1')) {
+            install.packages('RCurl', type = 'binary')
+          }
           remotes::install_deps(dependencies = TRUE)
-          remotes::install_github("tmelliott/surveyspec")
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_data.R
 \name{smart_read}
 \alias{smart_read}
-\title{iNZight Smart Read}
+\title{Read a data file}
 \usage{
 smart_read(
   file,
@@ -20,28 +20,49 @@ smart_read(
 \item{preview}{logical, if \code{TRUE} only the first few rows of
 the data will be returned}
 
-\item{column_types}{vector of column types (see \code{?readr::read_csv})}
+\item{column_types}{vector of column types (see ?readr::read_csv)}
 
 \item{...}{additional parameters passed to read_* functions}
 }
 \value{
-a dataframe with attributes
+A dataframe with some additional attributes:
+\itemize{
+\item \code{name} is the name of the file
+\item \code{code} contains the 'tidyverse' code used to read the data
+\item \code{sheets} contains names of sheets if 'file' is an Excel file (can be retrieved using the \code{sheets()} helper function)
+}
 }
 \description{
-A simple function that magically imports a file, irrespective of type.
+A simple function that imports a file without the users needing to
+specify information about the file type (see Details for more).
+The \code{smart_read()} function uses the file's extension to determine
+the appropriate function to read the data.
+Additionally, characters are converted to factors by default,
+mostly for compatibility with iNZight (https://inzight.nz).
 }
 \details{
-The smart read function understands the following:
+Currently, \code{smart_read()} understands the following file types:
 \itemize{
 \item delimited (.csv, .txt)
-\item excel files (.xls, .xlsx)
-\item spss files (.sav)
-\item stata files (.dta)
-\item SAS files (.sas7bdat, .xpt)
-\item R data files (.rds)
-\item JSON files (.json)
+\item Excel (.xls, .xlsx)
+\item SPSS (.sav)
+\item Stata (.dta)
+\item SAS (.sas7bdat, .xpt)
+\item R data (.rds)
+\item JSON (.json)
 }
 }
+\section{Reading delimited files}{
+
+
+By default, \code{smart_read()} will detect the delimiter used in the file
+if the argument \code{delimiter = NULL} is passed in (the default).
+If this does not work, you can override this argument:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{smart_read('path/to/file', delimiter = '+')
+}\if{html}{\out{</div>}}
+}
+
 \author{
 Tom Elliott
 }

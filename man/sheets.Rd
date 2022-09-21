@@ -2,18 +2,24 @@
 % Please edit documentation in R/import_data.R
 \name{sheets}
 \alias{sheets}
-\title{List of available sheets from a file}
+\title{List available sheets within a file}
 \usage{
 sheets(x)
 }
 \arguments{
-\item{x}{a dataframe from \code{smart_read}}
+\item{x}{a dataframe, presumably returned by \code{smart_read}}
 }
 \value{
-vector of sheet names, or NULL
+vector of sheet names, or NULL if the file was not an Excel workbook
 }
 \description{
-List of available sheets from a file
+Useful when reading an Excel file to quickly check what
+other sheets are available.
+}
+\examples{
+cas_file <- system.file('extdata/cas500.xls', package = 'iNZightTools')
+cas <- smart_read(cas_file)
+sheets(cas)
 }
 \author{
 Tom Elliott

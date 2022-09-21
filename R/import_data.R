@@ -1,22 +1,42 @@
-#' A simple function that magically imports a file, irrespective of type.
+#' Read a data file
 #'
-#' The smart read function understands the following:
+#' A simple function that imports a file without the users needing to
+#' specify information about the file type (see Details for more).
+#' The `smart_read()` function uses the file's extension to determine
+#' the appropriate function to read the data.
+#' Additionally, characters are converted to factors by default,
+#' mostly for compatibility with iNZight (https://inzight.nz).
+#'
+#' Currently, `smart_read()` understands the following file types:
 #' * delimited (.csv, .txt)
-#' * excel files (.xls, .xlsx)
-#' * spss files (.sav)
-#' * stata files (.dta)
-#' * SAS files (.sas7bdat, .xpt)
-#' * R data files (.rds)
-#' * JSON files (.json)
+#' * Excel (.xls, .xlsx)
+#' * SPSS (.sav)
+#' * Stata (.dta)
+#' * SAS (.sas7bdat, .xpt)
+#' * R data (.rds)
+#' * JSON (.json)
 #'
-#' @title iNZight Smart Read
+#' @section
+#' Reading delimited files:
+#'
+#' By default, `smart_read()` will detect the delimiter used in the file
+#' if the argument `delimiter = NULL` is passed in (the default).
+#' If this does not work, you can override this argument:
+#' ```
+#' smart_read('path/to/file', delimiter = '+')
+#' ```
+#'
 #' @param file the file path to read
 #' @param ext file extension, namely "csv" or "txt"
 #' @param preview logical, if \code{TRUE} only the first few rows of
 #'   the data will be returned
-#' @param column_types vector of column types (see \code{?readr::read_csv})
+#' @param column_types vector of column types (see ?readr::read_csv)
 #' @param ... additional parameters passed to read_* functions
-#' @return a dataframe with attributes
+#' @return
+#' A dataframe with some additional attributes:
+#' * `name` is the name of the file
+#' * `code` contains the 'tidyverse' code used to read the data
+#' * `sheets` contains names of sheets if 'file' is an Excel file (can be retrieved using the `sheets()` helper function)
 #' @author Tom Elliott
 #' @md
 #' @export
@@ -71,7 +91,7 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
 }
 
 guess_type <- function(ext) {
-    switch(ext,
+    switch(tolower(ext),
         "xls" = "excel",
         "xlsx" = "excel",
         "sav" = "spss",
@@ -96,7 +116,7 @@ read_dlm <- function(file,
                      preview = FALSE,
                      column_types = NULL,
                      encoding,
-                     delimiter,
+                     delimiter = "auto",
                      decimal_mark,
                      grouping_mark,
                      convert.to.factor = TRUE,
@@ -110,10 +130,7 @@ read_dlm <- function(file,
     if (preview)
         named.args <- c(list(n_max = 100), named.args)
 
-    if (missing(delimiter))
-        delimiter <- ifelse(ext == "csv", ",", " ")
-
-    if (ext != "csv" || delimiter != ",")
+    if (delimiter != "auto")
         named.args <- c(list(delim = delimiter), named.args)
     else if (ext == "txt")
         named.args <- c(list(delim = " "), named.args)
@@ -170,9 +187,10 @@ read_dlm <- function(file,
 
     exp <- ~FUN(ARGS)
     exp <- replaceVars(exp,
-        FUN = sprintf("readr::read_%s",
-            ifelse(ext == "csv" && delimiter == ",", "csv", "delim")
-        ),
+        FUN = "readr::read_delim",
+        # FUN = sprintf("readr::read_%s",
+        #     ifelse(ext == "csv" && delimiter == ",", "csv", "delim")
+        # ),
         ARGS = args,
         COLTYPES = ctypes
     )
@@ -230,17 +248,23 @@ read_excel <- function(file,
     exp <- replaceVars(exp, ARGS = args)
 
     res <- interpolate(exp, file = file, sheetname = sheet)
-    if (preview)
-        attr(res, "available.sheets") <- readxl::excel_sheets(file)
+    attr(res, "available.sheets") <- readxl::excel_sheets(file)
     res
 }
 
-#' List of available sheets from a file
+#' List available sheets within a file
 #'
-#' @param x a dataframe from \code{smart_read}
-#' @return vector of sheet names, or NULL
+#' Useful when reading an Excel file to quickly check what
+#' other sheets are available.
+#'
+#' @param x a dataframe, presumably returned by \code{smart_read}
+#' @return vector of sheet names, or NULL if the file was not an Excel workbook
 #' @author Tom Elliott
 #' @export
+#' @examples
+#' cas_file <- system.file('extdata/cas500.xls', package = 'iNZightTools')
+#' cas <- smart_read(cas_file)
+#' sheets(cas)
 sheets <- function(x) {
     attr(x, "available.sheets")
 }
@@ -515,17 +539,14 @@ save_rda <- function(data, file, name) {
     structure(TRUE, code = exp)
 }
 
-#' Download URL to temp file
-#'
-#' @param url where the file lives on the internet
-#' @return the location of a (temporary) file location
-#' @author Tom Elliott
+# Downloads file at `url` to a temporary file, returning the path
+# of the temporary file.
 url_to_temp <- function(url) {
     name <- basename(url)
     name <- gsub("%20", "_", name)
     name <- create_varname(name)
     dir <- tempdir()
     file <- file.path(dir, name)
-    utils::download.file(url, file, quiet = TRUE)
+    utils::download.file(url, file, quiet = TRUE, mode = "wb")
     file
 }

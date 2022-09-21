@@ -1,10 +1,12 @@
 require(survey)
 data(api)
 
+skip_if_not_installed("surveyspec")
+
 test_that("Survey design file parsed correctly", {
     svyfile <- tempfile("apistrat", fileext = ".svydesign")
     svytoml <-
-'strata = "stype"
+        'strata = "stype"
 weights = "pw"
 fpc = "fpc"
 '
@@ -19,7 +21,10 @@ fpc = "fpc"
     expect_s3_class(s2$design, "survey.design")
 
     expect_equal(
-        {data <- apistrat; surveyspec::make_survey(data, s)},
+        {
+            data <- apistrat
+            surveyspec::make_survey(data, s)
+        },
         s2,
         ignore_formula_env = TRUE
     )
@@ -31,7 +36,7 @@ fpc = "fpc"
 test_that("Survey design file parsed correctly", {
     svyfile <- tempfile("apiclus2", fileext = ".svydesign")
     svytoml <-
-'ids = "dnum + snum"
+        'ids = "dnum + snum"
 weights = "pw"
 fpc = "fpc1 + fpc2"
 '
@@ -46,7 +51,10 @@ fpc = "fpc1 + fpc2"
     expect_s3_class(s2$design, "survey.design")
 
     expect_equal(
-        {data <- apiclus2; surveyspec::make_survey(data, s)},
+        {
+            data <- apiclus2
+            surveyspec::make_survey(data, s)
+        },
         s2,
         ignore_formula_env = TRUE
     )
@@ -56,7 +64,7 @@ fpc = "fpc1 + fpc2"
 
     svyfile <- tempfile("apiclus2", fileext = ".svydesign")
     svytoml <-
-'clusters = "dnum + snum"
+        'clusters = "dnum + snum"
 weights = "pw"
 fpc = "fpc1 + fpc2"
 '
@@ -77,9 +85,9 @@ test_that("Replicate weight designs", {
 
     svyfile <- tempfile("chis", fileext = ".svydesign")
     svytoml <-
-'repweights = "rakedw[1-9]"
+        'repweights = "rakedw[1-9]"
 weights = "rakedw0"
-reptype = "other"
+type = "other"
 scale = 1
 rscales = 1
 '
@@ -88,9 +96,9 @@ rscales = 1
     dchis <- svrepdesign(
         weights = ~rakedw0,
         repweights = "rakedw[1-9]",
+        type = "other",
         scale = 1,
         rscales = 1,
-        type = "other",
         data = data
     )
 
@@ -117,7 +125,7 @@ test_that("Replicate design has same defaults as survey::svrepdesign()", {
 
     svyfile <- tempfile("chis", fileext = ".svydesign")
     svytoml <-
-'repweights = "rakedw[1-9]"
+        'repweights = "rakedw[1-9]"
 weights = "rakedw0"
 '
     writeLines(svytoml, svyfile)
@@ -164,7 +172,7 @@ M = 1018
 })
 
 test_that("Survey designs can be parsed as survey spec", {
-    dclus2 <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
+    dclus2 <- svydesign(~ dnum + snum, weights = ~pw, fpc = ~ fpc1 + fpc2, data = apiclus2)
     dsvy <- surveyspec::as_survey_spec(dclus2)
     expect_s3_class(dsvy, "inzsvyspec")
     expect_equal(dsvy$design, dclus2)
@@ -177,13 +185,17 @@ test_that("Survey designs can be parsed as survey spec", {
             strata = NULL,
             fpc = "fpc1 + fpc2",
             nest = NULL,
-            weights = "pw"
+            weights = "pw",
+            type = "survey"
         )
     )
 })
 
 test_that("Survey spec can be converted to survey design", {
-    dclus2 <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
+    dclus2 <- svydesign(~ dnum + snum, weights = ~pw, fpc = ~ fpc1 + fpc2, data = apiclus2)
     dsvy <- surveyspec::as_survey_spec(dclus2)
-    expect_equal(surveyspec::as_survey(dsvy), dclus2)
+    expect_equal(
+        surveyspec::as_survey(dsvy),
+        surveyspec::as_survey(dclus2)
+    )
 })

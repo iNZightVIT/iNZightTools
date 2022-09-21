@@ -12,7 +12,6 @@ Imports:
     haven,
     magrittr,
     methods,
-    RcppTOML,
     readr (>= 1.2.0),
     readxl,
     srvyr,
@@ -20,7 +19,6 @@ Imports:
     stringr,
     styler,
     survey,
-    surveyspec,
     tibble,
     tidyr,
     tools,
@@ -32,6 +30,7 @@ Suggests:
     covr,
     jsonlite,
     RCurl,
+    surveyspec,
     testthat (>= 3.0.0)
 Authors@R: c(
     person("Tom", "Elliott", role = c("aut", "cre"), email = "tom.elliott@auckland.ac.nz", comment = c(ORCID = "0000-0002-7815-6318")),

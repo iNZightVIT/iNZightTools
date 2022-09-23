@@ -2,6 +2,7 @@ require(survey)
 data(api)
 
 skip_if_not_installed("surveyspec")
+require(surveyspec)
 
 test_that("Survey design file parsed correctly", {
     svyfile <- tempfile("apistrat", fileext = ".svydesign")

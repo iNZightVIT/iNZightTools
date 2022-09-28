@@ -1,3 +1,5 @@
+- relocate survey specification reading files to new package [`surveyspec`](github.com/tmelliott/surveyspec)
+
 # iNZightTools 1.12.3
 
 - allow 'readr' to use automatic delimiter guessing (csv files) instead of forcing `,` (#187)

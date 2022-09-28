@@ -20,8 +20,11 @@ inzdf <- function(x, name, ...) {
 
 inzdf.tbl_df <- function(x, name, ...) {
     if (missing(name)) {
-        if (is.null(attr(x, "name", exact = TRUE))) name <- deparse(substitute(x))
-        else name <- attr(x, "name", exact = TRUE)
+        if (is.null(attr(x, "name", exact = TRUE))) {
+            name <- deparse(substitute(x))
+        } else {
+            name <- attr(x, "name", exact = TRUE)
+        }
     }
     structure(
         tibble::as_tibble(x),
@@ -70,7 +73,9 @@ inzdf.SQLiteConnection <- function(x,
         row.names = NA_integer_,
         dictionary = dictionary
     )
-    if (keep_con) return(x)
+    if (keep_con) {
+        return(x)
+    }
 
     x <- as_tibble(x)
     structure(
@@ -89,12 +94,16 @@ inzdf.SQLiteConnection <- function(x,
 
 con <- function(x) {
     db <- attr(x, "db", exact = TRUE)
-    if (is.null(db)) return(NULL)
+    if (is.null(db)) {
+        return(NULL)
+    }
     db$connection
 }
 schema <- function(x) {
     db <- attr(x, "db", exact = TRUE)
-    if (!is.null(db)) return(db$schema)
+    if (!is.null(db)) {
+        return(db$schema)
+    }
     NULL
 }
 
@@ -139,7 +148,7 @@ print.inzdf_db <- function(x, ...) {
     }
 
     if (!missing(i) && !missing(j)) {
-        warning('row subsetting not supported')
+        warning("row subsetting not supported")
     }
 
     d <- eval(e)
@@ -154,7 +163,9 @@ print.inzdf_db <- function(x, ...) {
 `[[.inzdf_db` <- function(x, i, exact = TRUE, stringsAsFactors = TRUE) {
     if (is.numeric(i)) {
         vari <- names(x)[i]
-    } else vari <- i
+    } else {
+        vari <- i
+    }
 
     z <- get_tbl(x, vars = vari)
 
@@ -165,9 +176,13 @@ print.inzdf_db <- function(x, ...) {
 }
 
 get_tbl <- function(x, table = NULL, include_links = TRUE, vars) {
-    if (is.null(table))
-        table <- if (is.null(schema(x))) DBI::dbListTables(con(x))[1]
-            else names(schema(x))[1]
+    if (is.null(table)) {
+        table <- if (is.null(schema(x))) {
+            DBI::dbListTables(con(x))[1]
+        } else {
+            names(schema(x))[1]
+        }
+    }
 
     if (!include_links ||
         is.null(schema(x)) ||
@@ -193,7 +208,8 @@ get_tbl <- function(x, table = NULL, include_links = TRUE, vars) {
     }
 
     for (link in names(links)) {
-        d <- link_table(d,
+        d <- link_table(
+            d,
             get_tbl(x, link, include_links = TRUE, vars = vars),
             links[[link]]
         )
@@ -205,8 +221,9 @@ get_tbl <- function(x, table = NULL, include_links = TRUE, vars) {
 link_table <- function(data, table, schema, join = "left") {
     join_fun <- eval(parse(text = sprintf("dplyr::%s_join", join)))
 
-    if (is.null(schema))
+    if (is.null(schema)) {
         return(join_fun(data, table, copy = TRUE))
+    }
 
     join_fun(data, table, by = schema, copy = TRUE)
 }
@@ -222,7 +239,7 @@ NULL
 #' @export
 select.inzdf_db <- function(.data, ..., table = NULL) {
     x <- get_tbl(.data, table) %>%
-            dplyr::select(...)
+        dplyr::select(...)
     structure(
         x,
         class = c("inzdf_lazydb", class(x)),
@@ -275,12 +292,15 @@ as_tibble.inzdf_lazydb <- function(x, ...) {
 
 set_attributes <- function(x, from, var = names(x)) {
     db <- attr(from, "db")
-    if (is.null(db) || is.null(db$var_attrs) || length(db$var_attrs) == 0) return(x)
+    if (is.null(db) || is.null(db$var_attrs) || length(db$var_attrs) == 0) {
+        return(x)
+    }
 
     attrs <- db$var_attrs
     if (is.data.frame(x)) {
-        for (v in names(x))
+        for (v in names(x)) {
             x[[v]] <- set_var_attributes(x[[v]], v, attrs)
+        }
     } else {
         x <- set_var_attributes(x, var, attrs)
     }
@@ -295,7 +315,9 @@ set_var_attributes <- function(x, var, attrs) {
     # find a column with the same name
     var <- as.character(var)
     vi <- sapply(tbl_names, function(n) var %in% n)
-    if (!any(vi)) return(x)
+    if (!any(vi)) {
+        return(x)
+    }
 
     mi <- as.integer(which(vi)[1])
     xa <- attrs[[mi]][[var]]
@@ -320,7 +342,9 @@ names.inzdf_db <- function(x) {
 #' @importFrom utils head
 #' @export
 head.inzdf_db <- function(x, ...) {
-    head(get_tbl(x), ...) %>% dplyr::collect() %>% set_attributes(x)
+    head(get_tbl(x), ...) %>%
+        dplyr::collect() %>%
+        set_attributes(x)
 }
 
 #' @export
@@ -329,4 +353,11 @@ dim.inzdf_db <- function(x) {
         dplyr::collect(dplyr::count(get_tbl(x)))$n,
         length(names(x))
     )
+}
+
+# prevent CRAN from complaining about not importing
+# from dbplyr (it is required by dplyr)
+dummy_function_to_use_dbplyr <- function() {
+    dbplyr::as.sql
+    invisible()
 }

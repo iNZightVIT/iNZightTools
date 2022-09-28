@@ -18,9 +18,7 @@ load_linked <- function(x, schema, con,
                         ),
                         keep_con = FALSE,
                         progress = FALSE,
-                        ...
-                        ) {
-
+                        ...) {
     fdir <- NULL
     if (!inherits(x, "inzlnk_spec")) {
         if (length(x) == 1L && tools::file_ext(x) == "inzlnk") {
@@ -36,10 +34,12 @@ load_linked <- function(x, schema, con,
     if (!is.null(x$dictionary)) {
         dict_path <- x$dictionary$file
         if (!is.null(fdir) && !grepl("^https?://", dict_path)) {
-            if (!file.exists(dict_path))
+            if (!file.exists(dict_path)) {
                 dict_path <- file.path(fdir, dict_path)
-            if (!file.exists(dict_path))
-                stop('cannot find', dict_path)
+            }
+            if (!file.exists(dict_path)) {
+                stop("cannot find", dict_path)
+            }
         }
         dict_path <- normalizePath(dict_path)
         x$dictionary$file <- dict_path
@@ -51,8 +51,8 @@ load_linked <- function(x, schema, con,
         if (is.logical(progress)) {
             if (progress) {
                 progress <- list(
-                    create = function(from, to) txtProgressBar(from, to, style = 3L),
-                    set = function(x, i) setTxtProgressBar(x, i),
+                    create = function(from, to) utils::txtProgressBar(from, to, style = 3L),
+                    set = function(x, i) utils::setTxtProgressBar(x, i),
                     destroy = function(x) close(x)
                 )
             } else {
@@ -65,15 +65,18 @@ load_linked <- function(x, schema, con,
             fname <- names(x$files)[i]
             f <- x$files[[i]]
             if (!is.null(fdir) && !grepl("^https?://", f)) {
-                if (!file.exists(f))
+                if (!file.exists(f)) {
                     f <- file.path(fdir, f)
-                if (!file.exists(f))
-                    stop('cannot find', f)
+                }
+                if (!file.exists(f)) {
+                    stop("cannot find", f)
+                }
             }
             f <- normalizePath(f)
             d <- smart_read(f, ...)
-            if (!is.null(x$dictionary))
+            if (!is.null(x$dictionary)) {
                 d <- apply_dictionary(d, x$dictionary)
+            }
             for (c in names(d)) attr(d[[c]], "table") <- fname
             if (!is.null(progress)) progress$set(pb, i)
             d
@@ -100,17 +103,20 @@ load_linked <- function(x, schema, con,
         return(dat)
     }
 
-    var_attrs <- lapply(names(x$files),
+    var_attrs <- lapply(
+        names(x$files),
         function(f) {
             fpath <- x$files[f]
-            if (!is.null(fdir) && !grepl("^https?://", fpath) && !grepl("/", fpath))
+            if (!is.null(fdir) && !grepl("^https?://", fpath) && !grepl("/", fpath)) {
                 fpath <- file.path(fdir, fpath)
+            }
             d <- smart_read(fpath, ...)
-            if (!is.null(x$dictionary))
+            if (!is.null(x$dictionary)) {
                 d <- apply_dictionary(d, x$dictionary)
-            vf <- lapply(d, function(x)
+            }
+            vf <- lapply(d, function(x) {
                 utils::modifyList(list(class = class(x)), as.list(attributes(x)))
-            )
+            })
             on.exit(rm(d))
             DBI::dbWriteTable(con, f, d)
             vf
@@ -134,16 +140,19 @@ link_data <- function(x, table, schema) {
     d <- x[[table]]
 
     # convert linking cols to character
-    link_cols <- do.call(c,
+    link_cols <- do.call(
+        c,
         lapply(links, function(l) if (is.null(names(l))) l else names(l))
     )
-    for (c in as.character(link_cols))
+    for (c in as.character(link_cols)) {
         if (is.factor(d[[c]])) d[[c]] <- as.character(d[[c]])
+    }
 
     for (link in names(links)) {
         ld <- link_data(x, link, schema)
-        for (c in as.character(links[[link]]))
+        for (c in as.character(links[[link]])) {
             if (is.factor(ld[[c]])) ld[[c]] <- as.character(ld[[c]])
+        }
 
         d <- link_table(d, ld, links[[link]])
     }

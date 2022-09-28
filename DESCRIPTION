@@ -1,7 +1,7 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for 'iNZight'
-Version: 1.12.2.9000
+Version: 1.12.3
 Depends: R (>= 4.0)
 Imports:
     chron,
@@ -40,6 +40,7 @@ Suggests:
     knitr,
     RCurl,
     RSQLite,
+    surveyspec,
     testthat (>= 3.0.0)
 Authors@R: c(
     person("Tom", "Elliott", role = c("aut", "cre"), email = "tom.elliott@auckland.ac.nz", comment = c(ORCID = "0000-0002-7815-6318")),

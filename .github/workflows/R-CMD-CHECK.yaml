@@ -12,8 +12,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: windows-latest, r: "4.0" }
+          - { os: windows-latest, r: "oldrel" }
           - { os: windows-latest, r: "release" }
+          - { os: windows-latest, r: "devel" }
           - { os: macOS-latest, r: "release" }
           # - {os: macOS-latest, r: 'devel'}
           - {
@@ -21,11 +22,11 @@ jobs:
               r: "release",
               rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest",
             }
-          # - {
-          #     os: ubuntu-20.04,
-          #     r: "devel",
-          #     rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest",
-          #   }
+          - {
+              os: ubuntu-20.04,
+              r: "devel",
+              rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest",
+            }
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -65,8 +66,11 @@ jobs:
 
       - name: Install dependencies
         run: |
+          if (.Platform$OS.type == "windows" && getRversion() < numeric_version('4.1')) {
+            install.packages('RCurl', type = 'binary')
+          }
+          remotes::install_github("tmelliott/surveyspec@develop")
           remotes::install_deps(dependencies = TRUE)
-          remotes::install_github("gergness/srvyr")
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 

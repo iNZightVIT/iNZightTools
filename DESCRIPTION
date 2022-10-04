@@ -4,15 +4,12 @@ Title: Tools for 'iNZight'
 Version: 1.12.3
 Depends: R (>= 4.0)
 Imports:
-    chron,
     dplyr,
     DBI,
     dbplyr,
-    expss,
     forcats,
     glue,
     grDevices,
-    haven,
     magrittr,
     methods,
     purrr,
@@ -21,7 +18,6 @@ Imports:
     srvyr,
     stats,
     stringr,
-    styler,
     survey,
     tibble,
     tidyr,
@@ -31,12 +27,16 @@ Imports:
     utils,
     zoo
 Suggests:
+    chron,
     covr,
+    expss,
+    haven,
     jsonlite,
     knitr,
     RCurl,
     readxl,
     RSQLite,
+    styler,
     surveyspec,
     testthat (>= 3.0.0),
     validate,

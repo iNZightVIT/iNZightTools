@@ -1,3 +1,5 @@
+skip_if_not_installed("expss")
+
 cas <- smart_read("cas500_coded.csv")
 
 test_that("Dictionary read and parsed correctly", {

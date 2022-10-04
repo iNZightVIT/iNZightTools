@@ -220,6 +220,10 @@ print.dict_var <- function(x, ...) {
 #' @export
 #' @rdname dictionary
 apply_dictionary <- function(data, dict) {
+    if (!requireNamespace("expss", quietly = TRUE)) {
+        stop("Please install suggested packages: 'expss'")
+    }
+
     dnames <- names(data)
     names(data) <- tolower(names(data))
 
@@ -252,10 +256,11 @@ add_var_attributes.numeric <- function(x, d) {
         return(add_var_attributes(x, d))
     }
 
+    # TODO: check if this all works with 'units' in Suggests
     # add units
-    if (!requireNamespace("units", quietly = TRUE)) {
-        return(x)
-    }
+    # if (!requireNamespace("units", quietly = TRUE)) {
+    #     return(x)
+    # }
     # xunits <- try(units::ud_units[[d$units]], silent = TRUE)
     # if (inherits(xunits, "try-error")) {
     #     print(xunits)

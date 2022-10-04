@@ -297,18 +297,27 @@ sheets <- function(x) {
     attr(x, "available.sheets")
 }
 
+.check_haven <- function() {
+    if (!requireNamespace("haven", quietly = TRUE)) {
+        stop("Please install suggested package: 'haven")
+    }
+}
+
 read_spss <- function(file, ext, preview = FALSE, column_types) {
+    .check_haven()
     exp <- ~ haven::read_sav(file)
 
     interpolate(exp, file = file)
 }
 
 read_stata <- function(file, ext, preview = FALSE, column_types) {
+    .check_haven()
     exp <- ~ haven::read_dta(file)
     interpolate(exp, file = file)
 }
 
 read_sas <- function(file, ext, preview = FALSE, column_types) {
+    .check_haven()
     exp <- ~ FUN(file)
     exp <- replaceVars(exp,
         FUN = switch(ext,

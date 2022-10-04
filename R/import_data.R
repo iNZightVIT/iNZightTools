@@ -232,7 +232,6 @@ read_dlm <- function(file,
     x
 }
 
-#' @import readxl
 read_excel <- function(file,
                        ext,
                        preview = FALSE,

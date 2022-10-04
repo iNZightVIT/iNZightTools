@@ -17,7 +17,6 @@ Imports:
     methods,
     purrr,
     readr (>= 1.2.0),
-    readxl,
     rlang,
     srvyr,
     stats,
@@ -30,17 +29,18 @@ Imports:
     lubridate,
     units,
     utils,
-    validate,
-    yaml,
     zoo
 Suggests:
     covr,
     jsonlite,
     knitr,
     RCurl,
+    readxl,
     RSQLite,
     surveyspec,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    validate,
+    yaml
 Authors@R: c(
     person("Tom", "Elliott", role = c("aut", "cre"), email = "tom.elliott@auckland.ac.nz", comment = c(ORCID = "0000-0002-7815-6318")),
     person("Daniel", "Barnett", role = "aut"),

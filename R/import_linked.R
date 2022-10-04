@@ -166,6 +166,9 @@ table_spec <- function(x) {
 }
 
 read_link_spec <- function(x, name = deparse(substitute(x))) {
+    if (!requireNamespace("yaml", quietly = TRUE)) {
+        stop("Please install the suggested package: 'yaml'")
+    }
     z <- yaml::read_yaml(x)
     files <- unlist(z$files)
     schema <- stats::setNames(lapply(z$schema, table_spec), names(z$schema))

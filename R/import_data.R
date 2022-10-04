@@ -42,12 +42,12 @@
 #' @export
 smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
                        column_types = NULL, ...) {
-
     if (grepl("^https?://", file)) file <- url_to_temp(file)
 
     type <- guess_type(ext)
     fun <- eval(parse(text = sprintf("read_%s", type)))
-    d <- fun(file, ext = ext, preview = preview,
+    d <- fun(file,
+        ext = ext, preview = preview,
         column_types = column_types, ...
     )
     # if the first 1000+ rows are missing (NA), they are by default
@@ -57,16 +57,18 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
             column_types,
             attr(d, "bad_guess")
         )
-        d <- fun(file, ext = ext, preview = preview,
+        d <- fun(file,
+            ext = ext, preview = preview,
             column_types = column_types, ...
         )
     }
     attrs <- attributes(d)
     attr_to_keep <- c("available.sheets")
-    if (any(names(attrs) %in% attr_to_keep))
+    if (any(names(attrs) %in% attr_to_keep)) {
         attrs <- attrs[names(attrs) %in% attr_to_keep]
-    else
+    } else {
         attrs <- NULL
+    }
 
     ## now the data is read, convert things to factors etc
     d <- convert_strings(d)
@@ -77,10 +79,12 @@ smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
     ## ensure variable names are valid
     d <- validate_names(d)
 
-    if (preview)
-      class(d) <- c("inz.preview", class(d))
-    if (is.null(attr(d, "name")))
-      attr(d, "name") <- tools::file_path_sans_ext(basename(file))
+    if (preview) {
+        class(d) <- c("inz.preview", class(d))
+    }
+    if (is.null(attr(d, "name"))) {
+        attr(d, "name") <- tools::file_path_sans_ext(basename(file))
+    }
 
     # replace any attributes
     if (!is.null(attrs)) {
@@ -121,57 +125,70 @@ read_dlm <- function(file,
                      grouping_mark,
                      convert.to.factor = TRUE,
                      ...) {
-
     named.args <- list(...)
 
-    if (is.null(named.args$comment))
+    if (is.null(named.args$comment)) {
         named.args$comment <- "#"
+    }
 
-    if (preview)
+    if (preview) {
         named.args <- c(list(n_max = 100), named.args)
+    }
 
-    if (delimiter != "auto")
+    if (delimiter != "auto") {
         named.args <- c(list(delim = delimiter), named.args)
-    else if (ext == "txt")
+    } else if (ext == "txt") {
         named.args <- c(list(delim = " "), named.args)
+    }
 
     locale <- list()
-    if (!missing(encoding))
+    if (!missing(encoding)) {
         locale$encoding <- escape_string(encoding)
+    }
 
-    if (!missing(decimal_mark))
+    if (!missing(decimal_mark)) {
         locale$decimal_mark <- escape_string(decimal_mark)
+    }
 
-    if (!missing(grouping_mark))
+    if (!missing(grouping_mark)) {
         locale$grouping_mark <- escape_string(grouping_mark)
+    }
 
     ## quote character arguments (x = z -> x = "z")
-    named.args <- lapply(named.args,
+    named.args <- lapply(
+        named.args,
         function(x) {
-            if (is.character(x)) escape_string(x)
-                else x
+            if (is.character(x)) {
+                escape_string(x)
+            } else {
+                x
+            }
         }
     )
 
     ctypes <- parse_coltypes(column_types)
-    if (ctypes != "NULL")
+    if (ctypes != "NULL") {
         named.args <- c(named.args, list(col_types = "COLTYPES"))
+    }
 
-    if (is.null(named.args$col_types))
+    if (is.null(named.args$col_types)) {
         named.args <- c(
             named.args,
             list(col_types = "readr::cols()")
         )
+    }
 
-    if (length(locale) > 0)
-        named.args$locale <- sprintf("readr::locale(%s)",
+    if (length(locale) > 0) {
+        named.args$locale <- sprintf(
+            "readr::locale(%s)",
             paste(names(locale), locale,
                 sep = " = ",
                 collapse = ", "
             )
         )
+    }
 
-    if (length(named.args) > 0)
+    if (length(named.args) > 0) {
         args <- paste(
             "file,",
             paste(names(named.args), named.args,
@@ -179,13 +196,15 @@ read_dlm <- function(file,
                 sep = " = "
             )
         )
-    else
+    } else {
         args <- "file"
+    }
 
-    if (utils::packageVersion("readr") >= numeric_version('2.0.0'))
+    if (utils::packageVersion("readr") >= numeric_version("2.0.0")) {
         args <- paste0(args, ", lazy = FALSE")
+    }
 
-    exp <- ~FUN(ARGS)
+    exp <- ~ FUN(ARGS)
     exp <- replaceVars(exp,
         FUN = "readr::read_delim",
         # FUN = sprintf("readr::read_%s",
@@ -220,31 +239,41 @@ read_excel <- function(file,
                        column_types,
                        sheet = NULL,
                        ...) {
+    if (!requireNamespace("readxl", quietly = TRUE)) {
+        stop("Please install suggested package: 'readxl'")
+    }
+
     named.args <- list(...)
 
-    if (!missing(column_types) && !is.null(column_types))
+    if (!missing(column_types) && !is.null(column_types)) {
         named.args <- c(list(col_types = column_types), named.args)
+    }
 
-    if (preview)
+    if (preview) {
         named.args <- c(list(n_max = 10), named.args)
+    }
 
-    if (!is.null(sheet))
+    if (!is.null(sheet)) {
         named.args <- c(list(sheet = "sheetname"), named.args)
+    }
 
-    if (!is.null(named.args$na))
+    if (!is.null(named.args$na)) {
         named.args$na <- escape_string(named.args$na)
+    }
 
-    if (length(named.args) > 0)
-        args <- paste("file,",
+    if (length(named.args) > 0) {
+        args <- paste(
+            "file,",
             paste(names(named.args), named.args,
                 collapse = ", ",
                 sep = " = "
             )
         )
-    else
+    } else {
         args <- "file"
+    }
 
-    exp <- ~readxl::read_excel(ARGS)
+    exp <- ~ readxl::read_excel(ARGS)
     exp <- replaceVars(exp, ARGS = args)
 
     res <- interpolate(exp, file = file, sheetname = sheet)
@@ -262,7 +291,7 @@ read_excel <- function(file,
 #' @author Tom Elliott
 #' @export
 #' @examples
-#' cas_file <- system.file('extdata/cas500.xls', package = 'iNZightTools')
+#' cas_file <- system.file("extdata/cas500.xls", package = "iNZightTools")
 #' cas <- smart_read(cas_file)
 #' sheets(cas)
 sheets <- function(x) {
@@ -270,18 +299,18 @@ sheets <- function(x) {
 }
 
 read_spss <- function(file, ext, preview = FALSE, column_types) {
-    exp <- ~haven::read_sav(file)
+    exp <- ~ haven::read_sav(file)
 
     interpolate(exp, file = file)
 }
 
 read_stata <- function(file, ext, preview = FALSE, column_types) {
-    exp <- ~haven::read_dta(file)
+    exp <- ~ haven::read_dta(file)
     interpolate(exp, file = file)
 }
 
 read_sas <- function(file, ext, preview = FALSE, column_types) {
-    exp <- ~FUN(file)
+    exp <- ~ FUN(file)
     exp <- replaceVars(exp,
         FUN = switch(ext,
             "xpt" = "haven::read_xpt",
@@ -292,15 +321,16 @@ read_sas <- function(file, ext, preview = FALSE, column_types) {
 }
 
 read_rds <- function(file, ext, preview = FALSE, column_types) {
-    exp <- ~readRDS(file)
+    exp <- ~ readRDS(file)
     interpolate(exp, file = file)
 }
 
 read_json <- function(file, ext, preview = FALSE, column_types) {
-    if (!requireNamespace("jsonlite", quietly = TRUE))
+    if (!requireNamespace("jsonlite", quietly = TRUE)) {
         stop("Please install the `jsonlite` package to read JSON files.")
+    }
 
-    exp <- ~jsonlite::fromJSON(f)
+    exp <- ~ jsonlite::fromJSON(f)
     tryCatch(x <- interpolate(exp, f = file),
         error = function(e) {
             stop("Unable to read file:\n", e)
@@ -334,7 +364,9 @@ is_preview <- function(df) inherits(df, "inz.preview")
 ## adding the necessary code along the way.
 convert_strings <- function(x, ctypes) {
     chars <- sapply(x, is.character)
-    if (!any(chars)) return(x)
+    if (!any(chars)) {
+        return(x)
+    }
 
     ## mutate(name = factor(name))
     TEMP_RESULT <- x
@@ -342,8 +374,9 @@ convert_strings <- function(x, ctypes) {
     charnames <- names(TEMP_RESULT)[chars]
 
     types <- sapply(TEMP_RESULT[charnames], readr::guess_parser)
-    convert_fn <- sapply(types,
-        function(type)
+    convert_fn <- sapply(
+        types,
+        function(type) {
             switch(type,
                 "date" = "as.Date",
                 "time" = {
@@ -355,15 +388,19 @@ convert_strings <- function(x, ctypes) {
                 "character" = ,
                 "as.factor"
             )
+        }
     )
 
     convert_fun <- as.factor(convert_fn)
     convert_list <- tapply(charnames, convert_fun, c)
-    convert_exprs <- lapply(names(convert_list),
+    convert_exprs <- lapply(
+        names(convert_list),
         function(fn) {
-            sprintf("dplyr::mutate_at(%s, %s)",
+            sprintf(
+                "dplyr::mutate_at(%s, %s)",
                 paste(capture.output(dput(convert_list[[fn]])), collapse = " "),
-                fn)
+                fn
+            )
         }
     )
 
@@ -374,18 +411,22 @@ convert_strings <- function(x, ctypes) {
 
     res <- eval(parse(text = expr))
     # prepend original code
-    if (!is.null(code(TEMP_RESULT)))
+    if (!is.null(code(TEMP_RESULT))) {
         attr(res, "code") <-
-            gsub("TEMP_RESULT",
-                paste(code(TEMP_RESULT), collapse="\n"),
+            gsub(
+                "TEMP_RESULT",
+                paste(code(TEMP_RESULT), collapse = "\n"),
                 expr
             )
+    }
     res
 }
 
 validate_type_changes <- function(x, column_types) {
     ctypes <- parse_coltypes(column_types)
-    if (ctypes == "NULL") return(x)
+    if (ctypes == "NULL") {
+        return(x)
+    }
 
     TEMP_RESULT <- x
 
@@ -395,7 +436,9 @@ validate_type_changes <- function(x, column_types) {
         switch(type,
             "n" = {
                 ## Convert factor to numeric
-                if (is.numeric(col)) return("")
+                if (is.numeric(col)) {
+                    return("")
+                }
                 sprintf("%s = as.numeric(%s)", name, name)
             },
             "c" = {
@@ -404,19 +447,22 @@ validate_type_changes <- function(x, column_types) {
                 # skip if ONE missing (not both)
                 colm <- ncol == col | (is.na(col) + is.na(ncol)) == 2L
                 colm <- ifelse(is.na(colm), FALSE, colm)
-                if (!all(colm))
+                if (!all(colm)) {
                     return("")
+                }
                 lvls <- sort(unique(ncol))
                 if (is.factor(col)) {
                     # relevel
                     if (!all(levels(col) == lvls)) {
-                        sprintf("%s = forcats::fct_relevel(%s, c('%s'))",
+                        sprintf(
+                            "%s = forcats::fct_relevel(%s, c('%s'))",
                             name, name,
                             paste(lvls, collapse = "', '")
                         )
                     }
                 } else {
-                    sprintf("%s = factor(%s, levels = c('%s'))",
+                    sprintf(
+                        "%s = factor(%s, levels = c('%s'))",
                         name, name,
                         paste(lvls, collapse = "', '")
                     )
@@ -425,18 +471,22 @@ validate_type_changes <- function(x, column_types) {
         )
     })
 
-    if (all(conv == "")) return(x)
+    if (all(conv == "")) {
+        return(x)
+    }
     conv <- conv[conv != ""]
 
-    expr <- sprintf("TEMP_RESULT %s dplyr::mutate(%s)",
+    expr <- sprintf(
+        "TEMP_RESULT %s dplyr::mutate(%s)",
         "%>%",
         paste(conv, collapse = ", ")
     )
 
     res <- eval(parse(text = expr))
     attr(res, "code") <-
-        gsub("TEMP_RESULT",
-            paste(code(TEMP_RESULT), collapse="\n"),
+        gsub(
+            "TEMP_RESULT",
+            paste(code(TEMP_RESULT), collapse = "\n"),
             expr
         )
     res
@@ -444,7 +494,9 @@ validate_type_changes <- function(x, column_types) {
 
 
 parse_coltypes <- function(column_types = NULL) {
-    if (is.null(column_types)) return("NULL")
+    if (is.null(column_types)) {
+        return("NULL")
+    }
 
     if (!is.null(names(column_types))) {
         ctypes <- paste(
@@ -470,12 +522,15 @@ validate_names <- function(x) {
     # check if any columns need renaming:
     names <- names(x)
     new <- make.names(gsub("\\s+", "_", names))
-    if (all(new == names)) return(x)
+    if (all(new == names)) {
+        return(x)
+    }
 
     # if the last character is a dot (but only in `new`), remove it
     remove_dot <- grepl("[.]$", new) & !grepl("[.]", names)
-    if (any(remove_dot))
+    if (any(remove_dot)) {
         new[remove_dot] <- gsub("[.]$", "", new[remove_dot])
+    }
 
     # now ensure names are all UNIQUE
     new <- make.names(new, unique = TRUE)
@@ -491,8 +546,9 @@ validate_names <- function(x) {
 
     res <- eval(parse(text = expr))
     attr(res, "code") <-
-        gsub("TEMP_RESULT",
-            paste(code(TEMP_RESULT), collapse="\n"),
+        gsub(
+            "TEMP_RESULT",
+            paste(code(TEMP_RESULT), collapse = "\n"),
             expr
         )
     res
@@ -529,10 +585,11 @@ load_rda <- function(file) {
 save_rda <- function(data, file, name) {
     if (missing(file)) stop("Please specify a file location")
     data_name <- deparse(substitute(data))
-    if (!missing(name))
+    if (!missing(name)) {
         name <- create_varname(name)
-    else
+    } else {
         name <- data_name
+    }
 
     e <- new.env()
     e[[name]] <- data

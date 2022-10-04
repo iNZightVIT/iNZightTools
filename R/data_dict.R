@@ -39,7 +39,8 @@ read_dictionary <- function(file,
     dict <- smart_read(file, ...)
 
     # convert all factors to strings
-    dict <- do.call(data.frame,
+    dict <- do.call(
+        data.frame,
         c(
             lapply(dict, function(x) if (is.factor(x)) as.character(x) else x),
             list(stringsAsFactors = FALSE)
@@ -58,22 +59,28 @@ read_dictionary <- function(file,
         stop("Please specify `name`")
     }
 
-    if (!missing(title) && title != "title")
+    if (!missing(title) && title != "title") {
         dict <- dplyr::rename(dict, title = !!title)
+    }
 
-    if (!missing(description) && description != "description")
+    if (!missing(description) && description != "description") {
         dict <- dplyr::rename(dict, description = !!description)
+    }
 
-    if (!missing(codes) && codes != "codes")
+    if (!missing(codes) && codes != "codes") {
         dict <- dplyr::rename(dict, codes = !!codes)
+    }
 
-    if (!missing(values) && values != "values")
+    if (!missing(values) && values != "values") {
         dict <- dplyr::rename(dict, values = !!values)
+    }
 
     # TODO: all the other columns too
 
-    dict_list <- lapply(seq_along(dict$name),
-        function(x) dict_row(dict[x, ], sep = level_separator))
+    dict_list <- lapply(
+        seq_along(dict$name),
+        function(x) dict_row(dict[x, ], sep = level_separator)
+    )
     names(dict_list) <- tolower(dict$name)
     structure(dict_list, class = "dictionary")
 }
@@ -88,10 +95,11 @@ read_dictionary <- function(file,
 print.dictionary <- function(x, kable = FALSE, include_other = TRUE, ...) {
     dots <- list(...)
     if (kable && requireNamespace("knitr", quietly = TRUE)) {
-        if (is.null(dots$code_sep))
+        if (is.null(dots$code_sep)) {
             knitr::kable(as_tibble(x, include_other = include_other, code_sep = "<br/>", ...), ...)
-        else
+        } else {
             knitr::kable(as_tibble(x, include_other = include_other, ...), ...)
+        }
     } else {
         print(as_tibble(x, include_other = include_other, ...), ...)
     }
@@ -129,6 +137,8 @@ as_tibble.dictionary <- function(x, n = length(x),
             other <- y$other
             y$other <- NULL
             y <- c(y, other)
+        } else {
+            y$other <- NULL
         }
         y
     })
@@ -136,7 +146,7 @@ as_tibble.dictionary <- function(x, n = length(x),
     x <- lapply(x, function(z) {
         lapply(
             stats::setNames(z[vars], vars),
-            function(y) if(is.null(y)) NA else (y)
+            function(y) if (is.null(y)) NA else (y)
         )
     })
     tibble::as_tibble(lapply(purrr::transpose(x), unlist))
@@ -145,18 +155,25 @@ as_tibble.dictionary <- function(x, n = length(x),
 #' @rdname dictionary
 #' @param i Subset index
 #' @export
-`[.dictionary` <- function(x, i, ...)
+`[.dictionary` <- function(x, i, ...) {
     structure(unclass(x)[i], class = class(x))
+}
 
 dict_row <- function(x, sep) {
     sep <- rep(sep, length = 2L)
     cn <- colnames(x)
     row <- list(
         name = tolower(as.character(x$name)),
-        type = if ("type" %in% cn) as.character(x$type) else {
-            if ("units" %in% cn && !is.na(x$units)) "numeric"
-            else if (all(c("codes", "values") %in% cn) && !is.na(x$codes) && !is.na(x$values)) "factor"
-            else NULL
+        type = if ("type" %in% cn) {
+            as.character(x$type)
+        } else {
+            if ("units" %in% cn && !is.na(x$units)) {
+                "numeric"
+            } else if (all(c("codes", "values") %in% cn) && !is.na(x$codes) && !is.na(x$values)) {
+                "factor"
+            } else {
+                NULL
+            }
         },
         title = if ("title" %in% cn) as.character(x$title) else as.character(x$name),
         description = if ("description" %in% cn) as.character(x$description) else NULL
@@ -180,7 +197,8 @@ dict_row <- function(x, sep) {
 #' @export
 print.dict_var <- function(x, ...) {
     cat(
-        sprintf("{%s}: %s %s\n", x$name, x$title,
+        sprintf(
+            "{%s}: %s %s\n", x$name, x$title,
             ifelse(is.null(x$type), "",
                 sprintf("[%s]", x$type)
             )
@@ -202,7 +220,6 @@ print.dict_var <- function(x, ...) {
 #' @export
 #' @rdname dictionary
 apply_dictionary <- function(data, dict) {
-
     dnames <- names(data)
     names(data) <- tolower(names(data))
 
@@ -221,8 +238,9 @@ apply_dictionary <- function(data, dict) {
     data
 }
 
-add_var_attributes <- function(x, d)
+add_var_attributes <- function(x, d) {
     UseMethod("add_var_attributes")
+}
 
 #' @export
 add_var_attributes.default <- function(x, d) x
@@ -235,7 +253,9 @@ add_var_attributes.numeric <- function(x, d) {
     }
 
     # add units
-    if (!requireNamespace("units", quietly = TRUE)) return(x)
+    if (!requireNamespace("units", quietly = TRUE)) {
+        return(x)
+    }
     # xunits <- try(units::ud_units[[d$units]], silent = TRUE)
     # if (inherits(xunits, "try-error")) {
     #     print(xunits)
@@ -277,9 +297,10 @@ add_var_attributes.factor <- function(x, d) {
 #' Check data has dictionary attached
 #' @rdname dictionary
 #' @export
-has_dictionary <- function(data)
+has_dictionary <- function(data) {
     !is.null(attr(data, "dictionary")) &&
-    is.data.frame(attr(data, "dictionary"))
+        is.data.frame(attr(data, "dictionary"))
+}
 
 #' Get data dictionary from data
 #' @rdname dictionary

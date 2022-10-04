@@ -15,6 +15,38 @@ test_that("Dictionary read and parsed correctly", {
     expect_s3_class(as_tibble(dict), "tbl_df")
 })
 
+test_that("Dictionary columns renamed correctly", {
+    td <- tempfile("dict", fileext = ".csv")
+    on.exit(unlink(td))
+    readr::write_csv(
+        data.frame(
+            vname = c("var1", "var2"),
+            vtitle = c("title one", "title two"),
+            vdesc = paste("this is variable", c("one", "two")),
+            vcodes = c("0 | 1", NA_character_),
+            vvals = c("one | two", NA_character_),
+            xother = c("another", "value")
+        ),
+        file = td
+    )
+
+    dict <- read_dictionary(td,
+        name = "vname",
+        title = "vtitle",
+        description = "vdesc",
+        codes = "vcodes",
+        values = "vvals"
+    )
+    expect_equal(
+        names(as_tibble(dict)),
+        c("name", "type", "title", "description", "code", "value", "xother")
+    )
+    expect_equal(
+        names(as_tibble(dict, include_other = FALSE)),
+        c("name", "type", "title", "description", "code", "value")
+    )
+})
+
 test_that("Dictionaries can be added to datasets", {
     # devtools::load_all()
     dict <- read_dictionary("casdict.csv",
@@ -30,4 +62,17 @@ test_that("Dictionaries can be added to datasets", {
 
     expect_s3_class(cas_dict[[1]], "labelled")
     expect_equal(expss::var_lab(cas_dict$cellsource), "Cellphone money source")
+})
+
+test_that("Printing dictionaries is fine", {
+    dict <- read_dictionary("casdict.csv",
+        name = "variable",
+        title = "friendly_name"
+    )
+
+    expect_s3_class(print(dict), "tbl_df")
+    expect_s3_class(print(dict, kable = TRUE), "knitr_kable")
+    expect_s3_class(print(dict, kable = TRUE, code_sep = " | "), "knitr_kable")
+
+    as_tibble(dict, include_other = TRUE)
 })

@@ -20,7 +20,7 @@ jobs:
         run: |
           install.packages(c("remotes", "rmarkdown", "roxygen2", "pkgdown"))
           remotes::install_github("tmelliott/surveyspec@develop")
-          remotes::install_local(".")
+          remotes::install_local(".", dependencies = TRUE)
         shell: Rscript {0}
       - name: Render README
         run: Rscript -e 'rmarkdown::render("README.Rmd")'

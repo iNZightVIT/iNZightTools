@@ -49,9 +49,11 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.12.3" id="inzighttools-1123">iNZightTools 1.12.3<small>2022-08-22</small><a class="anchor" aria-label="anchor" href="#inzighttools-1123"></a></h2>
-<ul><li>allow ‘readr’ to use automatic delimiter guessing (csv files) instead of forcing <code>,</code> (<a href="https://github.com/iNZightVIT/iNZightTools/issues/187" class="external-link">#187</a>)</li>
-<li>fix Windows bug in <code>url_to_temp()</code> adding extra lines, causing importing files with more than one line of comments to fail delimiter-guessing</li>
-<li>fix bug where extension guess failed if file extension was not lower case (e.g., <code>file.CSV</code>)</li>
+<ul><li><p>allow ‘readr’ to use automatic delimiter guessing (csv files) instead of forcing <code>,</code> (<a href="https://github.com/iNZightVIT/iNZightTools/issues/187" class="external-link">#187</a>)</p></li>
+<li><p>fix Windows bug in <code>url_to_temp()</code> adding extra lines, causing importing files with more than one line of comments to fail delimiter-guessing</p></li>
+<li><p>fix bug where extension guess failed if file extension was not lower case (e.g., <code>file.CSV</code>)</p></li>
+<li><p>fix bug in converting times with missing seconds (e.g., ‘08:30’)</p></li>
+<li><p><code><a href="../reference/dictionary.html">read_dictionary()</a></code> and <code><a href="../reference/dictionary.html">apply_dictionary()</a></code> functions to import a data dictionary from a rectangular data file and apply it to a dataset</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.12.2" id="inzighttools-1122">iNZightTools 1.12.2<small>2022-01-18</small><a class="anchor" aria-label="anchor" href="#inzighttools-1122"></a></h2>

@@ -17,7 +17,7 @@ test_that("Desired parts are extracted", {
   expect_equal(
     stripcode(extract_part(data, "a", "Year Quarter", "a.dt")),
     data %>% tibble::add_column(
-      a.dt = factor(format(zoo::as.yearqtr(data$a), '%YQ%q')),
+      a.dt = factor(format(zoo::as.yearqtr(data$a), "%YQ%q")),
       .after = "a"
     )
   )
@@ -36,6 +36,7 @@ test_that("Desired parts are extracted", {
     )
   )
 
+  skip_if_not_installed("chron")
   expect_true(is_dt(extract_part(data, "a", "Time only", "time")$time))
 })
 
@@ -45,6 +46,8 @@ test_that("Invalid parts are handled", {
     stripcode(extract_part(data, "b", "Hour", "b.dt")),
     data %>% tibble::add_column(b.dt = 0, .after = "b")
   )
+
+  skip_if_not_installed("chron")
   expect_equal(
     stripcode(extract_part(data, "b", "Time only", "b.dt")),
     data %>% tibble::add_column(b.dt = chron::times("00:00:00"), .after = "b")

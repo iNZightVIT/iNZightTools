@@ -16,8 +16,10 @@ test_that("files parsed correctly", {
 
 test_that("smart_read gets correct column types and dims", {
     data <- smart_read("cas500.csv")
-    expect_equal(names(data), c('cellsource', 'rightfoot', 'travel', 'getlunch', 'height',
-        'gender', 'age', 'year', 'armspan', 'cellcost'))
+    expect_equal(names(data), c(
+        "cellsource", "rightfoot", "travel", "getlunch", "height",
+        "gender", "age", "year", "armspan", "cellcost"
+    ))
     expect_equal(nrow(data), 500L)
 })
 
@@ -32,6 +34,7 @@ test_that("smart_read can handle various encoding", {
 })
 
 test_that("smart_read returns code with necessary conversions included", {
+    skip_if_not_installed("haven")
     expect_equal(
         code(smart_read("appbset1.sav")),
         "haven::read_sav(\"appbset1.sav\")"
@@ -54,17 +57,38 @@ test_that("smart_read doesn't output col_types spec", {
     expect_silent(x <- smart_read("cas.txt"))
 })
 
+test_that("Columns with 1000+ NAs read as character", {
+    d <- data.frame(
+        x1 = sample(2000),
+        x2 = c(rep(NA, 1500), sample(LETTERS[1:5], 500, TRUE)),
+        x3 = NA
+    )
+    tf <- tempfile(fileext = ".csv")
+    on.exit(unlink(tf))
+    readr::write_csv(d, tf)
+
+    expect_silent(x <- smart_read(tf))
+    expect_s3_class(x$x2, "factor")
+    expect_s3_class(x$x3, "factor")
+})
+
 test_that("Column type overrides are respected", {
-    expect_equal(as.character(sapply(smart_read("cas500.csv"), class)),
-                 c("factor", "numeric", "factor", "factor", "numeric",
-                   "factor", "numeric", "numeric", "numeric", "numeric"))
+    expect_equal(
+        as.character(sapply(smart_read("cas500.csv"), class)),
+        c(
+            "factor", "numeric", "factor", "factor", "numeric",
+            "factor", "numeric", "numeric", "numeric", "numeric"
+        )
+    )
     cas.yearcat <- smart_read("cas500.csv",
         column_types = c(year = "c", age = "n", travel = "c")
     )
     expect_equal(
         as.character(sapply(cas.yearcat, class)),
-        c("factor", "numeric", "factor", "factor", "numeric",
-          "factor", "numeric", "factor", "numeric", "numeric")
+        c(
+            "factor", "numeric", "factor", "factor", "numeric",
+            "factor", "numeric", "factor", "numeric", "numeric"
+        )
     )
     expect_equal(
         levels(cas.yearcat$year),
@@ -87,7 +111,8 @@ test_that("Column type overrides are respected", {
 test_that("SAS Import num to cat works", {
     expect_silent(
         d <- smart_read("test.sas7bdat",
-            column_types = c(q1 = "c", q2 = "c"))
+            column_types = c(q1 = "c", q2 = "c")
+        )
     )
     expect_s3_class(d$q1, "factor")
     expect_s3_class(d$q2, "factor")
@@ -161,7 +186,7 @@ test_that("Reading RDS works", {
 
 test_that("URLs are supported", {
     url <- "https://www.stat.auckland.ac.nz/~wild/data/test/CensusAtSchool-500.xls"
-    skip_if( !RCurl::url.exists(url), "URL not available." )
+    skip_if(!RCurl::url.exists(url), "URL not available.")
 
     file <- try(url_to_temp(url), silent = TRUE)
     skip_if(inherits(file, "try-error"))

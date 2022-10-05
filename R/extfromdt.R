@@ -7,7 +7,6 @@
 #'
 #' @return dataframe with extracted part column
 #' @author Yiwen He
-#' @importFrom chron chron
 #' @importFrom zoo as.yearqtr
 #' @export
 extract_part <- function(.data, varname, part, name) {
@@ -47,7 +46,8 @@ extract_part <- function(.data, varname, part, name) {
         "Day of the year" =
             'as.numeric(format(.DATA$.VARNAME, "%j"))',
         "Day of the week (name)" =
-            paste(sep = ", ",
+            paste(
+                sep = ", ",
                 "lubridate::wday(.DATA$.VARNAME, label = TRUE",
                 "abbr = FALSE, week_start = 1)"
             ),
@@ -60,10 +60,15 @@ extract_part <- function(.data, varname, part, name) {
         "Day" =
             'as.numeric(format(.DATA$.VARNAME, "%d"))',
         "Time" = ,
-        "Time only" =
-            'chron::chron(times. = format(.DATA$.VARNAME, "%H:%M:%S"))',
+        "Time only" = {
+            if (!requireNamespace("chron", quietly = TRUE)) {
+                stop("Please install suggested package: 'chron'") # nocov
+            }
+            'chron::chron(times. = format(.DATA$.VARNAME, "%H:%M:%S"))'
+        },
         "Hours (decimal)" =
-            paste(sep = " + ",
+            paste(
+                sep = " + ",
                 "lubridate::hour(.DATA$.VARNAME)",
                 "(lubridate::minute(.DATA$.VARNAME)",
                 "lubridate::second(.DATA$.VARNAME) / 60) /60"
@@ -76,7 +81,7 @@ extract_part <- function(.data, varname, part, name) {
             'as.numeric(format(.DATA$.VARNAME, "%S"))'
     )
 
-    exp <- ~.DATA %>%
+    exp <- ~ .DATA %>%
         tibble::add_column(.NAME = .EXTEXP, .after = ".VARNAME")
 
     exp <- replaceVars(exp,

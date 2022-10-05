@@ -17,7 +17,7 @@ Useful when reading an Excel file to quickly check what
 other sheets are available.
 }
 \examples{
-cas_file <- system.file('extdata/cas500.xls', package = 'iNZightTools')
+cas_file <- system.file("extdata/cas500.xls", package = "iNZightTools")
 cas <- smart_read(cas_file)
 sheets(cas)
 }

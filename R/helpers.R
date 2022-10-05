@@ -52,6 +52,29 @@ vartype <- function(x) {
     if (is.numeric(x)) 'num' else 'cat'
 }
 
+#' Get all variable types from data object
+#' @param x data object (data.frame or inzdf)
+#' @return a named vector of variable types
+#' @export
+vartypes <- function(x) UseMethod("vartypes")
+
+#' @export
+vartypes.default <- function(x) stop("Unsupported data object.")
+
+#' @export
+vartypes.data.frame <- function(x) sapply(x, vartype)
+
+#' @export
+vartypes.tbl_lazy <- function(x) sapply(dplyr::collect(head(x)), vartype)
+
+#' @export
+vartypes.inzdf_db <- function(x) {
+    if (!is.null(attr(x, "vartypes", exact = TRUE)))
+        return(attr(x, "vartypes", exact = TRUE))
+
+    sapply(head(x), vartype)
+}
+
 
 #' Check if object is a survey object (either standard or replicate design)
 #'

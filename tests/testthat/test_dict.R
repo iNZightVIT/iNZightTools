@@ -10,7 +10,7 @@ test_that("Dictionary read and parsed correctly", {
     )
     expect_s3_class(dict, "dictionary")
     expect_s3_class(dict[[1]], "dict_var")
-    expect_equal(names(dict), names(cas))
+    expect_equal(names(dict), c(names(cas), "other"))
 
     expect_error(read_dictionary("casdict.csv"))
 
@@ -27,7 +27,8 @@ test_that("Dictionary columns renamed correctly", {
             vdesc = paste("this is variable", c("one", "two")),
             vcodes = c("0 | 1", NA_character_),
             vvals = c("one | two", NA_character_),
-            xother = c("another", "value")
+            xother = c("another", "value"),
+            vtype = c("factor", "number")
         ),
         file = td
     )
@@ -37,7 +38,8 @@ test_that("Dictionary columns renamed correctly", {
         title = "vtitle",
         description = "vdesc",
         codes = "vcodes",
-        values = "vvals"
+        values = "vvals",
+        type = "vtype"
     )
     expect_equal(
         names(as_tibble(dict)),
@@ -72,9 +74,11 @@ test_that("Printing dictionaries is fine", {
         title = "friendly_name"
     )
 
-    expect_s3_class(print(dict), "tbl_df")
+    expect_output(print(dict[[1]]))
+
+    expect_output(print(dict))
     expect_s3_class(print(dict, kable = TRUE), "knitr_kable")
     expect_s3_class(print(dict, kable = TRUE, code_sep = " | "), "knitr_kable")
 
-    as_tibble(dict, include_other = TRUE)
+    expect_s3_class(as_tibble(dict, include_other = TRUE), "tbl_df")
 })

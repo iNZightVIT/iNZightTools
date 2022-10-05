@@ -59,6 +59,10 @@ read_dictionary <- function(file,
         stop("Please specify `name`")
     }
 
+    if (!missing(type) && type != "type") {
+        dict <- dplyr::rename(dict, type = !!type)
+    }
+
     if (!missing(title) && title != "title") {
         dict <- dplyr::rename(dict, title = !!title)
     }
@@ -165,7 +169,16 @@ dict_row <- function(x, sep) {
     row <- list(
         name = tolower(as.character(x$name)),
         type = if ("type" %in% cn) {
-            as.character(x$type)
+            switch(as.character(x$type),
+                "number" = ,
+                "numeric" = ,
+                "float" = "numeric",
+                "double" = "numeric",
+                "integer" = "integer",
+                "categorical" = ,
+                "factor" = "factor",
+                as.character(x$type)
+            )
         } else {
             if ("units" %in% cn && !is.na(x$units)) {
                 "numeric"

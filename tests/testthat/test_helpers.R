@@ -24,6 +24,12 @@ test_that("Vartype is correct", {
 
     d <- inzdf(con, "iris", keep_con = TRUE)
     expect_equal(vartypes(d), iris_types)
+    expect_equal(vartypes(dplyr::tbl(con, "iris")), iris_types)
+
+    expect_error(
+        vartypes(lm(Sepal.Width ~ Species, data = iris)),
+        "Unsupported data object."
+    )
 })
 
 test_that("Survey objects identified correctly", {

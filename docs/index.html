@@ -85,7 +85,12 @@
 </h2>
 <p>The package itself doesn’t have any one specific use, but the functions can be broken down into various workflows.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://inzight.nz" class="external-link">iNZightTools</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://inzight.nz" class="external-link">iNZightTools</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'iNZightTools'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     filter</span></span></code></pre></div>
 <p>Most of the functions return not only the resulting data, but attach the <em>tidyverse</em> code used to generate it. This is useful for GUIs that display code history (e.g., <em>iNZight</em>) or when learning to code.</p>
 <div class="section level3">
 <h3 id="data-import">Data import<a class="anchor" aria-label="anchor" href="#data-import"></a>
@@ -108,6 +113,7 @@
 <span><span class="co">#&gt;  - attr(*, "code")= chr "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %&gt;% dplyr::mutate_at(c"| __truncated__</span></span>
 <span><span class="co">#&gt;  - attr(*, "available.sheets")= chr "Census at School-500"</span></span>
 <span><span class="fu"><a href="reference/tidy_all_code.html">tidy_all_code</a></span><span class="op">(</span><span class="fu"><a href="reference/code.html">code</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required namespace: styler</span></span>
 <span><span class="co">#&gt;  [1] "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %&gt;%"</span></span>
 <span><span class="co">#&gt;  [2] "    dplyr::mutate_at("                                                                       </span></span>
 <span><span class="co">#&gt;  [3] "        c("                                                                                  </span></span>

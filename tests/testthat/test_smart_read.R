@@ -57,6 +57,21 @@ test_that("smart_read doesn't output col_types spec", {
     expect_silent(x <- smart_read("cas.txt"))
 })
 
+test_that("Columns with 1000+ NAs read as character", {
+    d <- data.frame(
+        x1 = sample(2000),
+        x2 = c(rep(NA, 1500), sample(LETTERS[1:5], 500, TRUE)),
+        x3 = NA
+    )
+    tf <- tempfile(fileext = ".csv")
+    on.exit(unlink(tf))
+    readr::write_csv(d, tf)
+
+    expect_silent(x <- smart_read(tf))
+    expect_s3_class(x$x2, "factor")
+    expect_s3_class(x$x3, "factor")
+})
+
 test_that("Column type overrides are respected", {
     expect_equal(
         as.character(sapply(smart_read("cas500.csv"), class)),

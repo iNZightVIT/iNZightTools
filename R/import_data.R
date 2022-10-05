@@ -239,7 +239,7 @@ read_excel <- function(file,
                        sheet = NULL,
                        ...) {
     if (!requireNamespace("readxl", quietly = TRUE)) {
-        stop("Please install suggested package: 'readxl'")
+        stop("Please install suggested package: 'readxl'") # nocov
     }
 
     named.args <- list(...)
@@ -299,7 +299,7 @@ sheets <- function(x) {
 
 .check_haven <- function() {
     if (!requireNamespace("haven", quietly = TRUE)) {
-        stop("Please install suggested package: 'haven")
+        stop("Please install suggested package: 'haven") # nocov
     }
 }
 
@@ -335,7 +335,7 @@ read_rds <- function(file, ext, preview = FALSE, column_types) {
 
 read_json <- function(file, ext, preview = FALSE, column_types) {
     if (!requireNamespace("jsonlite", quietly = TRUE)) {
-        stop("Please install the `jsonlite` package to read JSON files.")
+        stop("Please install the `jsonlite` package to read JSON files.") # nocov
     }
 
     exp <- ~ jsonlite::fromJSON(f)

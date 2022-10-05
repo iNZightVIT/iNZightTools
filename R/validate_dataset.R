@@ -1,6 +1,6 @@
 .check_validate_installed <- function() {
     if (!requireNamespace("validate", quietly = TRUE)) {
-        stop("Please install suggested package: 'validate'")
+        stop("Please install suggested package: 'validate'") # nocov
     }
 }
 

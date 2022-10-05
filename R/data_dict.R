@@ -234,7 +234,7 @@ print.dict_var <- function(x, ...) {
 #' @rdname dictionary
 apply_dictionary <- function(data, dict) {
     if (!requireNamespace("expss", quietly = TRUE)) {
-        stop("Please install suggested packages: 'expss'")
+        stop("Please install suggested packages: 'expss'") # nocov
     }
 
     dnames <- names(data)

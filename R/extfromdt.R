@@ -62,7 +62,7 @@ extract_part <- function(.data, varname, part, name) {
         "Time" = ,
         "Time only" = {
             if (!requireNamespace("chron", quietly = TRUE)) {
-                stop("Please install suggested package: 'chron'")
+                stop("Please install suggested package: 'chron'") # nocov
             }
             'chron::chron(times. = format(.DATA$.VARNAME, "%H:%M:%S"))'
         },

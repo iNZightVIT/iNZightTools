@@ -31,7 +31,7 @@ tidy_all_code <- function(x, width = 80, indent = 4, outfile,
 ### tidy a single piece of code
 tidy_code <- function(codeline, width, indent) {
     if (!requireNamespace("styler")) {
-        stop("Please install suggested package: 'styler'")
+        stop("Please install suggested package: 'styler'") # nocov
     }
 
     commentlines <- grepl("^#", codeline)

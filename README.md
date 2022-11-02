@@ -12,7 +12,7 @@ v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/
 
 Package consisting of a set of helper functions for doing data science
 with *iNZight*. These functions are designed to work well with a
-graphical user interface (GUI), but many\[1\] are functional for direct
+graphical user interface (GUI), but many[^1] are functional for direct
 use through *R*.
 
 ## Installation
@@ -123,4 +123,4 @@ filterNumeric(data, "height", "<", 150)
 #> # … with 117 more rows, and abbreviated variable names ¹​getlunch, ²​cellcost
 ```
 
-1.  with others being modified in time
+[^1]: with others being modified in time

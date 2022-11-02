@@ -1,3 +1,4 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # iNZightTools
@@ -10,21 +11,21 @@ v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/
 [![CRAN](https://www.r-pkg.org/badges/version/iNZightTools)](https://CRAN.R-project.org/package=iNZightTools)
 
 Package consisting of a set of helper functions for doing data science
-with _iNZight_. These functions are designed to work well with a
+with *iNZight*. These functions are designed to work well with a
 graphical user interface (GUI), but many\[1\] are functional for direct
-use through _R_.
+use through *R*.
 
 ## Installation
 
 The current release version is available on CRAN:
 
-```r
+``` r
 install.packages("iNZightTools")
 ```
 
 The development version can be downloaded from GitHub:
 
-```r
+``` r
 remotes::install_github("iNZightVIT/iNZightTools@dev")
 ```
 
@@ -33,18 +34,18 @@ remotes::install_github("iNZightVIT/iNZightTools@dev")
 The package itself doesn’t have any one specific use, but the functions
 can be broken down into various workflows.
 
-```r
+``` r
 library(iNZightTools)
-#>
+#> 
 #> Attaching package: 'iNZightTools'
 #> The following object is masked from 'package:stats':
-#>
+#> 
 #>     filter
 ```
 
 Most of the functions return not only the resulting data, but attach the
-_tidyverse_ code used to generate it. This is useful for GUIs that
-display code history (e.g., _iNZight_) or when learning to code.
+*tidyverse* code used to generate it. This is useful for GUIs that
+display code history (e.g., *iNZight*) or when learning to code.
 
 ### Data import
 
@@ -52,7 +53,7 @@ Importing data is done using the `smart_read()` function, which can read
 CSV, Excel, Stata, SAS, RData, and a few other formats based on the file
 extension.
 
-```r
+``` r
 data <- smart_read(system.file("extdata/cas500.xls", package = "iNZightTools"))
 str(data)
 #> tibble [500 × 10] (S3: tbl_df/tbl/data.frame)
@@ -71,30 +72,30 @@ str(data)
 tidy_all_code(code(data))
 #> Loading required namespace: styler
 #>  [1] "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %>%"
-#>  [2] "    dplyr::mutate_at("
-#>  [3] "        c("
-#>  [4] "            \"cellsource\","
-#>  [5] "            \"travel\","
-#>  [6] "            \"getlunch\","
-#>  [7] "            \"gender\""
-#>  [8] "        ),"
-#>  [9] "        as.factor"
-#> [10] "    ) %>%"
-#> [11] "    dplyr::mutate_at("
-#> [12] "        c("
-#> [13] "            \"rightfoot\","
-#> [14] "            \"height\","
-#> [15] "            \"age\","
-#> [16] "            \"armspan\","
-#> [17] "            \"cellcost\""
-#> [18] "        ),"
-#> [19] "        as.numeric"
+#>  [2] "    dplyr::mutate_at("                                                                       
+#>  [3] "        c("                                                                                  
+#>  [4] "            \"cellsource\","                                                                 
+#>  [5] "            \"travel\","                                                                     
+#>  [6] "            \"getlunch\","                                                                   
+#>  [7] "            \"gender\""                                                                      
+#>  [8] "        ),"                                                                                  
+#>  [9] "        as.factor"                                                                           
+#> [10] "    ) %>%"                                                                                   
+#> [11] "    dplyr::mutate_at("                                                                       
+#> [12] "        c("                                                                                  
+#> [13] "            \"rightfoot\","                                                                  
+#> [14] "            \"height\","                                                                     
+#> [15] "            \"age\","                                                                        
+#> [16] "            \"armspan\","                                                                    
+#> [17] "            \"cellcost\""                                                                    
+#> [18] "        ),"                                                                                  
+#> [19] "        as.numeric"                                                                          
 #> [20] "    )"
 ```
 
 ### Surveys
 
-Being an important but tricker data type to work with, _iNZightTools_
+Being an important but tricker data type to work with, *iNZightTools*
 includes methods for easily importing surveys using a specification
 format. For details, check out
 <https://inzight.nz/docs/survey-specification.html>
@@ -104,7 +105,7 @@ format. For details, check out
 There are many other data manipulation-focussed functions, such as
 filter, renaming variables, etc.
 
-```r
+``` r
 filterNumeric(data, "height", "<", 150)
 #> # A tibble: 127 × 10
 #>    cellsource rightfoot travel getlu…¹ height gender   age  year armspan cellc…²

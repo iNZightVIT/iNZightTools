@@ -49,6 +49,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          remotes::install_github("gdemin/expss")
           remotes::install_github("tmelliott/surveyspec@develop")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_github('r-lib/revdepcheck')

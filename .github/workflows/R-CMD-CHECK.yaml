@@ -69,6 +69,7 @@ jobs:
           if (.Platform$OS.type == "windows" && getRversion() < numeric_version('4.1')) {
             install.packages('RCurl', type = 'binary')
           }
+          remotes::install_github("gdemin/expss")
           remotes::install_github("tmelliott/surveyspec@develop")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")

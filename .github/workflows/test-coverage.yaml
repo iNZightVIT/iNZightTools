@@ -58,7 +58,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          remotes::install_github("gdemin/expss")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_github("tmelliott/surveyspec")
           remotes::install_cran("rcmdcheck")

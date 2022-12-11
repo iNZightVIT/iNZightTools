@@ -7,7 +7,6 @@
 #'
 #' @return dataframe with extracted part column
 #' @author Yiwen He
-#' @importFrom chron chron
 #' @importFrom zoo as.yearqtr
 #' @export
 extract_part <- function(.data, varname, part, name) {
@@ -15,6 +14,7 @@ extract_part <- function(.data, varname, part, name) {
     dataname <- mc$.data
 
     extexp <- switch(part,
+        "Date" = ,
         "Date only" =
             "as.Date(.DATA$.VARNAME)",
         "Year" =
@@ -29,6 +29,7 @@ extract_part <- function(.data, varname, part, name) {
             "as.numeric(stringr::str_sub(zoo::as.yearqtr(.DATA$.VARNAME), -1))",
         "Year Month" =
             'factor(format(.DATA$.VARNAME, "%YM%m"))',
+        "Month" = ,
         "Month (full)" =
             "lubridate::month(.DATA$.VARNAME, label = TRUE, abbr = FALSE)",
         "Month (abbreviated)" =
@@ -37,6 +38,7 @@ extract_part <- function(.data, varname, part, name) {
             'as.numeric(format(.DATA$.VARNAME, "%m"))',
         "Year Week" =
             'factor(format(.DATA$.VARNAME, "%YW%W"))',
+        "Week" = ,
         "Week of the year (Monday as first day of the week)" =
             'as.numeric(format(.DATA$.VARNAME, "%W"))',
         "Week of the year (Sunday as first day of the week)" =
@@ -44,7 +46,8 @@ extract_part <- function(.data, varname, part, name) {
         "Day of the year" =
             'as.numeric(format(.DATA$.VARNAME, "%j"))',
         "Day of the week (name)" =
-            paste(sep = ", ",
+            paste(
+                sep = ", ",
                 "lubridate::wday(.DATA$.VARNAME, label = TRUE",
                 "abbr = FALSE, week_start = 1)"
             ),
@@ -56,10 +59,16 @@ extract_part <- function(.data, varname, part, name) {
             'as.numeric(format(.DATA$.VARNAME, "%w"))',
         "Day" =
             'as.numeric(format(.DATA$.VARNAME, "%d"))',
-        "Time only" =
-            'chron::chron(times. = format(.DATA$.VARNAME, "%H:%M:%S"))',
+        "Time" = ,
+        "Time only" = {
+            if (!requireNamespace("chron", quietly = TRUE)) {
+                stop("Please install suggested package: 'chron'") # nocov
+            }
+            'chron::chron(times. = format(.DATA$.VARNAME, "%H:%M:%S"))'
+        },
         "Hours (decimal)" =
-            paste(sep = " + ",
+            paste(
+                sep = " + ",
                 "lubridate::hour(.DATA$.VARNAME)",
                 "(lubridate::minute(.DATA$.VARNAME)",
                 "lubridate::second(.DATA$.VARNAME) / 60) /60"
@@ -72,7 +81,7 @@ extract_part <- function(.data, varname, part, name) {
             'as.numeric(format(.DATA$.VARNAME, "%S"))'
     )
 
-    exp <- ~.DATA %>%
+    exp <- ~ .DATA %>%
         tibble::add_column(.NAME = .EXTEXP, .after = ".VARNAME")
 
     exp <- replaceVars(exp,

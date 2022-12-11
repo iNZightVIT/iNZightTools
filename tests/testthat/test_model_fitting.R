@@ -1,5 +1,3 @@
-context("Fit Model function")
-
 test_that("Linear model formula are generated correctly", {
     expect_equal(
         fitModel("response", "x1", "d"),

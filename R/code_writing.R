@@ -39,6 +39,28 @@ interpolate <- function(code, ..., comment = character(),
 #' @export
 code <- function(data) return(attr(data, "code"))
 
+#' Tidy-printing of the code attached to an object
+#'
+#' @param x a dataframe with code attached
+#' @param ... additional arguments passed to tidy_all_code()
+#' @return Called for side-effect of printing code to the console.
+#' @export
+#' @examples
+#' iris_agg <- aggregateData(iris, vars = "Species", summaries = "mean")
+#' print_code(iris_agg)
+print_code <- function(x, ...) {
+    c <- code(x)
+    if (is.null(c)) {
+        message("No code attached to this object.")
+        return(invisible(NULL))
+    }
+
+    c <- paste(c, collapse = " ")
+    c <- tidy_all_code(c, ...)
+    cat(c, sep = "\n")
+    cat("\n")
+    invisible(NULL)
+}
 
 replaceVars <- function(exp, ...) {
     sub_list <- list(...)

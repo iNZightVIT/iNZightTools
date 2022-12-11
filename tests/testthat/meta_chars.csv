@@ -1,0 +1,5 @@
+#' @factor var2[māori=1,english=2,français=3]
+var1,var2,var3
+a,1,nothing
+b,2,something
+c,3,more

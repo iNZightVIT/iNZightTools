@@ -1,5 +1,3 @@
-context("Add suffix correctly names objects")
-
 test_that("Suffixes are added correctly", {
     expect_equal(
         add_suffix(

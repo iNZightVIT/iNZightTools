@@ -1,21 +1,19 @@
-context("Test data joins")
-
 stripattr <- function(x, attrs = c('code', 'join_cols')) {
   for (attr in attrs) attributes(x)[[attr]] <- NULL
   x
 }
 
-d1 <- readr::read_csv("join.csv")
-d2 <- readr::read_csv("join2.csv")
-d3 <- readr::read_csv("join3.csv")
+d1 <- readr::read_csv("join.csv", show_col_types = FALSE)
+d2 <- readr::read_csv("join2.csv", show_col_types = FALSE)
+d3 <- readr::read_csv("join3.csv", show_col_types = FALSE)
 
-test_that("Auto detection works", {
-    skip("Skipping auto detection ...")
-    expect_equal(
-        stripattr(joindata(d1, d2, "", "", "inner_join", "x", "y")),
-        dplyr::inner_join(d1, d2)
-    )
-})
+# test_that("Auto detection works", {
+#     # skip("Skipping auto detection ...")
+#     expect_equal(
+#         stripattr(joindata(d1, d2, "", "", "inner_join", "x", "y")),
+#         dplyr::inner_join(d1, d2, by = "x1")
+#     )
+# })
 
 test_that("Inner join works", {
     expect_equal(
@@ -65,7 +63,7 @@ test_that("Semi join works", {
             list("x1", "x2"), list("x1", "x6"),
             "semi_join", "x", "y"
         )),
-        dplyr::semi_join(d1, d3)
+        dplyr::semi_join(d1, d3, by = "x1")
     )
     expect_equal(
         stripattr(joindata(d1, d2, "x1", "x1", "semi_join", "x", "y")),
@@ -79,7 +77,7 @@ test_that("Anti join works", {
             list("x1", "x2"), list("x1", "x6"),
             "anti_join", "x", "y"
         )),
-        dplyr::anti_join(d1, d3)
+        dplyr::anti_join(d1, d3, by = "x1")
     )
     expect_equal(
         stripattr(joindata(d1, d2, "x1", "x1", "anti_join", "x", "y")),
@@ -95,5 +93,3 @@ test_that("Inbalanced columns are returned with an error", {
         ))
     )
 })
-
-

@@ -1,5 +1,3 @@
-context("Test data reshape")
-
 dt1 <- data.frame(
     "Country" = c("A", "B", "C"),
     "v1999" = c("0.7K", "37K", "212K"),
@@ -51,7 +49,7 @@ test_that("Reshape long to wide works", {
 })
 
 test_that("Reshape results are factors", {
-    expect_is(
+    expect_s3_class(
         suppressWarnings(
             reshape_data(dt1, "", "", c("v1999", "v2000"), "Year", "Count", "wide")$Year
         ),

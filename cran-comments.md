@@ -1,13 +1,17 @@
 ## Test environments
-* ubuntu 18.04 (local), R 4.0.3
-* ubuntu 20.04 (github actions), R release and devel
-* macos (github actions), R release and devel
-* windows (win-builder), R release and devel
+
+- ubuntu 22.04 (local), R 4.2.1
+- ubuntu 20.04 (github actions), R release and devel
+- macos (github actions), R release
+- windows (win-builder), R release and devel
 
 ## R CMD check results
 
 0 errors | 0 warnings | 0 notes
 
-## Downstream dependencies
+## revdepcheck results
 
-I have run R CMD CHECK on downstream dependencies of iNZightTools, and all passed.
+We checked 2 reverse dependencies (0 from CRAN + 2 from Bioconductor), comparing R CMD check results across CRAN and dev versions of this package.
+
+- We saw 0 new problems
+- We failed to check 0 packages

@@ -1,4 +1,4 @@
-metaFun <- function(type, name, fun) {
+metaFun <- function(type, name, fun, labels = NULL) {
     if (!is.character(type) || length(type) != 1)
         stop("type must be a character string of length 1")
     if (!is.character(name) || length(name) != 1)
@@ -20,7 +20,8 @@ metaFun <- function(type, name, fun) {
             type = type,
             name = name,
             rename = rename,
-            fun = fun
+            fun = fun,
+            labels = labels
         ),
         class = "inzmetafun"
     )
@@ -44,10 +45,14 @@ rename <- function(x) !is.null(x$rename)
 getrename <- function(x) x$rename
 gettype <- function(x, abbr = FALSE) {
     if (abbr) {
-        return(switch(x$type,
-            "integer" = "i",
-            "numeric" = "n",
-            "factor" = "c"))
+        return(
+            switch(x$type,
+                "integer" = "i",
+                "numeric" = "n",
+                "factor" = "c",
+                "multi" = "c"
+            )
+        )
     }
     x$type
 }

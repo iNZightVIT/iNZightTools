@@ -1,10 +1,8 @@
-context("Categorical variable functions")
-
 cas <- smart_read("cas500.csv")
 
 test_that("Combine categorical variables returns a factor", {
     cas2 <- combineCatVars(cas, c("travel", "gender"))
-    expect_is(cas2$travel.gender, "factor")
+    expect_s3_class(cas2$travel.gender, "factor")
 })
 
 test_that("NAs in either variable return an NA", {
@@ -31,5 +29,5 @@ svy <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
 test_that("Survey cat vars can be combined", {
     d <- combineCatVars(svy, c("both", "awards"))
     expect_equal(levels(d$variables$both.awards), c("No.No", "Yes.No", "Yes.Yes"))
-    expect_equivalent(eval(parse(text = code(d))), d)
+    expect_equal(eval(parse(text = code(d))), d, ignore_attr = TRUE)
 })

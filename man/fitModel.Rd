@@ -13,7 +13,6 @@ fitModel(
     negbin = "log"),
   design = "simple",
   svydes = NA,
-  surv = NULL,
   surv_params = NULL,
   ...
 )
@@ -34,8 +33,6 @@ one of 'simple', 'survey' or 'experiment'}
 
 \item{svydes}{a vector of arguments to be passed to the svydesign function,
 excluding data (defined above)}
-
-\item{surv}{if the analysis is survival analysis, is it \code{cox} or \code{aft}?}
 
 \item{surv_params}{a vector containing arguments for \code{survival::Surv()}}
 

@@ -1,4 +1,5 @@
 - relocate survey specification reading files to new package [`surveyspec`](github.com/tmelliott/surveyspec)
+- add survival analysis as an option for `fitModel` via `family = "cox"`
 
 # iNZightTools 1.12.3
 
@@ -79,6 +80,7 @@ Minor version bump to align with release of iNZight 4.0.
 - add new `selectVars` function
 - add negative binomial as an option for `family` in `fitModel`
 - add `%notin%` operator to more easily/readably check `! x %in% y`
+- `fitModel` can now fit Cox PH models
 
 ---
 

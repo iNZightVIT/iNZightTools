@@ -11,6 +11,7 @@
 #'        one of 'simple', 'survey' or 'experiment'
 #' @param svydes  a vector of arguments to be passed to the svydesign function,
 #'        excluding data (defined above)
+#' @param surv_params a vector containing arguments for \code{survival::Surv()}
 #' @param ... further arguments to be passed to lm, glm, svyglm,
 #'        such as offset, etc.
 #' @return A model call formula (using lm, glm, or svyglm)
@@ -27,9 +28,13 @@ fitModel <- function(y, x, data,
                      ),
                      design = "simple",
                      svydes = NA,
+                     surv_params = NULL,
                      ...) {
 
     if (missing(x) || length(x) == 0 || x == "") x <- 1
+    if (isTRUE(family %in% c("cox", "aft"))) {
+        y <- paste0("survival::Surv(", paste(surv_params, collapse = ", "), ")")
+    }
     Formula <- paste(y, x, sep = " ~ ")
     dat <- paste("data", data, sep = " = ")
     fam <- paste("family", family, sep = " = ")
@@ -43,38 +48,55 @@ fitModel <- function(y, x, data,
 
     if (design == "simple") {
         # simple IID data:
-        if (family == "gaussian") {
-            # Simple linear regression model:
-            args <- paste(Formula, dat, sep = ", ")
-            if (xargs != "")
-                args <- paste(args, xargs, sep = ", ")
-            call <- paste("lm(", args, ")", sep = "")
-        } else if (family == "negbin") {
-            args <- paste(Formula, dat, sep = ", ")
-            if (xargs != "")
-                args <- paste(args, xargs, sep = ", ")
-            if (isTRUE(link != "log")) {
-                args <- paste(args, sprintf("link = \"%s\"", link), sep = ", ")
+        if (!(family %in% c("cox", "aft"))) {
+            if (family == "gaussian") {
+                # Simple linear regression model:
+                args <- paste(Formula, dat, sep = ", ")
+                if (xargs != "")
+                    args <- paste(args, xargs, sep = ", ")
+                call <- paste("lm(", args, ")", sep = "")
+            } else if (family == "negbin") {
+                args <- paste(Formula, dat, sep = ", ")
+                if (xargs != "")
+                    args <- paste(args, xargs, sep = ", ")
+                if (isTRUE(link != "log")) {
+                    args <- paste(args, sprintf("link = \"%s\"", link), sep = ", ")
+                }
+                call <- paste("MASS::glm.nb(", args, ")", sep = "")
+            } else {
+                # general linear model:
+                args <- paste(Formula, dat, fam, sep = ", ")
+                if (xargs != "")
+                    args <- paste(args, xargs, sep = ", ")
+                call <- paste("glm(", args, ")", sep = "")
             }
-            call <- paste("MASS::glm.nb(", args, ")", sep = "")
-        } else {
-            # general linear model:
-            args <- paste(Formula, dat, fam, sep = ", ")
+        } else if (isTRUE(family %in% c("cox", "aft"))) {
+            ## Which survival model?
+            surv.fun <- ifelse(family == "cox", "coxph", "survreg")
+            args <- paste(Formula, dat, sep = ", ")
             if (xargs != "")
                 args <- paste(args, xargs, sep = ", ")
-            call <- paste("glm(", args, ")", sep = "")
+            call <- paste("survival::", surv.fun, "(", args,  ", model = TRUE)", sep = "")
         }
     } else if (design == "survey") {
         # complex survey design:
-        if (family == "negbin") {
-            stop("Negative binomial regression is not yet implemented for survey designs. \n")
+        if (!(family %in% c("cox", "aft"))) {
+            if (family == "negbin") {
+                stop("Negative binomial regression is not yet implemented for survey designs. \n")
+            }
+
+            # set up the svyglm function call
+            args <- paste(Formula, fam, "design = svy.design", sep = ", ")
+            if (xargs != "")
+                args <- paste(args, xargs, sep = ", ")
+            call <- paste("survey::svyglm(", args, ")", sep = "")
+        } else if (isTRUE(family %in% c("cox", "aft"))) {
+            surv.fun <- ifelse(family == "cox", "coxph", "survreg")
+            args <- paste(Formula, "design = svy.design", sep = ", ")
+            if (xargs != "")
+                args <- paste(args, xargs, sep = ", ")
+            call <- paste("survey::svy", surv.fun, "(", args, ")", sep = "")
         }
-        
-        # set up the svyglm function call
-        args <- paste(Formula, fam, "design = svy.design", sep = ", ")
-        if (xargs != "")
-            args <- paste(args, xargs, sep = ", ")
-        call <- paste("survey::svyglm(", args, ")", sep = "")
     } else if (design == "experiment") {
         # experimental design:
         stop("Experiments are not yet implemented. \n")
@@ -105,3 +127,5 @@ fitDesign <- function(svydes, dataset.name) {
 
     eval(parse(text = svy.des), .GlobalEnv)
 }
+
+

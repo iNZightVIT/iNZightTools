@@ -5,42 +5,38 @@
 #'
 #' @param data a dataframe or survey design object to filter
 #' @param var character of the column in `data` to filter by
-#' @param num a number for which the \code{op} applies to
 #' @param op  a logical operator of "<=", "<", ">=", ">", "==" or "!="
 #'        for the boolean condition
+#' @param num a number for which the \code{op} applies to
 #' @return filtered dataframe with tidyverse code attached
 #' @seealso \code{\link{code}}
-#' @rdname filter_dbl
+#' @rdname filter_num
 #' @examples
-#' filtered <- filter_dbl(iris, var = "Sepal.Length", op = "<=", num = 5)
-#' code(filtered)
+#' filtered <- filter_num(iris, var = "Sepal.Length", op = "<=", num = 5)
+#' cat(code(filtered))
 #' head(filtered)
 #'
 #' library(survey)
 #' data(api)
 #' svy <- svydesign(~ dnum + snum, weights = ~pw, fpc = ~ fpc1 + fpc2, data = apiclus2)
-#' svy_filtered <- filter_dbl(svy, var = "api00", op = "<", num = 700)
-#' code(svy_filtered)
+#' svy_filtered <- filter_num(svy, var = "api00", op = "<", num = 700)
+#' cat(code(svy_filtered))
 #'
 #' @author Owen Jin, Tom Elliott, Stephen Su
 #' @export
 #' @md
-filter_dbl <- function(data, var, num,
-                       op = c("<=", "<", ">=", ">", "==", "!=")) {
-    op <- arg_match(op)
-    exp <- expr_deparse(enexpr(data)) |>
-        paste0(if_else(
-            is_survey(data) && !inherits(data, "tbl_svy"),
-            " |> srvyr::as_survey()", ""
-        )) |>
-        paste0(" |> ", sprintf(
-            "%s::filter(%s %s %s)",
-            if_else(is_survey(data), "srvyr", "dplyr"),
-            var, op, num
-        )) |>
-        parse_expr()
-
-    eval_tidy(exp) |> structure(code = exp)
+filter_num <- function(data, var,
+                       op = c("<=", "<", ">=", ">", "==", "!="),
+                       num) {
+    op <- rlang::arg_match(op)
+    expr <- rlang::enexpr(data)
+    if (is_survey(data) && !inherits(data, "tbl_svy")) {
+        expr <- rlang::expr(!!expr %>% srvyr::as_survey())
+    }
+    filter_lib <- rlang::sym(ifelse(is_survey(data), "srvyr", "dplyr"))
+    expr <- rlang::expr(!!expr %>%
+        `::`(!!filter_lib, filter)((!!op)(!!rlang::sym(var), !!num)))
+    eval_code(expr)
 }
 
 
@@ -55,31 +51,28 @@ filter_dbl <- function(data, var, num,
 #'
 #' @return filtered dataframe with tidyverse code attached
 #' @seealso \code{\link{code}}
-#' @rdname filter_chr
+#' @rdname filter_cat
 #' @examples
-#' filtered <- filter_chr(iris,
+#' filtered <- filter_cat(iris,
 #'     var = "Species",
 #'     levels = c("versicolor", "virginica")
 #' )
-#' code(filtered)
+#' cat(code(filtered))
 #' head(filtered)
 #'
 #' @author Owen Jin, Stephen Su
 #' @export
-filter_chr <- function(data, var, levels) {
-    exp <- expr_deparse(enexpr(data)) |>
-        paste0(if_else(
-            is_survey(data) && !inherits(data, "tbl_svy"),
-            " |> srvyr::as_survey()", ""
-        )) |>
-        paste0(" |> ", sprintf(
-            "%s::filter(%s %s %s)",
-            if_else(is_survey(data), "srvyr", "dplyr"),
-            var, "%in%", expr_deparse(enexpr(levels))
-        )) |>
-        parse_expr()
-
-    eval_tidy(exp) |> structure(code = exp)
+filter_cat <- function(data, var, levels) {
+    expr <- rlang::enexpr(data)
+    lvls <- rlang::enexpr(levels)
+    if (is_survey(data) && !inherits(data, "tbl_svy")) {
+        expr <- rlang::expr(!!expr %>% srvyr::as_survey())
+    }
+    filter_lib <- rlang::sym(ifelse(is_survey(data), "srvyr", "dplyr"))
+    op <- ifelse(length(levels) > 1, "%in%", "==")
+    expr <- rlang::expr(!!expr %>%
+        `::`(!!filter_lib, filter)((!!op)(!!rlang::sym(var), !!lvls)))
+    eval_code(expr)
 }
 
 
@@ -92,61 +85,20 @@ filter_chr <- function(data, var, levels) {
 #' @param rows  a numeric vector of row numbers to slice off
 #' @return filtered dataframe with tidyverse code attached
 #' @seealso \code{\link{code}}
-#' @rdname rows_remove
+#' @rdname remove_rows
 #' @examples
-#' filtered <- rows_remove(iris, rows = c(1, 4, 5))
-#' code(filtered)
-#' head(filtered)
+#' data <- remove_rows(iris, rows = c(1, 4, 5))
+#' cat(code(data))
+#' head(data)
 #'
 #' @author Owen Jin, Stephen Su
 #' @export
-rows_remove <- function(data, rows) {
-    exp <- expr_deparse(enexpr(data))
+remove_rows <- function(data, rows) {
+    expr <- rlang::enexpr(data)
     if (is_survey(data)) {
-        exp <- sprintf("%s[-(%s)]", exp, expr_deparse(enexpr(rows)))
+        expr <- rlang::expr(`[`(!!expr, -((!!rlang::enexpr(rows)))))
     } else {
-        exp <- sprintf("dplyr::slice(%s, -(%s))", exp, expr_deparse(enexpr(rows)))
+        expr <- rlang::expr(dplyr::slice(!!expr, -((!!rlang::enexpr(rows)))))
     }
-    exp <- parse_expr(exp)
-
-    eval_tidy(exp) |> structure(code = exp)
-}
-
-
-#' Random sampling without replacement
-#'
-#' Take a specified number of groups of observations with fixed group size
-#' by sampling without replacement
-#' and returns the result along with tidyverse code used to generate it.
-#'
-#' @param data a dataframe to sample from
-#' @param n the number of groups to generate
-#' @param sample_size  the size of each group specified in \code{n}
-#' @return a dataframe containing the random samples with
-#'         tidyverse code attached
-#' @seealso \code{\link{code}}
-#' @rdname random_sample
-#' @examples
-#' filtered <- random_sample(iris, n = 5, sample_size = 3)
-#' code(filtered)
-#' head(filtered)
-#'
-#' @author Owen Jin, Stephen Su
-#' @export
-random_sample <- function(data, n, sample_size) {
-    exp <- expr_deparse(enexpr(data))
-    if (is_survey(data)) {
-        abort("Survey data cannot be sampled at this stage.")
-    }
-    exp <- exp |>
-        paste0(" |> ", sprintf(
-            "dplyr::slice_sample(n = %s * %s)", n, sample_size
-        )) |>
-        paste0(" |> ", sprintf(
-            "dplyr::mutate(.group = factor(rep(seq_len(%s), each = %s)))",
-            n, sample_size
-        )) |>
-        parse_expr()
-
-    eval_tidy(exp) |> structure(code = exp)
+    eval_code(expr)
 }

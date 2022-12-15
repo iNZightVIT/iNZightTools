@@ -189,3 +189,9 @@ orNULL <- function(x, y = x) {
 #' @export
 #' @md
 `%notin%` <- function(x, table) match(x, table, nomatch = 0L) == 0L
+
+
+eval_code <- function(expr) {
+    rlang::eval_tidy(expr) |>
+        structure(code = rlang::expr_deparse(expr))
+}

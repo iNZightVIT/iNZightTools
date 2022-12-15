@@ -30,12 +30,16 @@ filter_num <- function(data, var,
                        num) {
     op <- rlang::arg_match(op)
     expr <- rlang::enexpr(data)
-    if (is_survey(data) && !inherits(data, "tbl_svy")) {
-        expr <- rlang::expr(!!expr %>% srvyr::as_survey())
+    ## Defuse {`op`(var, num)} into the form of {var `op` num}
+    filter_expr <- rlang::expr((!!op)(!!rlang::sym(var), !!num))
+    if (is_survey(data)) {
+        if (!inherits(data, "tbl_svy")) {
+            expr <- rlang::expr(!!expr %>% srvyr::as_survey())
+        }
+        expr <- rlang::expr(!!expr %>% srvyr::filter(!!filter_expr))
+    } else {
+        expr <- rlang::expr(!!expr %>% dplyr::filter(!!filter_expr))
     }
-    filter_lib <- rlang::sym(ifelse(is_survey(data), "srvyr", "dplyr"))
-    expr <- rlang::expr(!!expr %>%
-        `::`(!!filter_lib, filter)((!!op)(!!rlang::sym(var), !!num)))
     eval_code(expr)
 }
 
@@ -65,13 +69,16 @@ filter_num <- function(data, var,
 filter_cat <- function(data, var, levels) {
     expr <- rlang::enexpr(data)
     lvls <- rlang::enexpr(levels)
-    if (is_survey(data) && !inherits(data, "tbl_svy")) {
-        expr <- rlang::expr(!!expr %>% srvyr::as_survey())
-    }
-    filter_lib <- rlang::sym(ifelse(is_survey(data), "srvyr", "dplyr"))
     op <- ifelse(length(levels) > 1, "%in%", "==")
-    expr <- rlang::expr(!!expr %>%
-        `::`(!!filter_lib, filter)((!!op)(!!rlang::sym(var), !!lvls)))
+    filter_expr <- rlang::expr((!!op)(!!rlang::sym(var), !!lvls)) ## Defuse `op`
+    if (is_survey(data)) {
+        if (!inherits(data, "tbl_svy")) {
+            expr <- rlang::expr(!!expr %>% srvyr::as_survey())
+        }
+        expr <- rlang::expr(!!expr %>% srvyr::filter(!!filter_expr))
+    } else {
+        expr <- rlang::expr(!!expr %>% dplyr::filter(!!filter_expr))
+    }
     eval_code(expr)
 }
 

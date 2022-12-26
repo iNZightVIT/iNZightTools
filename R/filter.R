@@ -33,9 +33,7 @@ filter_num <- function(data, var,
     ## Defuse {`op`(var, num)} into the form of {var `op` num}
     filter_expr <- rlang::expr((!!op)(!!rlang::sym(var), !!num))
     if (is_survey(data)) {
-        if (!inherits(data, "tbl_svy")) {
-            expr <- rlang::expr(!!expr %>% srvyr::as_survey())
-        }
+        expr <- coerce_tbl_svy(expr, data)
         expr <- rlang::expr(!!expr %>% srvyr::filter(!!filter_expr))
     } else {
         expr <- rlang::expr(!!expr %>% dplyr::filter(!!filter_expr))
@@ -72,9 +70,7 @@ filter_cat <- function(data, var, levels) {
     op <- ifelse(length(levels) > 1, "%in%", "==")
     filter_expr <- rlang::expr((!!op)(!!rlang::sym(var), !!lvls)) ## Defuse `op`
     if (is_survey(data)) {
-        if (!inherits(data, "tbl_svy")) {
-            expr <- rlang::expr(!!expr %>% srvyr::as_survey())
-        }
+        expr <- coerce_tbl_svy(expr, data)
         expr <- rlang::expr(!!expr %>% srvyr::filter(!!filter_expr))
     } else {
         expr <- rlang::expr(!!expr %>% dplyr::filter(!!filter_expr))

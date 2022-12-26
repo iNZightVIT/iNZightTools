@@ -192,6 +192,20 @@ orNULL <- function(x, y = x) {
 
 
 eval_code <- function(expr) {
+    pipe <- getOption("inzighttools.pipe", "baseR")
+    expr_deparsed <- dplyr::case_when(
+        pipe %in% c("dplyr", "%>%", "magrittr") ~ rlang::expr_deparse(expr),
+        TRUE ~ stringr::str_replace_all(rlang::expr_deparse(expr), "%>%", "|>")
+    )
     rlang::eval_tidy(expr) |>
-        structure(code = rlang::expr_deparse(expr))
+        structure(code = expr_deparsed)
+}
+
+
+coerce_tbl_svy <- function(expr, data) {
+    if (!inherits(data, "tbl_svy")) {
+        rlang::expr(!!expr %>% srvyr::as_survey())
+    } else {
+        expr
+    }
 }

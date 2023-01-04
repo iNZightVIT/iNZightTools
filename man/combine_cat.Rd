@@ -30,7 +30,7 @@ are removed from the factor}
 otherwise, the resulting entries will return \code{<NA>}}
 }
 \value{
-original dataframe containing a new column of the renamed
+original dataframe containing new columns of the renamed
         categorical variable with tidyverse code attached
 }
 \description{

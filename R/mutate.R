@@ -1,3 +1,13 @@
+mutate_expr <- function(expr, vars_expr, data) {
+    if (is_survey(data)) {
+        expr <- coerce_tbl_svy(expr, data)
+        rlang::expr(!!expr %>% srvyr::mutate(!!!vars_expr))
+    } else {
+        rlang::expr(!!expr %>% dplyr::mutate(!!!vars_expr))
+    }
+}
+
+
 #' Replace NAs with specified values
 #' @name replace_na
 #' @importFrom tidyr replace_na
@@ -37,7 +47,7 @@ replace_na.factor <- function(data, replace = "<NA>", ...) {
 #'        \code{NA} in the characters will be replaced with \code{"<NA>"};
 #'        otherwise, the resulting entries will return \code{<NA>}
 #'
-#' @return original dataframe containing a new column of the renamed
+#' @return original dataframe containing new columns of the renamed
 #'         categorical variable with tidyverse code attached
 #' @rdname combine_cat
 #' @examples
@@ -72,5 +82,62 @@ combine_cat <- function(data, vars, sep = ":", name = NULL,
             )
         ))
     }
+    eval_code(expr)
+}
+
+
+#' Convert variables to categorical variables
+#'
+#' Convert specified variables into factors
+#'
+#' @param data a dataframe with the categorical column to convert
+#' @param vars  a character vector of column names to convert
+#' @param names a character vector of names for the created variables
+#' @return original dataframe containing new columns of the
+#'         converted variables with tidyverse code attached
+#' @rdname mutate_as_cat
+#' @seealso \code{\link{code}}
+#' @examples
+#' converted <- mutate_as_cat(iris, vars = c("Petal.Width"))
+#' cat(code(converted))
+#' head(converted)
+#'
+#' @author Stephen Su
+#' @export
+mutate_as_cat <- function(data, vars, names = NULL) {
+    expr <- rlang::enexpr(data)
+    if (is.null(names)) {
+        names <- sprintf("%s.cat", vars)
+    }
+    vars_expr <- purrr::map(vars, function(x) {
+        rlang::expr(as.factor(!!rlang::sym(x)))
+    }) |> rlang::set_names(names)
+    expr <- mutate_expr(expr, vars_expr, data)
+    eval_code(expr)
+}
+
+
+#' Convert variables to date-time
+#'
+#' @param data a dataframe with the variables to convert
+#' @param vars a character vector of column names to convert
+#' @param names a character vector of names for the created variables
+#' @param tz a time zone name (default: local time zone). See
+#'        \code{\link[base]{OlsonNames}}
+#' @return original dataframe containing new columns of the
+#'         converted variables with tidyverse code attached
+#' @rdname mutate_as_datetime
+#' @seealso \code{\link{code}}
+#' @export
+#' @author Stephen Su
+mutate_as_datetime <- function(data, vars, names = NULL, tz = "") {
+    expr <- rlang::enexpr(data)
+    if (is.null(names)) {
+        names <- sprintf("%s.datetime", vars)
+    }
+    vars_expr <- purrr::map(vars, function(x) {
+        rlang::expr(lubridate::as_datetime(!!rlang::sym(x), tz = !!tz))
+    }) |> rlang::set_names(names)
+    expr <- mutate_expr(expr, vars_expr, data)
     eval_code(expr)
 }

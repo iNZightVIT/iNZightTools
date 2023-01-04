@@ -1,3 +1,13 @@
+filter_expr <- function(expr, var_expr, data) {
+    if (is_survey(data)) {
+        expr <- coerce_tbl_svy(expr, data)
+        expr <- rlang::expr(!!expr %>% srvyr::filter(!!var_expr))
+    } else {
+        expr <- rlang::expr(!!expr %>% dplyr::filter(!!var_expr))
+    }
+}
+
+
 #' Filter data by levels of numeric variables
 #'
 #' Filter a dataframe by some boolean condition of one numeric variable
@@ -31,13 +41,8 @@ filter_num <- function(data, var,
     op <- rlang::arg_match(op)
     expr <- rlang::enexpr(data)
     ## Defuse {`op`(var, num)} into the form of {var `op` num}
-    filter_expr <- rlang::expr((!!op)(!!rlang::sym(var), !!num))
-    if (is_survey(data)) {
-        expr <- coerce_tbl_svy(expr, data)
-        expr <- rlang::expr(!!expr %>% srvyr::filter(!!filter_expr))
-    } else {
-        expr <- rlang::expr(!!expr %>% dplyr::filter(!!filter_expr))
-    }
+    var_expr <- rlang::expr((!!op)(!!rlang::sym(var), !!num))
+    expr <- filter_expr(expr, var_expr, data)
     eval_code(expr)
 }
 
@@ -68,13 +73,8 @@ filter_cat <- function(data, var, levels) {
     expr <- rlang::enexpr(data)
     lvls <- rlang::enexpr(levels)
     op <- ifelse(length(levels) > 1, "%in%", "==")
-    filter_expr <- rlang::expr((!!op)(!!rlang::sym(var), !!lvls)) ## Defuse `op`
-    if (is_survey(data)) {
-        expr <- coerce_tbl_svy(expr, data)
-        expr <- rlang::expr(!!expr %>% srvyr::filter(!!filter_expr))
-    } else {
-        expr <- rlang::expr(!!expr %>% dplyr::filter(!!filter_expr))
-    }
+    var_expr <- rlang::expr((!!op)(!!rlang::sym(var), !!lvls)) ## Defuse `op`
+    expr <- filter_expr(expr, var_expr, data)
     eval_code(expr)
 }
 

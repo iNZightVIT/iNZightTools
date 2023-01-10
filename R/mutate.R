@@ -68,20 +68,14 @@ combine_cat <- function(data, vars, sep = ":", name = NULL,
     } else {
         vars <- rlang::syms(vars)
     }
-    if (is_survey(data)) {
-        expr <- coerce_tbl_svy(expr, data)
-        expr <- rlang::expr(!!expr %>% srvyr::mutate(
-            !!name := forcats::fct_cross(!!!vars,
-                sep = !!sep, keep_empty = !!keep_empty
-            )
+    vars_expr <- rlang::list2(
+        !!name := rlang::expr(forcats::fct_cross(
+            !!!vars,
+            sep = !!sep,
+            keep_empty = !!keep_empty
         ))
-    } else {
-        expr <- rlang::expr(!!expr %>% dplyr::mutate(
-            !!name := forcats::fct_cross(!!!vars,
-                sep = !!sep, keep_empty = !!keep_empty
-            )
-        ))
-    }
+    )
+    expr <- mutate_expr(expr, vars_expr, data)
     eval_code(expr)
 }
 
@@ -288,5 +282,60 @@ rename_vars <- function(data, from, to) {
     } else {
         expr <- rlang::expr(!!expr %>% dplyr::rename(!!!vars_expr))
     }
+    eval_code(expr)
+}
+
+
+#' Collapse data by values of a categorical variable
+#'
+#' Collapse values in a categorical variable into less levels of values
+#'
+#' @param data a dataframe to collapse
+#' @param var  a string of the name of the categorical variable to collapse
+#' @param collapsed  a named list: the values of the categorical variable
+#'        matching each element in the list will be changed to the name of that
+#'        element in the list
+#' @param name a name for the new variable
+#' @return the original dataframe containing a new column of the
+#'         collapsed variable with tidyverse code attached
+#' @rdname collapse_cat
+#' @seealso \code{\link{code}}
+#'
+#' @examples
+#' collapsed <- collapse_cat(iris,
+#'     var = "Species",
+#'     list(S = "setosa", V = c("versicolor", "virginica"))
+#' )
+#' cat(code(collapsed))
+#' head(collapsed)
+#'
+#' @author Stephen Su
+#' @export
+collapse_cat <- function(data, var, collapsed = NULL, name = NULL) {
+    expr <- rlang::enexpr(data)
+    if (length(var) > 1) {
+        var <- var[1]
+        rlang::warn(sprintf(
+            "Please specify one variable, setting `var = %s`",
+            var
+        ))
+    }
+    if (is.null(name)) {
+        name <- sprintf("%s.coll", var)
+    }
+    fctr <- purrr::map(collapsed, function(x) {
+        if (length(x) > 1) {
+            ## Parse the elements into expressions in the form of c(...)
+            purrr::map_chr(x, function(x) sprintf("\"%s\"", x)) |>
+                (\(.) sprintf("c(%s)", paste(., collapse = ", ")))() |>
+                rlang::parse_expr()
+        } else {
+            rlang::parse_expr(sprintf("\"%s\"", x))
+        }
+    }) |> rlang::set_names(names(collapsed))
+    vars_expr <- rlang::list2(
+        !!name := rlang::expr(forcats::fct_collapse(!!rlang::sym(var), !!!fctr))
+    )
+    expr <- mutate_expr(expr, vars_expr, data)
     eval_code(expr)
 }

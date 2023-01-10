@@ -1,4 +1,5 @@
 - relocate survey specification reading files to new package [`surveyspec`](github.com/tmelliott/surveyspec)
+
 - add survival analysis as an option for `fitModel` via `family = "cox"`
 
 # iNZightTools 1.12.3

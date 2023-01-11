@@ -82,3 +82,11 @@ test_that("Not in works", {
     expect_true("a" %notin% LETTERS)
     expect_false("A" %notin% LETTERS)
 })
+
+test_that("Or null helper", {
+    x <- list(a = 1, b = NULL)
+    expect_equal(orNULL(x), x)
+    expect_equal(orNULL(x$a), x$a)
+    expect_equal(orNULL(x$b), NULL)
+    expect_equal(orNULL(x$c), NULL)
+})

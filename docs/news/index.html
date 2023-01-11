@@ -87,7 +87,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.12.0" id="inzighttools-1120">iNZightTools 1.12.0<small>2021-09-17</small><a class="anchor" aria-label="anchor" href="#inzighttools-1120"></a></h2>
-<ul><li>add new support for metadata formats:<ul><li>multiple-response variables (using <code>@multi</code>)</li>
+<ul><li>add new support for metadata formats:
+<ul><li>multiple-response variables (using <code>@multi</code>)</li>
 <li>numeric na codes (using <code>@numeric x na=99</code>)</li>
 </ul></li>
 <li>allow spaces in new factor level names (<code><a href="../reference/renameLevels.html">renameLevels()</a></code>)</li>
@@ -103,7 +104,8 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11.4" id="inzighttools-1114">iNZightTools 1.11.4<a class="anchor" aria-label="anchor" href="#inzighttools-1114"></a></h2>
 <ul><li>fix bug in <code><a href="../reference/aggregateData.html">aggregateData()</a></code> if <code>summary_vars</code> is not specified and there are factor columns in the dataset not showing up in <code>vars</code>
-</li></ul></div>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11.3" id="inzighttools-1113">iNZightTools 1.11.3<a class="anchor" aria-label="anchor" href="#inzighttools-1113"></a></h2>
 <ul><li>fix <code>form_class_intervals</code> to work with survey designs (count not yet working)</li>
@@ -111,14 +113,18 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11.2" id="inzighttools-1112">iNZightTools 1.11.2<small>2021-07-13</small><a class="anchor" aria-label="anchor" href="#inzighttools-1112"></a></h2>
-<ul><li>prevents tests from failing during CRAN checks when resources unavailable</li></ul></div>
+<ul><li>prevents tests from failing during CRAN checks when resources unavailable</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11.1" id="inzighttools-1111">iNZightTools 1.11.1<small>2021-06-30</small><a class="anchor" aria-label="anchor" href="#inzighttools-1111"></a></h2>
-<ul><li>update <code>survey_IQR</code> (and some tests) to work with ‘survey’ 4.1 (new <code>svyquantile</code> function)</li></ul></div>
+<ul><li>update <code>survey_IQR</code> (and some tests) to work with ‘survey’ 4.1 (new <code>svyquantile</code> function)</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11" id="inzighttools-111">iNZightTools 1.11<a class="anchor" aria-label="anchor" href="#inzighttools-111"></a></h2>
-<ul><li>use <code>srvyr</code> package to handle survey designs using <code>dplyr</code>-like syntax<ul><li>
-<code><a href="../reference/aggregateData.html">aggregateData()</a></code>, <code><a href="../reference/filterNumeric.html">filterNumeric()</a></code>, <code><a href="../reference/filterLevels.html">filterLevels()</a></code>, <code><a href="../reference/filterRows.html">filterRows()</a></code>, …</li></ul></li>
+<ul><li>use <code>srvyr</code> package to handle survey designs using <code>dplyr</code>-like syntax
+<ul><li>
+<code><a href="../reference/aggregateData.html">aggregateData()</a></code>, <code><a href="../reference/filterNumeric.html">filterNumeric()</a></code>, <code><a href="../reference/filterLevels.html">filterLevels()</a></code>, <code><a href="../reference/filterRows.html">filterRows()</a></code>, …</li>
+</ul></li>
 <li>remove redundant code from <code><a href="../reference/filterLevels.html">filterLevels()</a></code> to make it more concise (using <code><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels()</a></code>)</li>
 <li>add method to convert survey design-like objects to iNZight’s <code>inzsvyspec</code> format</li>
 <li>suppress printing of dataset when joining data</li>
@@ -134,7 +140,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.1" id="inzighttools-191">iNZightTools 1.9.1<a class="anchor" aria-label="anchor" href="#inzighttools-191"></a></h2>
-<ul><li>fix bug in reading delim files where, if first 1000+ rows of a column were <code>NA</code>, the column was read as logical instead of character (this is a fixed behaviour of <code>readr</code>, so cannot be overridden)</li></ul></div>
+<ul><li>fix bug in reading delim files where, if first 1000+ rows of a column were <code>NA</code>, the column was read as logical instead of character (this is a fixed behaviour of <code>readr</code>, so cannot be overridden)</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.0" id="inzighttools-190">iNZightTools 1.9.0<small>2020-07-29</small><a class="anchor" aria-label="anchor" href="#inzighttools-190"></a></h2>
 <p>Minor version bump to align with release of iNZight 4.0.</p>
@@ -151,7 +158,8 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.6" id="inzighttools-186">iNZightTools 1.8.6<a class="anchor" aria-label="anchor" href="#inzighttools-186"></a></h2>
 <ul><li>ensure non-numeric values are returned as factors by <code><a href="../reference/read_text.html">read_text()</a></code>
-</li></ul></div>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.5" id="inzighttools-185">iNZightTools 1.8.5<small>2020-05-20</small><a class="anchor" aria-label="anchor" href="#inzighttools-185"></a></h2>
 <ul><li>increase nmax for previews to 100 (from 10)</li>
@@ -170,7 +178,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.2" id="inzighttools-182">iNZightTools 1.8.2<a class="anchor" aria-label="anchor" href="#inzighttools-182"></a></h2>
-<ul><li>fix issues from CRAN submission</li></ul></div>
+<ul><li>fix issues from CRAN submission</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.1" id="inzighttools-181">iNZightTools 1.8.1<a class="anchor" aria-label="anchor" href="#inzighttools-181"></a></h2>
 <ul><li>new <code><a href="../reference/read_text.html">read_text()</a></code> function to read from text string/clipboard</li>
@@ -206,7 +215,8 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.2" id="inzighttools-172">iNZightTools 1.7.2<a class="anchor" aria-label="anchor" href="#inzighttools-172"></a></h2>
 <p><strong>Release date</strong>: 15 July 2019</p>
-<ul><li>various bug fixes</li></ul></div>
+<ul><li>various bug fixes</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.1" id="inzighttools-171">iNZightTools 1.7.1<a class="anchor" aria-label="anchor" href="#inzighttools-171"></a></h2>
 <p><strong>Release date</strong>: 30 April 2019</p>
@@ -224,21 +234,25 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6.3" id="inzighttools-163">iNZightTools 1.6.3<a class="anchor" aria-label="anchor" href="#inzighttools-163"></a></h2>
 <p><strong>Release date</strong>: 15 November 2018</p>
-<ul><li>[fix] prefix <code>survey::</code> namespace to function calls</li></ul></div>
+<ul><li>[fix] prefix <code>survey::</code> namespace to function calls</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6.2" id="inzighttools-162">iNZightTools 1.6.2<a class="anchor" aria-label="anchor" href="#inzighttools-162"></a></h2>
 <p><strong>Release date</strong>: 10 September 2018</p>
-<ul><li>fix a bug in reading csv files with spaces in the header</li></ul></div>
+<ul><li>fix a bug in reading csv files with spaces in the header</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6.1" id="inzighttools-161">iNZightTools 1.6.1<a class="anchor" aria-label="anchor" href="#inzighttools-161"></a></h2>
 <p><strong>Release date</strong>: 04 September 2018</p>
-<ul><li>fix bug in reading metadata where non-meta comments would cancel read</li></ul></div>
+<ul><li>fix bug in reading metadata where non-meta comments would cancel read</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6" id="inzighttools-16">iNZightTools 1.6<a class="anchor" aria-label="anchor" href="#inzighttools-16"></a></h2>
 <p><strong>Release date</strong>: 14 August 2018</p>
 <div class="section level3">
 <h3 id="breaking-changes-1-6">Breaking Changes<a class="anchor" aria-label="anchor" href="#breaking-changes-1-6"></a></h3>
-<ul><li>data import is now performed by the <code><a href="../reference/smart_read.html">smart_read()</a></code> function</li></ul></div>
+<ul><li>data import is now performed by the <code><a href="../reference/smart_read.html">smart_read()</a></code> function</li>
+</ul></div>
 <div class="section level3">
 <h3 id="minor-changes-and-fixes-1-6">Minor Changes and Fixes<a class="anchor" aria-label="anchor" href="#minor-changes-and-fixes-1-6"></a></h3>
 <ul><li>new function to generate R variable names (for code writing)</li>
@@ -257,13 +271,16 @@
 <h3 id="patches-1-5">Patches<a class="anchor" aria-label="anchor" href="#patches-1-5"></a></h3>
 <div class="section level4">
 <h4 id="patch---1-5">Patch 1.5.1 - 21/02/2018<a class="anchor" aria-label="anchor" href="#patch---1-5"></a></h4>
-<ul><li>fix tiny bug in encoding default that prevented non-UTF-8 files from reading</li></ul></div>
+<ul><li>fix tiny bug in encoding default that prevented non-UTF-8 files from reading</li>
+</ul></div>
 <div class="section level4">
 <h4 id="patch---1-5-1">Patch 1.5.2 - 22/02/2018<a class="anchor" aria-label="anchor" href="#patch---1-5-1"></a></h4>
-<ul><li>fix a bug where timezone NA on macs prevented reading data</li></ul></div>
+<ul><li>fix a bug where timezone NA on macs prevented reading data</li>
+</ul></div>
 <div class="section level4">
 <h4 id="patch---1-5-2">Patch 1.5.3 - 12/03/2018<a class="anchor" aria-label="anchor" href="#patch---1-5-2"></a></h4>
-<ul><li>fix a bug in csv reading on macos</li></ul><hr></div>
+<ul><li>fix a bug in csv reading on macos</li>
+</ul><hr></div>
 </div>
 </div>
     <div class="section level2">
@@ -276,7 +293,8 @@
 <h3 id="patches-1-4">Patches<a class="anchor" aria-label="anchor" href="#patches-1-4"></a></h3>
 <div class="section level4">
 <h4 id="version-1-4">Version 1.4-1, 02/10/2017<a class="anchor" aria-label="anchor" href="#version-1-4"></a></h4>
-<ul><li>fixes to pass CRAN checks</li></ul><hr></div>
+<ul><li>fixes to pass CRAN checks</li>
+</ul><hr></div>
 </div>
 </div>
     <div class="section level2">
@@ -289,17 +307,21 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2" id="version-12">Version 1.2<a class="anchor" aria-label="anchor" href="#version-12"></a></h2>
 <p><strong>Release date</strong>: 5 September, 2016</p>
-<ul><li>New device function uses the cairo device on Linux</li></ul><div class="section level3">
+<ul><li>New device function uses the cairo device on Linux</li>
+</ul><div class="section level3">
 <h3 id="patch---february-1-2">Patch 1.2.1 - 3 February, 2017<a class="anchor" aria-label="anchor" href="#patch---february-1-2"></a></h3>
-<ul><li>Only use the Acinonyx package on Mac (crashes R on Linux)</li></ul></div>
+<ul><li>Only use the Acinonyx package on Mac (crashes R on Linux)</li>
+</ul></div>
 <div class="section level3">
 <h3 id="patch---february-1-2-1">Patch 1.2.2 - 18 February, 2017<a class="anchor" aria-label="anchor" href="#patch---february-1-2-1"></a></h3>
 <ul><li>Stop using <code>type = "nbcairo"</code> as macOS fallback in <code><a href="../reference/newdevice.html">newdevice()</a></code>
-</li></ul><hr></div>
+</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1" id="version-11">Version 1.1<a class="anchor" aria-label="anchor" href="#version-11"></a></h2>
-<ul><li>Directly access <code>svydesign</code> function. Temporary fix until package gets a more significant revamp.</li></ul><hr></div>
+<ul><li>Directly access <code>svydesign</code> function. Temporary fix until package gets a more significant revamp.</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0" id="version-10">Version 1.0<a class="anchor" aria-label="anchor" href="#version-10"></a></h2>
 <p>Initial release.</p>

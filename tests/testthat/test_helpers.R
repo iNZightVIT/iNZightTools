@@ -30,6 +30,9 @@ test_that("Vartype is correct", {
         vartypes(lm(Sepal.Width ~ Species, data = iris)),
         "Unsupported data object."
     )
+
+    d <- structure(list(), vartypes = c("A", "B"), class = "inzdf_db")
+    expect_equal(vartypes(d), c("A", "B"))
 })
 
 test_that("Survey objects identified correctly", {

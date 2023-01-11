@@ -48,6 +48,25 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="1.13.0" id="inzighttools-1130">iNZightTools 1.13.0<a class="anchor" aria-label="anchor" href="#inzighttools-1130"></a></h2>
+<div class="section level3">
+<h3 id="new-features-1-13-0">New features<a class="anchor" aria-label="anchor" href="#new-features-1-13-0"></a></h3>
+<p><strong>Data dictionaries</strong></p>
+<p>Users can now import a data dictionary and apply it to a dataset. This will apply text labels to numerically coded variables and set labels for variables with human-friendly names.</p>
+<p><strong>Linked data</strong></p>
+<p>New functions to load linked datasets from a <code>.inzlnk</code> file, where the file linkage is specified. Optionally users can include a data dictionary in this file, which will also be applied to the data.</p>
+</div>
+<div class="section level3">
+<h3 id="other-changes-1-13-0">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-1-13-0"></a></h3>
+<ul><li>relocate survey specification reading files to new package <a href="github.com/tmelliott/surveyspec"><code>surveyspec</code></a>
+</li>
+<li>add survival analysis as an option for <code>fitModel</code> via <code>family = "cox"</code>
+</li>
+<li>initial implementation of (basic) database connectivity - this is in early alpha stage</li>
+<li>various bug fixes/changes</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="1.12.3" id="inzighttools-1123">iNZightTools 1.12.3<small>2022-08-22</small><a class="anchor" aria-label="anchor" href="#inzighttools-1123"></a></h2>
 <ul><li><p>allow ‘readr’ to use automatic delimiter guessing (csv files) instead of forcing <code>,</code> (<a href="https://github.com/iNZightVIT/iNZightTools/issues/187" class="external-link">#187</a>)</p></li>
 <li><p>fix Windows bug in <code>url_to_temp()</code> adding extra lines, causing importing files with more than one line of comments to fail delimiter-guessing</p></li>

@@ -89,16 +89,16 @@ combine_cat <- function(data, vars, sep = ":", name = NULL,
 #' @param names a character vector of names for the created variables
 #' @return original dataframe containing new columns of the
 #'         converted variables with tidyverse code attached
-#' @rdname mutate_as_cat
+#' @rdname convert_to_cat
 #' @seealso \code{\link{code}}
 #' @examples
-#' converted <- mutate_as_cat(iris, vars = c("Petal.Width"))
+#' converted <- convert_to_cat(iris, vars = c("Petal.Width"))
 #' cat(code(converted))
 #' head(converted)
 #'
 #' @author Stephen Su
 #' @export
-mutate_as_cat <- function(data, vars, names = NULL) {
+convert_to_cat <- function(data, vars, names = NULL) {
     expr <- rlang::enexpr(data)
     if (is.null(names)) {
         names <- sprintf("%s.cat", vars)
@@ -120,11 +120,11 @@ mutate_as_cat <- function(data, vars, names = NULL) {
 #'        \code{\link[base]{OlsonNames}}
 #' @return original dataframe containing new columns of the
 #'         converted variables with tidyverse code attached
-#' @rdname mutate_as_datetime
+#' @rdname convert_to_datetime
 #' @seealso \code{\link{code}}
 #' @export
 #' @author Stephen Su
-mutate_as_datetime <- function(data, vars, names = NULL, tz = "") {
+convert_to_datetime <- function(data, vars, names = NULL, tz = "") {
     expr <- rlang::enexpr(data)
     if (is.null(names)) {
         names <- sprintf("%s.datetime", vars)
@@ -144,11 +144,11 @@ mutate_as_datetime <- function(data, vars, names = NULL, tz = "") {
 #' @param names a character vector of names for the created variables
 #' @return original dataframe containing new columns of the
 #'         converted variables with tidyverse code attached
-#' @rdname mutate_as_date
+#' @rdname convert_to_date
 #' @seealso \code{\link{code}}
 #' @export
 #' @author Stephen Su
-mutate_as_date <- function(data, vars, names = NULL) {
+convert_to_date <- function(data, vars, names = NULL) {
     expr <- rlang::enexpr(data)
     if (is.null(names)) {
         names <- sprintf("%s.date", vars)
@@ -175,17 +175,17 @@ mutate_as_date <- function(data, vars, names = NULL) {
 #' with tidyverse code attached
 #' @seealso \code{\link{code}}
 #' @examples
-#' created <- mutate_new(
+#' created <- new_vars(
 #'     data = iris,
 #'     vars = "Sepal.Length_less_Sepal.Width",
 #'     "Sepal.Length - Sepal.Width"
 #' )
 #' cat(code(created))
 #' head(created)
-#' @rdname mutate_new
+#' @rdname new_vars
 #' @author Stephen Su
 #' @export
-mutate_new <- function(data, vars = ".new_var", vars_expr = NULL) {
+new_vars <- function(data, vars = ".new_var", vars_expr = NULL) {
     expr <- rlang::enexpr(data)
     vars_expr <- purrr::map(vars_expr, rlang::parse_expr) |>
         rlang::set_names(vars)
@@ -223,10 +223,10 @@ delete_vars <- function(data, vars = NULL) {
 #'
 #' @return the original dataframe containing the new columns of the transformed
 #'         variable with tidyverse code attached
-#' @rdname mutate_transform
+#' @rdname transform_vars
 #' @seealso \code{\link{code}}
 #' @examples
-#' transformed <- mutate_transform(iris,
+#' transformed <- transform_vars(iris,
 #'     var = "Petal.Length",
 #'     fn = "log"
 #' )
@@ -235,7 +235,7 @@ delete_vars <- function(data, vars = NULL) {
 #'
 #' @author Stephen Su
 #' @export
-mutate_transform <- function(data, vars, fn, names = NULL) {
+transform_vars <- function(data, vars, fn, names = NULL) {
     expr <- rlang::enexpr(data)
     if (is.null(names)) {
         names <- sprintf("%s.%s", fn, vars)
@@ -253,34 +253,32 @@ mutate_transform <- function(data, vars, fn, names = NULL) {
 #' Rename columns of a dataset with desired names
 #'
 #' @param data a dataframe with columns to rename
-#' @param from a character vector the variable names as-is
-#' @param to a character vector the variable names to-be
+#' @param tobe_asis  a named list of the old column names assigned
+#'        to the new column names
+#'        ie. list('new column names' = 'old column names')
 #' @return original dataframe containing new columns of the renamed columns
 #'        with tidyverse code attached
 #' @rdname rename_vars
 #' @seealso \code{\link{code}}
 #' @examples
-#' renamed <- rename_vars(iris,
-#'     from = names(iris),
-#'     to = tolower(gsub("\\.", "_", names(iris)))
-#' )
+#' renamed <- rename_vars(iris, list(
+#'     sepal_length = "Sepal.Length",
+#'     sepal_width = "Sepal.Width",
+#'     petal_length = "Petal.Length",
+#'     petal_width = "Petal.Width"
+#' ))
 #' cat(code(renamed))
 #' head(renamed)
 #'
 #' @author Stephen Su
 #' @export
-rename_vars <- function(data, from, to) {
+rename_vars <- function(data, tobe_asis) {
     expr <- rlang::enexpr(data)
-    if (length(from) != length(to)) {
-        rlang::abort("`from` and `to` must have same length.")
-    }
-    vars_expr <- purrr::map(from, rlang::sym) |>
-        rlang::set_names(to)
     if (is_survey(data)) {
         expr <- coerce_tbl_svy(expr, data)
-        expr <- rlang::expr(!!expr %>% srvyr::rename(!!!vars_expr))
+        expr <- rlang::expr(!!expr %>% srvyr::rename(!!!tobe_asis))
     } else {
-        expr <- rlang::expr(!!expr %>% dplyr::rename(!!!vars_expr))
+        expr <- rlang::expr(!!expr %>% dplyr::rename(!!!tobe_asis))
     }
     eval_code(expr)
 }
@@ -288,13 +286,12 @@ rename_vars <- function(data, from, to) {
 
 #' Collapse data by values of a categorical variable
 #'
-#' Collapse values in a categorical variable into less levels of values
+#' Collapse values in a categorical variable into one defined level
 #'
 #' @param data a dataframe to collapse
 #' @param var  a string of the name of the categorical variable to collapse
-#' @param collapsed  a named list: the values of the categorical variable
-#'        matching each element in the list will be changed to the name of that
-#'        element in the list
+#' @param levels_from  a character vector of the levels to be collapsed
+#' @param levels_to a string for the new level
 #' @param name a name for the new variable
 #' @return the original dataframe containing a new column of the
 #'         collapsed variable with tidyverse code attached
@@ -304,35 +301,20 @@ rename_vars <- function(data, from, to) {
 #' @examples
 #' collapsed <- collapse_cat(iris,
 #'     var = "Species",
-#'     list(S = "setosa", V = c("versicolor", "virginica"))
+#'     c("versicolor", "virginica"),
+#'     levels_to = "V"
 #' )
 #' cat(code(collapsed))
-#' head(collapsed)
+#' tail(collapsed)
 #'
 #' @author Stephen Su
 #' @export
-collapse_cat <- function(data, var, collapsed = NULL, name = NULL) {
+collapse_cat <- function(data, var, levels_from, levels_to, name = NULL) {
     expr <- rlang::enexpr(data)
-    if (length(var) > 1) {
-        var <- var[1]
-        rlang::warn(sprintf(
-            "Please specify one variable, setting `var = %s`",
-            var
-        ))
-    }
     if (is.null(name)) {
         name <- sprintf("%s.coll", var)
     }
-    fctr <- purrr::map(collapsed, function(x) {
-        if (length(x) > 1) {
-            ## Parse the elements into expressions in the form of c(...)
-            purrr::map_chr(x, function(x) sprintf("\"%s\"", x)) |>
-                (\(.) sprintf("c(%s)", paste(., collapse = ", ")))() |>
-                rlang::parse_expr()
-        } else {
-            rlang::parse_expr(sprintf("\"%s\"", x))
-        }
-    }) |> rlang::set_names(names(collapsed))
+    fctr <- rlang::list2(!!levels_to := rlang::enexpr(levels_from))
     vars_expr <- rlang::list2(
         !!name := rlang::expr(forcats::fct_collapse(!!rlang::sym(var), !!!fctr))
     )

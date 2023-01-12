@@ -4,16 +4,16 @@
 \alias{collapse_cat}
 \title{Collapse data by values of a categorical variable}
 \usage{
-collapse_cat(data, var, collapsed = NULL, name = NULL)
+collapse_cat(data, var, levels_from, levels_to, name = NULL)
 }
 \arguments{
 \item{data}{a dataframe to collapse}
 
 \item{var}{a string of the name of the categorical variable to collapse}
 
-\item{collapsed}{a named list: the values of the categorical variable
-matching each element in the list will be changed to the name of that
-element in the list}
+\item{levels_from}{a character vector of the levels to be collapsed}
+
+\item{levels_to}{a string for the new level}
 
 \item{name}{a name for the new variable}
 }
@@ -22,15 +22,16 @@ the original dataframe containing a new column of the
         collapsed variable with tidyverse code attached
 }
 \description{
-Collapse values in a categorical variable into less levels of values
+Collapse values in a categorical variable into one defined level
 }
 \examples{
 collapsed <- collapse_cat(iris,
     var = "Species",
-    list(S = "setosa", V = c("versicolor", "virginica"))
+    c("versicolor", "virginica"),
+    levels_to = "V"
 )
 cat(code(collapsed))
-head(collapsed)
+tail(collapsed)
 
 }
 \seealso{

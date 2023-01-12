@@ -4,14 +4,14 @@
 \alias{rename_vars}
 \title{Rename column names}
 \usage{
-rename_vars(data, from, to)
+rename_vars(data, tobe_asis)
 }
 \arguments{
 \item{data}{a dataframe with columns to rename}
 
-\item{from}{a character vector the variable names as-is}
-
-\item{to}{a character vector the variable names to-be}
+\item{tobe_asis}{a named list of the old column names assigned
+to the new column names
+ie. list('new column names' = 'old column names')}
 }
 \value{
 original dataframe containing new columns of the renamed columns
@@ -21,10 +21,12 @@ original dataframe containing new columns of the renamed columns
 Rename columns of a dataset with desired names
 }
 \examples{
-renamed <- rename_vars(iris,
-    from = names(iris),
-    to = tolower(gsub("\\\\.", "_", names(iris)))
-)
+renamed <- rename_vars(iris, list(
+    sepal_length = "Sepal.Length",
+    sepal_width = "Sepal.Width",
+    petal_length = "Petal.Length",
+    petal_width = "Petal.Width"
+))
 cat(code(renamed))
 head(renamed)
 

@@ -50,6 +50,7 @@ Authors@R: c(
     person("Akshay", "Gupta", role = "ctb"),
     person("Lushi", "Cai", role = "ctb")
     )
+Additional_repositories: https://r.docker.stat.auckland.ac.nz
 BugReports: https://github.com/iNZightVIT/iNZightTools/issues
 Contact: inzight_support@stat.auckland.ac.nz
 URL: http://inzight.nz

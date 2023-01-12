@@ -8,29 +8,6 @@ mutate_expr <- function(expr, vars_expr, data) {
 }
 
 
-#' Replace NAs with specified values
-#' @name replace_na
-#' @importFrom tidyr replace_na
-#' @export
-NULL
-
-#' Make \code{\link[tidyr]{replace_na}} also work for factors.
-#' @inheritParams tidyr::replace_na
-#' @param replace If \code{data} is a factor, the default value
-#'        will be \code{"<NA>"}.
-#' @importFrom tidyr replace_na
-#' @rdname replace_na
-#' @export
-replace_na.factor <- function(data, replace = "<NA>", ...) {
-    as.character(data) |>
-        tidyr::replace_na(replace, ...) |>
-        factor(levels = c(
-            ifelse(any(is.na(data)), replace, ""),
-            levels(data)
-        ))
-}
-
-
 #' Combine categorical variables into one
 #'
 #' Combine specified categorical variables by concatenating
@@ -50,6 +27,7 @@ replace_na.factor <- function(data, replace = "<NA>", ...) {
 #' @return original dataframe containing new columns of the renamed
 #'         categorical variable with tidyverse code attached
 #' @rdname combine_cat
+#' @importFrom forcats fct_explicit_na
 #' @examples
 #' combined <- combine_cat(warpbreaks, vars = c("wool", "tension"), sep = "_")
 #' cat(code(combined))
@@ -64,7 +42,7 @@ combine_cat <- function(data, vars, sep = ":", name = NULL,
         name <- paste(vars, collapse = sep)
     }
     if (keep_na) {
-        vars <- rlang::parse_exprs(sprintf("replace_na(%s)", vars))
+        vars <- rlang::parse_exprs(sprintf("fct_explicit_na(%s)", vars))
     } else {
         vars <- rlang::syms(vars)
     }

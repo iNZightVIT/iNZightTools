@@ -158,6 +158,12 @@ test_that("changing column types in delimited file", {
         dt <- smart_read("cas.txt", column_types = c(education = "c"))
     )
     expect_s3_class(dt$education, "factor")
+
+    expect_silent(
+        dt <- smart_read("invalid_names.csv",
+            column_types = c("second variable" = "c")
+        )
+    )
 })
 
 test_that("Reading (excel) files converts strings to factor", {

@@ -51,7 +51,11 @@ joindata <- function(.data, imported_data,
         byfml <- sprintf(", by = c(%s)", col_names)
     }
 
-    suf <- paste0(", suffix = c('.", left, "', '.", right, "')")
+    if (join_method %in% c("left_join", "right_join", "full_join")) {
+        suf <- paste0(", suffix = c('.", left, "', '.", right, "')")
+    } else {
+        suf <- ""
+    }
 
     exp <- ~.DATA %>%
         .FUN(.IMP.BY.SUFFIX)

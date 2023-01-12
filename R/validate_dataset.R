@@ -1,3 +1,9 @@
+.check_validate_installed <- function() {
+    if (!requireNamespace("validate", quietly = TRUE)) {
+        stop("Please install suggested package: 'validate'") # nocov
+    }
+}
+
 #' Validation Confrontation Summary
 #'
 #' Generates a summary of a confrontation which gives basic information about
@@ -11,6 +17,7 @@
 #' @author Daniel Barnett
 #' @export
 validation_summary <- function(cf) {
+    .check_validate_installed()
     orig.summary <- validate::summary(cf)
 
     new.summary <- data.frame(
@@ -47,7 +54,8 @@ validation_summary <- function(cf) {
 #' @author Daniel Barnett
 #'
 #' @export
-validation_details <-  function(cf, v, var, id.var, df) {
+validation_details <- function(cf, v, var, id.var, df) {
+    .check_validate_installed()
     i <- which(names(v) == var)
 
     which.vars <- validate::variables(v$rules[[i]])

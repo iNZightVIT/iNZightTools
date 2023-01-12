@@ -11,8 +11,9 @@
 #' @export
 tidy_all_code <- function(x, width = 80, indent = 4, outfile,
                           incl_library = TRUE) {
-    if (length(x) == 1 && file.exists(x))
+    if (length(x) == 1 && file.exists(x)) {
         x <- readLines(x)
+    }
 
     allcode <- getText(x, incl_library)
     strvector <- sapply(allcode, tidy_code, width = width, indent = indent)
@@ -29,15 +30,21 @@ tidy_all_code <- function(x, width = 80, indent = 4, outfile,
 
 ### tidy a single piece of code
 tidy_code <- function(codeline, width, indent) {
+    if (!requireNamespace("styler")) {
+        stop("Please install suggested package: 'styler'") # nocov
+    }
+
     commentlines <- grepl("^#", codeline)
-    if (all(commentlines)) return(codeline)
+    if (all(commentlines)) {
+        return(codeline)
+    }
     codeline <- gsub("|>", "|>\n", codeline, fixed = TRUE)
     codeline[!commentlines] <- gsub(",\ +", ",\n", codeline[!commentlines])
     cf <- tempfile(fileext = ".R")
     on.exit(unlink(cf))
     writeLines(codeline, cf)
     z <- capture.output(
-        styler::style_file(cf, indent = indent, scope = "tokens")
+        styler::style_file(path = cf, indent = indent, scope = "tokens")
     )
     rm(z)
     readLines(cf)
@@ -63,7 +70,8 @@ getText <- function(code, incl_library) {
                 for (i in (1:length(package[[1]]))) {
                     allname <- c(
                         allname,
-                        substr(withpn,
+                        substr(
+                            withpn,
                             space[[1]][max(which(space[[1]] < package[[1]][i]))] + 1,
                             package[[1]][i] + 1
                         )

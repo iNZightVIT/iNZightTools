@@ -14,5 +14,5 @@
 ^docs$
 ^pkgdown$
 ^.*\.gitadd$
-^.git$
+^\.git$
 ^.docker$

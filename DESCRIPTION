@@ -1,37 +1,46 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for 'iNZight'
-Version: 1.12.3
+Version: 1.13.0
 Depends: R (>= 4.0)
 Imports:
-    chron,
     dplyr,
+    DBI,
+    dbplyr,
     forcats,
     glue,
     grDevices,
-    haven,
     magrittr,
     methods,
-    RcppTOML,
+    purrr,
     readr (>= 1.2.0),
-    readxl,
+    rlang,
     srvyr,
     stats,
     stringr,
-    styler,
     survey,
     tibble,
     tidyr,
     tools,
     lubridate,
+    units,
     utils,
-    validate,
     zoo
 Suggests:
+    chron,
     covr,
+    expss,
+    haven,
     jsonlite,
+    knitr,
     RCurl,
-    testthat (>= 3.0.0)
+    readxl,
+    RSQLite,
+    styler,
+    surveyspec,
+    testthat (>= 3.0.0),
+    validate,
+    yaml
 Authors@R: c(
     person("Tom", "Elliott", role = c("aut", "cre"), email = "tom.elliott@auckland.ac.nz", comment = c(ORCID = "0000-0002-7815-6318")),
     person("Daniel", "Barnett", role = "aut"),
@@ -48,5 +57,5 @@ Description: Provides a collection of wrapper functions for common variable and 
 License: GPL-3
 Encoding: UTF-8
 Language: en-GB
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Config/testthat/edition: 3

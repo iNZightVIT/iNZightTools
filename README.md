@@ -12,7 +12,7 @@ v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/
 
 Package consisting of a set of helper functions for doing data science
 with *iNZight*. These functions are designed to work well with a
-graphical user interface (GUI), but many\[1\] are functional for direct
+graphical user interface (GUI), but many[^1] are functional for direct
 use through *R*.
 
 ## Installation
@@ -36,6 +36,11 @@ can be broken down into various workflows.
 
 ``` r
 library(iNZightTools)
+#> 
+#> Attaching package: 'iNZightTools'
+#> The following object is masked from 'package:stats':
+#> 
+#>     filter
 ```
 
 Most of the functions return not only the resulting data, but attach the
@@ -65,6 +70,7 @@ str(data)
 #>  - attr(*, "code")= chr "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %>% dplyr::mutate_at(c"| __truncated__
 #>  - attr(*, "available.sheets")= chr "Census at School-500"
 tidy_all_code(code(data))
+#> Loading required namespace: styler
 #>  [1] "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %>%"
 #>  [2] "    dplyr::mutate_at("                                                                       
 #>  [3] "        c("                                                                                  
@@ -117,4 +123,4 @@ filterNumeric(data, "height", "<", 150)
 #> # … with 117 more rows, and abbreviated variable names ¹​getlunch, ²​cellcost
 ```
 
-1.  with others being modified in time
+[^1]: with others being modified in time

@@ -41,3 +41,22 @@ test_that("Negative binomial regression works", {
         "not yet implemented for survey designs"
     )
 })
+
+test_that("Cox PH models are generated correctly", {
+    expect_equal(
+        fitModel("response", "x1", "d", family = "cox", surv_params = c("time", "event")),
+        "survival::coxph(survival::Surv(time, event) ~ x1, data = d, model = TRUE)"
+    )
+
+    expect_equal(
+        fitModel("response", "x1 + x2", "d", family = "cox", design = "survey", surv_params = c("time", "event")),
+        "survey::svycoxph(survival::Surv(time, event) ~ x1 + x2, design = svy.design)"
+    )
+})
+
+test_that("Experiment not supported yet", {
+    expect_error(
+        fitModel("Sepal.Length", "Species", "iris", design = "experiment"),
+        "Experiments are not yet implemented. \n"
+    )
+})

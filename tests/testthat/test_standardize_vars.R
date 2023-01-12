@@ -5,7 +5,7 @@ test_that("Simple standardization", {
     d <- standardizeVars(cas, c("height", "rightfoot"))
     expect_equal(
         d$height.std,
-        scale(cas$height)[,1]
+        scale(cas$height)[, 1]
     )
     expect_equal(
         eval(parse(text = attr(d, "code"))),
@@ -16,7 +16,7 @@ test_that("Simple standardization", {
 
 require(survey)
 data(api)
-svy <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
+svy <- svydesign(~ dnum + snum, weights = ~pw, fpc = ~ fpc1 + fpc2, data = apiclus2)
 
 test_that("Standardization works for surveys", {
     d <- standardizeVars(svy, c("api99", "api00"))

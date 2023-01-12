@@ -30,6 +30,9 @@ test_that("Vartype is correct", {
         vartypes(lm(Sepal.Width ~ Species, data = iris)),
         "Unsupported data object."
     )
+
+    d <- structure(list(), vartypes = c("A", "B"), class = "inzdf_db")
+    expect_equal(vartypes(d), c("A", "B"))
 })
 
 test_that("Survey objects identified correctly", {
@@ -81,4 +84,12 @@ test_that("Make names are unique", {
 test_that("Not in works", {
     expect_true("a" %notin% LETTERS)
     expect_false("A" %notin% LETTERS)
+})
+
+test_that("Or null helper", {
+    x <- list(a = 1, b = NULL)
+    expect_equal(orNULL(x), x)
+    expect_equal(orNULL(x$a), x$a)
+    expect_equal(orNULL(x$b), NULL)
+    expect_equal(orNULL(x$c), NULL)
 })

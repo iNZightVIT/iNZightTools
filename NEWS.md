@@ -1,6 +1,21 @@
-- relocate survey specification reading files to new package [`surveyspec`](github.com/tmelliott/surveyspec)
+# iNZightTools 1.13.0
 
+## New features
+
+**Data dictionaries**
+
+Users can now import a data dictionary and apply it to a dataset. This will apply text labels to numerically coded variables and set labels for variables with human-friendly names.
+
+**Linked data**
+
+New functions to load linked datasets from a `.inzlnk` file, where the file linkage is specified. Optionally users can include a data dictionary in this file, which will also be applied to the data.
+
+## Other changes
+
+- relocate survey specification reading files to new package [`surveyspec`](github.com/tmelliott/surveyspec)
 - add survival analysis as an option for `fitModel` via `family = "cox"`
+- initial implementation of (basic) database connectivity - this is in early alpha stage
+- various bug fixes/changes
 
 # iNZightTools 1.12.3
 

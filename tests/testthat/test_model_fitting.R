@@ -53,3 +53,10 @@ test_that("Cox PH models are generated correctly", {
         "survey::svycoxph(survival::Surv(time, event) ~ x1 + x2, design = svy.design)"
     )
 })
+
+test_that("Experiment not supported yet", {
+    expect_error(
+        fitModel("Sepal.Length", "Species", "iris", design = "experiment"),
+        "Experiments are not yet implemented. \n"
+    )
+})

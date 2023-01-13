@@ -153,17 +153,17 @@ convert_to_date <- function(data, vars, names = NULL) {
 #' with tidyverse code attached
 #' @seealso \code{\link{code}}
 #' @examples
-#' created <- new_vars(
+#' created <- create_vars(
 #'     data = iris,
 #'     vars = "Sepal.Length_less_Sepal.Width",
 #'     "Sepal.Length - Sepal.Width"
 #' )
 #' cat(code(created))
 #' head(created)
-#' @rdname new_vars
+#' @rdname create_vars
 #' @author Stephen Su
 #' @export
-new_vars <- function(data, vars = ".new_var", vars_expr = NULL) {
+create_vars <- function(data, vars = ".new_var", vars_expr = NULL) {
     expr <- rlang::enexpr(data)
     vars_expr <- purrr::map(vars_expr, rlang::parse_expr) |>
         rlang::set_names(vars)

@@ -197,7 +197,7 @@ eval_code <- function(expr) {
         pipe %in% c("dplyr", "%>%", "magrittr") ~ rlang::expr_deparse(expr),
         TRUE ~ stringr::str_replace_all(rlang::expr_deparse(expr), "%>%", "|>")
     )
-    rlang::eval_tidy(expr) |>
+    try(rlang::eval_tidy(expr)) |>
         structure(code = expr_deparsed)
 }
 

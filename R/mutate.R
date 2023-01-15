@@ -268,8 +268,8 @@ rename_vars <- function(data, tobe_asis) {
 #'
 #' @param data a dataframe to collapse
 #' @param var  a string of the name of the categorical variable to collapse
-#' @param levels_from  a character vector of the levels to be collapsed
-#' @param levels_to a string for the new level
+#' @param levels  a character vector of the levels to be collapsed
+#' @param new_level a string for the new level
 #' @param name a name for the new variable
 #' @return the original dataframe containing a new column of the
 #'         collapsed variable with tidyverse code attached
@@ -280,19 +280,19 @@ rename_vars <- function(data, tobe_asis) {
 #' collapsed <- collapse_cat(iris,
 #'     var = "Species",
 #'     c("versicolor", "virginica"),
-#'     levels_to = "V"
+#'     new_level = "V"
 #' )
 #' cat(code(collapsed))
 #' tail(collapsed)
 #'
 #' @author Stephen Su
 #' @export
-collapse_cat <- function(data, var, levels_from, levels_to, name = NULL) {
+collapse_cat <- function(data, var, levels, new_level, name = NULL) {
     expr <- rlang::enexpr(data)
     if (is.null(name)) {
         name <- sprintf("%s.coll", var)
     }
-    fctr <- rlang::list2(!!levels_to := rlang::enexpr(levels_from))
+    fctr <- rlang::list2(!!new_level := rlang::enexpr(levels))
     vars_expr <- rlang::list2(
         !!name := rlang::expr(forcats::fct_collapse(!!rlang::sym(var), !!!fctr))
     )

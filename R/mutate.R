@@ -315,3 +315,36 @@ collapse_cat <- function(data, var, levels, new_level, name = NULL) {
     expr <- mutate_expr_i(expr, vars_expr, data, .after = var)
     eval_code(expr)
 }
+
+
+#' Standardize the data of a numeric variable
+#'
+#' Centre then divide by the standard error of the values in a numeric variable
+#'
+#' @param data a dataframe with the columns to standardize
+#' @param vars  a character vector of the numeric variables in \code{data}
+#'        to standardize
+#' @param names names for the created variables
+#'
+#' @return the original dataframe containing new columns of the standardized
+#'         variables with tidyverse code attached
+#' @rdname standardize_vars
+#' @seealso \code{\link{code}}
+#' @examples
+#' standardized <- standardize_vars(iris, var = c("Sepal.Width", "Petal.Width"))
+#' cat(code(standardized))
+#' head(standardized)
+#'
+#' @author Stephen Su
+#' @export
+standardize_vars <- function(data, vars, names = NULL) {
+    expr <- rlang::enexpr(data)
+    if (is.null(names)) {
+        names <- sprintf("%s.std", vars)
+    }
+    vars_expr <- purrr::map(vars, function(x) {
+        rlang::expr(scale(!!rlang::sym(x)))
+    }) |> rlang::set_names(names)
+    expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)
+    eval_code(expr)
+}

@@ -20,43 +20,47 @@ mutate_expr_i <- function(expr, vars_expr, data, ...) {
 }
 
 
-#' Combine categorical variables into one
+#' Combine variables into one categorical variable
 #'
-#' Combine specified categorical variables by concatenating
-#' their values into one character, and returns the result
+#' Combine chosen variables of any class by concatenating
+#' them into one factor variable, and returns the result
 #' along with tidyverse code used to generate it.
 #'
 #' @param data a dataframe with the columns to be combined
-#' @param vars  a character vector of the categorical variables to be combined
+#' @param vars  a character vector of the variables to be combined
 #' @param sep a character string to separate the levels
 #' @param name a name for the new variable
 #' @param keep_empty logical, if \code{FALSE} empty level combinations
 #'        are removed from the factor
 #' @param keep_na logical, if \code{TRUE} the \code{<NA>} in the factors or
-#'        \code{NA} in the characters will be replaced with \code{"<NA>"};
+#'        \code{NA} in the characters will be replaced with \code{"(Missing)"};
 #'        otherwise, the resulting entries will return \code{<NA>}
 #'
-#' @return original dataframe containing new columns of the renamed
+#' @return original dataframe containing new columns of the new
 #'         categorical variable with tidyverse code attached
-#' @rdname combine_cat
+#' @rdname combine_vars
 #' @importFrom forcats fct_explicit_na
 #' @examples
-#' combined <- combine_cat(warpbreaks, vars = c("wool", "tension"), sep = "_")
+#' combined <- combine_vars(warpbreaks, vars = c("wool", "tension"), sep = "_")
 #' cat(code(combined))
 #' head(combined)
 #'
 #' @author Owen Jin, Stephen Su
 #' @export
-combine_cat <- function(data, vars, sep = ":", name = NULL,
-                        keep_empty = FALSE, keep_na = TRUE) {
+combine_vars <- function(data, vars, sep = ":", name = NULL,
+                         keep_empty = FALSE, keep_na = TRUE) {
     expr <- rlang::enexpr(data)
     if (is.null(name)) {
         name <- paste(vars, collapse = sep)
     }
+    vars_not_cat <- purrr::map_lgl(vars, function(x) {
+        !inherits(data[[x]], c("factor", "character"))
+    })
+    vars[vars_not_cat] <- sprintf("as.character(%s)", vars[vars_not_cat])
     if (keep_na) {
         vars <- rlang::parse_exprs(sprintf("fct_explicit_na(%s)", vars))
     } else {
-        vars <- rlang::syms(vars)
+        vars <- rlang::parse_exprs(vars)
     }
     vars_expr <- rlang::list2(
         !!name := rlang::expr(forcats::fct_cross(

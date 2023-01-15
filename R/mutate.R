@@ -181,7 +181,7 @@ convert_to_date <- function(data, vars, names = NULL) {
 #' @export
 create_vars <- function(data, vars = ".new_var", vars_expr = NULL) {
     expr <- rlang::enexpr(data)
-    vars_expr <- purrr::map(vars_expr, rlang::parse_expr) |>
+    vars_expr <- rlang::parse_exprs(vars_expr) |>
         rlang::set_names(vars)
     expr <- mutate_expr(expr, vars_expr, data)
     eval_code(expr)

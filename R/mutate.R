@@ -56,7 +56,7 @@ combine_vars <- function(data, vars, sep = ":", name = NULL,
     vars_not_cat <- purrr::map_lgl(vars, function(x) {
         !inherits(data[[x]], c("factor", "character"))
     })
-    vars[vars_not_cat] <- sprintf("as.character(%s)", vars[vars_not_cat])
+    vars[vars_not_cat] <- sprintf("as.factor(%s)", vars[vars_not_cat])
     if (keep_na) {
         vars <- rlang::parse_exprs(sprintf("fct_explicit_na(%s)", vars))
     } else {

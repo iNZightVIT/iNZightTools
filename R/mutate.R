@@ -8,6 +8,18 @@ mutate_expr <- function(expr, vars_expr, data) {
 }
 
 
+mutate_expr_i <- function(expr, vars_expr, data, ...) {
+    purrr::map(seq_along(vars_expr), function(i) {
+        vars_expr_i <- rlang::list2(
+            !!names(vars_expr)[i] := vars_expr[[i]],
+            !!!purrr::map(list(...), function(x) rlang::sym(x[i]))
+        )
+        expr <<- mutate_expr(expr, vars_expr_i, data)
+    })
+    expr
+}
+
+
 #' Combine categorical variables into one
 #'
 #' Combine specified categorical variables by concatenating
@@ -84,7 +96,7 @@ convert_to_cat <- function(data, vars, names = NULL) {
     vars_expr <- purrr::map(vars, function(x) {
         rlang::expr(as.factor(!!rlang::sym(x)))
     }) |> rlang::set_names(names)
-    expr <- mutate_expr(expr, vars_expr, data)
+    expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)
     eval_code(expr)
 }
 
@@ -110,7 +122,7 @@ convert_to_datetime <- function(data, vars, names = NULL, tz = "") {
     vars_expr <- purrr::map(vars, function(x) {
         rlang::expr(lubridate::as_datetime(!!rlang::sym(x), tz = !!tz))
     }) |> rlang::set_names(names)
-    expr <- mutate_expr(expr, vars_expr, data)
+    expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)
     eval_code(expr)
 }
 
@@ -134,7 +146,7 @@ convert_to_date <- function(data, vars, names = NULL) {
     vars_expr <- purrr::map(vars, function(x) {
         rlang::expr(lubridate::as_date(!!rlang::sym(x)))
     }) |> rlang::set_names(names)
-    expr <- mutate_expr(expr, vars_expr, data)
+    expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)
     eval_code(expr)
 }
 
@@ -221,7 +233,7 @@ transform_vars <- function(data, vars, fn, names = NULL) {
     vars_expr <- purrr::map(vars, function(x) {
         rlang::expr((!!rlang::parse_expr(fn))(!!rlang::sym(x)))
     }) |> rlang::set_names(names)
-    expr <- mutate_expr(expr, vars_expr, data)
+    expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)
     eval_code(expr)
 }
 
@@ -296,6 +308,6 @@ collapse_cat <- function(data, var, levels, new_level, name = NULL) {
     vars_expr <- rlang::list2(
         !!name := rlang::expr(forcats::fct_collapse(!!rlang::sym(var), !!!fctr))
     )
-    expr <- mutate_expr(expr, vars_expr, data)
+    expr <- mutate_expr_i(expr, vars_expr, data, .after = var)
     eval_code(expr)
 }

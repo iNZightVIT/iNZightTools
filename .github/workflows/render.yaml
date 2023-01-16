@@ -26,6 +26,8 @@ jobs:
           OS_TYPE: ${{ runner.os }}
         run: Rscript ./.github/install_deps.R
         shell: bash
+      - name: Install package
+        run: Rscript -e 'remotes::install_local()'
       - name: Render README
         run: Rscript -e 'rmarkdown::render("README.Rmd")'
       - name: Update Documentation

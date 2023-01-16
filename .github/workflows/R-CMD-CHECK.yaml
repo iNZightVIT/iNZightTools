@@ -34,7 +34,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.config.os }}-${{ matrix.config.r }}
       cancel-in-progress: true
 
     steps:

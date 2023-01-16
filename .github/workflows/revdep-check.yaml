@@ -58,6 +58,14 @@ jobs:
         run: Rscript ./.github/install_deps.R
         shell: bash
 
+      - name: Install revdepcheck
+        run: |
+          if (!requireNamespace("revdepcheck", quietly = TRUE)) {
+            options(repos = "https://cloud.r-project.org")
+            remotes::install_github("r-lib/revdepcheck")
+          }
+        shell: Rscript {0}
+
       - name: Revdepcheck
         run: |
           options(repos = "https://cloud.r-project.org")

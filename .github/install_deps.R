@@ -16,6 +16,10 @@ options(
     install.packages.compile.from.source = "never"
 )
 
+if (!requireNamespace("remotes", quietly = TRUE)) {
+    install.packages("remotes")
+}
+
 remotes::install_github(github_deps,
     INSTALL_opts = c("--no-multiarch")
 )

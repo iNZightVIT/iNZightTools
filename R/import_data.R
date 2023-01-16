@@ -508,15 +508,6 @@ parse_coltypes <- function(column_types = NULL) {
 
     if (!is.null(names(column_types))) {
         ctypes <- rlang::expr(readr::cols(!!!column_types))
-        # ctypes <- paste(
-        #     "readr::cols(",
-        #     paste(names(column_types), " = '", column_types, "'",
-        #         sep = "",
-        #         collapse = ", "
-        #     ),
-        #     ")",
-        #     sep = ""
-        # )
     } else {
         ctypes <- paste("readr::cols('", column_types, "')",
             sep = "",

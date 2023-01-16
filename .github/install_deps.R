@@ -3,10 +3,6 @@ github_deps <- c(
     "tmelliott/surveyspec@develop"
 )
 
-if (.Platform$OS.type == "windows") {
-    install.packages("RCurl", type = "binary")
-}
-
 OS <- Sys.getenv("OS_TYPE")
 if (OS == "Windows" && !requireNamespace("RCurl", quietly = TRUE)) {
     install.packages("RCurl", repos = "https://cran.r-project.org")

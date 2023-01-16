@@ -65,14 +65,10 @@ jobs:
           sudo -s eval "$sysreqs"
 
       - name: Install dependencies
-        run: |
-          if (.Platform$OS.type == "windows") {
-            install.packages('RCurl', type = 'binary')
-          }
-          remotes::install_github("tmelliott/surveyspec@develop")
-          remotes::install_deps(dependencies = TRUE)
-          remotes::install_cran("rcmdcheck")
-        shell: Rscript {0}
+        env:
+          OS_TYPE: ${{ runner.os }}
+        run: Rscript ./.github/install_deps.R
+        shell: bash
 
       - name: Check
         env:

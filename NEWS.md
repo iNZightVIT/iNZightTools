@@ -16,6 +16,7 @@ New functions to load linked datasets from a `.inzlnk` file, where the file link
 - add survival analysis as an option for `fitModel` via `family = "cox"`
 - initial implementation of (basic) database connectivity - this is in early alpha stage
 - various bug fixes/changes
+- fix some issues occuring when column names have spaces (in the CSV) (#200)
 
 # iNZightTools 1.12.3
 

@@ -25,6 +25,10 @@ jobs:
       RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.config.os }}-${{ matrix.config.r }}
+      cancel-in-progress: true
+
     steps:
       - uses: actions/checkout@v3
 
@@ -57,11 +61,10 @@ jobs:
           sudo -s eval "$sysreqs"
 
       - name: Install dependencies
-        run: |
-          remotes::install_deps(dependencies = TRUE)
-          remotes::install_github("tmelliott/surveyspec")
-          remotes::install_cran("rcmdcheck")
-        shell: Rscript {0}
+        env:
+          OS_TYPE: ${{ runner.os }}
+        run: Rscript ./.github/install_deps.R
+        shell: bash
 
       - name: Test coverage
         uses: nick-invision/retry@v1

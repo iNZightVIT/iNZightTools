@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - dev
 
 name: Check reverse dependencies
 
@@ -18,6 +19,10 @@ jobs:
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.config.os }}-${{ matrix.config.r }}
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v3
@@ -48,10 +53,17 @@ jobs:
           restore-keys: ${{ matrix.config.os }}-r-${{ matrix.config.r }}-1-revdep-
 
       - name: Install dependencies
+        env:
+          OS_TYPE: ${{ runner.os }}
+        run: Rscript ./.github/install_deps.R
+        shell: bash
+
+      - name: Install revdepcheck
         run: |
-          remotes::install_github("tmelliott/surveyspec@develop")
-          remotes::install_deps(dependencies = TRUE)
-          remotes::install_github('r-lib/revdepcheck')
+          if (!requireNamespace("revdepcheck", quietly = TRUE)) {
+            options(repos = "https://cloud.r-project.org")
+            remotes::install_github("r-lib/revdepcheck")
+          }
         shell: Rscript {0}
 
       - name: Revdepcheck

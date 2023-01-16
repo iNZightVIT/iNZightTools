@@ -447,7 +447,7 @@ validate_type_changes <- function(x, column_types) {
                 if (is.numeric(col)) {
                     return("")
                 }
-                sprintf("%s = as.numeric(%s)", name, name)
+                sprintf("`%s` = as.numeric(%s)", name, name)
             },
             "c" = {
                 ## Convert numeric to factor
@@ -463,14 +463,14 @@ validate_type_changes <- function(x, column_types) {
                     # relevel
                     if (!all(levels(col) == lvls)) {
                         sprintf(
-                            "%s = forcats::fct_relevel(%s, c('%s'))",
+                            "`%s` = forcats::fct_relevel(`%s`, c('%s'))",
                             name, name,
                             paste(lvls, collapse = "', '")
                         )
                     }
                 } else {
                     sprintf(
-                        "%s = factor(%s, levels = c('%s'))",
+                        "`%s` = factor(`%s`, levels = c('%s'))",
                         name, name,
                         paste(lvls, collapse = "', '")
                     )
@@ -507,15 +507,7 @@ parse_coltypes <- function(column_types = NULL) {
     }
 
     if (!is.null(names(column_types))) {
-        ctypes <- paste(
-            "readr::cols(",
-            paste(names(column_types), " = '", column_types, "'",
-                sep = "",
-                collapse = ", "
-            ),
-            ")",
-            sep = ""
-        )
+        ctypes <- rlang::expr(readr::cols(!!!column_types))
     } else {
         ctypes <- paste("readr::cols('", column_types, "')",
             sep = "",

@@ -29,7 +29,8 @@ jobs:
       - name: Install package
         run: |
           install.packages(c("remotes", "rmarkdown", "roxygen2", "pkgdown"))
-          Rscript -e 'remotes::install_local(".", dependencies = TRUE)'
+          remotes::install_local(".", dependencies = TRUE)
+        shell: Rscript {0}
       - name: Render README
         run: Rscript -e 'rmarkdown::render("README.Rmd")'
       - name: Update Documentation

@@ -61,3 +61,8 @@ test_that("print_code works OK", {
         "No code attached to this object."
     )
 })
+
+test_that("tidying from file works OK", {
+    x <- tidy_all_code("messy_gapminder.txt")
+    expect_true(length(x) > 0)
+})

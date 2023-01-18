@@ -24,8 +24,8 @@ test_that("smart_read gets correct column types and dims", {
 })
 
 test_that("smart_read can handle various encoding", {
-    skip_on_ci()
     skip_on_cran()
+    skip_on_ci()
     data <- smart_read("enc-latin.csv", encoding = "ISO-8859-1")
     expect_identical(as.character(data$summer[2]), "\u00e9t\u00e9")
 
@@ -145,7 +145,10 @@ test_that("converting numeric with some string values to cat behaves appropriate
     tmp <- tempfile(fileext = ".csv")
     on.exit(unlink(tmp))
     readr::write_csv(
-        data.frame(x = 1:100, y = c(sample(1:2, 99, T), "text")),
+        data.frame(
+            x = 1:100,
+            y = c(sample(1:2, 99, T), "text")
+        ),
         tmp
     )
     expect_silent(d <- smart_read(tmp, column_types = c(y = "c")))
@@ -158,6 +161,17 @@ test_that("changing column types in delimited file", {
         dt <- smart_read("cas.txt", column_types = c(education = "c"))
     )
     expect_s3_class(dt$education, "factor")
+
+    expect_silent(
+        dt <- smart_read("invalid_names.csv",
+            column_types = c("second variable" = "c")
+        )
+    )
+})
+
+test_that("Validating column types", {
+    d <- validate_type_changes(iris, list(Species = "n"))
+    expect_type(d$Species, "double")
 })
 
 test_that("Reading (excel) files converts strings to factor", {

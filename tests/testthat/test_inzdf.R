@@ -8,7 +8,10 @@ test_that("SQLite database supported", {
 
     db <- tempfile(fileext = ".db")
     con <- DBI::dbConnect(RSQLite::SQLite(), db)
-    on.exit({DBI::dbDisconnect(con); unlink(db)})
+    on.exit({
+        DBI::dbDisconnect(con)
+        unlink(db)
+    })
     DBI::dbWriteTable(con, "iris", iris)
 
     d <- inzdf(con, "iris", keep_con = TRUE)
@@ -34,10 +37,14 @@ test_that("Linked data in database supported", {
 
     db <- tempfile(fileext = ".db")
     con <- DBI::dbConnect(RSQLite::SQLite(), db)
-    on.exit({DBI::dbDisconnect(con); unlink(db)})
+    on.exit({
+        DBI::dbDisconnect(con)
+        unlink(db)
+    })
     DBI::dbWriteTable(con, "iris_species", iris_species)
     DBI::dbWriteTable(con, "iris_data", iris_data)
-    DBI::dbWriteTable(con, "iris_extra",
+    DBI::dbWriteTable(
+        con, "iris_extra",
         data.frame(
             id = 1:2,
             type = c("Fluffy", "Hard")

@@ -191,13 +191,13 @@ orNULL <- function(x, y = x) {
 `%notin%` <- function(x, table) match(x, table, nomatch = 0L) == 0L
 
 
-eval_code <- function(expr) {
+eval_code <- function(expr, penv_n = 2) {
     pipe <- getOption("inzighttools.pipe", "baseR")
     expr_deparsed <- dplyr::case_when(
         pipe %in% c("dplyr", "%>%", "magrittr") ~ rlang::expr_deparse(expr),
         TRUE ~ stringr::str_replace_all(rlang::expr_deparse(expr), "%>%", "|>")
     )
-    try(rlang::eval_tidy(expr)) |>
+    try(rlang::eval_tidy(expr, env = rlang::env_parent(n = penv_n))) |>
         structure(code = expr_deparsed)
 }
 

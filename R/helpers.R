@@ -191,13 +191,13 @@ orNULL <- function(x, y = x) {
 `%notin%` <- function(x, table) match(x, table, nomatch = 0L) == 0L
 
 
-eval_code <- function(expr, penv_n = 2) {
+eval_code <- function(expr, env = parent.frame(2)) {
     pipe <- getOption("inzighttools.pipe", "baseR")
     expr_deparsed <- dplyr::case_when(
         pipe %in% c("dplyr", "%>%", "magrittr") ~ rlang::expr_deparse(expr),
         TRUE ~ stringr::str_replace_all(rlang::expr_deparse(expr), "%>%", "|>")
     )
-    try(rlang::eval_tidy(expr, env = rlang::env_parent(n = penv_n))) |>
+    try(rlang::eval_tidy(expr, env = env)) |>
         structure(code = expr_deparsed)
 }
 
@@ -208,4 +208,13 @@ coerce_tbl_svy <- function(expr, data) {
     } else {
         expr
     }
+}
+
+
+check_eval <- function(x) {
+    stopifnot(!is.null(attributes(x)$code))
+    testthat::expect_equal(rlang::eval_tidy(
+        rlang::parse_expr(paste(code(x), collapse = "\n")),
+        env = parent.frame(1)
+    ), x, ignore_attr = TRUE)
 }

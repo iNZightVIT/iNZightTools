@@ -343,7 +343,13 @@ standardize_vars <- function(data, vars, names = NULL) {
         names <- sprintf("%s.std", vars)
     }
     vars_expr <- purrr::map(vars, function(x) {
-        rlang::expr(scale(!!rlang::sym(x)))
+        if (is_survey(data)) {
+            x <- rlang::sym(x)
+            rlang::expr((!!x - svymean(~ !!x, !!expr, na.rm = TRUE)) /
+                sqrt(svyvar(~ !!x, !!expr, na.rm = TRUE)))
+        } else {
+            rlang::expr(scale(!!rlang::sym(x))[, 1])
+        }
     }) |> rlang::set_names(names)
     expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)
     eval_code(expr)

@@ -50,6 +50,16 @@ mutate_expr_i <- function(expr, vars_expr, data, ...) {
 combine_vars <- function(data, vars, sep = ":", name = NULL,
                          keep_empty = FALSE, keep_na = TRUE) {
     expr <- rlang::enexpr(data)
+    n_max <- getOption("inzighttools.max_levels", 100)
+    n_lvl <- rlang::inject(
+        with(data, length(unique(paste(!!!rlang::syms(names(data))))))
+    )
+    if (n_lvl > n_max) {
+        rlang::abort(sprintf(paste(
+            "Resulting factor has more levels than the allowed limit (%s).",
+            "Try using `collapse_cat()` to reduce the number of levels."
+        ), n_max))
+    }
     if (is.null(name)) {
         name <- paste(vars, collapse = sep)
     }

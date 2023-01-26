@@ -52,7 +52,7 @@ combine_vars <- function(data, vars, sep = ":", name = NULL,
     expr <- rlang::enexpr(data)
     n_max <- getOption("inzighttools.max_levels", 100)
     n_lvl <- rlang::inject(
-        with(data, length(unique(paste(!!!rlang::syms(names(data))))))
+        prod(!!!purrr::map(vars, function(x) length(unique(data[[x]]))))
     )
     if (n_lvl > n_max) {
         rlang::abort(sprintf(paste(

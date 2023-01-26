@@ -11,8 +11,8 @@ test_that("Either united column NAs remain as NAs", {
 test_that("Limit size of variable combinations", {
     options(inzighttools.max_levels = 110)
     expect_error(combine_vars(iris, vars = names(iris)), "110")
-    options(inzighttools.max_levels = 149)
-    expect_s3_class(combine_vars(iris, vars = names(iris)), "data.frame")
+    options(inzighttools.max_levels = 200)
+    expect_error(combine_vars(iris, vars = names(iris)), "200")
     options(inzighttools.max_levels = 100)
 })
 

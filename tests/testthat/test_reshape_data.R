@@ -19,40 +19,40 @@ dt2 <- data.frame(
     )
 )
 
-stripattr <- function(x, attr = 'code') {
+stripattr <- function(x, attr = "code") {
     attributes(x)[[attr]] <- NULL
     x
 }
 
 test_that("Reshape wide to long works", {
     expect_equal(
-        suppressWarnings(
-            stripattr(reshape_data(dt1, "", "", list("v1999", "v2000"), "Year", "Count", "wide"))
-        ),
-        suppressWarnings(
-            tidyr::gather(dt1, key = "Year", value = "Count", c("v1999", "v2000")) %>%
-                dplyr::mutate(Year = as.factor(Year), Count = as.factor(Count))
+        stripattr(reshape_data(dt1,
+            cols = c("v1999", "v2000"), names_to = "Year", values_to = "Count"
+        )),
+        tidyr::pivot_longer(
+            dt1, c(v1999, v2000),
+            names_to = "Year", values_to = "Count"
         )
     )
     expect_equal(
-        stripattr(reshape_data(dt2, "", "", "Count", "xx", "yy", "wide")),
-        tidyr::gather(dt2, key = "xx", value = "yy", "Count") %>%
-            dplyr::mutate(xx = as.factor(xx))
+        stripattr(reshape_data(dt2,
+            cols = "Count", names_to = "xx", values_to = "yy"
+        )),
+        tidyr::pivot_longer(
+            dt2, Count,
+            names_to = "xx", values_to = "yy"
+        )
     )
 })
 
 test_that("Reshape long to wide works", {
     expect_equal(
-        stripattr(reshape_data(dt2, "Type", "Count", "", "", "", "long")),
-        tidyr::spread(dt2, key = "Type", value = "Count")
-    )
-})
-
-test_that("Reshape results are factors", {
-    expect_s3_class(
-        suppressWarnings(
-            reshape_data(dt1, "", "", c("v1999", "v2000"), "Year", "Count", "wide")$Year
-        ),
-        "factor"
+        stripattr(reshape_data(dt2,
+            data_to = "wide",
+            names_from = "Type", values_from = "Count"
+        )),
+        tidyr::pivot_wider(dt2,
+            names_from = Type, values_from = Count
+        )
     )
 })

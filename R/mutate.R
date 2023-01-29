@@ -51,9 +51,9 @@ combine_vars <- function(data, vars, sep = ":", name = NULL,
                          keep_empty = FALSE, keep_na = TRUE) {
     expr <- rlang::enexpr(data)
     n_max <- getOption("inzighttools.max_levels", 100)
-    n_lvl <- rlang::inject(
-        prod(!!!purrr::map(vars, function(x) length(unique(data[[x]]))))
-    )
+    n_lvl <- purrr::map_dbl(vars, function(x) {
+        length(unique(data[[x]]))
+    }) |> prod()
     if (n_lvl > n_max) {
         rlang::abort(sprintf(paste(
             "Resulting factor has more levels than the allowed limit (%s).",

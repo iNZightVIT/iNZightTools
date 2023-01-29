@@ -6,6 +6,10 @@ test_that("Sort works for iid data", {
     check_eval(d)
 })
 
+test_that("Check for `asc` length", {
+    expect_error(sort_vars(cas, "gender", asc = c(TRUE, TRUE)))
+})
+
 library(survey)
 data(api)
 svy <- svydesign(~ dnum + snum, weights = ~pw, fpc = ~ fpc1 + fpc2, data = apiclus2)

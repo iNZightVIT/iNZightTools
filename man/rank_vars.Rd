@@ -13,7 +13,7 @@ rank_vars(data, vars, rank_type = c("min", "dense", "percent"))
 to rank}
 
 \item{rank_type}{either \code{"min"}, \code{"dense"} or \code{"percent"},
-for more details see \code{\link[dplyr]{ranking}}}
+see \code{\link[dplyr]{row_number}}, \code{\link[dplyr]{percent_rank}}}
 }
 \value{
 the original dataframe containing new columns with the ranks of the
@@ -22,7 +22,7 @@ the original dataframe containing new columns with the ranks of the
 \description{
 Rank the values of numeric variables, for example, in descending order,
 and then returns the result along with tidyverse code used to generate it.
-For all the types of ranking see \code{\link[dplyr]{ranking}}.
+See \code{\link[dplyr]{row_number}} and \code{\link[dplyr]{percent_rank}}.
 }
 \examples{
 ranked <- rank_vars(iris, vars = c("Sepal.Length", "Petal.Length"))

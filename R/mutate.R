@@ -371,13 +371,13 @@ standardize_vars <- function(data, vars, names = NULL) {
 #'
 #' Rank the values of numeric variables, for example, in descending order,
 #' and then returns the result along with tidyverse code used to generate it.
-#' For all the types of ranking see \code{\link[dplyr]{ranking}}.
+#' See \code{\link[dplyr]{row_number}} and \code{\link[dplyr]{percent_rank}}.
 #'
 #' @param data a dataframe with the variables to rank
 #' @param vars  a character vector of numeric variables in \code{data}
 #'        to rank
 #' @param rank_type either \code{"min"}, \code{"dense"} or \code{"percent"},
-#'        for more details see \code{\link[dplyr]{ranking}}
+#'        see \code{\link[dplyr]{row_number}}, \code{\link[dplyr]{percent_rank}}
 #'
 #' @return the original dataframe containing new columns with the ranks of the
 #'         variables in \code{vars} with tidyverse code attached

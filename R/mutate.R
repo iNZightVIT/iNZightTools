@@ -493,3 +493,46 @@ reorder_levels <- function(data, var, new_levels = NULL,
     expr <- mutate_expr_i(expr, vars_expr, data, .after = var)
     eval_code(expr)
 }
+
+
+#' Convert missing values to categorical variables
+#'
+#' Turn \code{<NA>} in categorical variables into \code{"(Missing)"};
+#' numeric variables will be converted to categorical variables where numeric
+#' values as \code{"(Observed)"} and \code{NA} as \code{"(Missing)"}.
+#'
+#' @param data a dataframe with the columns to convert
+#'        its missing values into categorical
+#' @param vars  a character vector of the variables in \code{data}
+#'        for conversion of missing values
+#' @param names a character vector of names for the new variables
+#' @return original dataframe containing new columns of the converted variables
+#'        for the missing values with tidyverse code attached
+#' @rdname missing_to_cat
+#' @seealso \code{\link{code}}
+#' @examples
+#' missing <- missing_to_cat(iris, vars = c("Species", "Sepal.Length"))
+#' cat(code(missing))
+#' head(missing)
+#'
+#' @author Stephen Su
+#' @export
+missing_to_cat <- function(data, vars, names = NULL) {
+    expr <- rlang::enexpr(data)
+    if (is.null(names)) {
+        names <- sprintf("%s.miss", vars)
+    }
+    vars_expr <- purrr::map(vars, function(x) {
+        .data <- if (is_survey(data)) data$variables else data
+        if (is.numeric(.data[[x]])) {
+            rlang::expr(factor(dplyr::case_when(
+                is.na(!!rlang::sym(x)) ~ "(Missing)",
+                TRUE ~ "(Observed)"
+            )))
+        } else {
+            rlang::expr(fct_explicit_na(!!rlang::sym(x)))
+        }
+    }) |> rlang::set_names(names)
+    expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)
+    eval_code(expr)
+}

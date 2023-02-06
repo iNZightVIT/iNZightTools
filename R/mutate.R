@@ -33,13 +33,13 @@ mutate_expr_i <- function(expr, vars_expr, data, ...) {
 #' @param keep_empty logical, if \code{FALSE} empty level combinations
 #'        are removed from the factor
 #' @param keep_na logical, if \code{TRUE} the \code{<NA>} in the factors or
-#'        \code{NA} in the characters will be replaced with \code{"(Missing)"};
+#'        \code{NA} in the characters will occupy an explicit factor level;
 #'        otherwise, the resulting entries will return \code{<NA>}
 #'
 #' @return original dataframe containing new columns of the new
 #'         categorical variable with tidyverse code attached
 #' @rdname combine_vars
-#' @importFrom forcats fct_explicit_na
+#' @importFrom forcats fct_na_value_to_level
 #' @examples
 #' combined <- combine_vars(warpbreaks, vars = c("wool", "tension"), sep = "_")
 #' cat(code(combined))
@@ -69,7 +69,7 @@ combine_vars <- function(data, vars, sep = ":", name = NULL,
     })
     vars[vars_not_cat] <- sprintf("as.factor(%s)", vars[vars_not_cat])
     if (keep_na) {
-        vars <- rlang::parse_exprs(sprintf("fct_explicit_na(%s)", vars))
+        vars <- rlang::parse_exprs(sprintf("fct_na_value_to_level(%s)", vars))
     } else {
         vars <- rlang::parse_exprs(vars)
     }
@@ -530,7 +530,7 @@ missing_to_cat <- function(data, vars, names = NULL) {
                 TRUE ~ "(Observed)"
             )))
         } else {
-            rlang::expr(fct_explicit_na(!!rlang::sym(x)))
+            rlang::expr(fct_na_value_to_level(!!rlang::sym(x), "(Missing)"))
         }
     }) |> rlang::set_names(names)
     expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)

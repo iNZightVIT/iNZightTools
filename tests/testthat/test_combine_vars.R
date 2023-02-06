@@ -5,7 +5,7 @@ test_that("Either united column NAs remain as NAs", {
     cas2 <- combine_vars(cas, c("getlunch", "cellsource"), sep = "_")
     expect_s3_class(cas2$getlunch_cellsource, "factor")
     check_eval(cas2)
-    expect_true("home_(Missing)" %in% levels(cas2$getlunch_cellsource))
+    expect_true("home_NA" %in% levels(cas2$getlunch_cellsource))
 })
 
 test_that("Limit size of variable combinations", {

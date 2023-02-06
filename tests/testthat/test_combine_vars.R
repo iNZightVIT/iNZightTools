@@ -21,9 +21,11 @@ data(api)
 svy <- svydesign(~ dnum + snum, weights = ~pw, fpc = ~ fpc1 + fpc2, data = apiclus2)
 
 test_that("Uniting variables works with survey object", {
+    options(inzighttools.max_levels = Inf)
     d <- combine_vars(svy, c("enroll", "awards"), sep = "&", "new", keep_na = FALSE)
     expect_s3_class(d, "survey.design2")
     expect_s3_class(d$variables$new, "factor")
     check_eval(d)
     expect_true(any(is.na(d$variables$new)))
+    options(inzighttools.max_levels = 100)
 })

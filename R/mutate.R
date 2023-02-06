@@ -51,8 +51,9 @@ combine_vars <- function(data, vars, sep = ":", name = NULL,
                          keep_empty = FALSE, keep_na = TRUE) {
     expr <- rlang::enexpr(data)
     n_max <- getOption("inzighttools.max_levels", 100)
+    .data <- if (is_survey(data)) data$variables else data
     n_lvl <- purrr::map_dbl(vars, function(x) {
-        length(unique(data[[x]]))
+        length(unique(.data[[x]]))
     }) |> prod()
     if (n_lvl > n_max) {
         rlang::abort(sprintf(paste(
@@ -64,7 +65,7 @@ combine_vars <- function(data, vars, sep = ":", name = NULL,
         name <- paste(vars, collapse = sep)
     }
     vars_not_cat <- purrr::map_lgl(vars, function(x) {
-        !inherits(data[[x]], c("factor", "character"))
+        !inherits(.data[[x]], c("factor", "character"))
     })
     vars[vars_not_cat] <- sprintf("as.factor(%s)", vars[vars_not_cat])
     if (keep_na) {

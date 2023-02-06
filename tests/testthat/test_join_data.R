@@ -9,10 +9,10 @@ d3 <- readr::read_csv("join3.csv", show_col_types = FALSE)
 
 test_that("Auto detection works", {
     expect_equal(
-        stripattr(join_data(iris, iris)),
-        suppressMessages(dplyr::inner_join(iris, iris))
+        stripattr(suppressWarnings(join_data(iris, iris))),
+        suppressMessages(dplyr::inner_join(iris, iris, multiple = "all"))
     )
-    eval_code(join_data(iris, iris))
+    expect_warning(join_data(iris, iris))
 })
 
 test_that("Inner join works", {

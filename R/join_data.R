@@ -27,9 +27,9 @@ join_data <- function(data_l, data_r, by = NULL,
     if (is.null(by)) {
         by <- capture.output(data <- eval_code(expr), type = "message") |>
             paste(collapse = " ") |>
-            stringr::str_remove("Joining, by =") |>
-            rlang::parse_expr() |>
-            rlang::eval_bare() |>
+            stringr::str_replace(".+\\((.+)\\).+", "\\1") |>
+            strsplit(", ") |>
+            purrr::list_c() |>
             rlang::set_names()
     } else {
         data <- eval_code(expr)

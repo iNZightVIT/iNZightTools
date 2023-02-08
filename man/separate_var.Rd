@@ -4,31 +4,21 @@
 \alias{separate_var}
 \title{Separate columns}
 \usage{
-separate_var(
-  data,
-  var,
-  left,
-  right,
-  by,
-  into = c("cols", "rows"),
-  method = c("delim", "position")
-)
+separate_var(data, var, by, left, right, into = c("cols", "rows"))
 }
 \arguments{
 \item{data}{dataset}
 
 \item{var}{name of variable to be separated}
 
+\item{by}{a string as delimiter between values (separate by delimiter) or an
+integer as number of characters to split by (separate by position)}
+
 \item{left}{name for the separated left column (for \code{into = "cols"})}
 
 \item{right}{name for the separated right column (for \code{into = "cols"})}
 
-\item{by}{a string as delimiter between values (\code{delim} method) or an
-integer as number of characters to split by (\code{position} method)}
-
 \item{into}{whether to split into new rows or columns}
-
-\item{method}{method of separation}
 }
 \value{
 Separated dataset

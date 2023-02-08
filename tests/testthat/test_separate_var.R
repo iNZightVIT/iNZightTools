@@ -4,11 +4,20 @@ data <- data.frame(
     "C" = c("2019M02", "2019M03", "2019M04")
 )
 
+
 test_that("Basic separate works", {
-    expect_silent(separate_var(data, "C", "year", "month", "M"))
-    expect_silent(separate_var(data, "C", "year", "month", 4, method = "position"))
+    expect_silent(separate_var(data, "C", "M", "year", "month"))
+    expect_silent(separate_var(data, "C", 4, "year", "month"))
     expect_silent(separate_var(data, "C", by = "M", into = "rows"))
-    expect_silent(separate_var(data, "C", by = 4, into = "rows", method = "position"))
+    expect_silent(separate_var(data, "C", by = 4, into = "rows"))
+})
+
+test_that("Condition checks", {
+    expect_error(separate_var(data, "C", factor("M"), "year", "month"))
+    expect_warning(separate_var(data, "C", 4.1, "year", "month"))
+    expect_error(separate_var(data, "C", 11, "year", "month"))
+    expect_error(separate_var(data, "C", 0, "year", "month"))
+    expect_error(suppressWarnings(separate_var(data, "C", 0.9, "year", "month")))
 })
 
 
@@ -19,7 +28,7 @@ svy <- svydesign(~ dnum + snum, weights = ~pw, fpc = ~ fpc1 + fpc2, data = apicl
 test_that("Survey designs work", {
     svy$variables$avg.ed <- format(svy$variables$avg.ed)
     suppressWarnings(
-        d <- separate_var(svy, "avg.ed", "ed.a", "ed.b", by = ".")
+        d <- separate_var(svy, "avg.ed", by = ".", "ed.a", "ed.b")
     )
     expect_s3_class(d, "survey.design2")
     expect_true(all(c("ed.a", "ed.b") %in% names(d$variables)))

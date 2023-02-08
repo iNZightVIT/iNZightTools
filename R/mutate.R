@@ -525,9 +525,10 @@ missing_to_cat <- function(data, vars, names = NULL) {
     vars_expr <- purrr::map(vars, function(x) {
         .data <- if (is_survey(data)) data$variables else data
         if (is.numeric(.data[[x]])) {
-            rlang::expr(factor(dplyr::case_when(
-                is.na(!!rlang::sym(x)) ~ "(Missing)",
-                TRUE ~ "(Observed)"
+            rlang::expr(factor(dplyr::case_match(
+                !!rlang::sym(x),
+                NA ~ "(Missing)",
+                .default = "(Observed)"
             )))
         } else {
             rlang::expr(fct_na_value_to_level(!!rlang::sym(x), "(Missing)"))

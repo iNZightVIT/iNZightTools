@@ -4,19 +4,23 @@
 \alias{separate_var}
 \title{Separate columns}
 \usage{
-separate_var(data, var, by, left, right, into = c("cols", "rows"))
+separate_var(data, var, by, names, into = c("cols", "rows"))
 }
 \arguments{
 \item{data}{dataset}
 
 \item{var}{name of variable to be separated}
 
-\item{by}{a string as delimiter between values (separate by delimiter) or an
-integer as number of characters to split by (separate by position)}
+\item{by}{a string as delimiter between values (separate by delimiter) or
+integer(s) as number of characters to split by (separate by position),
+the length of \code{by} should be \code{1} unless \code{by} is integer
+and \code{into = "cols"}; if \code{by} is a non-integer numeric vector
+its values will be rounded down to the nearest integer}
 
-\item{left}{name for the separated left column (for \code{into = "cols"})}
-
-\item{right}{name for the separated right column (for \code{into = "cols"})}
+\item{names}{for \code{into = "cols"}, a character vector of output column
+names; use \code{NA} if there are components that you don't want to
+appear in the output; the number of non-\code{NA} elements determines
+the number of new columns in the result}
 
 \item{into}{whether to split into new rows or columns}
 }

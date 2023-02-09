@@ -218,3 +218,16 @@ check_eval <- function(x) {
         env = parent.frame(1)
     ), x, ignore_attr = TRUE)
 }
+
+
+parse_datetime_order <- function(x) {
+    y <- strsplit(x, "\\s+")[[1]]
+    if (length(y) == 1) {
+        return(x)
+    }
+    dplyr::case_when(
+        grepl("minute", y, TRUE) ~ "M",
+        grepl("(am.?pm)|(pm.?am)", y, TRUE) ~ "p",
+        TRUE ~ tolower(substr(y, 1, 1))
+    ) |> paste(collapse = "")
+}

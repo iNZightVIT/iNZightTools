@@ -116,56 +116,6 @@ convert_to_cat <- function(data, vars, names = NULL) {
 }
 
 
-#' Convert variables to date-time
-#'
-#' @param data a dataframe with the variables to convert
-#' @param vars a character vector of column names to convert
-#' @param names a character vector of names for the created variables
-#' @param tz a time zone name (default: local time zone). See
-#'        \code{\link[base]{OlsonNames}}
-#' @return original dataframe containing new columns of the
-#'         converted variables with tidyverse code attached
-#' @rdname convert_to_datetime
-#' @seealso \code{\link{code}}
-#' @export
-#' @author Stephen Su
-convert_to_datetime <- function(data, vars, names = NULL, tz = "") {
-    expr <- rlang::enexpr(data)
-    if (is.null(names)) {
-        names <- sprintf("%s.datetime", vars)
-    }
-    vars_expr <- purrr::map(vars, function(x) {
-        rlang::expr(lubridate::as_datetime(!!rlang::sym(x), tz = !!tz))
-    }) |> rlang::set_names(names)
-    expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)
-    eval_code(expr)
-}
-
-
-#' Convert variables to dates
-#'
-#' @param data a dataframe with the variables to convert
-#' @param vars a character vector of column names to convert
-#' @param names a character vector of names for the created variables
-#' @return original dataframe containing new columns of the
-#'         converted variables with tidyverse code attached
-#' @rdname convert_to_date
-#' @seealso \code{\link{code}}
-#' @export
-#' @author Stephen Su
-convert_to_date <- function(data, vars, names = NULL) {
-    expr <- rlang::enexpr(data)
-    if (is.null(names)) {
-        names <- sprintf("%s.date", vars)
-    }
-    vars_expr <- purrr::map(vars, function(x) {
-        rlang::expr(lubridate::as_date(!!rlang::sym(x)))
-    }) |> rlang::set_names(names)
-    expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)
-    eval_code(expr)
-}
-
-
 #' Create new variables
 #'
 #' Create new variables by using valid R expressions and returns
@@ -532,6 +482,73 @@ missing_to_cat <- function(data, vars, names = NULL) {
             )))
         } else {
             rlang::expr(fct_na_value_to_level(!!rlang::sym(x), "(Missing)"))
+        }
+    }) |> rlang::set_names(names)
+    expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)
+    eval_code(expr)
+}
+
+
+#' Convert variables to date-time
+#'
+#' @param data a dataframe with the variables to convert
+#' @param vars a character vector of column names to convert
+#' @param ord a character vector of date-time formats
+#' @param names a character vector of names for the created variables
+#' @param tz a time zone name (default: local time zone). See
+#'        \code{\link[base]{OlsonNames}}
+#' @return original dataframe containing new columns of the
+#'         converted variables with tidyverse code attached
+#' @rdname convert_to_datetime
+#' @seealso \code{\link{code}}
+#' @export
+#' @author Stephen Su
+convert_to_datetime <- function(data, vars, ord = NULL, names = NULL, tz = "") {
+    expr <- rlang::enexpr(data)
+    if (is.null(names)) {
+        names <- sprintf("%s.datetime", vars)
+    }
+    vars_expr <- purrr::map(vars, function(x) {
+        if (is.null(ord)) {
+            rlang::expr(lubridate::as_datetime(!!rlang::sym(x), tz = !!tz))
+        } else {
+            rlang::expr(lubridate::parse_date_time(
+                !!rlang::sym(x),
+                orders = !!parse_datetime_order(ord),
+                tz = !!tz
+            ))
+        }
+    }) |> rlang::set_names(names)
+    expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)
+    eval_code(expr)
+}
+
+
+#' Convert variables to dates
+#'
+#' @param data a dataframe with the variables to convert
+#' @param vars a character vector of column names to convert
+#' @param ord a character vector of date-time formats
+#' @param names a character vector of names for the created variables
+#' @return original dataframe containing new columns of the
+#'         converted variables with tidyverse code attached
+#' @rdname convert_to_date
+#' @seealso \code{\link{code}}
+#' @export
+#' @author Stephen Su
+convert_to_date <- function(data, vars, ord = NULL, names = NULL) {
+    expr <- rlang::enexpr(data)
+    if (is.null(names)) {
+        names <- sprintf("%s.date", vars)
+    }
+    vars_expr <- purrr::map(vars, function(x) {
+        if (is.null(ord)) {
+            rlang::expr(lubridate::as_date(!!rlang::sym(x)))
+        } else {
+            rlang::expr(lubridate::parse_date_time(
+                !!rlang::sym(x),
+                orders = !!parse_datetime_order(ord)
+            ) |> as.Date())
         }
     }) |> rlang::set_names(names)
     expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)

@@ -4,12 +4,14 @@
 \alias{convert_to_datetime}
 \title{Convert variables to date-time}
 \usage{
-convert_to_datetime(data, vars, names = NULL, tz = "")
+convert_to_datetime(data, vars, ord = NULL, names = NULL, tz = "")
 }
 \arguments{
 \item{data}{a dataframe with the variables to convert}
 
 \item{vars}{a character vector of column names to convert}
+
+\item{ord}{a character vector of date-time formats}
 
 \item{names}{a character vector of names for the created variables}
 

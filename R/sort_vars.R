@@ -19,7 +19,7 @@
 #' cat(code(sorted))
 #' head(sorted)
 #'
-#' @author Owen Jin, Stephen Su
+#' @author Owen Jin, Zhaoming Su
 #' @export
 sort_vars <- function(data, vars, asc = rep(TRUE, length(vars))) {
     expr <- rlang::enexpr(data)

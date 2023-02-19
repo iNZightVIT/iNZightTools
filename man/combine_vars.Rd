@@ -45,5 +45,5 @@ head(combined)
 
 }
 \author{
-Owen Jin, Stephen Su
+Owen Jin, Zhaoming Su
 }

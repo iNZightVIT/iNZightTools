@@ -39,5 +39,5 @@ cat(code(svy_filtered))
 \code{\link{code}}
 }
 \author{
-Owen Jin, Tom Elliott, Stephen Su
+Owen Jin, Tom Elliott, Zhaoming Su
 }

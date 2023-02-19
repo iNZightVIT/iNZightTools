@@ -34,5 +34,5 @@ head(ranked)
 \code{\link{code}}
 }
 \author{
-Stephen Su
+Zhaoming Su
 }

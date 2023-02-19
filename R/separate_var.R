@@ -16,7 +16,7 @@
 #' @return Separated dataset
 #' @rdname separate_var
 #' @export
-#' @author Stephen Su
+#' @author Zhaoming Su
 separate_var <- function(data, var, by, names, into = c("cols", "rows")) {
     expr <- rlang::enexpr(data)
     into <- ifelse(rlang::arg_match(into) == "cols", "wider", "longer")

@@ -42,7 +42,7 @@
 #' cat(code(aggregated))
 #' head(aggregated)
 #'
-#' @author Tom Elliott, Owen Jin, Stephen Su
+#' @author Tom Elliott, Owen Jin, Zhaoming Su
 #' @export
 #' @md
 aggregate_data <- function(data, group_vars, summaries,

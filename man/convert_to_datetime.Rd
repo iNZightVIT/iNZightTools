@@ -29,5 +29,5 @@ Convert variables to date-time
 \code{\link{code}}
 }
 \author{
-Stephen Su
+Zhaoming Su
 }

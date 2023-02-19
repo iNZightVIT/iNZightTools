@@ -45,7 +45,7 @@ mutate_expr_i <- function(expr, vars_expr, data, ...) {
 #' cat(code(combined))
 #' head(combined)
 #'
-#' @author Owen Jin, Stephen Su
+#' @author Owen Jin, Zhaoming Su
 #' @export
 combine_vars <- function(data, vars, sep = ":", name = NULL,
                          keep_empty = FALSE, keep_na = TRUE) {
@@ -101,7 +101,7 @@ combine_vars <- function(data, vars, sep = ":", name = NULL,
 #' cat(code(converted))
 #' head(converted)
 #'
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @export
 convert_to_cat <- function(data, vars, names = NULL) {
     expr <- rlang::enexpr(data)
@@ -138,7 +138,7 @@ convert_to_cat <- function(data, vars, names = NULL) {
 #' cat(code(created))
 #' head(created)
 #' @rdname create_vars
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @export
 create_vars <- function(data, vars = ".new_var", vars_expr = NULL) {
     expr <- rlang::enexpr(data)
@@ -155,7 +155,7 @@ create_vars <- function(data, vars = ".new_var", vars_expr = NULL) {
 #' @param data dataset
 #' @param vars variable names to delete
 #' @return dataset without chosen variables
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @rdname delete_vars
 #' @export
 delete_vars <- function(data, vars = NULL) {
@@ -188,7 +188,7 @@ delete_vars <- function(data, vars = NULL) {
 #' cat(code(transformed))
 #' head(transformed)
 #'
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @export
 transform_vars <- function(data, vars, fn, names = NULL) {
     expr <- rlang::enexpr(data)
@@ -225,7 +225,7 @@ transform_vars <- function(data, vars, fn, names = NULL) {
 #' cat(code(renamed))
 #' head(renamed)
 #'
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @export
 rename_vars <- function(data, tobe_asis) {
     expr <- rlang::enexpr(data)
@@ -262,7 +262,7 @@ rename_vars <- function(data, tobe_asis) {
 #' cat(code(collapsed))
 #' tail(collapsed)
 #'
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @export
 collapse_cat <- function(data, var, levels, new_level, name = NULL) {
     expr <- rlang::enexpr(data)
@@ -296,7 +296,7 @@ collapse_cat <- function(data, var, levels, new_level, name = NULL) {
 #' cat(code(standardized))
 #' head(standardized)
 #'
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @export
 standardize_vars <- function(data, vars, names = NULL) {
     expr <- rlang::enexpr(data)
@@ -338,7 +338,7 @@ standardize_vars <- function(data, vars, names = NULL) {
 #' cat(code(ranked))
 #' head(ranked)
 #'
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @export
 rank_vars <- function(data, vars, rank_type = c("min", "dense", "percent")) {
     rank_type <- rlang::arg_match(rank_type)
@@ -377,7 +377,7 @@ rank_vars <- function(data, vars, rank_type = c("min", "dense", "percent")) {
 #' cat(code(renamed))
 #' head(renamed)
 #'
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @export
 rename_levels <- function(data, var, tobe_asis, name = NULL) {
     expr <- rlang::enexpr(data)
@@ -423,7 +423,7 @@ rename_levels <- function(data, var, tobe_asis, name = NULL) {
 #' cat(code(reordered))
 #' head(reordered)
 #'
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @export
 reorder_levels <- function(data, var, new_levels = NULL,
                            auto = c("freq", "order", "seq"),
@@ -465,7 +465,7 @@ reorder_levels <- function(data, var, new_levels = NULL,
 #' cat(code(missing))
 #' head(missing)
 #'
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @export
 missing_to_cat <- function(data, vars, names = NULL) {
     expr <- rlang::enexpr(data)
@@ -502,7 +502,7 @@ missing_to_cat <- function(data, vars, names = NULL) {
 #' @rdname convert_to_datetime
 #' @seealso \code{\link{code}}
 #' @export
-#' @author Stephen Su
+#' @author Zhaoming Su
 convert_to_datetime <- function(data, vars, ord = NULL, names = NULL, tz = "") {
     expr <- rlang::enexpr(data)
     if (is.null(names)) {
@@ -535,7 +535,7 @@ convert_to_datetime <- function(data, vars, ord = NULL, names = NULL, tz = "") {
 #' @rdname convert_to_date
 #' @seealso \code{\link{code}}
 #' @export
-#' @author Stephen Su
+#' @author Zhaoming Su
 convert_to_date <- function(data, vars, ord = NULL, names = NULL) {
     expr <- rlang::enexpr(data)
     if (is.null(names)) {

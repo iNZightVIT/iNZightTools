@@ -20,5 +20,5 @@ dataset with new rows appended
 Append rows to the dataset
 }
 \author{
-Yiwen He, Stephen Su
+Yiwen He, Zhaoming Su
 }

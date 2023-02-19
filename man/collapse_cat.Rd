@@ -38,5 +38,5 @@ tail(collapsed)
 \code{\link{code}}
 }
 \author{
-Stephen Su
+Zhaoming Su
 }

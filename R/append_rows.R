@@ -6,7 +6,7 @@
 #' @return dataset with new rows appended
 #' @rdname append_rows
 #' @export
-#' @author Yiwen He, Stephen Su
+#' @author Yiwen He, Zhaoming Su
 append_rows <- function(data, new_data, when_added = FALSE) {
     expr <- rlang::enexpr(data)
     new_expr <- rlang::enexpr(new_data)

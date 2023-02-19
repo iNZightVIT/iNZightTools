@@ -52,5 +52,5 @@ head(reordered)
 \code{\link{code}}
 }
 \author{
-Stephen Su
+Zhaoming Su
 }

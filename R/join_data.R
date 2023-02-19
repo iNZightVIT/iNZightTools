@@ -11,7 +11,7 @@
 #' @rdname join_data
 #' @seealso \code{\link{code}}, \code{\link[dplyr]{mutate-joins}},
 #'          \code{\link[dplyr]{filter-joins}}
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @export
 join_data <- function(data_l, data_r, by = NULL,
                       how = c("inner", "left", "right", "full", "anti", "semi"),

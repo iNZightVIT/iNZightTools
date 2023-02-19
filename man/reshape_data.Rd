@@ -36,5 +36,5 @@ reshaped dataset
 Reshaping dataset from wide to long or from long to wide
 }
 \author{
-Stephen Su
+Zhaoming Su
 }

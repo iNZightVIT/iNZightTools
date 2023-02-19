@@ -21,5 +21,5 @@ Select a (reordered) subset of variables from a subset.
 select_vars(iris, c("Sepal.Length", "Species", "Sepal.Width"))
 }
 \author{
-Tom Elliott, Stephen Su
+Tom Elliott, Zhaoming Su
 }

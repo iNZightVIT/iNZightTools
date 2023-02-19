@@ -62,5 +62,5 @@ Create categorical intervals from a numeric variable.
 form_class_intervals(iris, "Sepal.Length", "equal", 5L)
 }
 \author{
-Tom Elliott, Stephen Su
+Tom Elliott, Zhaoming Su
 }

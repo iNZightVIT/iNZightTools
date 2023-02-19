@@ -27,7 +27,7 @@
 #' @return dataframe with an additional column with categorical class intervals
 #' @rdname form_class_intervals
 #' @md
-#' @author Tom Elliott, Stephen Su
+#' @author Tom Elliott, Zhaoming Su
 #' @export
 #' @examples
 #' form_class_intervals(iris, "Sepal.Length", "equal", 5L)

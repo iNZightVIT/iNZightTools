@@ -35,5 +35,5 @@ head(sorted)
 \code{\link{code}}
 }
 \author{
-Owen Jin, Stephen Su
+Owen Jin, Zhaoming Su
 }

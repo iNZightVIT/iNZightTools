@@ -33,5 +33,5 @@ head(filtered)
 \code{\link{code}}
 }
 \author{
-Owen Jin, Stephen Su
+Owen Jin, Zhaoming Su
 }

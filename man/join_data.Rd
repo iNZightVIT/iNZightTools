@@ -37,5 +37,5 @@ Join data with another dataset
          \code{\link[dplyr]{filter-joins}}
 }
 \author{
-Stephen Su
+Zhaoming Su
 }

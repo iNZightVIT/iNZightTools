@@ -69,5 +69,5 @@ head(aggregated)
 \code{\link{code}}
 }
 \author{
-Tom Elliott, Owen Jin, Stephen Su
+Tom Elliott, Owen Jin, Zhaoming Su
 }

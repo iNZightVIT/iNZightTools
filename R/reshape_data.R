@@ -10,7 +10,7 @@
 #'
 #' @return reshaped dataset
 #' @rdname reshape_data
-#' @author Stephen Su
+#' @author Zhaoming Su
 #' @export
 reshape_data <- function(data, data_to = c("long", "wide"),
                          cols, names_to = "name", values_to = "value",

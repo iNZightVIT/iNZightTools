@@ -18,5 +18,5 @@ dataset without chosen variables
 Delete variables from a dataset
 }
 \author{
-Stephen Su
+Zhaoming Su
 }

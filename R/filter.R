@@ -32,7 +32,7 @@ filter_expr <- function(expr, var_expr, data) {
 #' svy_filtered <- filter_num(svy, var = "api00", op = "<", num = 700)
 #' cat(code(svy_filtered))
 #'
-#' @author Owen Jin, Tom Elliott, Stephen Su
+#' @author Owen Jin, Tom Elliott, Zhaoming Su
 #' @export
 #' @md
 filter_num <- function(data, var,
@@ -67,7 +67,7 @@ filter_num <- function(data, var,
 #' cat(code(filtered))
 #' head(filtered)
 #'
-#' @author Owen Jin, Stephen Su
+#' @author Owen Jin, Zhaoming Su
 #' @export
 filter_cat <- function(data, var, levels) {
     expr <- rlang::enexpr(data)
@@ -94,7 +94,7 @@ filter_cat <- function(data, var, levels) {
 #' cat(code(data))
 #' head(data)
 #'
-#' @author Owen Jin, Stephen Su
+#' @author Owen Jin, Zhaoming Su
 #' @export
 remove_rows <- function(data, rows) {
     expr <- rlang::enexpr(data)

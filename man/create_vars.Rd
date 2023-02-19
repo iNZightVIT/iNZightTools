@@ -36,5 +36,5 @@ head(created)
 \code{\link{code}}
 }
 \author{
-Stephen Su
+Zhaoming Su
 }

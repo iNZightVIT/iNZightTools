@@ -6,7 +6,7 @@
 #' @param keep vector of variable names to keep
 #' @return a data frame with tidyverse code attribute
 #' @rdname select_vars
-#' @author Tom Elliott, Stephen Su
+#' @author Tom Elliott, Zhaoming Su
 #' @examples
 #' select_vars(iris, c("Sepal.Length", "Species", "Sepal.Width"))
 #' @export

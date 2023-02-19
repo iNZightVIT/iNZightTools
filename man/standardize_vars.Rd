@@ -31,5 +31,5 @@ head(standardized)
 \code{\link{code}}
 }
 \author{
-Stephen Su
+Zhaoming Su
 }

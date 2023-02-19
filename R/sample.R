@@ -16,7 +16,7 @@
 #' cat(code(rs))
 #' head(rs)
 #'
-#' @author Owen Jin, Stephen Su
+#' @author Owen Jin, Zhaoming Su
 #' @export
 #' @md
 random_sample <- function(data, n, sample_size) {

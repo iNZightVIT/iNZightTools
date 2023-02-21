@@ -16,13 +16,15 @@ aggregate_data(
 \arguments{
 \item{data}{a dataframe or survey design object to aggregate}
 
-\item{group_vars}{a character vector of categorical variables in \code{data}
-to group by}
+\item{group_vars}{a character vector of variables in \code{data} to group by}
 
-\item{summaries}{summaries to generate for the groups generated
-in \code{group_vars} (see details)}
+\item{summaries}{an unnamed character vector or named list (with the names
+being the names of variables in the dataset to calculate summaries of,
+and the elements being character vectors) of summaries to generate
+for the groups generated in \code{group_vars} (see details)}
 
-\item{vars}{names of variables in the dataset to calculate summaries of}
+\item{vars}{names of variables in the dataset to calculate summaries of
+(ignored if \code{summaries} is a named list)}
 
 \item{names}{name templates for created variables (see details)}
 

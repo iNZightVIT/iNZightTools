@@ -5,11 +5,13 @@
 #' and returns the result along with tidyverse code used to generate it.
 #'
 #' @param data a dataframe or survey design object to aggregate
-#' @param group_vars  a character vector of categorical variables in \code{data}
-#'        to group by
-#' @param summaries summaries to generate for the groups generated
-#'        in \code{group_vars} (see details)
+#' @param group_vars a character vector of variables in `data` to group by
+#' @param summaries an unnamed character vector or named list (with the names
+#'        being the names of variables in the dataset to calculate summaries of,
+#'        and the elements being character vectors) of summaries to generate
+#'        for the groups generated in `group_vars` (see details)
 #' @param vars names of variables in the dataset to calculate summaries of
+#'        (ignored if `summaries` is a named list)
 #' @param names name templates for created variables (see details)
 #' @param quantiles if requesting quantiles, specify the desired quantiles here
 #' @return aggregated dataframe containing the summaries
@@ -49,13 +51,7 @@ aggregate_data <- function(data, group_vars, summaries,
                            vars = NULL, names = NULL,
                            quantiles = c(0.25, 0.75)) {
     expr <- rlang::enexpr(data)
-    if (is.null(vars)) {
-        cols <- names(data)[purrr::map_lgl(data, is_num)]
-        if (length(cols) == 0) {
-            rlang::abort("No numeric/date-time variables to aggregate.")
-        }
-        vars <- cols[!cols %in% group_vars]
-    }
+    summaries <- validate_agg_args(data, group_vars, summaries, vars)
     names <- make_varnames(summaries, names)
     vars_expr <- smry_expr(vars, summaries, names, quantiles, is_survey(data))
     if (is_survey(data)) {
@@ -70,8 +66,34 @@ aggregate_data <- function(data, group_vars, summaries,
 }
 
 
+validate_agg_args <- function(data, group_vars, summaries, vars) {
+    if (!is.list(summaries)) {
+        if (!is.null(names(summaries))) {
+            rlang::abort("`summaries` must be an unnamed vector or named list.")
+        }
+        if (is.null(vars)) {
+            cols <- names(data)[purrr::map_lgl(data, is_num)]
+            if (length(cols) == 0) {
+                rlang::abort("No numeric/date-time variables to aggregate.")
+            }
+            vars <- cols[!cols %in% group_vars]
+        }
+        summaries <- replicate(length(vars), summaries, simplify = FALSE) |>
+            rlang::set_names(vars)
+    } else {
+        if (is.null(names(summaries)) || "" %in% names(summaries)) {
+            rlang::abort("`summaries` must be an unnamed vector or named list.")
+        }
+        if (!is.null(vars)) {
+            rlang::warn("`vars` is ignored and overridden by `summaries`.")
+        }
+    }
+    summaries
+}
+
+
 smry_expr <- function(vars, summaries, names, quantiles, is_svy) {
-    purrr::map(summaries, function(x) {
+    purrr::map(unique(purrr::list_c(summaries)), function(x) {
         qt <- if (x == "quantile") rlang::exprs(c(!!!quantiles)) else NULL
         na <- if (x == "count") NULL else list(na.rm = TRUE)
         svy_fn <- ifelse(is_svy, "srvyr::survey_", "")
@@ -85,9 +107,12 @@ smry_expr <- function(vars, summaries, names, quantiles, is_svy) {
             return(list(rlang::expr((!!fn)()) |>
                 structure(name = glue::glue(names[[x]]))))
         }
-        purrr::map(vars, function(var) {
+        purrr::map(names(summaries), function(var) {
             name <- (is_svy && x == "quantile") |>
                 ifelse(gsub("\\_q\\{100\\*p\\}$", "", names[[x]]), names[[x]])
+            if (!x %in% summaries[[var]]) {
+                return(list(structure("", name = name)))
+            }
             if (!is_svy && x == "quantile") {
                 s_expr <- rlang::exprs(
                     (!!fn)(!!rlang::sym(var), !!quantiles[1], !!!na),
@@ -105,11 +130,13 @@ smry_expr <- function(vars, summaries, names, quantiles, is_svy) {
         }) |> purrr::list_flatten()
     }) |>
         purrr::list_flatten() |>
-        (\(x) rlang::set_names(x, purrr::map_chr(x, attr, "name")))()
+        (\(x) rlang::set_names(x, purrr::map_chr(x, attr, "name")))() |>
+        (\(x) x[!purrr::map_lgl(x, is.character)])()
 }
 
 
 make_varnames <- function(summaries, names) {
+    summaries <- unique(purrr::list_c(summaries))
     default_names <- purrr::map(summaries, agg_default_name) |>
         rlang::set_names(summaries)
     if (is.null(names)) {

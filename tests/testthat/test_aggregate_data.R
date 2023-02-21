@@ -33,6 +33,20 @@ test_that("Aggregation of non-survey works", {
     expect_silent(
         aggregate_data(iris, "Species", c("mean", "sd"), names = c(mean = "{var}_mu"))
     )
+
+    # `summaries` as named list
+    d <- aggregate_data(iris, "Species", list(
+        Sepal.Length = c("mean", "sd"),
+        Sepal.Width = c("mean", "sd"),
+        Petal.Length = c("sd", "missing"),
+        Petal.Width = c("var", "sum")
+    ))
+    expect_true(length(names(d)) == 9)
+    expect_warning(
+        aggregate_data(iris, "Species", list(Sepal.Length = "sd"), "Sepal.Length")
+    )
+    expect_error(aggregate_data(iris, "Species", c(Sepal.Length = "sd")))
+    expect_error(aggregate_data(iris, "Species", list("sd")))
 })
 
 test_that("Aggregating over fewer than all cat vars is OK", {

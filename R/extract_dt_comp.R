@@ -102,7 +102,7 @@ inz_dt_comp <- list(
     ),
     "Time only" = list(
         suffix = ".time",
-        expr = "format(_x_, \"%H:%M:_x_\")"
+        expr = "chron::chron(times. = format(_x_, \"%H:%M:%S\"))"
     ),
     "Hour" = list(
         suffix = ".hour",
@@ -129,8 +129,11 @@ inz_dt_comp <- list(
 
 
 get_dt_comp <- function(x) {
-    ## Suppress note in R CMD check
-    tsibble::tsibble
+    opt_pkg <- c("chron", "tsibble") |>
+        (\(p) p[purrr::map_lgl(p, grepl, x)])()
+    if (length(opt_pkg) && !requireNamespace(opt_pkg, quietly = TRUE)) {
+        rlang::abort(sprintf("Please install suggested package: '%s'", opt_pkg))
+    }
     x <- gsub("\\(", "\\\\(", gsub("\\)", "\\\\)", x))
     i <- which(grepl(sprintf("^%s", x), names(inz_dt_comp), TRUE))
     inz_dt_comp[[i[1]]]

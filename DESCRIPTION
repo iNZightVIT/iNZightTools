@@ -22,7 +22,6 @@ Imports:
     tibble,
     tidyr (>= 1.3.0),
     tools,
-    tsibble,
     lubridate,
     units,
     utils
@@ -39,6 +38,7 @@ Suggests:
     styler,
     surveyspec,
     testthat (>= 3.0.0),
+    tsibble,
     validate,
     yaml
 Authors@R: c(

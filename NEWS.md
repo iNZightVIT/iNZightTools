@@ -1,3 +1,7 @@
+# iNZightTools 1.13.1
+
+- add global options to set/override default comment character (this will allow Lite to change the default without changing the package's default behaviour)
+
 # iNZightTools 1.13.0
 
 ## New features

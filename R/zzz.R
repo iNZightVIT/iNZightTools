@@ -1,3 +1,4 @@
+# nocov start
 .onLoad <- function(libname, pkgname) {
     # TODO: check what Suggested packages aren't installed and prompt to install them
 
@@ -5,3 +6,4 @@
         options(inzighttools.comment = "#")
     }
 }
+# nocov end

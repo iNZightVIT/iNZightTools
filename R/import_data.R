@@ -128,7 +128,7 @@ read_dlm <- function(file,
     named.args <- list(...)
 
     if (is.null(named.args$comment)) {
-        named.args$comment <- "#"
+        named.args$comment <- getOption("inzighttools.comment")
     }
 
     if (preview) {

@@ -269,3 +269,11 @@ test_that("Variable names are quoted as necessary", {
     expect_equal(quote_varname("hello_world"), "hello_world")
     expect_equal(quote_varname("_hello"), "`_hello`")
 })
+
+test_that("Global comment argument is passed to readr::read_csv", {
+    expect_s3_class(smart_read("comments.csv"), "data.frame")
+    op <- options(inzighttools.comment = NULL)
+    on.exit(options(op))
+    expect_error(smart_read("comments.csv"))
+    expect_s3_class(smart_read("comments.csv", comment = "#"), "data.frame")
+})

@@ -9,7 +9,7 @@
 
 0 errors | 0 warnings | 1 notes
 
-- There is one NOTE about a non-CRAN dependency - this package 'surveyspec' is only used conditionally, providing additional but not essential functionality.
+- There are two (related) NOTEs about a non-CRAN dependency - this package 'surveyspec' is only used conditionally, providing additional but not essential functionality. 'Additional_repositories' points to a repository where 'surveyspec' can be found.
 
 ## revdepcheck results
 

@@ -1,21 +1,31 @@
-test_that('Metadata is read correctly', {
-    data <- smart_read('meta.csv')
-    expect_s3_class(data, 'data.frame')
-    expect_equal(names(data),
-        c('cellsource', 'rightfoot', 'travel', 'getlunch', 'height',
-          'gender', 'age', 'year', 'armspan', 'cellcost', 'school', 'phonebill'))
-    expect_equal(as.character(sapply(data, class)),
-        c('factor', 'numeric', 'factor', 'factor', 'numeric',
-          'factor', 'numeric', 'numeric', 'numeric', 'numeric', 'factor', 'numeric'))
+options(inzighttools.comment = "#")
+
+test_that("Metadata is read correctly", {
+    data <- smart_read("meta.csv")
+    expect_s3_class(data, "data.frame")
+    expect_equal(
+        names(data),
+        c(
+            "cellsource", "rightfoot", "travel", "getlunch", "height",
+            "gender", "age", "year", "armspan", "cellcost", "school", "phonebill"
+        )
+    )
+    expect_equal(
+        as.character(sapply(data, class)),
+        c(
+            "factor", "numeric", "factor", "factor", "numeric",
+            "factor", "numeric", "numeric", "numeric", "numeric", "factor", "numeric"
+        )
+    )
 })
 
-test_that('Name is read', {
-    expect_equal(attr(smart_read('meta.csv'), 'name'), 'Census at School (subset)')
-    expect_equal(attr(smart_read('meta.txt'), 'name'), 'meta')
+test_that("Name is read", {
+    expect_equal(attr(smart_read("meta.csv"), "name"), "Census at School (subset)")
+    expect_equal(attr(smart_read("meta.txt"), "name"), "meta")
 })
 
 test_that("Factor level orders are respected", {
-    data <- smart_read('meta.csv')
+    data <- smart_read("meta.csv")
     # data <- smart_read('tests/testthat/meta.csv')
     expect_equal(levels(data$gender), c("male", "female"))
 })
@@ -27,7 +37,7 @@ test_that("First row is read if no title/description given", {
 
 test_that("Special characters are removed from factor levels", {
     expect_equal(
-        levels(smart_read('meta_chars.csv')$var2),
+        levels(smart_read("meta_chars.csv")$var2),
         c("maori", "english", "francais")
     )
 })

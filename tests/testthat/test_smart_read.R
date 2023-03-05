@@ -1,3 +1,5 @@
+options(inzighttools.comment = "#")
+
 test_that("smart_read can figure out the file type", {
     expect_equal(guess_type("txt"), "meta")
     expect_equal(guess_type("dta"), "stata")

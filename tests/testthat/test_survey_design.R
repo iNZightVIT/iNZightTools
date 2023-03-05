@@ -1,3 +1,5 @@
+options(inzighttools.comment = "#")
+
 require(survey)
 data(api)
 

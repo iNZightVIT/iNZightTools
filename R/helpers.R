@@ -45,6 +45,9 @@ is_dt <- function(x) {
 #' @export
 vartype <- function(x) {
     if (inherits(x, 'POSIXct') ||
+        inherits(x, 'yearweek') ||
+        inherits(x, 'yearmonth') ||
+        inherits(x, 'yearquarter') ||
         inherits(x, 'Date') ||
         inherits(x, 'times') ||
         inherits(x, 'hms')) return('dt')

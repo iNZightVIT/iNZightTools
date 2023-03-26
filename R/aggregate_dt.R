@@ -23,10 +23,10 @@ aggregate_dt <- function(data, dt, dt_comp, summaries,
                          quantiles = c(0.25, 0.75)) {
     assign(rlang::expr_deparse(expr <- rlang::enexpr(data)), data)
     ._x_ <- rlang::inject(extract_dt_comp(!!expr, dt, dt_comp))
-    aggregated <- aggregate_data(
+    agg <- aggregate_data(
         ._x_, sprintf("%s%s", dt, get_dt_comp(dt_comp)$suffix),
         summaries, vars, names, quantiles
     )
-    new_code <- stringr::str_replace(code(aggregated), "\\._x_", code(._x_))
-    structure(aggregated, code = new_code)
+    new_code <- gsub("\\._x_", paste(code(._x_), collapse = "\n"), code(agg))
+    structure(agg, code = new_code)
 }

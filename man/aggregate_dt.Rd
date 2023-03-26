@@ -8,6 +8,7 @@ aggregate_dt(
   data,
   dt,
   dt_comp,
+  group_vars = NULL,
   summaries,
   vars = NULL,
   names = NULL,
@@ -20,6 +21,8 @@ aggregate_dt(
 \item{dt}{a string of the name of the date-time variable}
 
 \item{dt_comp}{a string of the component of the date-time to group by}
+
+\item{group_vars}{a character vector of other variables in \code{data} to group by}
 
 \item{summaries}{an unnamed character vector or named list (with the names
 being the names of variables in the dataset to calculate summaries of,

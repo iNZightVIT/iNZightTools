@@ -26,7 +26,7 @@ combine_vars(
 are removed from the factor}
 
 \item{keep_na}{logical, if \code{TRUE} the \code{<NA>} in the factors or
-\code{NA} in the characters will occupy an explicit factor level;
+\code{NA} in the characters will turn in a level \code{"(Missing)"};
 otherwise, the resulting entries will return \code{<NA>}}
 }
 \value{

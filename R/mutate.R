@@ -33,7 +33,7 @@ mutate_expr_i <- function(expr, vars_expr, data, ...) {
 #' @param keep_empty logical, if \code{FALSE} empty level combinations
 #'        are removed from the factor
 #' @param keep_na logical, if \code{TRUE} the \code{<NA>} in the factors or
-#'        \code{NA} in the characters will occupy an explicit factor level;
+#'        \code{NA} in the characters will turn in a level \code{"(Missing)"};
 #'        otherwise, the resulting entries will return \code{<NA>}
 #'
 #' @return original dataframe containing new columns of the new
@@ -69,7 +69,8 @@ combine_vars <- function(data, vars, sep = ":", name = NULL,
     })
     vars[vars_not_cat] <- sprintf("as.factor(%s)", vars[vars_not_cat])
     if (keep_na) {
-        vars <- rlang::parse_exprs(sprintf("fct_na_value_to_level(%s)", vars))
+        vars <- sprintf("fct_na_value_to_level(%s, \"(Missing)\")", vars) |>
+            rlang::parse_exprs()
     } else {
         vars <- rlang::parse_exprs(vars)
     }

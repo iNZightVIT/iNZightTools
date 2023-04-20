@@ -1,3 +1,26 @@
+# iNZightTools 2.0.0
+
+## Breaking Changes
+
+- major code rework for all data-wrangling and variable manipulation functions with tidyverse libraries and development conventions
+- renamed most data-wrangling and variable manipulation functions such that their functionality are more name-intuitive (see below)
+
+## New features
+
+- Default code of generated data from all data-wrangling and variable manipulation functions now uses native R pipe `|>`. An option is added to use the `magrittr` pipe `%>%` instead.
+- The following functions are reworked and added new features:
+  - `aggregate_dt()` is now a wrapper of `aggregate_data()` with date component extraction and aggregation functionality built in, and added an option to allow aggregation with additional variables.
+  - combined `unite()` and `combineCatVars()` into `combine_vars()` and added options to remove empty factor combinations and turn missing values into an explicit factor level
+  - renamed `rankVars()` to `rank_vars()` and included more ranking methods (integer ranking by density and percentage ranking)
+  - renamed `reorderLevels()` to `reorder_levels` and included more auto-reordering methods (by first appearance and numeric order)
+  - added an option to specify time zone in `convert_to_datetime()`
+  - renamed `joindata()` to `join_data()`, included right-join method, and reworked its arguments
+- Changes to other functions
+  - renamed `filterLevels()` to `filter_cat()` with renamed arguments
+  - renamed `filterNumeric()` to `filter_num()` with renamed arguments
+  - renamed `filterRows()` to `remove_rows()` with renamed arguments
+  - ... #TODO
+
 # iNZightTools 1.13.0
 
 ## New features

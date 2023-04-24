@@ -26,12 +26,14 @@ reshape_data <- function(data, data_to = c("long", "wide"),
         expr <- rlang::expr(!!expr %>% tidyr::pivot_longer(
             !!cols,
             names_to = !!names_to,
-            values_to = !!values_to
+            values_to = !!values_to,
+            names_repair = "unique"
         ))
     } else {
         expr <- rlang::expr(!!expr %>% tidyr::pivot_wider(
             names_from = !!rlang::sym(names_from),
-            values_from = !!rlang::sym(values_from)
+            values_from = !!rlang::sym(values_from),
+            names_repair = "unique"
         ))
     }
     eval_code(expr)

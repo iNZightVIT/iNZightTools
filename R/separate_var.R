@@ -56,7 +56,7 @@ separate_var <- function(data, var, by, names, into = c("cols", "rows")) {
         sep_arg <- c(sep_arg, names = rlang::enexpr(names), too_many = "merge")
     }
     if (grepl("wider", sep_fn)) {
-        sep_arg <- c(sep_arg, too_few = "align_start")
+        sep_arg <- c(sep_arg, too_few = "align_start", names_repair = "unique")
     }
     sep_expr <- rlang::expr((!!rlang::parse_expr(sep_fn))(!!!sep_arg))
     if (is_survey(data)) {

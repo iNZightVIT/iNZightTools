@@ -46,7 +46,7 @@ code <- function(data) return(attr(data, "code"))
 #' @return Called for side-effect of printing code to the console.
 #' @export
 #' @examples
-#' iris_agg <- aggregateData(iris, vars = "Species", summaries = "mean")
+#' iris_agg <- aggregate_data(iris, group_vars = "Species", summaries = "mean")
 #' print_code(iris_agg)
 print_code <- function(x, ...) {
     c <- code(x)

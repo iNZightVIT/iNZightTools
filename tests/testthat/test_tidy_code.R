@@ -49,7 +49,7 @@ test_that("Cody tidying does not break code 2", {
 })
 
 test_that("print_code works OK", {
-    dat <- filterRows(iris, c(10, 20, 30))
+    dat <- remove_rows(iris, c(10, 20, 30))
     expect_equal(
         eval(parse(text = capture.output(print_code(dat)))),
         dat,

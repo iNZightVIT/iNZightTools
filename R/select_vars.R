@@ -1,30 +1,22 @@
 #' Select variables from a dataset
 #'
-#' Select a (reordered) subset of variables from a subset.`
+#' Select a (reordered) subset of variables from a subset.
 #'
-#' @param .data the dataset
+#' @param data the dataset
 #' @param keep vector of variable names to keep
 #' @return a data frame with tidyverse code attribute
-#' @author Tom Elliott
+#' @rdname select_vars
+#' @author Tom Elliott, Zhaoming Su
 #' @examples
-#' selectVars(iris, c("Sepal.Length", "Species", "Sepal.Width"))
+#' select_vars(iris, c("Sepal.Length", "Species", "Sepal.Width"))
 #' @export
-selectVars <- function(.data, keep) {
-    mc <- match.call()
-    dataname <- mc$.data
-
-    keep <- paste(keep, collapse = ", ")
-
-    if (is_survey(.data) && !inherits(.data, "tbl_svy")) {
-        .data <- srvyr::as_survey(.data)
-        dataname <- glue::glue("{dataname} %>% srvyr::as_survey()")
+select_vars <- function(data, keep) {
+    expr <- rlang::enexpr(data)
+    if (is_survey(data)) {
+        expr <- coerce_tbl_svy(expr, data)
+        expr <- rlang::expr(!!expr %>% srvyr::select(!!!rlang::syms(keep)))
+    } else {
+        expr <- rlang::expr(!!expr %>% dplyr::select(!!!rlang::syms(keep)))
     }
-
-    exp <- ~.DATA %>% dplyr::select(.KEEP)
-    exp <- replaceVars(exp,
-        .DATA = dataname,
-        .KEEP = keep
-    )
-
-    interpolate(exp)
+    eval_code(expr)
 }

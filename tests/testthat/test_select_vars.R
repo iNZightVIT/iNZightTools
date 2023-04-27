@@ -1,24 +1,15 @@
 test_that("Correct vars are grabbed", {
-    expect_equal(
-        selectVars(iris, c("Sepal.Length", "Species", "Sepal.Width")),
-        iris[, c("Sepal.Length", "Species", "Sepal.Width")],
-        ignore_attr = TRUE
-    )
+    d <- select_vars(iris, c("Sepal.Length", "Species", "Sepal.Width"))
+    expect_equal(names(d), c("Sepal.Length", "Species", "Sepal.Width"))
+    check_eval(d)
 })
 
-test_that("Code is correct", {
-    expect_equal(
-        code(selectVars(iris, c("Sepal.Length", "Species", "Sepal.Width"))),
-        "iris %>% dplyr::select(Sepal.Length, Species, Sepal.Width)"
-    )
-})
-
-require(survey)
+library(survey)
 data(api)
-svy <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
+svy <- svydesign(~ dnum + snum, weights = ~pw, fpc = ~ fpc1 + fpc2, data = apiclus2)
 
 test_that("Surveys supported", {
-    d <- selectVars(svy, c("api00", "stype"))
+    d <- select_vars(svy, c("api00", "stype"))
     expect_equal(names(d$variables), c("api00", "stype"))
-    expect_equal(eval(parse(text = code(d))), d, ignore_attr = TRUE)
+    check_eval(d)
 })

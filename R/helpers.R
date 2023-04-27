@@ -45,6 +45,9 @@ is_dt <- function(x) {
 #' @export
 vartype <- function(x) {
     if (inherits(x, 'POSIXct') ||
+        inherits(x, 'yearweek') ||
+        inherits(x, 'yearmonth') ||
+        inherits(x, 'yearquarter') ||
         inherits(x, 'Date') ||
         inherits(x, 'times') ||
         inherits(x, 'hms')) return('dt')
@@ -189,3 +192,45 @@ orNULL <- function(x, y = x) {
 #' @export
 #' @md
 `%notin%` <- function(x, table) match(x, table, nomatch = 0L) == 0L
+
+
+eval_code <- function(expr, env = parent.frame(2)) {
+    pipe <- getOption("inzighttools.pipe", "baseR")
+    expr_deparsed <- dplyr::case_when(
+        pipe %in% c("dplyr", "%>%", "magrittr") ~ rlang::expr_deparse(expr),
+        TRUE ~ stringr::str_replace_all(rlang::expr_deparse(expr), "%>%", "|>")
+    )
+    try(rlang::eval_tidy(expr, env = env)) |>
+        structure(code = expr_deparsed)
+}
+
+
+coerce_tbl_svy <- function(expr, data) {
+    if (!inherits(data, "tbl_svy")) {
+        rlang::expr(!!expr %>% srvyr::as_survey())
+    } else {
+        expr
+    }
+}
+
+
+check_eval <- function(x) {
+    stopifnot(!is.null(attributes(x)$code))
+    testthat::expect_equal(rlang::eval_tidy(
+        rlang::parse_expr(paste(code(x), collapse = "\n")),
+        env = parent.frame(1)
+    ), x, ignore_attr = TRUE)
+}
+
+
+parse_datetime_order <- function(x) {
+    y <- strsplit(x, "\\s+")[[1]]
+    if (length(y) == 1) {
+        return(x)
+    }
+    dplyr::case_when(
+        grepl("minute", y, TRUE) ~ "M",
+        grepl("(am.?pm)|(pm.?am)", y, TRUE) ~ "p",
+        TRUE ~ tolower(substr(y, 1, 1))
+    ) |> paste(collapse = "")
+}

@@ -10,14 +10,20 @@
 #' @author Tom Elliott
 #' @export
 read_text <- function(txt, delim = "\t", ...) {
-    if (txt == "clipboard")
+    if (txt == "clipboard") {
         txt <- readr::clipboard()
+    }
 
-    if (utils::packageVersion('readr') < numeric_version('2.0.0')) {
+    if (utils::packageVersion("readr") < numeric_version("2.0.0")) {
         d <- readr::read_delim(I(txt), delim = delim)
     } else {
         d <- readr::read_delim(I(txt), delim = delim, show_col_types = FALSE)
     }
 
-    d %>% dplyr::mutate_if(is.character, as.factor)
+    d <- d |> dplyr::mutate_if(is.character, as.factor)
+
+    if (any(grepl(" ", colnames(d)))) {
+        colnames(d) <- gsub(" ", "_", colnames(d))
+    }
+    d
 }

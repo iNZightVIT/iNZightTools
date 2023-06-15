@@ -1,168 +1,163 @@
 #' Aggregate data by categorical variables
 #'
-#' Aggregate a dataframe into summaries of all numeric variables by grouping
-#' them by specified categorical variables
+#' Aggregate a dataframe into summaries of all numeric/date-time variables by
+#' grouping them by specified categorical variables
 #' and returns the result along with tidyverse code used to generate it.
 #'
-#' @param .data a dataframe or survey design object to aggregate
-#' @param vars  a character vector of categorical variables in \code{.data}
-#'        to group by
-#' @param summaries summaries to generate for the groups generated
-#'        in \code{vars}. See details.
-#' @param summary_vars names of variables in the dataset to calculate summaries of
-#' @param varnames name templates for created variables (see details).
+#' @param data a dataframe or survey design object to aggregate
+#' @param group_vars a character vector of variables in `data` to group by
+#' @param summaries an unnamed character vector or named list (with the names
+#'        being the names of variables in the dataset to calculate summaries of,
+#'        and the elements being character vectors) of summaries to generate
+#'        for the groups generated in `group_vars` (see details)
+#' @param vars names of variables in the dataset to calculate summaries of
+#'        (ignored if `summaries` is a named list)
+#' @param names name templates for created variables (see details)
 #' @param quantiles if requesting quantiles, specify the desired quantiles here
-#' @param custom_funs a list of custom functions (see details).
 #' @return aggregated dataframe containing the summaries
 #'         with tidyverse code attached
+#' @rdname aggregate_data
 #' @seealso \code{\link{code}}
-#' @seealso \code{\link{countMissing}}
 #'
 #' @section Calculating variable summaries:
-#' The `aggregateData` function accepts any R function which returns a single-value (such as `mean`, `var`, `sd`, `sum`, `IQR`). The default name of new variables will be `{var}_{fun}`, where `{var}` is the variable name and `{fun}` is the summary function used. You may pass new names via the `varnames` argument, which should be either a vector the same length as `summary_vars`, or a named list (where the names are the summary function). In either case, use `{var}` to represent the variable name. e.g., `{var}_mean` or `min_{var}`.
+#' The `aggregate_data` function accepts any R function which returns a
+#' single-value (such as `mean`, `var`, `sd`, `sum`, `IQR`). The default name of
+#' new variables will be `{var}_{fun}`, where `{var}` is the variable name and
+#' `{fun}` is the summary function used. You may pass new names via the `names`
+#' argument, which should be either a vector the same length as `vars`, or a
+#' named list (where the names are the summary function). In either case, use
+#' `{var}` to represent the variable name. e.g., `{var}_mean` or `min_{var}`.
 #'
-#' You can also include the summary `missing`, which will count the number of missing values in the variable. It has default name `{var}_missing`.
+#' You can also include the summary `missing`, which will count the number of
+#' missing values in the variable. It has default name `{var}_missing`.
 #'
-#' For the `quantile` summary, there is the additional argument `quantiles`. A new variable will be created for each specified quantile 'p'. To name these variables, use `{p}` in `varnames` (the default is `{var}_q{p}`).
-#'
-#' Custom functions can be passed via the `custom_funs` argument. This should be a list, and each element should have a `name` and either an `expr` or `fun` element. Expressions should operate on a variable `x`. The function should be a function of `x` and return a single value.
-#' ```r
-#' cust_funs <- list(name = '{var}_width', expr = diff(range(x), na.rm = TRUE))
-#' cust_funs <- list(name = '{var}_stderr',
-#'   fun = function(x) {
-#'     s <- sd(x)
-#'     n <- length(x)
-#'     s / sqrt(n)
-#'   }
-#' )
-#' ```
+#' For the `quantile` summary, there is the additional argument `quantiles`.
+#' A new variable will be created for each specified quantile 'p'. To name these
+#' variables, use `{p}` in `names` (the default is `{var}_q{p}`).
 #'
 #' @examples
 #' aggregated <-
-#'     aggregateData(iris,
-#'         vars = c("Species"),
+#'     aggregate_data(iris,
+#'         group_vars = c("Species"),
 #'         summaries = c("mean", "sd", "iqr")
 #'     )
 #' cat(code(aggregated))
 #' head(aggregated)
 #'
-#' @author Tom Elliott, Owen Jin
+#' @author Tom Elliott, Owen Jin, Zhaoming Su
 #' @export
 #' @md
-aggregateData <- function(.data, vars, summaries,
-                          summary_vars,
-                          varnames = NULL,
-                          quantiles = c(0.25, 0.75),
-                          custom_funs = NULL) {
-
-    mc <- match.call()
-    dataname <- mc$.data
-
-    is_survey <- is_survey(.data)
-    if (is_survey && !inherits(.data, "tbl_svy")) {
-        .data <- srvyr::as_survey(.data)
-        dataname <- glue::glue("{dataname} %>% srvyr::as_survey()")
+aggregate_data <- function(data, group_vars, summaries,
+                           vars = NULL, names = NULL,
+                           quantiles = c(0.25, 0.75)) {
+    expr <- rlang::enexpr(data)
+    summaries <- validate_agg_args(data, group_vars, summaries, vars)
+    names <- make_varnames(summaries, names)
+    vars_expr <- smry_expr(vars, summaries, names, quantiles, is_survey(data))
+    if (is_survey(data)) {
+        expr <- coerce_tbl_svy(expr, data)
     }
+    s_fn <- sprintf("%s::summarise", ifelse(is_survey(data), "srvyr", "dplyr"))
+    g_fn <- sprintf("%s::group_by", ifelse(is_survey(data), "srvyr", "dplyr"))
+    expr <- rlang::expr(!!expr %>%
+        (!!rlang::parse_expr(g_fn))(!!!rlang::syms(group_vars)) %>%
+        (!!rlang::parse_expr(s_fn))(!!!vars_expr, .groups = "drop"))
+    eval_code(expr)
+}
 
-    if (missing(vars)) stop("Variables to aggregate over required")
 
-    if (missing(summary_vars)) {
-        cols <- colnames(.data)
-        cols <- cols[sapply(.data, is_num)]
-        if (length(cols) == 0) stop("No numeric variables to aggregate.")
-        summary_vars <- cols[cols %notin% vars]
-    }
-
-    varnames <- make_varnames(summaries, varnames)
-    summary_funs <- do.call(rbind,
-        lapply(summaries,
-            function(smry) {
-                name <- varnames[[smry]]
-                # functions that don't take na.rm argument
-                na <- ifelse(smry %in% c("count"), "", ", na.rm = TRUE")
-                svy <- if (is_survey) "srvyr::survey_" else ""
-                fun <- switch(smry,
-                    "count" =
-                        if (is_survey) "srvyr::survey_total()"
-                        else "dplyr::n()",
-                    "iqr" =
-                        if (is_survey) "iNZightTools::survey_IQR({var})"
-                        else "IQR({var}, na.rm = TRUE)",
-                    "missing" = "iNZightTools::countMissing({var})",
-                    "sum" =
-                        if (is_survey) "srvyr::survey_total({var}, na.rm = TRUE)"
-                        else "sum({var}, na.rm = TRUE)",
-                    paste0(svy, smry, "({var}", na, ")")
-                )
-
-                var <- summary_vars
-                if (smry == "quantile") {
-                    if (is_survey) {
-                        name <- glue::glue(gsub("\\_q\\{100\\*p\\}$", "", name))
-                        fun <- glue::glue("srvyr::survey_quantile({var}, quantiles = .QUANTILES, na.rm = TRUE)")
-                    } else {
-                        z <- do.call(rbind,
-                            lapply(quantiles,
-                                function(p) {
-                                    n <- glue::glue(name)
-                                    f <- glue::glue("quantile({var}, probs = {p}, na.rm = TRUE)")
-                                    data.frame(n = n, f = f)
-                                }
-                            )
-                        )
-                        name <- z[,1]
-                        fun <- z[,2]
-                    }
-                } else {
-                    name <- glue::glue(name)
-                    fun <- glue::glue(fun)
-                }
-                data.frame(name, fun)
+validate_agg_args <- function(data, group_vars, summaries, vars) {
+    if (!is.list(summaries)) {
+        if (!is.null(names(summaries))) {
+            rlang::abort("`summaries` must be an unnamed vector or named list.")
+        }
+        if (is.null(vars)) {
+            cols <- names(data)[purrr::map_lgl(data, is_num)]
+            if (length(cols) == 0) {
+                rlang::abort("No numeric/date-time variables to aggregate.")
             }
-        )
-    )
-
-    smry_expr <- paste(summary_funs$name, summary_funs$fun, sep = " = ", collapse = ",\n")
-    groupby_str <- stringr::str_c(vars, collapse = ", ")
-
-    exp <- ~.data %>%
-        dplyr::group_by(.EVAL_GROUPBY) %>%
-        dplyr::summarize(
-            .EVAL_SUMMARIZE,
-            .groups = "drop"
-        )
-
-    exp <- replaceVars(exp,
-        .EVAL_GROUPBY = groupby_str,
-        .EVAL_SUMMARIZE = smry_expr,
-        .data = dataname
-    )
-
-    interpolate(exp, .QUANTILES = quantiles)
-}
-
-make_varnames <- function(summaries, varnames) {
-    default_varnames <- lapply(summaries, agg_default_name)
-    names(default_varnames) <- summaries
-    if (missing(varnames) || is.null(varnames)) {
-        varnames <- default_varnames
-    } else if (length(varnames) != length(summaries)) {
-        varnames <- utils::modifyList(default_varnames, varnames)
+            vars <- cols[!cols %in% group_vars]
+        }
+        summaries <- replicate(length(vars), summaries, simplify = FALSE) |>
+            rlang::set_names(vars)
     } else {
-        varnames <- as.list(varnames)
-        names(varnames) <- summaries
+        if (is.null(names(summaries)) || "" %in% names(summaries)) {
+            rlang::abort("`summaries` must be an unnamed vector or named list.")
+        }
+        if (!is.null(vars)) {
+            rlang::warn("`vars` is ignored and overridden by `summaries`.")
+        }
     }
-    varnames
+    summaries
 }
 
-agg_default_name <- function(fun) {
-    switch(fun,
-        "count" = "count",
-        "quantile" = "{var}_q{100*p}",
-        "missing" = "{var}_missing",
-        paste("{var}", fun, sep = "_")
+
+smry_expr <- function(vars, summaries, names, quantiles, is_svy) {
+    purrr::map(unique(purrr::list_c(summaries)), function(x) {
+        qt <- if (x == "quantile") rlang::exprs(c(!!!quantiles)) else NULL
+        na <- if (x == "count") NULL else list(na.rm = TRUE)
+        svy_fn <- ifelse(is_svy, "srvyr::survey_", "")
+        fn <- dplyr::case_match(x,
+            "count" ~ ifelse(is_svy, "srvyr::survey_total", "dplyr::n"),
+            "iqr" ~ ifelse(is_svy, "iNZightTools::survey_IQR", "IQR"),
+            "sum" ~ ifelse(is_svy, "srvyr::survey_total", "sum"),
+            .default = paste0(svy_fn, x)
+        ) |> rlang::parse_expr()
+        if (x == "count") {
+            return(list(rlang::expr((!!fn)()) |>
+                structure(name = glue::glue(names[[x]]))))
+        }
+        purrr::map(names(summaries), function(var) {
+            name <- (is_svy && x == "quantile") |>
+                ifelse(gsub("\\_q\\{100\\*p\\}$", "", names[[x]]), names[[x]])
+            if (!x %in% summaries[[var]]) {
+                return(list(structure("", name = name)))
+            }
+            if (!is_svy && x == "quantile") {
+                s_expr <- rlang::exprs(
+                    (!!fn)(!!rlang::sym(var), !!quantiles[1], !!!na),
+                    (!!fn)(!!rlang::sym(var), !!quantiles[2], !!!na)
+                )
+                attr(s_expr[[1]], "name") <- glue::glue(name, p = quantiles[1])
+                attr(s_expr[[2]], "name") <- glue::glue(name, p = quantiles[2])
+                return(s_expr)
+            } else if (x == "missing") {
+                s_expr <- rlang::expr(sum(is.na(!!rlang::sym(var))))
+            } else {
+                s_expr <- rlang::expr((!!fn)(!!rlang::sym(var), !!!qt, !!!na))
+            }
+            structure(s_expr, name = glue::glue(name))
+        }) |> purrr::list_flatten()
+    }) |>
+        purrr::list_flatten() |>
+        (\(x) rlang::set_names(x, purrr::map_chr(x, attr, "name")))() |>
+        (\(x) x[!purrr::map_lgl(x, is.character)])()
+}
+
+
+make_varnames <- function(summaries, names) {
+    summaries <- unique(purrr::list_c(summaries))
+    default_names <- purrr::map(summaries, agg_default_name) |>
+        rlang::set_names(summaries)
+    if (is.null(names)) {
+        default_names
+    } else if (length(names) != length(summaries)) {
+        utils::modifyList(default_names, as.list(names))
+    } else {
+        rlang::set_names(as.list(names), summaries)
+    }
+}
+
+
+agg_default_name <- function(x) {
+    dplyr::case_match(x,
+        "count" ~ "count",
+        "quantile" ~ "{var}_q{100*p}",
+        "missing" ~ "{var}_missing",
+        .default = sprintf("{var}_%s", x)
     )
 }
+
 
 #' Interquartile range function for surveys
 #'
@@ -181,10 +176,10 @@ agg_default_name <- function(fun) {
 #' data(api)
 #'
 #' dstrata <- apistrat %>%
-#' as_survey(strata = stype, weights = pw)
+#'     as_survey(strata = stype, weights = pw)
 #'
 #' dstrata %>%
-#'   summarise(api99_iqr = survey_IQR(api99))
+#'     summarise(api99_iqr = survey_IQR(api99))
 #'
 #' @author Tom Elliott
 #' @md
@@ -194,9 +189,10 @@ survey_IQR <- function(x, na.rm = TRUE) {
     qs <- survey::svyquantile(~`__SRVYR_TEMP_VAR__`,
         quantiles = c(0.25, 0.75),
         se = FALSE,
-        na.rm = na.rm, design = .svy)
+        na.rm = na.rm, design = .svy
+    )
     if (utils::packageVersion("survey") >= "4.1") {
-        out <- sapply(qs, function(qx) diff(qx[,1]))
+        out <- sapply(qs, function(qx) diff(qx[, 1]))
     } else {
         out <- apply(qs, 1, diff)
     }

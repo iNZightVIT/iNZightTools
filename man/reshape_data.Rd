@@ -4,23 +4,30 @@
 \alias{reshape_data}
 \title{Reshaping dataset from wide to long or from long to wide}
 \usage{
-reshape_data(.data, col1, col2, cols, key, value, check)
+reshape_data(
+  data,
+  data_to = c("long", "wide"),
+  cols,
+  names_to = "name",
+  values_to = "value",
+  names_from = "name",
+  values_from = "value"
+)
 }
 \arguments{
-\item{.data}{dataset}
+\item{data}{a dataset to reshape}
 
-\item{col1}{column to spread out (for long to wide)}
+\item{data_to}{whether the target dataset is \code{long} or \code{wide}}
 
-\item{col2}{values to be put in the spread out column (for long to wide)}
+\item{cols}{columns to gather together (for wide to long)}
 
-\item{cols}{columns(s) to gather together (for wide to long)}
+\item{names_to}{name for new column containing old names (for wide to long)}
 
-\item{key}{name for new column containing old column names (for wide to long)}
+\item{values_to}{name for new column containing old values (for wide to long)}
 
-\item{value}{name for new column containing old column values
-(for wide to long)}
+\item{names_from}{column to spread out (for long to wide)}
 
-\item{check}{check whether to use long to wide or wide to long}
+\item{values_from}{values to be put in the spread columns (for long to wide)}
 }
 \value{
 reshaped dataset
@@ -29,5 +36,5 @@ reshaped dataset
 Reshaping dataset from wide to long or from long to wide
 }
 \author{
-Yiwen He
+Zhaoming Su
 }

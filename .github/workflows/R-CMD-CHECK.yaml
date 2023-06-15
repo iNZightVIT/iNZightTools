@@ -15,7 +15,7 @@ jobs:
           - { os: windows-latest, r: "oldrel" }
           - { os: windows-latest, r: "release" }
           - { os: windows-latest, r: "devel" }
-          - { os: macOS-latest, r: "release" }
+          - { os: macOS-latest, r: "4.2" }
           # - {os: macOS-latest, r: 'devel'}
           - {
               os: ubuntu-20.04,

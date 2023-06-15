@@ -1,7 +1,7 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for 'iNZight'
-Version: 1.13.1
+Version: 1.13.3
 Depends: R (>= 4.0)
 Imports:
     dplyr (>= 1.1.0),

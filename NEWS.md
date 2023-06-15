@@ -44,6 +44,9 @@
   - renamed `transformVar()` to `transform_vars()`
 - removed `countMissing()`
 
+# iNZightTools 1.13.3
+
+- `read_text()` function replaces spaces with underscores in column names
 
 # iNZightTools 1.13.2
 

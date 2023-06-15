@@ -11,3 +11,13 @@ test_that("Tab-delim text reads", {
         readr::read_tsv(I(text), show_col_types = FALSE) %>% dplyr::mutate(y = as.factor(y))
     )
 })
+
+text <- "var 1\tvar 2
+1\t2
+3\t4
+5\t6
+"
+test_that("Spaces in names converted to underscores", {
+    d <- read_text(text)
+    expect_equal(colnames(d), c("var_1", "var_2"))
+})

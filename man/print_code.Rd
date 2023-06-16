@@ -18,6 +18,6 @@ Called for side-effect of printing code to the console.
 Tidy-printing of the code attached to an object
 }
 \examples{
-iris_agg <- aggregateData(iris, vars = "Species", summaries = "mean")
+iris_agg <- aggregate_data(iris, group_vars = "Species", summaries = "mean")
 print_code(iris_agg)
 }

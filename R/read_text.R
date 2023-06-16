@@ -22,8 +22,8 @@ read_text <- function(txt, delim = "\t", ...) {
 
     d <- d |> dplyr::mutate_if(is.character, as.factor)
 
-    if (any(grepl(" ", colnames(d)))) {
-        colnames(d) <- gsub(" ", "_", colnames(d))
-    }
+    d <- convert_strings(d)
+    d <- validate_names(d)
+    attr(d, "code") <- NULL
     d
 }

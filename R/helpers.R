@@ -191,6 +191,7 @@ orNULL <- function(x, y = x) {
 }
 
 #' Anti value matching
+#' @rdname operator_not_in
 #' @param x vector of values to be matched
 #' @param table vector of values to match against
 #' @return A logical vector of same length as 'x', indicating if each
@@ -200,6 +201,7 @@ orNULL <- function(x, y = x) {
 `%notin%` <- function(x, table) match(x, table, nomatch = 0L) == 0L
 
 #' NULL or operator
+#' @rdname operator_or_null
 #' @param a an object, potentially NULL
 #' @param b an object
 #' @return a if a is not NULL, otherwise b

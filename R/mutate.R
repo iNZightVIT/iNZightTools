@@ -39,7 +39,6 @@ mutate_expr_i <- function(expr, vars_expr, data, ...) {
 #' @return original dataframe containing new columns of the new
 #'         categorical variable with tidyverse code attached
 #' @rdname combine_vars
-#' @importFrom forcats fct_na_value_to_level
 #' @examples
 #' combined <- combine_vars(warpbreaks, vars = c("wool", "tension"), sep = "_")
 #' cat(code(combined))
@@ -69,7 +68,7 @@ combine_vars <- function(data, vars, sep = ":", name = NULL,
     })
     vars[vars_not_cat] <- sprintf("as.factor(%s)", vars[vars_not_cat])
     if (keep_na) {
-        vars <- sprintf("fct_na_value_to_level(%s, \"(Missing)\")", vars) |>
+        vars <- sprintf("forcats::fct_na_value_to_level(%s, \"(Missing)\")", vars) |>
             rlang::parse_exprs()
     } else {
         vars <- rlang::parse_exprs(vars)
@@ -482,7 +481,7 @@ missing_to_cat <- function(data, vars, names = NULL) {
                 .default = "(Observed)"
             )))
         } else {
-            rlang::expr(fct_na_value_to_level(!!rlang::sym(x), "(Missing)"))
+            rlang::expr(forcats::fct_na_value_to_level(!!rlang::sym(x), "(Missing)"))
         }
     }) |> rlang::set_names(names)
     expr <- mutate_expr_i(expr, vars_expr, data, .after = vars)

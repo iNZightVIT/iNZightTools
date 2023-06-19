@@ -10,7 +10,7 @@
 #' @author Tom Elliott
 #' @export
 is_num <- function(x) {
-    vartype(x) %in% c('num', 'dt')
+    vartype(x) %in% c("num", "dt")
 }
 
 #' Is factor check
@@ -22,7 +22,7 @@ is_num <- function(x) {
 #' @author Tom Elliott
 #' @export
 is_cat <- function(x) {
-    vartype(x) == 'cat'
+    vartype(x) == "cat"
 }
 
 #' Is datetime check
@@ -34,7 +34,7 @@ is_cat <- function(x) {
 #' @author Tom Elliott
 #' @export
 is_dt <- function(x) {
-    vartype(x) == 'dt'
+    vartype(x) == "dt"
 }
 
 #' Get variable type name
@@ -44,15 +44,17 @@ is_dt <- function(x) {
 #' @author Tom Elliott
 #' @export
 vartype <- function(x) {
-    if (inherits(x, 'POSIXct') ||
-        inherits(x, 'yearweek') ||
-        inherits(x, 'yearmonth') ||
-        inherits(x, 'yearquarter') ||
-        inherits(x, 'Date') ||
-        inherits(x, 'times') ||
-        inherits(x, 'hms')) return('dt')
+    if (inherits(x, "POSIXct") ||
+        inherits(x, "yearweek") ||
+        inherits(x, "yearmonth") ||
+        inherits(x, "yearquarter") ||
+        inherits(x, "Date") ||
+        inherits(x, "times") ||
+        inherits(x, "hms")) {
+        return("dt")
+    }
 
-    if (is.numeric(x)) 'num' else 'cat'
+    if (is.numeric(x)) "num" else "cat"
 }
 
 #' Get all variable types from data object
@@ -72,8 +74,9 @@ vartypes.tbl_lazy <- function(x) sapply(dplyr::collect(head(x)), vartype)
 
 #' @export
 vartypes.inzdf_db <- function(x) {
-    if (!is.null(attr(x, "vartypes", exact = TRUE)))
+    if (!is.null(attr(x, "vartypes", exact = TRUE))) {
         return(attr(x, "vartypes", exact = TRUE))
+    }
 
     sapply(head(x), vartype)
 }
@@ -127,17 +130,20 @@ is_svyrep <- function(x) {
 #' add_suffix(c("data.filtered", "data.filtered.reshaped"), "filtered")
 #' @export
 add_suffix <- function(name, suffix) {
-    if (length(suffix) > 1)
+    if (length(suffix) > 1) {
         warning("More than one suffix specified, using only the first.")
+    }
     suffix <- suffix[1]
 
-    new_name <- sapply(name,
+    new_name <- sapply(
+        name,
         function(x) {
             if (grepl(suffix, x, fixed = TRUE)) {
                 # counter (numbers after suffix)
                 expr <- paste0("\\.", suffix, "[0-9]*")
                 rgx <- regexpr(expr, x)
-                rgn <- gsub(paste0(".", suffix), "",
+                rgn <- gsub(
+                    paste0(".", suffix), "",
                     substr(x, rgx, rgx + attr(rgx, "match.length") - 1)
                 )
                 count <- max(1, as.integer(rgn), na.rm = TRUE) + 1
@@ -168,7 +174,7 @@ make_names <- function(new, existing = character()) {
     names <- character(length(new))
     for (v in seq_along(new)) {
         if (new[v] %in% existing) {
-            i = 1
+            i <- 1
             while (paste0(new[v], i) %in% existing) i <- i + 1
             vv <- paste0(new[v], i)
         } else {
@@ -192,6 +198,15 @@ orNULL <- function(x, y = x) {
 #' @export
 #' @md
 `%notin%` <- function(x, table) match(x, table, nomatch = 0L) == 0L
+
+#' NULL or operator
+#' @param a an object, potentially NULL
+#' @param b an object
+#' @return a if a is not NULL, otherwise b
+#' @export
+`%||%` <- function(a, b) {
+    if (is.null(a)) b else a
+}
 
 
 eval_code <- function(expr, env = parent.frame(2)) {

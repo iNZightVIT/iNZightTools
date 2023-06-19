@@ -19,6 +19,7 @@
   - renamed `reorderLevels()` to `reorder_levels` and included more auto-reordering methods (by first appearance and numeric order)
   - added an option to specify time zone in `convert_to_datetime()`
   - renamed `joindata()` to `join_data()`, included right-join method, and reworked its arguments
+- pull `%||%` operator from 'iNZight'
 
 ## Other changes
 
@@ -56,7 +57,6 @@
 # iNZightTools 1.13.2
 
 - add global options to set/override default comment character (this will allow Lite to change the default without changing the package's default behaviour; default set as # at load time)
-
 
 # iNZightTools 1.13.0
 

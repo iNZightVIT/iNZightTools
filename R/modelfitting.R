@@ -30,7 +30,6 @@ fitModel <- function(y, x, data,
                      svydes = NA,
                      surv_params = NULL,
                      ...) {
-
     if (missing(x) || length(x) == 0 || x == "") x <- 1
     if (isTRUE(family %in% c("cox", "aft"))) {
         y <- paste0("survival::Surv(", paste(surv_params, collapse = ", "), ")")
@@ -52,13 +51,15 @@ fitModel <- function(y, x, data,
             if (family == "gaussian") {
                 # Simple linear regression model:
                 args <- paste(Formula, dat, sep = ", ")
-                if (xargs != "")
+                if (xargs != "") {
                     args <- paste(args, xargs, sep = ", ")
+                }
                 call <- paste("lm(", args, ")", sep = "")
             } else if (family == "negbin") {
                 args <- paste(Formula, dat, sep = ", ")
-                if (xargs != "")
+                if (xargs != "") {
                     args <- paste(args, xargs, sep = ", ")
+                }
                 if (isTRUE(link != "log")) {
                     args <- paste(args, sprintf("link = \"%s\"", link), sep = ", ")
                 }
@@ -66,17 +67,19 @@ fitModel <- function(y, x, data,
             } else {
                 # general linear model:
                 args <- paste(Formula, dat, fam, sep = ", ")
-                if (xargs != "")
+                if (xargs != "") {
                     args <- paste(args, xargs, sep = ", ")
+                }
                 call <- paste("glm(", args, ")", sep = "")
             }
         } else if (isTRUE(family %in% c("cox", "aft"))) {
             ## Which survival model?
             surv.fun <- ifelse(family == "cox", "coxph", "survreg")
             args <- paste(Formula, dat, sep = ", ")
-            if (xargs != "")
+            if (xargs != "") {
                 args <- paste(args, xargs, sep = ", ")
-            call <- paste("survival::", surv.fun, "(", args,  ", model = TRUE)", sep = "")
+            }
+            call <- paste("survival::", surv.fun, "(", args, ", model = TRUE)", sep = "")
         }
     } else if (design == "survey") {
         # complex survey design:
@@ -87,14 +90,16 @@ fitModel <- function(y, x, data,
 
             # set up the svyglm function call
             args <- paste(Formula, fam, "design = svy.design", sep = ", ")
-            if (xargs != "")
+            if (xargs != "") {
                 args <- paste(args, xargs, sep = ", ")
+            }
             call <- paste("survey::svyglm(", args, ")", sep = "")
         } else if (isTRUE(family %in% c("cox", "aft"))) {
             surv.fun <- ifelse(family == "cox", "coxph", "survreg")
             args <- paste(Formula, "design = svy.design", sep = ", ")
-            if (xargs != "")
+            if (xargs != "") {
                 args <- paste(args, xargs, sep = ", ")
+            }
             call <- paste("survey::svy", surv.fun, "(", args, ")", sep = "")
         }
     } else if (design == "experiment") {
@@ -116,7 +121,9 @@ fitModel <- function(y, x, data,
 #' @author Tom Elliott
 #' @export
 fitDesign <- function(svydes, dataset.name) {
-    if (all(svydes == "")) return()
+    if (all(svydes == "")) {
+        return()
+    }
     svy.des <- paste0(
         "survey::svydesign(",
         paste(svydes, collapse = ", "),
@@ -127,5 +134,3 @@ fitDesign <- function(svydes, dataset.name) {
 
     eval(parse(text = svy.des), .GlobalEnv)
 }
-
-

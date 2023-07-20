@@ -18,6 +18,8 @@ inzdf <- function(x, name, ...) {
     UseMethod("inzdf")
 }
 
+#' @rdname inzdf
+#' @export
 inzdf.tbl_df <- function(x, name, ...) {
     if (missing(name)) {
         if (is.null(attr(x, "name", exact = TRUE))) {

@@ -65,5 +65,5 @@ Being an important but tricker data type to work with, _iNZightTools_ includes m
 There are many other data manipulation-focussed functions, such as filter, renaming variables, etc.
 
 ```{r}
-filterNumeric(data, "height", "<", 150)
+filter_num(data, "height", "<", 150)
 ```

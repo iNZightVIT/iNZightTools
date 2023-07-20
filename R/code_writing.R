@@ -20,8 +20,9 @@ interpolate <- function(code, ..., comment = character(),
     }
 
     res <- eval(expr, `_env`)
-    if (length(comment) > 0)
+    if (length(comment) > 0) {
         comment <- paste("##", comment)
+    }
     attr(res, "code") <- c(comment, capture.output(expr))
     res
 }
@@ -37,7 +38,9 @@ interpolate <- function(code, ..., comment = character(),
 #' @return The code used to generate the data.frame, if available (else NULL)
 #' @author Tom Elliott
 #' @export
-code <- function(data) return(attr(data, "code"))
+code <- function(data) {
+    return(attr(data, "code"))
+}
 
 #' Tidy-printing of the code attached to an object
 #'

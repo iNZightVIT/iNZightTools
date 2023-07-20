@@ -2,11 +2,14 @@
 % Please edit documentation in R/inzdf.R
 \name{inzdf}
 \alias{inzdf}
+\alias{inzdf.tbl_df}
 \alias{inzdf.data.frame}
 \alias{inzdf.SQLiteConnection}
 \title{iNZight data frame object}
 \usage{
 inzdf(x, name, ...)
+
+\method{inzdf}{tbl_df}(x, name, ...)
 
 \method{inzdf}{data.frame}(x, name, ...)
 

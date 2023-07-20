@@ -16,6 +16,10 @@ options(
     install.packages.compile.from.source = "never"
 )
 
+if (OS == "Windows" && packageVersion("Matrix") < "1.6-0") {
+    install.packages("Matrix", type = "source")
+}
+
 if (!requireNamespace("remotes", quietly = TRUE)) {
     install.packages("remotes")
 }

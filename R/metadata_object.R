@@ -30,14 +30,6 @@ metaFun <- function(type, name, fun, labels = NULL) {
     )
 }
 
-print.inzmetafun <- function(x, ...) {
-    cat(sprintf("%s: a %s variable", x$name, x$type))
-    if (rename(x)) {
-        cat(sprintf(" based on %s", x$rename))
-    }
-    cat("\n")
-}
-
 ## Accessors:
 getname <- function(x, original = TRUE) {
     name <- if (original && rename(x)) {

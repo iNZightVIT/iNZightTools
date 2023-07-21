@@ -22,6 +22,22 @@ extract_dt_comp <- function(data, var, comp, name = NULL) {
     eval_code(expr)
 }
 
+#' Extract part of a datetimes variable (DEPRECATED)
+#'
+#' This function has been replaced by `extract_dt_comp` and will be removed in the next release.
+#'
+#' @param .data dataframe
+#' @param varname name of the variable
+#' @param part part of the variable wanted
+#' @param name name of the new column
+#'
+#' @return dataframe with extracted part column
+#' @author Yiwen He
+#' @importFrom zoo as.yearqtr
+#' @export
+extract_part <- function(.data, varname, part, name) {
+    extract_dt_comp(.data, varname, part, name)
+}
 
 ## External use only for the `iNZight` package
 ## For making `offspring.data` list in `gtree`

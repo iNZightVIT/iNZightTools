@@ -16,13 +16,16 @@ options(
     install.packages.compile.from.source = "never"
 )
 
-if (packageVersion("Matrix") < "1.6-0") {
-    install.packages("Matrix", type = "source")
-}
 
 if (!requireNamespace("remotes", quietly = TRUE)) {
     install.packages("remotes")
 }
+
+if (packageVersion("Matrix") < "1.6-0") {
+    install.packages("Matrix", type = "source")
+}
+
+install.packages("knitr")
 
 remotes::install_github(github_deps,
     INSTALL_opts = c("--no-multiarch")

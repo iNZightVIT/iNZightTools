@@ -165,7 +165,7 @@ get_dt_comp <- function(x) {
     opt_pkg <- c("chron", "tsibble") |>
         (\(p) p[purrr::map_lgl(p, grepl, x)])()
     if (length(opt_pkg) && !requireNamespace(opt_pkg, quietly = TRUE)) {
-        rlang::abort(sprintf("Please install suggested package: '%s'", opt_pkg))
+        rlang::abort(sprintf("Please install suggested package: '%s'", opt_pkg)) # nocov
     }
     x <- gsub("\\(", "\\\\(", gsub("\\)", "\\\\)", x))
     i <- which(grepl(sprintf("^%s", x), names(inz_dt_comp), TRUE))

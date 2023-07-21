@@ -42,7 +42,13 @@ fitModel <- function(y, x, data,
     }
 
     # Deal with extra arguments (eg. weights, offset ...)
-    xarg <- list(...)
+    xarg <- lapply(list(...), function(x) {
+        if (is.character(x)) {
+            sprintf("\"%s\"", x)
+        } else {
+            x
+        }
+    })
     xargs <- paste(names(xarg), xarg, sep = " = ", collapse = ", ")
 
     if (design == "simple") {
@@ -120,7 +126,8 @@ fitModel <- function(y, x, data,
 #' @return a survey object
 #' @author Tom Elliott
 #' @export
-fitDesign <- function(svydes, dataset.name) {
+fitDesign <- function(svydes, dataset.name) { # nocov start
+    warning("This function is deprecated. Use the 'surveyspec' package instead.")
     if (all(svydes == "")) {
         return()
     }
@@ -133,4 +140,4 @@ fitDesign <- function(svydes, dataset.name) {
     )
 
     eval(parse(text = svy.des), .GlobalEnv)
-}
+} # nocov end

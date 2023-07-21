@@ -127,7 +127,7 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
                 lbls <- if (length(mc) && !is.null(meta$columns[[mc]]$labels)) {
                     meta$columns[[mc]]$labels
                 } else {
-                    NULL
+                    NULL # nocov
                 }
 
                 cnames <- paste(sep = "_", v, lvls)

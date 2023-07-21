@@ -64,3 +64,10 @@ test_that("NA codes converted to NA", {
         factor(c("observed", "observed", "Refused", "Dont_Know"))
     )
 })
+
+test_that("Non-existent variables produce error", {
+    expect_error(
+        smart_read("meta_bad.csv"),
+        "Some variables defined in metadata not in dataset"
+    )
+})

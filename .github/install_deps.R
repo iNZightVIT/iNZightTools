@@ -16,7 +16,7 @@ options(
     install.packages.compile.from.source = "never"
 )
 
-if (OS == "Windows" && packageVersion("Matrix") < "1.6-0") {
+if (packageVersion("Matrix") < "1.6-0") {
     install.packages("Matrix", type = "source")
 }
 

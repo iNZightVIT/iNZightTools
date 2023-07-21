@@ -30,10 +30,7 @@ extract_dt_comp <- function(data, var, comp, name = NULL) {
 #' @param varname name of the variable
 #' @param part part of the variable wanted
 #' @param name name of the new column
-#'
-#' @return dataframe with extracted part column
-#' @author Yiwen He
-#' @importFrom zoo as.yearqtr
+#' @return see `extract_dt_comp`
 #' @export
 extract_part <- function(.data, varname, part, name) {
     extract_dt_comp(.data, varname, part, name)

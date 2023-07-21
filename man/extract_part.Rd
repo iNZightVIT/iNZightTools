@@ -16,11 +16,8 @@ extract_part(.data, varname, part, name)
 \item{name}{name of the new column}
 }
 \value{
-dataframe with extracted part column
+see `extract_dt_comp`
 }
 \description{
 This function has been replaced by `extract_dt_comp` and will be removed in the next release.
-}
-\author{
-Yiwen He
 }

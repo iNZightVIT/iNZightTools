@@ -24,6 +24,7 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
 if (packageVersion("Matrix") < "1.6-0") {
     install.packages("Matrix", type = "source")
 }
+install.packages("MatrixModels")
 
 install.packages("knitr")
 

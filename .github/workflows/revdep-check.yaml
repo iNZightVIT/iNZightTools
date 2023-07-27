@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: macos-latest, r: "release" }
+          - { os: windows-latest, r: "4.2" }
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -58,13 +58,15 @@ jobs:
         run: Rscript ./.github/install_deps.R
         shell: bash
 
-      - name: Install additional R packages
-        shell: Rscript {0}
-        run: |
-          if (packageVersion("Matrix") < "1.6-0")
-            install.packages("Matrix", type = "source")
-          if (!requireNamespace("MatrixModels", quietly = TRUE))
-            install.packages("MatrixModels")
+      # - name: Install additional R packages
+      #   shell: Rscript {0}
+      #   run: |
+      #     if (!requireNamespace("Matrix", quietly = TRUE))
+      #       install.packages("Matrix")
+      #     if (packageVersion("Matrix") < "1.6-0")
+      #       install.packages("Matrix", type = "source")
+      #     if (!requireNamespace("MatrixModels", quietly = TRUE))
+      #       install.packages("MatrixModels")
 
       - name: Install revdepcheck
         run: |

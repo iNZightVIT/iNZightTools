@@ -21,11 +21,6 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
     install.packages("remotes")
 }
 
-if (packageVersion("Matrix") < "1.6-0") {
-    install.packages("Matrix", type = "source")
-}
-install.packages("MatrixModels")
-
 install.packages("knitr")
 
 remotes::install_github(github_deps,

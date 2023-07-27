@@ -84,8 +84,8 @@ jobs:
           revdepcheck::revdep_summary()
         shell: Rscript {0}
 
-      - name: Upload check results
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-revdepresults
-          path: revdep/
+      # - name: Upload check results
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: ${{ runner.os }}-r${{ matrix.config.r }}-revdepresults
+      #     path: revdep/

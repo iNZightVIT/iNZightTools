@@ -14,13 +14,14 @@
 )
 }
 \arguments{
-\item{x}{a `dictionary` object}
+\item{x}{A `dictionary` object.}
 
-\item{n}{number of rows to convert}
+\item{n}{Numeric, the number of rows to convert.}
 
-\item{include_other}{if `TRUE` other variables with be included in the tibble}
+\item{include_other}{If `TRUE`, other variables with be included in the
+tibble.}
 
-\item{code_sep}{the separator used between codes and values}
+\item{code_sep}{The separator used between codes and values.}
 }
 \description{
 as_tibble

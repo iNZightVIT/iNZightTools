@@ -1,13 +1,16 @@
 #' Extract date component from a date-time variable
 #'
-#' @param data dataframe
-#' @param var name of the date-time variable
-#' @param comp date component wanted from the variable, see
-#'        \code{iNZightTools:::inz_dt_comp} for full list
-#' @param name name of the new column
+#' This function extracts a specific date component from a date-time variable
+#' in a dataframe.
 #'
-#' @return dataframe with the new date component column
-#' @rdname extract_dt_comp
+#' @param data The dataframe containing the date-time variable.
+#' @param var The name of the date-time variable to extract the component.
+#' @param comp The date component wanted from the variable. See
+#'        \code{iNZightTools:::inz_dt_comp} for the full list of components.
+#' @param name The name of the new column to store the extracted date
+#'        component.
+#'
+#' @return A dataframe with the new date component column.
 #' @author Zhaoming Su
 #' @export
 extract_dt_comp <- function(data, var, comp, name = NULL) {

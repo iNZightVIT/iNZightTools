@@ -1,33 +1,34 @@
 #' Form Class Intervals
 #'
-#' Create categorical intervals from a numeric variable.
+#' This function creates categorical intervals from a numeric variable in the given dataset.
 #'
-#' @param data the data set
-#' @param variable name of the variable to convert
-#' @param method one of 'equal' for equal-width intervals, 'width' for intervals
-#'        of a specific width, 'count' for equal-count intervals, and 'manual'
-#'        to specify break points manually
-#' @param n_intervals for methods 'equal' and 'count', this is the number of
-#'        intervals to create
-#' @param interval_width for method 'width', this is the width of intervals
-#' @param format the format for intervals; use 'a' and 'b' to represent the
-#'        min/max of each interval, respectively.
-#' @param range the range of the data; use this to adjust the labels (e.g., for
-#'        continuous data, set this to floor/ceiling of the min/max of the data
-#'        to get prettier intervals). If `range` does not cover the range of the
-#'        data, values outside will be placed into 'less than a' and 'greater
-#'        than b' categories
-#' @param format_lowest values lower than the min of `range` will have this
-#'        label format
-#' @param format_highest values higher than the max of `range` will have this
-#'        label format
-#' @param break_points for `method` 'manual', specify breakpoints here (as a
-#'        numeric vector)
-#' @param name the name of the new variable in the resulting data set
-#' @return dataframe with an additional column with categorical class intervals
-#' @rdname form_class_intervals
-#' @md
+#' @param data A dataset or a survey object.
+#' @param variable The name of the numeric variable to convert into intervals.
+#' @param method The method used to create intervals:
+#' - 'equal' for equal-width intervals,
+#' - 'width' for intervals of a specific width,
+#' - 'count' for equal-count intervals, and
+#' - 'manual' to specify break points manually.
+#' @param n_intervals For methods 'equal' and 'count', this specifies the
+#'        number of intervals to create.
+#' @param interval_width For method 'width', this sets the width of the
+#'        intervals.
+#' @param format The format for interval labels; use 'a' and 'b' to represent
+#'        the min/max of each interval, respectively.
+#' @param range The range of the data; use this to adjust the labels
+#'        (e.g., for continuous data, set this to the floor/ceiling
+#'        of the min/max of the data to get prettier intervals).
+#'        If range does not cover the range of the data, values outside will be
+#'        placed into 'less than a' and 'greater than b' categories.
+#' @param format_lowest Label format for values lower than the min of range.
+#' @param format_highest Label format for values higher than the max of range.
+#' @param break_points For method 'manual', specify breakpoints here as a
+#'        numeric vector.
+#' @param name The name of the new variable in the resulting data set.
+#' @return A dataframe with an additional column containing categorical class
+#'         intervals.
 #' @author Tom Elliott, Zhaoming Su
+#' @md
 #' @export
 #' @examples
 #' form_class_intervals(iris, "Sepal.Length", "equal", 5L)

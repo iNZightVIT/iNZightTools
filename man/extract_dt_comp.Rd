@@ -7,20 +7,22 @@
 extract_dt_comp(data, var, comp, name = NULL)
 }
 \arguments{
-\item{data}{dataframe}
+\item{data}{The dataframe containing the date-time variable.}
 
-\item{var}{name of the date-time variable}
+\item{var}{The name of the date-time variable to extract the component.}
 
-\item{comp}{date component wanted from the variable, see
-\code{iNZightTools:::inz_dt_comp} for full list}
+\item{comp}{The date component wanted from the variable. See
+\code{iNZightTools:::inz_dt_comp} for the full list of components.}
 
-\item{name}{name of the new column}
+\item{name}{The name of the new column to store the extracted date
+component.}
 }
 \value{
-dataframe with the new date component column
+A dataframe with the new date component column.
 }
 \description{
-Extract date component from a date-time variable
+This function extracts a specific date component from a date-time variable
+in a dataframe.
 }
 \author{
 Zhaoming Su

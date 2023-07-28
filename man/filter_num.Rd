@@ -7,21 +7,23 @@
 filter_num(data, var, op = c("<=", "<", ">=", ">", "==", "!="), num)
 }
 \arguments{
-\item{data}{a dataframe or survey design object to filter}
+\item{data}{A dataframe or survey design object to be filtered.}
 
-\item{var}{character of the column in \code{data} to filter by}
+\item{var}{The name of the column in \code{data} to be filtered by.}
 
-\item{op}{a logical operator of "<=", "<", ">=", ">", "==" or "!="
-for the boolean condition}
+\item{op}{A logical operator to apply for the filtering condition.
+Valid options are: "<=", "<", ">=", ">", "==", or "!=".}
 
-\item{num}{a number for which the \code{op} applies to}
+\item{num}{The numeric value for which the specified \code{op} is applied.}
 }
 \value{
-filtered dataframe with tidyverse code attached
+A filtered dataframe with the tidyverse code attached.
 }
 \description{
-Filter a dataframe by some boolean condition of one numeric variable
-and returns the result along with tidyverse code used to generate it.
+This function filters a dataframe or survey design object by applying a
+specified boolean condition to one of its numeric variables. The resulting
+filtered dataframe is returned, along with the tidyverse code used to
+generate it.
 }
 \examples{
 filtered <- filter_num(iris, var = "Sepal.Length", op = "<=", num = 5)
@@ -30,7 +32,10 @@ head(filtered)
 
 library(survey)
 data(api)
-svy <- svydesign(~ dnum + snum, weights = ~pw, fpc = ~ fpc1 + fpc2, data = apiclus2)
+svy <- svydesign(~ dnum + snum,
+    weights = ~pw, fpc = ~ fpc1 + fpc2,
+    data = apiclus2
+)
 svy_filtered <- filter_num(svy, var = "api00", op = "<", num = 700)
 cat(code(svy_filtered))
 

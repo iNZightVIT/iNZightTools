@@ -7,7 +7,7 @@
 \alias{apply_dictionary}
 \alias{has_dictionary}
 \alias{get_dictionary}
-\title{Data dictionaries}
+\title{Data Dictionaries}
 \usage{
 read_dictionary(
   file,
@@ -33,48 +33,53 @@ has_dictionary(data)
 get_dictionary(data)
 }
 \arguments{
-\item{file}{path to a file}
+\item{file}{The path to the file containing the data dictionary.}
 
-\item{name}{name of the column containing the variable name}
+\item{name}{The name of the column containing the variable name.}
 
-\item{type}{column containing the variable type}
+\item{type}{The name of the column containing the variable type.}
 
-\item{title}{the column containing a short, human-readable title for the variable - if blank, the variable name will be used instead}
+\item{title}{The name of the column containing a short, human-readable title
+for the variable. If blank, the variable name will be used instead.}
 
-\item{description}{name of the column containing the variable description}
+\item{description}{The name of the column containing the variable
+description.}
 
-\item{units}{column containing units (for numeric variables only)}
+\item{units}{The name of the column containing units (for numeric
+variables only).}
 
-\item{codes}{column containing factor codes}
+\item{codes}{The name of the column containing factor codes (for categorical
+variables only).}
 
-\item{values}{column containing factor values - these should be in the same order}
+\item{values}{The name of the column containing factor values
+corresponding to the codes. These should be in the same order
+as the codes.}
 
-\item{level_separator}{the separator used to separate levels in \code{codes} and \code{values} columns, default "|". Can optionally be a vector of length 2, in which case the first is used for \code{codes} and the second for \code{values}.}
+\item{level_separator}{The separator used to separate levels in \code{codes} and
+\code{values} columns. The default separator is "|".
+Alternatively, you can provide a vector of length 2, where the first
+element is used for \code{codes} and the second element for \code{values}.}
 
-\item{...}{additional arguments, passed to \code{smart_read}}
+\item{...}{Additional arguments, passed to \code{smart_read}.}
 
-\item{x}{a \code{dictionary} object}
+\item{x}{A \code{dictionary} object.}
 
-\item{kable}{if \code{TRUE} outputs a kable instead}
+\item{kable}{If \code{TRUE}, the output will be formatted using kable.}
 
-\item{include_other}{if \code{TRUE} additional variables will be included in the output}
+\item{include_other}{If \code{TRUE}, additional variables will be included in
+the output.}
 
-\item{i}{Subset index}
+\item{i}{Subset index.}
 
-\item{data}{a dataset (dataframe, tibble)}
+\item{data}{A dataset (dataframe, tibble).}
 
-\item{dict}{a dictionary (created using \code{read_dictionary()})}
+\item{dict}{A dictionary (created using \code{read_dictionary()}).}
+}
+\value{
+The dataset with the attached data dictionary.
 }
 \description{
-Read a data dictionary from file, attach to a dataset (plus utility functions).
-These can then be used by other methods (such as plots) to automatically create
-axes, etc.
+This function reads a data dictionary from a file and attaches it to a
+dataset. The attached data dictionary provides utility functions that can be
+used by other methods, such as plots, to automatically create axes and more.
 }
-\section{Units and codes}{
-
-
-For numeric variables, the dictionary can specify the units used in the measurements.
-
-For categorical variables, often these are coded rather than printed in full in the dataset. Data dictionaries may specify a column containing the codes (with a separator) and
-}
-

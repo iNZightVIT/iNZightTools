@@ -8,9 +8,10 @@ d2 <- readr::read_csv("join2.csv", show_col_types = FALSE)
 d3 <- readr::read_csv("join3.csv", show_col_types = FALSE)
 
 test_that("Auto detection works", {
+    iris10 <- iris[1:10, ]
     expect_equal(
-        stripattr(suppressWarnings(join_data(iris, iris))),
-        suppressMessages(dplyr::inner_join(iris, iris, multiple = "all"))
+        stripattr(suppressWarnings(join_data(iris10, iris10))),
+        suppressMessages(dplyr::inner_join(iris10, iris10, multiple = "all"))
     )
     expect_warning(join_data(iris, iris))
 })

@@ -39,7 +39,21 @@ interpolate <- function(code, ..., comment = character(),
 #' @author Tom Elliott
 #' @export
 code <- function(data) {
-    return(attr(data, "code"))
+    code <- attr(data, "code")
+    if (is.null(code)) {
+        return(NULL)
+    }
+    class(code) <- c("inzcode", class(code))
+    code
+}
+
+#' @export
+print.inzcode <- function(x, ...) {
+    c <- paste(x, collapse = " ")
+    c <- tidy_all_code(c, ...)
+    cat(c, sep = "\n")
+    cat("\n")
+    invisible(NULL)
 }
 
 #' Tidy-printing of the code attached to an object
@@ -58,11 +72,7 @@ print_code <- function(x, ...) {
         return(invisible(NULL))
     }
 
-    c <- paste(c, collapse = " ")
-    c <- tidy_all_code(c, ...)
-    cat(c, sep = "\n")
-    cat("\n")
-    invisible(NULL)
+    print(c, ...)
 }
 
 replaceVars <- function(exp, ...) {

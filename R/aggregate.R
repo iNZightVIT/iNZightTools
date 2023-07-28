@@ -59,7 +59,7 @@
 #'         group_vars = c("Species"),
 #'         summaries = c("mean", "sd", "iqr")
 #'     )
-#' cat(code(aggregated))
+#' code(aggregated)
 #' head(aggregated)
 #'
 #' @author Tom Elliott, Owen Jin, Zhaoming Su

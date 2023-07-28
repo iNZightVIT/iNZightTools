@@ -56,7 +56,9 @@
 </ul></div>
 <div class="section level3">
 <h3 id="minor-changes-2-0-0">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-2-0-0"></a></h3>
-<ul><li>Default code of generated data from all data-wrangling and variable manipulation functions now uses native R pipe <code>|&gt;</code>. An option is added to use the <code>magrittr</code> pipe <code>%&gt;%</code> instead.</li></ul></div>
+<ul><li>Default code of generated data from all data-wrangling and variable manipulation functions now uses native R pipe <code>|&gt;</code>. An option is added to use the <code>magrittr</code> pipe <code>%&gt;%</code> instead.</li>
+<li>The <code><a href="../reference/code.html">code()</a></code> accessor function now returns a string with class <code>inzcode</code> that has a print method which formats the code nicely.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="new-features-2-0-0">New features<a class="anchor" aria-label="anchor" href="#new-features-2-0-0"></a></h3>
 <ul><li>The following functions are reworked and added new features:<ul><li>renamed <code>aggregatedt()</code> to <code><a href="../reference/aggregate_data.html">aggregate_dt()</a></code> and <code><a href="../reference/aggregate_data.html">aggregate_dt()</a></code> is now a wrapper of <code><a href="../reference/aggregate_data.html">aggregate_data()</a></code> with date component extraction and aggregation functionality built in, and added an option to allow aggregation with additional variables</li>

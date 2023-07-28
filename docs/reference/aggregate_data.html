@@ -175,8 +175,50 @@ value. For example, using <code>names = "Q{p}_{var}"</code> will create variable
 <span class="r-in"><span>        group_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        summaries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sd"</span>, <span class="st">"iqr"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="code.html">code</a></span><span class="op">(</span><span class="va">aggregated</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iris |&gt; dplyr::group_by(Species) |&gt; dplyr::summarise(Sepal.Length_mean = mean(   Sepal.Length, na.rm = TRUE), Sepal.Width_mean = mean(Sepal.Width, na.rm = TRUE), Petal.Length_mean = mean(Petal.Length, na.rm = TRUE), Petal.Width_mean = mean(   Petal.Width, na.rm = TRUE), Sepal.Length_sd = sd(Sepal.Length, na.rm = TRUE), Sepal.Width_sd = sd(Sepal.Width, na.rm = TRUE), Petal.Length_sd = sd(   Petal.Length, na.rm = TRUE), Petal.Width_sd = sd(Petal.Width, na.rm = TRUE), Sepal.Length_iqr = IQR(Sepal.Length, na.rm = TRUE), Sepal.Width_iqr = IQR(   Sepal.Width, na.rm = TRUE), Petal.Length_iqr = IQR(Petal.Length, na.rm = TRUE), Petal.Width_iqr = IQR(Petal.Width, na.rm = TRUE), .groups = "drop")</span>
+<span class="r-in"><span><span class="fu"><a href="code.html">code</a></span><span class="op">(</span><span class="va">aggregated</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: styler</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iris |&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     dplyr::group_by(Species) |&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     dplyr::summarise(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Sepal.Length_mean = mean(Sepal.Length,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             na.rm = TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Sepal.Width_mean = mean(Sepal.Width,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             na.rm = TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Petal.Length_mean = mean(Petal.Length,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             na.rm = TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Petal.Width_mean = mean(Petal.Width,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             na.rm = TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Sepal.Length_sd = sd(Sepal.Length,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             na.rm = TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Sepal.Width_sd = sd(Sepal.Width,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             na.rm = TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Petal.Length_sd = sd(Petal.Length,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             na.rm = TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Petal.Width_sd = sd(Petal.Width,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             na.rm = TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Sepal.Length_iqr = IQR(Sepal.Length,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             na.rm = TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Sepal.Width_iqr = IQR(Sepal.Width,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             na.rm = TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Petal.Length_iqr = IQR(Petal.Length,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             na.rm = TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Petal.Width_iqr = IQR(Petal.Width,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             na.rm = TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         .groups = "drop"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     )</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">aggregated</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 13</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Species  Sepal.Length_mean Sepal.Width_mean Petal.Length_mean Petal.Width_mean</span>

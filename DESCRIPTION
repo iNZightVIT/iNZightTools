@@ -6,7 +6,6 @@ Depends: R (>= 4.0)
 Imports:
     dplyr (>= 1.1.0),
     DBI,
-    dbplyr,
     forcats,
     glue,
     grDevices,
@@ -27,6 +26,7 @@ Imports:
 Suggests:
     chron,
     covr,
+    dbplyr,
     expss,
     haven,
     jsonlite,

@@ -16,7 +16,7 @@ append_rows <- function(data, new_data, when_added = FALSE) {
     }
     if (when_added) {
         new_expr <- rlang::expr((!!new_expr) |>
-            dplyr::mutate(.when_added = lubridate::now()))
+            dplyr::mutate(.when_added = Sys.time()))
     }
     expr <- rlang::expr(!!expr %>% dplyr::bind_rows(!!new_expr))
     eval_code(expr)

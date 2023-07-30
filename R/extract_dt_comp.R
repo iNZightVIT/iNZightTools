@@ -178,7 +178,7 @@ inz_dt_comp <- list(
 
 
 get_dt_comp <- function(x) {
-    opt_pkg <- c("chron", "tsibble") |>
+    opt_pkg <- c("chron", "tsibble", "lubridate") |>
         (\(p) p[purrr::map_lgl(p, grepl, x)])()
     if (length(opt_pkg) && !requireNamespace(opt_pkg, quietly = TRUE)) {
         rlang::abort(sprintf("Please install suggested package: '%s'", opt_pkg)) # nocov

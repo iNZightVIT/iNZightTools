@@ -508,6 +508,9 @@ convert_to_datetime <- function(data, vars, ord = NULL, names = NULL, tz = "") {
     if (is.null(names)) {
         names <- sprintf("%s.datetime", vars)
     }
+    if (!requireNamespace("lubridate", quietly = TRUE)) {
+        stop("Please install lubridate to use this function.")
+    }
     vars_expr <- purrr::map(vars, function(x) {
         if (is.null(ord)) {
             rlang::expr(lubridate::as_datetime(!!rlang::sym(x), tz = !!tz))
@@ -540,6 +543,9 @@ convert_to_date <- function(data, vars, ord = NULL, names = NULL) {
     expr <- rlang::enexpr(data)
     if (is.null(names)) {
         names <- sprintf("%s.date", vars)
+    }
+    if (!requireNamespace("lubridate", quietly = TRUE)) {
+        stop("Please install lubridate to use this function.")
     }
     vars_expr <- purrr::map(vars, function(x) {
         if (is.null(ord)) {

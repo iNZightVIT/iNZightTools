@@ -7,16 +7,17 @@
 remove_rows(data, rows)
 }
 \arguments{
-\item{data}{a dataframe or a survey design object to filter}
+\item{data}{A dataframe or a survey design object to be filtered.}
 
-\item{rows}{a numeric vector of row numbers to slice off}
+\item{rows}{A numeric vector of row numbers to be sliced off.}
 }
 \value{
-filtered dataframe with tidyverse code attached
+A filtered dataframe with the tidyverse code attached.
 }
 \description{
-Filter a dataframe by slicing off specified rows
-and returns the result along with tidyverse code used to generate it.
+This function filters a dataframe or a survey design object by removing
+specified rows based on the provided row numbers. The resulting filtered
+dataframe is returned, along with the tidyverse code used to generate it.
 }
 \examples{
 data <- remove_rows(iris, rows = c(1, 4, 5))

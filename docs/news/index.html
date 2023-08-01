@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">iNZightTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.13.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -48,7 +48,91 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.13.0" id="inzighttools-1130">iNZightTools 1.13.0<a class="anchor" aria-label="anchor" href="#inzighttools-1130"></a></h2>
+<h2 class="page-header" data-toc-text="2.0.0" id="inzighttools-200">iNZightTools 2.0.0<a class="anchor" aria-label="anchor" href="#inzighttools-200"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-2-0-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-2-0-0"></a></h3>
+<ul><li>major code rework for all data-wrangling and variable manipulation functions with tidyverse libraries and development conventions</li>
+<li>renamed most data-wrangling and variable manipulation functions such that their functionality are more name-intuitive (see below)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="minor-changes-2-0-0">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-2-0-0"></a></h3>
+<ul><li>Default code of generated data from all data-wrangling and variable manipulation functions now uses native R pipe <code>|&gt;</code>. An option is added to use the <code>magrittr</code> pipe <code>%&gt;%</code> instead.</li>
+<li>The <code><a href="../reference/code.html">code()</a></code> accessor function now returns a string with class <code>inzcode</code> that has a print method which formats the code nicely.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-2-0-0">New features<a class="anchor" aria-label="anchor" href="#new-features-2-0-0"></a></h3>
+<ul><li>The following functions are reworked and added new features:<ul><li>renamed <code>aggregatedt()</code> to <code><a href="../reference/aggregate_data.html">aggregate_dt()</a></code> and <code><a href="../reference/aggregate_data.html">aggregate_dt()</a></code> is now a wrapper of <code><a href="../reference/aggregate_data.html">aggregate_data()</a></code> with date component extraction and aggregation functionality built in, and added an option to allow aggregation with additional variables</li>
+<li>combined <code>unite()</code> and <code>combineCatVars()</code> into <code><a href="../reference/combine_vars.html">combine_vars()</a></code> and added options to remove empty factor combinations and turn missing values into an explicit factor level</li>
+<li>combined <code><a href="../reference/reshape_data.html">reshape_data()</a></code> and <code>stackVars()</code> into <code><a href="../reference/reshape_data.html">reshape_data()</a></code> and reworked the arguments</li>
+<li>renamed <code>rankVars()</code> to <code><a href="../reference/rank_vars.html">rank_vars()</a></code> and included more ranking methods (integer ranking by density and percentage ranking)</li>
+<li>renamed <code>reorderLevels()</code> to <code>reorder_levels</code> and included more auto-reordering methods (by first appearance and numeric order)</li>
+<li>added an option to specify time zone in <code><a href="../reference/convert_to_datetime.html">convert_to_datetime()</a></code>
+</li>
+<li>renamed <code>joindata()</code> to <code><a href="../reference/join_data.html">join_data()</a></code>, included right-join method, and reworked its arguments</li>
+</ul></li>
+<li>pull <code>%||%</code> operator from ‘iNZight’</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-changes-2-0-0">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-2-0-0"></a></h3>
+<ul><li>The following functions have changed names and with renamed/reworked arguments (see code documentation for more details)<ul><li>renamed <code>aggregateData()</code> to <code><a href="../reference/aggregate_data.html">aggregate_data()</a></code>
+</li>
+<li>renamed <code>appendrows()</code> to <code><a href="../reference/append_rows.html">append_rows()</a></code>
+</li>
+<li>renamed <code>collapseLevels()</code> to <code><a href="../reference/collapse_cat.html">collapse_cat()</a></code>
+</li>
+<li>renamed <code>convertToCat()</code> to <code><a href="../reference/convert_to_cat.html">convert_to_cat()</a></code>
+</li>
+<li>renamed <code>createNewVar()</code> to <code><a href="../reference/create_vars.html">create_vars()</a></code>
+</li>
+<li>renamed <code>deleteVars()</code> to <code><a href="../reference/delete_vars.html">delete_vars()</a></code>
+</li>
+<li>renamed <code><a href="../reference/extract_part.html">extract_part()</a></code> to <code><a href="../reference/extract_dt_comp.html">extract_dt_comp()</a></code>
+</li>
+<li>renamed <code>filterLevels()</code> to <code><a href="../reference/filter_cat.html">filter_cat()</a></code>
+</li>
+<li>renamed <code>filterNumeric()</code> to <code><a href="../reference/filter_num.html">filter_num()</a></code>
+</li>
+<li>renamed <code>filterRandom()</code> to <code><a href="../reference/random_sample.html">random_sample()</a></code>
+</li>
+<li>renamed <code>filterRows()</code> to <code><a href="../reference/remove_rows.html">remove_rows()</a></code>
+</li>
+<li>renamed <code>missingToCat()</code> to <code><a href="../reference/missing_to_cat.html">missing_to_cat()</a></code>
+</li>
+<li>renamed <code>renameLevels()</code> to <code><a href="../reference/rename_levels.html">rename_levels()</a></code>
+</li>
+<li>renamed <code>renameVars()</code> to <code><a href="../reference/rename_vars.html">rename_vars()</a></code>
+</li>
+<li>renamed <code>selectVars()</code> to <code><a href="../reference/select_vars.html">select_vars()</a></code>
+</li>
+<li>renamed <code>separate()</code> to <code><a href="../reference/separate_var.html">separate_var()</a></code>
+</li>
+<li>renamed <code>sortVars()</code> to <code><a href="../reference/sort_vars.html">sort_vars()</a></code>
+</li>
+<li>renamed <code>standardizeVars()</code> to <code><a href="../reference/standardize_vars.html">standardize_vars()</a></code>
+</li>
+<li>renamed <code>transformVar()</code> to <code><a href="../reference/transform_vars.html">transform_vars()</a></code>
+</li>
+</ul></li>
+<li>removed <code>countMissing()</code>
+</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.13.4" id="inzighttools-1134">iNZightTools 1.13.4<a class="anchor" aria-label="anchor" href="#inzighttools-1134"></a></h2>
+<ul><li>
+<code><a href="../reference/read_text.html">read_text()</a></code> function handles all invalid characters (as <code><a href="../reference/smart_read.html">smart_read()</a></code> does)</li>
+<li>
+<code><a href="../reference/read_text.html">read_text()</a></code> applies string to factor conversion</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.13.3" id="inzighttools-1133">iNZightTools 1.13.3<a class="anchor" aria-label="anchor" href="#inzighttools-1133"></a></h2>
+<ul><li>
+<code><a href="../reference/read_text.html">read_text()</a></code> function replaces spaces with underscores in column names</li></ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.13.2" id="inzighttools-1132">iNZightTools 1.13.2<a class="anchor" aria-label="anchor" href="#inzighttools-1132"></a></h2>
+<ul><li>add global options to set/override default comment character (this will allow Lite to change the default without changing the package’s default behaviour; default set as # at load time)</li></ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.13.0" id="inzighttools-1130">iNZightTools 1.13.0<small>2023-01-26</small><a class="anchor" aria-label="anchor" href="#inzighttools-1130"></a></h2>
 <div class="section level3">
 <h3 id="new-features-1-13-0">New features<a class="anchor" aria-label="anchor" href="#new-features-1-13-0"></a></h3>
 <p><strong>Data dictionaries</strong></p>
@@ -78,7 +162,7 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.12.2" id="inzighttools-1122">iNZightTools 1.12.2<small>2022-01-18</small><a class="anchor" aria-label="anchor" href="#inzighttools-1122"></a></h2>
 <ul><li>add new function <code><a href="../reference/print_code.html">print_code()</a></code> to extract, tidy, and print code attached to an object</li>
-<li>allow more than one character as ‘sep’ argument to <code><a href="../reference/combineCatVars.html">combineCatVars()</a></code>
+<li>allow more than one character as ‘sep’ argument to <code>combineCatVars()</code>
 </li>
 </ul></div>
     <div class="section level2">
@@ -91,7 +175,7 @@
 <ul><li>add new support for metadata formats:<ul><li>multiple-response variables (using <code>@multi</code>)</li>
 <li>numeric na codes (using <code>@numeric x na=99</code>)</li>
 </ul></li>
-<li>allow spaces in new factor level names (<code><a href="../reference/renameLevels.html">renameLevels()</a></code>)</li>
+<li>allow spaces in new factor level names (<code>renameLevels()</code>)</li>
 <li>add additional time formats for <code><a href="../reference/extract_part.html">extract_part()</a></code>
 </li>
 <li>add <code><a href="http://gdfe.co/srvyr/reference/as_survey.html" class="external-link">as_survey()</a></code> method for <code>inzsvyspec</code> objects (<a href="https://github.com/iNZightVIT/iNZightTools/issues/178" class="external-link">#178</a>)</li>
@@ -103,7 +187,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11.4" id="inzighttools-1114">iNZightTools 1.11.4<a class="anchor" aria-label="anchor" href="#inzighttools-1114"></a></h2>
-<ul><li>fix bug in <code><a href="../reference/aggregateData.html">aggregateData()</a></code> if <code>summary_vars</code> is not specified and there are factor columns in the dataset not showing up in <code>vars</code>
+<ul><li>fix bug in <code>aggregateData()</code> if <code>summary_vars</code> is not specified and there are factor columns in the dataset not showing up in <code>vars</code>
 </li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11.3" id="inzighttools-1113">iNZightTools 1.11.3<a class="anchor" aria-label="anchor" href="#inzighttools-1113"></a></h2>
@@ -119,11 +203,11 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11" id="inzighttools-111">iNZightTools 1.11<a class="anchor" aria-label="anchor" href="#inzighttools-111"></a></h2>
 <ul><li>use <code>srvyr</code> package to handle survey designs using <code>dplyr</code>-like syntax<ul><li>
-<code><a href="../reference/aggregateData.html">aggregateData()</a></code>, <code><a href="../reference/filterNumeric.html">filterNumeric()</a></code>, <code><a href="../reference/filterLevels.html">filterLevels()</a></code>, <code><a href="../reference/filterRows.html">filterRows()</a></code>, …</li></ul></li>
-<li>remove redundant code from <code><a href="../reference/filterLevels.html">filterLevels()</a></code> to make it more concise (using <code><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels()</a></code>)</li>
+<code>aggregateData()</code>, <code>filterNumeric()</code>, <code>filterLevels()</code>, <code>filterRows()</code>, …</li></ul></li>
+<li>remove redundant code from <code>filterLevels()</code> to make it more concise (using <code><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels()</a></code>)</li>
 <li>add method to convert survey design-like objects to iNZight’s <code>inzsvyspec</code> format</li>
 <li>suppress printing of dataset when joining data</li>
-<li>fix bug where special characters in levels during <code><a href="../reference/collapseLevels.html">collapseLevels()</a></code> cause error</li>
+<li>fix bug where special characters in levels during <code>collapseLevels()</code> cause error</li>
 <li>add new <code><a href="../reference/form_class_intervals.html">form_class_intervals()</a></code> function</li>
 <li>update <code>import_survey()</code> to handle URL as the data argument</li>
 <li>fix bug in <code>reorderLevels(..., freq = TRUE)</code> (<a href="https://github.com/iNZightVIT/iNZightTools/issues/165" class="external-link">#165</a>, <a href="https://github.com/tmelliott" class="external-link">@tmelliott</a>)</li>

@@ -10,17 +10,18 @@ filter_expr <- function(expr, var_expr, data) {
 
 #' Filter data by levels of numeric variables
 #'
-#' Filter a dataframe by some boolean condition of one numeric variable
-#' and returns the result along with tidyverse code used to generate it.
+#' This function filters a dataframe or survey design object by applying a
+#' specified boolean condition to one of its numeric variables. The resulting
+#' filtered dataframe is returned, along with the tidyverse code used to
+#' generate it.
 #'
-#' @param data a dataframe or survey design object to filter
-#' @param var character of the column in `data` to filter by
-#' @param op  a logical operator of "<=", "<", ">=", ">", "==" or "!="
-#'        for the boolean condition
-#' @param num a number for which the \code{op} applies to
-#' @return filtered dataframe with tidyverse code attached
+#' @param data A dataframe or survey design object to be filtered.
+#' @param var The name of the column in `data` to be filtered by.
+#' @param op  A logical operator to apply for the filtering condition.
+#'        Valid options are: "<=", "<", ">=", ">", "==", or "!=".
+#' @param num The numeric value for which the specified `op` is applied.
+#' @return A filtered dataframe with the tidyverse code attached.
 #' @seealso \code{\link{code}}
-#' @rdname filter_num
 #' @examples
 #' filtered <- filter_num(iris, var = "Sepal.Length", op = "<=", num = 5)
 #' cat(code(filtered))
@@ -28,7 +29,10 @@ filter_expr <- function(expr, var_expr, data) {
 #'
 #' library(survey)
 #' data(api)
-#' svy <- svydesign(~ dnum + snum, weights = ~pw, fpc = ~ fpc1 + fpc2, data = apiclus2)
+#' svy <- svydesign(~ dnum + snum,
+#'     weights = ~pw, fpc = ~ fpc1 + fpc2,
+#'     data = apiclus2
+#' )
 #' svy_filtered <- filter_num(svy, var = "api00", op = "<", num = 700)
 #' cat(code(svy_filtered))
 #'
@@ -49,16 +53,17 @@ filter_num <- function(data, var,
 
 #' Filter data by levels of categorical variables
 #'
-#' Filter a dataframe by some levels of one categorical variable
-#' and returns the result along with tidyverse code used to generate it.
+#' This function filters a dataframe or survey design object by keeping only
+#' the rows where a specified categorical variable matches one of the given
+#' levels. The resulting filtered dataframe is returned, along with the
+#' tidyverse code used to generate it.
 #'
-#' @param data a dataframe or survey design object to filter
-#' @param var character of the column in \code{data} to filter by
-#' @param levels a character vector of levels in \code{var} to filter by
+#' @param data A dataframe or survey design object to be filtered.
+#' @param var The name of the column in \code{data} to be filtered by.
+#' @param levels A character vector of levels in \code{var} to keep.
 #'
-#' @return filtered dataframe with tidyverse code attached
+#' @return A filtered dataframe with the tidyverse code attached.
 #' @seealso \code{\link{code}}
-#' @rdname filter_cat
 #' @examples
 #' filtered <- filter_cat(iris,
 #'     var = "Species",
@@ -69,6 +74,7 @@ filter_num <- function(data, var,
 #'
 #' @author Owen Jin, Zhaoming Su
 #' @export
+#' @md
 filter_cat <- function(data, var, levels) {
     expr <- rlang::enexpr(data)
     lvls <- rlang::enexpr(levels)
@@ -78,17 +84,17 @@ filter_cat <- function(data, var, levels) {
     eval_code(expr)
 }
 
-
 #' Remove rows from data by row numbers
 #'
-#' Filter a dataframe by slicing off specified rows
-#' and returns the result along with tidyverse code used to generate it.
+#' This function filters a dataframe or a survey design object by removing
+#' specified rows based on the provided row numbers. The resulting filtered
+#' dataframe is returned, along with the tidyverse code used to generate it.
 #'
-#' @param data a dataframe or a survey design object to filter
-#' @param rows  a numeric vector of row numbers to slice off
-#' @return filtered dataframe with tidyverse code attached
+#' @param data A dataframe or a survey design object to be filtered.
+#' @param rows A numeric vector of row numbers to be sliced off.
+#' @return A filtered dataframe with the tidyverse code attached.
+#'
 #' @seealso \code{\link{code}}
-#' @rdname remove_rows
 #' @examples
 #' data <- remove_rows(iris, rows = c(1, 4, 5))
 #' cat(code(data))
@@ -96,6 +102,7 @@ filter_cat <- function(data, var, levels) {
 #'
 #' @author Owen Jin, Zhaoming Su
 #' @export
+#' @md
 remove_rows <- function(data, rows) {
     expr <- rlang::enexpr(data)
     if (is_survey(data)) {

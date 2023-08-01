@@ -1,39 +1,57 @@
 #' Aggregate data by categorical variables
 #'
-#' Aggregate a dataframe into summaries of all numeric/date-time variables by
-#' grouping them by specified categorical variables
-#' and returns the result along with tidyverse code used to generate it.
+#' Summarizes non-categorical variables in a dataframe by grouping them
+#' based on specified categorical variables and returns the aggregated result
+#' along with the tidyverse code used to generate it.
 #'
-#' @param data a dataframe or survey design object to aggregate
-#' @param group_vars a character vector of variables in `data` to group by
-#' @param summaries an unnamed character vector or named list (with the names
+#' @param data A dataframe or survey design object to be aggregated.
+#' @param group_vars A character vector specifying the variables in `data` to '
+#'        be used as grouping factors.
+#' @param summaries An unnamed character vector or named list (with the names
 #'        being the names of variables in the dataset to calculate summaries of,
 #'        and the elements being character vectors) of summaries to generate
-#'        for the groups generated in `group_vars` (see details)
-#' @param vars names of variables in the dataset to calculate summaries of
-#'        (ignored if `summaries` is a named list)
-#' @param names name templates for created variables (see details)
-#' @param quantiles if requesting quantiles, specify the desired quantiles here
-#' @return aggregated dataframe containing the summaries
-#'         with tidyverse code attached
+#'        for the groups generated in `group_vars` (see details).
+#' @param summaries An unnamed character vector or named list of summary
+#'        functions to calculate for each group.
+#'        If unnamed, the vector elements should be names of variables in the
+#'        dataset for which summary statistics need to be calculated.
+#'        If named, the names should correspond to the summary functions
+#'        (e.g., "mean", "sd", "iqr") to be applied to each variable.
+#' @param vars (Optional) A character vector specifying the names of variables
+#'        in the dataset for which summary statistics need to be calculated.
+#'        This argument is ignored if `summaries` is a named list.
+#' @param names (Optional) A character vector or named list providing name
+#'        templates for the newly created variables. See details for more
+#'        information.
+#' @param quantiles (Optional) A numeric vector specifying the desired
+#'        quantiles (e.g., c(0.25, 0.5, 0.75)).
+#'        See details for more information.
+#'
+#' @return An aggregated dataframe containing the summary statistics for each
+#'         group, along with the tidyverse code used for the aggregation.
+#'
 #' @rdname aggregate_data
 #' @seealso \code{\link{code}}
 #'
-#' @section Calculating variable summaries:
-#' The `aggregate_data` function accepts any R function which returns a
-#' single-value (such as `mean`, `var`, `sd`, `sum`, `IQR`). The default name of
-#' new variables will be `{var}_{fun}`, where `{var}` is the variable name and
-#' `{fun}` is the summary function used. You may pass new names via the `names`
-#' argument, which should be either a vector the same length as `vars`, or a
-#' named list (where the names are the summary function). In either case, use
-#' `{var}` to represent the variable name. e.g., `{var}_mean` or `min_{var}`.
+#' @details
+#' The `aggregate_data()` function accepts any R function that returns a
+#' single-value summary (e.g., `mean`, `var`, `sd`, `sum`, `IQR`). By default,
+#' new variables are named `{var}_{fun}`, where `{var}` is the variable name
+#' and `{fun}` is the summary function used. The user can provide custom names
+#' using the `names` argument, either as a vector of the same length as `vars`,
+#' or as a named list where the names correspond to summary functions (e.g.,
+#' "mean" or "sd").
 #'
-#' You can also include the summary `missing`, which will count the number of
-#' missing values in the variable. It has default name `{var}_missing`.
+#' The special summary "missing" can be included, which counts the number of
+#' missing values in the variable. The default name for this summary is
+#' `{var}_missing`.
 #'
-#' For the `quantile` summary, there is the additional argument `quantiles`.
-#' A new variable will be created for each specified quantile 'p'. To name these
-#' variables, use `{p}` in `names` (the default is `{var}_q{p}`).
+#' If `quantiles` are requested, the function calculates the specified
+#' quantiles (e.g., 25th, 50th, 75th percentiles), creating new variables for
+#' each quantile. To customize the names of these variables, use `{p}` as a
+#' placeholder in the `names` argument, where `{p}` represents the quantile
+#' value. For example, using `names = "Q{p}_{var}"` will create variables like
+#' "Q0.25_Sepal.Length" for the 25th percentile.
 #'
 #' @examples
 #' aggregated <-
@@ -41,7 +59,7 @@
 #'         group_vars = c("Species"),
 #'         summaries = c("mean", "sd", "iqr")
 #'     )
-#' cat(code(aggregated))
+#' code(aggregated)
 #' head(aggregated)
 #'
 #' @author Tom Elliott, Owen Jin, Zhaoming Su
@@ -197,4 +215,26 @@ survey_IQR <- function(x, na.rm = TRUE) {
         out <- apply(qs, 1, diff)
     }
     out
+}
+
+#' @describeIn aggregate_data Aggregate data by dates and times
+#' @param dt A character string representing the name of the date-time variable
+#'        in the dataset.
+#' @param dt_comp A character string specifying the component of the date-time
+#'        to use for grouping.
+#' @author Zhaoming Su
+#' @seealso \code{\link{aggregate_data}}
+#' @md
+#' @export
+aggregate_dt <- function(data, dt, dt_comp, group_vars = NULL,
+                         summaries, vars = NULL, names = NULL,
+                         quantiles = c(0.25, 0.75)) {
+    assign(rlang::expr_deparse(expr <- rlang::enexpr(data)), data)
+    ._x_ <- rlang::inject(extract_dt_comp(!!expr, dt, dt_comp))
+    agg <- aggregate_data(
+        ._x_, c(sprintf("%s%s", dt, get_dt_comp(dt_comp)$suffix), group_vars),
+        summaries, vars, names, quantiles
+    )
+    new_code <- gsub("\\._x_", paste(code(._x_), collapse = "\n"), code(agg))
+    structure(agg, code = new_code)
 }

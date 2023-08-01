@@ -8,6 +8,7 @@
 ## Minor changes
 
 - Default code of generated data from all data-wrangling and variable manipulation functions now uses native R pipe `|>`. An option is added to use the `magrittr` pipe `%>%` instead.
+- The `code()` accessor function now returns a string with class `inzcode` that has a print method which formats the code nicely.
 
 ## New features
 

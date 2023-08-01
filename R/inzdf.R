@@ -18,6 +18,8 @@ inzdf <- function(x, name, ...) {
     UseMethod("inzdf")
 }
 
+#' @rdname inzdf
+#' @export
 inzdf.tbl_df <- function(x, name, ...) {
     if (missing(name)) {
         if (is.null(attr(x, "name", exact = TRUE))) {
@@ -59,6 +61,10 @@ inzdf.SQLiteConnection <- function(x,
                                    dictionary = NULL,
                                    keep_con = FALSE,
                                    ...) {
+    if (!requireNamespace("dbplyr", quietly = TRUE)) {
+        stop("dbplyr is required to use inzdf with databases")
+    }
+
     # TODO: add col types to schema (if missing)
     x <- structure(
         list(),
@@ -176,6 +182,10 @@ print.inzdf_db <- function(x, ...) {
 }
 
 get_tbl <- function(x, table = NULL, include_links = TRUE, vars) {
+    if (!requireNamespace("dbplyr", quietly = TRUE)) {
+        stop("dbplyr is required to use inzdf with databases")
+    }
+
     if (is.null(table)) {
         table <- if (is.null(schema(x))) {
             DBI::dbListTables(con(x))[1]
@@ -358,6 +368,9 @@ dim.inzdf_db <- function(x) {
 # prevent CRAN from complaining about not importing
 # from dbplyr (it is required by dplyr)
 dummy_function_to_use_dbplyr <- function() {
+    if (!requireNamespace("dbplyr", quietly = TRUE)) {
+        stop("DBI is required to use inzdf with databases")
+    }
     dbplyr::as.sql
     invisible()
 }

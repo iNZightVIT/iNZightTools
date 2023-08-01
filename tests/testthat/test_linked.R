@@ -36,8 +36,9 @@ on.exit(unlink(c(t1, t2, t3, t4)))
 write.csv(iris_species, file = t1, row.names = FALSE, quote = FALSE)
 write.csv(iris_data, file = t2, row.names = FALSE, quote = FALSE)
 write.csv(iris_extra, file = t3, row.names = FALSE, quote = FALSE)
-writeLines(sprintf(
-"files:
+writeLines(
+    sprintf(
+        "files:
     iris_species: %s
     iris_data: %s
     iris_extra: %s
@@ -49,7 +50,8 @@ schema:
     links_to:
       iris_extra:
         type_id: id
-", t1, t2, t3),
+", t1, t2, t3
+    ),
     t4
 )
 
@@ -104,7 +106,7 @@ test_that("Dicionaries load", {
         unlink(t0)
     })
     writeLines(
-"files:
+        "files:
     cas: ./cas500_coded.csv
 schema:
     cas:

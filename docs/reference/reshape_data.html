@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">iNZightTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.13.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -53,38 +53,45 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">reshape_data</span><span class="op">(</span><span class="va">.data</span>, <span class="va">col1</span>, <span class="va">col2</span>, <span class="va">cols</span>, <span class="va">key</span>, <span class="va">value</span>, <span class="va">check</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">reshape_data</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  data_to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"long"</span>, <span class="st">"wide"</span><span class="op">)</span>,</span>
+<span>  <span class="va">cols</span>,</span>
+<span>  names_to <span class="op">=</span> <span class="st">"name"</span>,</span>
+<span>  values_to <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  names_from <span class="op">=</span> <span class="st">"name"</span>,</span>
+<span>  values_from <span class="op">=</span> <span class="st">"value"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>.data</dt>
-<dd><p>dataset</p></dd>
+    <dl><dt>data</dt>
+<dd><p>a dataset to reshape</p></dd>
 
 
-<dt>col1</dt>
-<dd><p>column to spread out (for long to wide)</p></dd>
-
-
-<dt>col2</dt>
-<dd><p>values to be put in the spread out column (for long to wide)</p></dd>
+<dt>data_to</dt>
+<dd><p>whether the target dataset is <code>long</code> or <code>wide</code></p></dd>
 
 
 <dt>cols</dt>
-<dd><p>columns(s) to gather together (for wide to long)</p></dd>
+<dd><p>columns to gather together (for wide to long)</p></dd>
 
 
-<dt>key</dt>
-<dd><p>name for new column containing old column names (for wide to long)</p></dd>
+<dt>names_to</dt>
+<dd><p>name for new column containing old names (for wide to long)</p></dd>
 
 
-<dt>value</dt>
-<dd><p>name for new column containing old column values
-(for wide to long)</p></dd>
+<dt>values_to</dt>
+<dd><p>name for new column containing old values (for wide to long)</p></dd>
 
 
-<dt>check</dt>
-<dd><p>check whether to use long to wide or wide to long</p></dd>
+<dt>names_from</dt>
+<dd><p>column to spread out (for long to wide)</p></dd>
+
+
+<dt>values_from</dt>
+<dd><p>values to be put in the spread columns (for long to wide)</p></dd>
 
 </dl></div>
     <div id="value">
@@ -95,7 +102,7 @@
     </div>
     <div id="author">
     <h2>Author</h2>
-    <p>Yiwen He</p>
+    <p>Zhaoming Su</p>
     </div>
 
   </div>

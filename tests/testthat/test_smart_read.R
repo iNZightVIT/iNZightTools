@@ -39,19 +39,23 @@ test_that("smart_read returns code with necessary conversions included", {
     skip_if_not_installed("haven")
     expect_equal(
         code(smart_read("appbset1.sav")),
-        "haven::read_sav(\"appbset1.sav\")"
+        "haven::read_sav(\"appbset1.sav\")",
+        ignore_attr = TRUE
     )
     expect_equal(
         code(smart_read("c5hw1.dta")),
-        "haven::read_dta(\"c5hw1.dta\")"
+        "haven::read_dta(\"c5hw1.dta\")",
+        ignore_attr = TRUE
     )
     expect_equal(
         code(smart_read("test.sas7bdat")),
-        "haven::read_sas(\"test.sas7bdat\") %>% dplyr::mutate_at(\"gender\", as.factor)"
+        "haven::read_sas(\"test.sas7bdat\") %>% dplyr::mutate_at(\"gender\", as.factor)",
+        ignore_attr = TRUE
     )
     expect_equal(
         code(smart_read("cars.xpt")),
-        "haven::read_xpt(\"cars.xpt\") %>% dplyr::mutate_at(\"MAKE\", as.factor)"
+        "haven::read_xpt(\"cars.xpt\") %>% dplyr::mutate_at(\"MAKE\", as.factor)",
+        ignore_attr = TRUE
     )
 })
 

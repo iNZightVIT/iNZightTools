@@ -1,13 +1,16 @@
 #' Extract date component from a date-time variable
 #'
-#' @param data dataframe
-#' @param var name of the date-time variable
-#' @param comp date component wanted from the variable, see
-#'        \code{iNZightTools:::inz_dt_comp} for full list
-#' @param name name of the new column
+#' This function extracts a specific date component from a date-time variable
+#' in a dataframe.
 #'
-#' @return dataframe with the new date component column
-#' @rdname extract_dt_comp
+#' @param data The dataframe containing the date-time variable.
+#' @param var The name of the date-time variable to extract the component.
+#' @param comp The date component wanted from the variable. See
+#'        \code{iNZightTools:::inz_dt_comp} for the full list of components.
+#' @param name The name of the new column to store the extracted date
+#'        component.
+#'
+#' @return A dataframe with the new date component column.
 #' @author Zhaoming Su
 #' @export
 extract_dt_comp <- function(data, var, comp, name = NULL) {
@@ -22,6 +25,19 @@ extract_dt_comp <- function(data, var, comp, name = NULL) {
     eval_code(expr)
 }
 
+#' Extract part of a datetimes variable (DEPRECATED)
+#'
+#' This function has been replaced by `extract_dt_comp` and will be removed in the next release.
+#'
+#' @param .data dataframe
+#' @param varname name of the variable
+#' @param part part of the variable wanted
+#' @param name name of the new column
+#' @return see `extract_dt_comp`
+#' @export
+extract_part <- function(.data, varname, part, name) {
+    extract_dt_comp(.data, varname, part, name)
+}
 
 ## External use only for the `iNZight` package
 ## For making `offspring.data` list in `gtree`
@@ -162,10 +178,10 @@ inz_dt_comp <- list(
 
 
 get_dt_comp <- function(x) {
-    opt_pkg <- c("chron", "tsibble") |>
+    opt_pkg <- c("chron", "tsibble", "lubridate") |>
         (\(p) p[purrr::map_lgl(p, grepl, x)])()
     if (length(opt_pkg) && !requireNamespace(opt_pkg, quietly = TRUE)) {
-        rlang::abort(sprintf("Please install suggested package: '%s'", opt_pkg))
+        rlang::abort(sprintf("Please install suggested package: '%s'", opt_pkg)) # nocov
     }
     x <- gsub("\\(", "\\\\(", gsub("\\)", "\\\\)", x))
     i <- which(grepl(sprintf("^%s", x), names(inz_dt_comp), TRUE))

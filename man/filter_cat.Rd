@@ -7,18 +7,20 @@
 filter_cat(data, var, levels)
 }
 \arguments{
-\item{data}{a dataframe or survey design object to filter}
+\item{data}{A dataframe or survey design object to be filtered.}
 
-\item{var}{character of the column in \code{data} to filter by}
+\item{var}{The name of the column in \code{data} to be filtered by.}
 
-\item{levels}{a character vector of levels in \code{var} to filter by}
+\item{levels}{A character vector of levels in \code{var} to keep.}
 }
 \value{
-filtered dataframe with tidyverse code attached
+A filtered dataframe with the tidyverse code attached.
 }
 \description{
-Filter a dataframe by some levels of one categorical variable
-and returns the result along with tidyverse code used to generate it.
+This function filters a dataframe or survey design object by keeping only
+the rows where a specified categorical variable matches one of the given
+levels. The resulting filtered dataframe is returned, along with the
+tidyverse code used to generate it.
 }
 \examples{
 filtered <- filter_cat(iris,

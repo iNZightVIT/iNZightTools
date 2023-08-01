@@ -2,22 +2,23 @@
 % Please edit documentation in R/append_rows.R
 \name{append_rows}
 \alias{append_rows}
-\title{Append rows to the dataset}
+\title{Append rows to a dataset}
 \usage{
 append_rows(data, new_data, when_added = FALSE)
 }
 \arguments{
-\item{data}{original dataset}
+\item{data}{The original dataset to which new rows will be appended.}
 
-\item{new_data}{dataset to append below \code{data}}
+\item{new_data}{The dataset containing the new rows.}
 
-\item{when_added}{whether a \code{.when_added} column is required}
+\item{when_added}{Logical; indicates whether a \code{.when_added} column
+is required.}
 }
 \value{
-dataset with new rows appended
+A dataset with new rows appended below the original \code{data}.
 }
 \description{
-Append rows to the dataset
+Append rows to a dataset
 }
 \author{
 Yiwen He, Zhaoming Su

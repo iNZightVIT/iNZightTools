@@ -1,28 +1,29 @@
-#' Data dictionaries
+#' Data Dictionaries
 #'
-#' Read a data dictionary from file, attach to a dataset (plus utility functions).
-#' These can then be used by other methods (such as plots) to automatically create
-#' axes, etc.
+#' This function reads a data dictionary from a file and attaches it to a
+#' dataset. The attached data dictionary provides utility functions that can be
+#' used by other methods, such as plots, to automatically create axes and more.
 #'
-#' @section
-#' Units and codes:
-#'
-#' For numeric variables, the dictionary can specify the units used in the measurements.
-#'
-#' For categorical variables, often these are coded rather than printed in full in the dataset. Data dictionaries may specify a column containing the codes (with a separator) and
-#'
-#'
-#'
-#' @param file path to a file
-#' @param name name of the column containing the variable name
-#' @param type column containing the variable type
-#' @param title the column containing a short, human-readable title for the variable - if blank, the variable name will be used instead
-#' @param description name of the column containing the variable description
-#' @param units column containing units (for numeric variables only)
-#' @param codes column containing factor codes
-#' @param values column containing factor values - these should be in the same order
-#' @param level_separator the separator used to separate levels in `codes` and `values` columns, default "|". Can optionally be a vector of length 2, in which case the first is used for `codes` and the second for `values`.
-#' @param ... additional arguments, passed to `smart_read`
+#' @param file The path to the file containing the data dictionary.
+#' @param name The name of the column containing the variable name.
+#' @param type The name of the column containing the variable type.
+#' @param title The name of the column containing a short, human-readable title
+#'        for the variable. If blank, the variable name will be used instead.
+#' @param description The name of the column containing the variable
+#'        description.
+#' @param units The name of the column containing units (for numeric
+#'        variables only).
+#' @param codes The name of the column containing factor codes (for categorical
+#'        variables only).
+#' @param values The name of the column containing factor values
+#'        corresponding to the codes. These should be in the same order
+#'        as the codes.
+#' @param level_separator The separator used to separate levels in `codes` and
+#'        `values` columns. The default separator is "|".
+#'        Alternatively, you can provide a vector of length 2, where the first
+#'        element is used for `codes` and the second element for `values`.
+#' @param ... Additional arguments, passed to `smart_read`.
+#' @return The dataset with the attached data dictionary.
 #' @md
 #' @rdname dictionary
 #' @export
@@ -78,7 +79,7 @@ read_dictionary <- function(file,
     if (!missing(values) && values != "values") {
         dict <- dplyr::rename(dict, values = !!values)
     }
-
+    #'
     # TODO: all the other columns too
 
     dict_list <- lapply(
@@ -90,9 +91,11 @@ read_dictionary <- function(file,
 }
 
 #' Print a dictionary object
-#' @param x a `dictionary` object
-#' @param kable if `TRUE` outputs a kable instead
-#' @param include_other if `TRUE` additional variables will be included in the output
+#'
+#' @param x A `dictionary` object.
+#' @param kable If `TRUE`, the output will be formatted using kable.
+#' @param include_other  If `TRUE`, additional variables will be included in
+#'        the output.
 #' @md
 #' @export
 #' @rdname dictionary
@@ -120,10 +123,11 @@ NULL
 
 
 #' Convert dictionary object to a 'tibble'
-#' @param x a `dictionary` object
-#' @param n number of rows to convert
-#' @param include_other if `TRUE` other variables with be included in the tibble
-#' @param code_sep the separator used between codes and values
+#' @param x A `dictionary` object.
+#' @param n Numeric, the number of rows to convert.
+#' @param include_other If `TRUE`, other variables with be included in the
+#'        tibble.
+#' @param code_sep The separator used between codes and values.
 #' @rdname as_tibble
 #' @export
 as_tibble.dictionary <- function(x, n = length(x),
@@ -157,7 +161,7 @@ as_tibble.dictionary <- function(x, n = length(x),
 }
 
 #' @rdname dictionary
-#' @param i Subset index
+#' @param i Subset index.
 #' @export
 `[.dictionary` <- function(x, i, ...) {
     structure(unclass(x)[i], class = class(x))
@@ -227,8 +231,8 @@ print.dict_var <- function(x, ...) {
 
 #' Apply a data dictionary to dataset
 #'
-#' @param data a dataset (dataframe, tibble)
-#' @param dict a dictionary (created using `read_dictionary()`)
+#' @param data A dataset (dataframe, tibble).
+#' @param dict A dictionary (created using `read_dictionary()`).
 #' @md
 #' @export
 #' @rdname dictionary

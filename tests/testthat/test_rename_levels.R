@@ -1,49 +1,38 @@
 cas <- smart_read("cas500.csv")
-# cas <- smart_read("tests/testthat/cas500.csv")
 
 test_that("Ranking works for iid data", {
-    d <- renameLevels(cas, "gender", list(m = "male", f = "female"))
+    d <- rename_levels(cas, "gender", list(m = "male", f = "female"))
     expect_equal(
-        levels(d$gender.rename),
+        levels(d$gender.renamed),
         c("f", "m")
     )
-    expect_equal(
-        eval(parse(text = attr(d, "code"))),
-        d,
-        ignore_attr = TRUE
-    )
+    check_eval(d)
 })
 
 test_that("Spaces in new level names are OK", {
     expect_silent(
-        d <- renameLevels(cas, "cellsource", list("pocket money" = "pocket", "parents" = "parent"))
+        d <- rename_levels(cas, "cellsource", list("pocket money" = "pocket", "parents" = "parent"))
     )
     expect_equal(
-        levels(d$cellsource.rename),
+        levels(d$cellsource.renamed),
         c("job", "other", "parents", "pocket money")
     )
-    expect_equal(
-        eval(parse(text = attr(d, "code"))),
-        d,
-        ignore_attr = TRUE
-    )
+    check_eval(d)
 })
 
-require(survey)
+library(survey)
 data(api)
-svy <- svydesign(~dnum+snum, weights = ~pw, fpc = ~fpc1+fpc2, data = apiclus2)
+svy <- svydesign(~ dnum + snum, weights = ~pw, fpc = ~ fpc1 + fpc2, data = apiclus2)
 
 test_that("Rename works for surveys", {
-    d <- renameLevels(svy, "stype",
-        list(Elementary = "E", High = "H", Middle = "M"))
+    d <- rename_levels(
+        svy, "stype",
+        list(Elementary = "E", High = "H", Middle = "M")
+    )
     expect_s3_class(d, "survey.design2")
     expect_equal(
-        levels(d$variables$stype.rename),
+        levels(d$variables$stype.renamed),
         c("Elementary", "High", "Middle")
     )
-    expect_equal(
-        eval(parse(text = attr(d, "code"))),
-        d,
-        ignore_attr = TRUE
-    )
+    check_eval(d)
 })

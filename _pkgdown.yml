@@ -23,39 +23,39 @@ reference:
     desc: >
       Methods for working with entire datasets at once. For users coming from the iNZight GUI, these operations would be found in the *Dataset* menu.
   - contents:
-      - aggregateData
-      - aggregatedt
-      - appendrows
-      - starts_with("filter")
-      - joindata
-      - separate
-      - unite
+      - starts_with("aggregate_")
+      - append_rows
+      - remove_rows
+      - filter
+      - starts_with("filter_")
+      - join_data
+      - separate_var
       - reshape_data
-      - selectVars
-      - sortVars
-      - stackVars
+      - combine_vars
+      - select_vars
+      - sort_vars
       - select
       - starts_with("validation_")
   - subtitle: Variable operations
     desc: >
       Methods for working with one or several variables (columns) in a dataset. iNZight GUI users will be familiar with these operations from the *Variables* menu.
   - contents:
-      - collapseLevels
-      - combineCatVars
-      - convertToCat
+      - collapse_cat
+      - convert_to_cat
+      - convert_to_date
       - convert_to_datetime
-      - countMissing
-      - createNewVar
-      - deleteVars
+      - create_vars
+      - delete_vars
+      - extract_dt_comp
       - extract_part
       - form_class_intervals
-      - missingToCat
-      - rankVars
-      - renameLevels
-      - renameVars
-      - reorderLevels
-      - standardizeVars
-      - transformVar
+      - missing_to_cat
+      - rank_vars
+      - rename_levels
+      - rename_vars
+      - reorder_levels
+      - standardize_vars
+      - transform_vars
   - title: Working with data in R
   - subtitle: Code writing
     desc: Functions for accessing and working with code returned by iNZightTools functions.
@@ -78,9 +78,11 @@ reference:
       - vartype
       - vartypes
       - "%notin%"
+      - "%||%"
       - survey_IQR
   - title: Other wrapper functions
   - contents:
       - fitModel
       - fitDesign
       - newdevice
+      - random_sample

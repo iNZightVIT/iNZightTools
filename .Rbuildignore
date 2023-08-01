@@ -16,3 +16,4 @@
 ^.*\.gitadd$
 ^\.git$
 ^.docker$
+^.better-commits.json$

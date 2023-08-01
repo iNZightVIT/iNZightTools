@@ -1,90 +1,38 @@
 #' Join data with another dataset
 #'
-#' @param .data Original data
-#' @param imported_data Imported dataset
-#' @param origin_join_col column selected from the original data
-#' @param import_join_col column selected from the imported dataset
-#' @param join_method function used to join the two datasets
-#' @param left suffix name assigned to the original dataset
-#' @param right suffix name assigned to the imported dataset
+#' @param data_l original data
+#' @param data_r imported dataset
+#' @param by a character vector of variables to join by
+#' @param how the method used to join the datasets
+#' @param suffix_l suffix for the original dataset (ignored for filter-joins)
+#' @param suffix_r suffix for the imported dataset (ignored for filter-joins)
 #'
 #' @return joined dataset
+#' @rdname join_data
+#' @seealso \code{\link{code}}, \code{\link[dplyr]{mutate-joins}},
+#'          \code{\link[dplyr]{filter-joins}}
+#' @author Zhaoming Su
 #' @export
-joindata <- function(.data, imported_data,
-                     origin_join_col, import_join_col,
-                     join_method, left, right) {
-
-    mc <- match.call()
-    dataname <- mc$.data
-    importname <- mc$imported_data
-
-    for (i in 1:length(origin_join_col)) {
-        if (((origin_join_col[i] == "") &
-             (import_join_col[i] != "")) |
-            ((origin_join_col[i] != "") &
-             (import_join_col[i] == ""))) {
-            stop(paste(
-              "Must select at least one column",
-              "from each dataset to match on"
-            ))
-        }
+join_data <- function(data_l, data_r, by = NULL,
+                      how = c("inner", "left", "right", "full", "anti", "semi"),
+                      suffix_l = ".x", suffix_r = ".y") {
+    expr <- rlang::enexprs(data_l, data_r)
+    how <- rlang::arg_match(how)
+    join_fn <- rlang::parse_expr(sprintf("dplyr::%s_join", how))
+    fn_arg <- rlang::list2(expr[[2]], by = rlang::enexpr(by))
+    if (how %in% c("inner", "left", "right", "full")) {
+        fn_arg <- c(fn_arg, suffix = rlang::expr(c(!!suffix_l, !!suffix_r)))
     }
-
-    col_names <- ""
-    for (i in seq_along(origin_join_col)) {
-        if ((origin_join_col[i] != "") & (import_join_col[i] != "")) {
-            col_names <-
-                paste0(
-                    col_names,
-                    "'",
-                    origin_join_col[i],
-                    "'='",
-                    import_join_col[i],
-                    "',"
-                )
-        }
-    }
-    col_names <- substr(col_names, 1, nchar(col_names) - 1)
-
-    byfml <- ""
-    if (col_names != "") {
-        byfml <- sprintf(", by = c(%s)", col_names)
-    }
-
-    if (join_method %in% c("left_join", "right_join", "full_join")) {
-        suf <- paste0(", suffix = c('.", left, "', '.", right, "')")
+    expr <- rlang::expr(!!expr[[1]] %>% (!!join_fn)(!!!fn_arg))
+    if (is.null(by)) {
+        by <- capture.output(data <- eval_code(expr), type = "message") |>
+            paste(collapse = " ") |>
+            stringr::str_replace(".+\\((.+)\\).+", "\\1") |>
+            strsplit(", ") |>
+            purrr::list_c() |>
+            rlang::set_names()
     } else {
-        suf <- ""
+        data <- eval_code(expr)
     }
-
-    exp <- ~.DATA %>%
-        .FUN(.IMP.BY.SUFFIX)
-
-    exp <- replaceVars(exp,
-        .DATA = dataname,
-        .IMP = importname,
-        .BY = byfml,
-        .FUN = paste("dplyr", join_method, sep = "::"),
-        .SUFFIX = suf
-    )
-
-
-    if (all(origin_join_col == "") & all(import_join_col == "")) {
-        res <- suppressMessages(interpolate(exp))
-        vars <- capture.output(
-            tmp <- dplyr::inner_join(.data, imported_data),
-            type = "message"
-        )
-        rm(tmp)
-        origin_join_col <-
-            eval(parse(text = gsub(".+ = ", "", vars)))
-        import_join_col <- origin_join_col
-    } else {
-        res <- suppressMessages(interpolate(exp))
-    }
-    attr(res, "join_cols") <-
-        structure(import_join_col,
-            .Names = origin_join_col
-        )
-    res
+    structure(data, join_cols = by)
 }

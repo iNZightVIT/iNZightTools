@@ -385,6 +385,10 @@ convert_strings <- function(x, ctypes) {
     convert_fn <- sapply(
         types,
         function(type) {
+            if (type == "time" &&
+                !requireNamespace("lubridate", quietly = TRUE)) {
+                stop("Please install suggested package: 'lubridate'") # nocov
+            }
             switch(type,
                 "date" = "as.Date",
                 "time" = {

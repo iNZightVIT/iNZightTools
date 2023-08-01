@@ -20,8 +20,9 @@ interpolate <- function(code, ..., comment = character(),
     }
 
     res <- eval(expr, `_env`)
-    if (length(comment) > 0)
+    if (length(comment) > 0) {
         comment <- paste("##", comment)
+    }
     attr(res, "code") <- c(comment, capture.output(expr))
     res
 }
@@ -37,7 +38,23 @@ interpolate <- function(code, ..., comment = character(),
 #' @return The code used to generate the data.frame, if available (else NULL)
 #' @author Tom Elliott
 #' @export
-code <- function(data) return(attr(data, "code"))
+code <- function(data) {
+    code <- attr(data, "code")
+    if (is.null(code)) {
+        return(NULL)
+    }
+    class(code) <- c("inzcode", class(code))
+    code
+}
+
+#' @export
+print.inzcode <- function(x, ...) {
+    c <- paste(x, collapse = " ")
+    c <- tidy_all_code(c, ...)
+    cat(c, sep = "\n")
+    cat("\n")
+    invisible(NULL)
+}
 
 #' Tidy-printing of the code attached to an object
 #'
@@ -46,7 +63,7 @@ code <- function(data) return(attr(data, "code"))
 #' @return Called for side-effect of printing code to the console.
 #' @export
 #' @examples
-#' iris_agg <- aggregateData(iris, vars = "Species", summaries = "mean")
+#' iris_agg <- aggregate_data(iris, group_vars = "Species", summaries = "mean")
 #' print_code(iris_agg)
 print_code <- function(x, ...) {
     c <- code(x)
@@ -55,11 +72,7 @@ print_code <- function(x, ...) {
         return(invisible(NULL))
     }
 
-    c <- paste(c, collapse = " ")
-    c <- tidy_all_code(c, ...)
-    cat(c, sep = "\n")
-    cat("\n")
-    invisible(NULL)
+    print(c, ...)
 }
 
 replaceVars <- function(exp, ...) {

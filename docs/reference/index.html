@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">iNZightTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.13.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -61,7 +61,7 @@
       </tr><tr><td>
           <p><code><a href="dictionary.html">read_dictionary()</a></code> <code><a href="dictionary.html">print(<i>&lt;dictionary&gt;</i>)</a></code> <code><a href="dictionary.html">`[`(<i>&lt;dictionary&gt;</i>)</a></code> <code><a href="dictionary.html">apply_dictionary()</a></code> <code><a href="dictionary.html">has_dictionary()</a></code> <code><a href="dictionary.html">get_dictionary()</a></code> </p>
         </td>
-        <td><p>Data dictionaries</p></td>
+        <td><p>Data Dictionaries</p></td>
       </tr><tr><td>
           <p><code><a href="read_meta.html">read_meta()</a></code> </p>
         </td>
@@ -95,65 +95,53 @@
           <p class="section-desc"></p><p>Methods for working with entire datasets at once. For users coming from the iNZight GUI, these operations would be found in the <em>Dataset</em> menu.</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="aggregateData.html">aggregateData()</a></code> </p>
+          <p><code><a href="aggregate_data.html">aggregate_data()</a></code> <code><a href="aggregate_data.html">aggregate_dt()</a></code> </p>
         </td>
         <td><p>Aggregate data by categorical variables</p></td>
       </tr><tr><td>
-          <p><code><a href="aggregatedt.html">aggregatedt()</a></code> </p>
+          <p><code><a href="append_rows.html">append_rows()</a></code> </p>
         </td>
-        <td><p>Aggregate datetimes</p></td>
+        <td><p>Append rows to a dataset</p></td>
       </tr><tr><td>
-          <p><code><a href="appendrows.html">appendrows()</a></code> </p>
+          <p><code><a href="remove_rows.html">remove_rows()</a></code> </p>
         </td>
-        <td><p>Append row to the dataset</p></td>
+        <td><p>Remove rows from data by row numbers</p></td>
       </tr><tr><td>
           <p><code><a href="filter.html">filter(<i>&lt;inzdf_db&gt;</i>)</a></code> </p>
         </td>
         <td><p>Filter</p></td>
       </tr><tr><td>
-          <p><code><a href="filterLevels.html">filterLevels()</a></code> </p>
+          <p><code><a href="filter_cat.html">filter_cat()</a></code> </p>
         </td>
-        <td><p>Filter data by levels of a categorical variables</p></td>
+        <td><p>Filter data by levels of categorical variables</p></td>
       </tr><tr><td>
-          <p><code><a href="filterNumeric.html">filterNumeric()</a></code> </p>
+          <p><code><a href="filter_num.html">filter_num()</a></code> </p>
         </td>
-        <td><p>Filter data by levels of a numeric variables</p></td>
+        <td><p>Filter data by levels of numeric variables</p></td>
       </tr><tr><td>
-          <p><code><a href="filterRandom.html">filterRandom()</a></code> </p>
-        </td>
-        <td><p>Random sampling without replacement</p></td>
-      </tr><tr><td>
-          <p><code><a href="filterRows.html">filterRows()</a></code> </p>
-        </td>
-        <td><p>Filter data by row numbers</p></td>
-      </tr><tr><td>
-          <p><code><a href="joindata.html">joindata()</a></code> </p>
+          <p><code><a href="join_data.html">join_data()</a></code> </p>
         </td>
         <td><p>Join data with another dataset</p></td>
       </tr><tr><td>
-          <p><code><a href="separate.html">separate()</a></code> </p>
+          <p><code><a href="separate_var.html">separate_var()</a></code> </p>
         </td>
         <td><p>Separate columns</p></td>
-      </tr><tr><td>
-          <p><code><a href="unite.html">unite()</a></code> </p>
-        </td>
-        <td><p>Unite columns in a dataset</p></td>
       </tr><tr><td>
           <p><code><a href="reshape_data.html">reshape_data()</a></code> </p>
         </td>
         <td><p>Reshaping dataset from wide to long or from long to wide</p></td>
       </tr><tr><td>
-          <p><code><a href="selectVars.html">selectVars()</a></code> </p>
+          <p><code><a href="combine_vars.html">combine_vars()</a></code> </p>
+        </td>
+        <td><p>Combine variables into one categorical variable</p></td>
+      </tr><tr><td>
+          <p><code><a href="select_vars.html">select_vars()</a></code> </p>
         </td>
         <td><p>Select variables from a dataset</p></td>
       </tr><tr><td>
-          <p><code><a href="sortVars.html">sortVars()</a></code> </p>
+          <p><code><a href="sort_vars.html">sort_vars()</a></code> </p>
         </td>
         <td><p>Sort data by variables</p></td>
-      </tr><tr><td>
-          <p><code><a href="stackVars.html">stackVars()</a></code> </p>
-        </td>
-        <td><p>Stack variables</p></td>
       </tr><tr><td>
           <p><code><a href="select.html">select</a></code> </p>
         </td>
@@ -171,69 +159,69 @@
           <p class="section-desc"></p><p>Methods for working with one or several variables (columns) in a dataset. iNZight GUI users will be familiar with these operations from the <em>Variables</em> menu.</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="collapseLevels.html">collapseLevels()</a></code> </p>
+          <p><code><a href="collapse_cat.html">collapse_cat()</a></code> </p>
         </td>
         <td><p>Collapse data by values of a categorical variable</p></td>
       </tr><tr><td>
-          <p><code><a href="combineCatVars.html">combineCatVars()</a></code> </p>
+          <p><code><a href="convert_to_cat.html">convert_to_cat()</a></code> </p>
         </td>
-        <td><p>Combine categorical variables into one</p></td>
+        <td><p>Convert variables to categorical variables</p></td>
       </tr><tr><td>
-          <p><code><a href="convertToCat.html">convertToCat()</a></code> </p>
+          <p><code><a href="convert_to_date.html">convert_to_date()</a></code> </p>
         </td>
-        <td><p>Convert numeric variables to categorical</p></td>
+        <td><p>Convert variables to dates</p></td>
       </tr><tr><td>
           <p><code><a href="convert_to_datetime.html">convert_to_datetime()</a></code> </p>
         </td>
-        <td><p>Convert to datetime</p></td>
+        <td><p>Convert variables to date-time</p></td>
       </tr><tr><td>
-          <p><code><a href="countMissing.html">countMissing()</a></code> </p>
-        </td>
-        <td><p>Count missing values</p></td>
-      </tr><tr><td>
-          <p><code><a href="createNewVar.html">createNewVar()</a></code> </p>
+          <p><code><a href="create_vars.html">create_vars()</a></code> </p>
         </td>
         <td><p>Create new variables</p></td>
       </tr><tr><td>
-          <p><code><a href="deleteVars.html">deleteVars()</a></code> </p>
+          <p><code><a href="delete_vars.html">delete_vars()</a></code> </p>
         </td>
         <td><p>Delete variables</p></td>
       </tr><tr><td>
+          <p><code><a href="extract_dt_comp.html">extract_dt_comp()</a></code> </p>
+        </td>
+        <td><p>Extract date component from a date-time variable</p></td>
+      </tr><tr><td>
           <p><code><a href="extract_part.html">extract_part()</a></code> </p>
         </td>
-        <td><p>Extract part of a datetimes variable</p></td>
+        <td><p>Extract part of a datetimes variable (DEPRECATED)</p></td>
       </tr><tr><td>
           <p><code><a href="form_class_intervals.html">form_class_intervals()</a></code> </p>
         </td>
         <td><p>Form Class Intervals</p></td>
       </tr><tr><td>
-          <p><code><a href="missingToCat.html">missingToCat()</a></code> </p>
+          <p><code><a href="missing_to_cat.html">missing_to_cat()</a></code> </p>
         </td>
         <td><p>Convert missing values to categorical variables</p></td>
       </tr><tr><td>
-          <p><code><a href="rankVars.html">rankVars()</a></code> </p>
+          <p><code><a href="rank_vars.html">rank_vars()</a></code> </p>
         </td>
-        <td><p>Rank the data of a numeric variables</p></td>
+        <td><p>Rank the data of numeric variables</p></td>
       </tr><tr><td>
-          <p><code><a href="renameLevels.html">renameLevels()</a></code> </p>
+          <p><code><a href="rename_levels.html">rename_levels()</a></code> </p>
         </td>
         <td><p>Rename the levels of a categorical variable</p></td>
       </tr><tr><td>
-          <p><code><a href="renameVars.html">renameVars()</a></code> </p>
+          <p><code><a href="rename_vars.html">rename_vars()</a></code> </p>
         </td>
         <td><p>Rename column names</p></td>
       </tr><tr><td>
-          <p><code><a href="reorderLevels.html">reorderLevels()</a></code> </p>
+          <p><code><a href="reorder_levels.html">reorder_levels()</a></code> </p>
         </td>
-        <td><p>Reorder a categorical</p></td>
+        <td><p>Reorder the levels of a categorical variable</p></td>
       </tr><tr><td>
-          <p><code><a href="standardizeVars.html">standardizeVars()</a></code> </p>
+          <p><code><a href="standardize_vars.html">standardize_vars()</a></code> </p>
         </td>
         <td><p>Standardize the data of a numeric variable</p></td>
       </tr><tr><td>
-          <p><code><a href="transformVar.html">transformVar()</a></code> </p>
+          <p><code><a href="transform_vars.html">transform_vars()</a></code> </p>
         </td>
-        <td><p>Transform data of a numeric variable</p></td>
+        <td><p>Transform data of numeric variables</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="working-with-data-in-r">Working with data in R <a href="#working-with-data-in-r" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
@@ -311,9 +299,13 @@
         </td>
         <td><p>Get all variable types from data object</p></td>
       </tr><tr><td>
-          <p><code><a href="grapes-notin-grapes.html">`%notin%`</a></code> </p>
+          <p><code><a href="operator_not_in.html">`%notin%`</a></code> </p>
         </td>
         <td><p>Anti value matching</p></td>
+      </tr><tr><td>
+          <p><code><a href="operator_or_null.html">`%||%`</a></code> </p>
+        </td>
+        <td><p>NULL or operator</p></td>
       </tr><tr><td>
           <p><code><a href="survey_IQR.html">survey_IQR()</a></code> </p>
         </td>
@@ -334,6 +326,10 @@
           <p><code><a href="newdevice.html">newdevice()</a></code> </p>
         </td>
         <td><p>Open a New Graphics Device</p></td>
+      </tr><tr><td>
+          <p><code><a href="random_sample.html">random_sample()</a></code> </p>
+        </td>
+        <td><p>Random sampling without replacement</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

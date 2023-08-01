@@ -1,3 +1,51 @@
+# iNZightTools 2.0.0
+
+## Breaking changes
+
+- major code rework for all data-wrangling and variable manipulation functions with tidyverse libraries and development conventions
+- renamed most data-wrangling and variable manipulation functions such that their functionality are more name-intuitive (see below)
+
+## Minor changes
+
+- Default code of generated data from all data-wrangling and variable manipulation functions now uses native R pipe `|>`. An option is added to use the `magrittr` pipe `%>%` instead.
+- The `code()` accessor function now returns a string with class `inzcode` that has a print method which formats the code nicely.
+
+## New features
+
+- The following functions are reworked and added new features:
+  - renamed `aggregatedt()` to `aggregate_dt()` and `aggregate_dt()` is now a wrapper of `aggregate_data()` with date component extraction and aggregation functionality built in, and added an option to allow aggregation with additional variables
+  - combined `unite()` and `combineCatVars()` into `combine_vars()` and added options to remove empty factor combinations and turn missing values into an explicit factor level
+  - combined `reshape_data()` and `stackVars()` into `reshape_data()` and reworked the arguments
+  - renamed `rankVars()` to `rank_vars()` and included more ranking methods (integer ranking by density and percentage ranking)
+  - renamed `reorderLevels()` to `reorder_levels` and included more auto-reordering methods (by first appearance and numeric order)
+  - added an option to specify time zone in `convert_to_datetime()`
+  - renamed `joindata()` to `join_data()`, included right-join method, and reworked its arguments
+- pull `%||%` operator from 'iNZight'
+
+## Other changes
+
+- The following functions have changed names and with renamed/reworked arguments (see code documentation for more details)
+  - renamed `aggregateData()` to `aggregate_data()`
+  - renamed `appendrows()` to `append_rows()`
+  - renamed `collapseLevels()` to `collapse_cat()`
+  - renamed `convertToCat()` to `convert_to_cat()`
+  - renamed `createNewVar()` to `create_vars()`
+  - renamed `deleteVars()` to `delete_vars()`
+  - renamed `extract_part()` to `extract_dt_comp()`
+  - renamed `filterLevels()` to `filter_cat()`
+  - renamed `filterNumeric()` to `filter_num()`
+  - renamed `filterRandom()` to `random_sample()`
+  - renamed `filterRows()` to `remove_rows()`
+  - renamed `missingToCat()` to `missing_to_cat()`
+  - renamed `renameLevels()` to `rename_levels()`
+  - renamed `renameVars()` to `rename_vars()`
+  - renamed `selectVars()` to `select_vars()`
+  - renamed `separate()` to `separate_var()`
+  - renamed `sortVars()` to `sort_vars()`
+  - renamed `standardizeVars()` to `standardize_vars()`
+  - renamed `transformVar()` to `transform_vars()`
+- removed `countMissing()`
+
 # iNZightTools 1.13.4
 
 - `read_text()` function handles all invalid characters (as `smart_read()` does)

@@ -19,7 +19,13 @@
     <loc>https://inzightvit.github.io/iNZightTools/reference/aggregateData.html</loc>
   </url>
   <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/aggregate_data.html</loc>
+  </url>
+  <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/aggregatedt.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/append_rows.html</loc>
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/appendrows.html</loc>
@@ -40,10 +46,22 @@
     <loc>https://inzightvit.github.io/iNZightTools/reference/collapseLevels.html</loc>
   </url>
   <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/collapse_cat.html</loc>
+  </url>
+  <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/combineCatVars.html</loc>
   </url>
   <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/combine_vars.html</loc>
+  </url>
+  <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/convertToCat.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/convert_to_cat.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/convert_to_date.html</loc>
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/convert_to_datetime.html</loc>
@@ -58,10 +76,19 @@
     <loc>https://inzightvit.github.io/iNZightTools/reference/create_varname.html</loc>
   </url>
   <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/create_vars.html</loc>
+  </url>
+  <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/deleteVars.html</loc>
   </url>
   <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/delete_vars.html</loc>
+  </url>
+  <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/dictionary.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/extract_dt_comp.html</loc>
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/extract_part.html</loc>
@@ -80,6 +107,12 @@
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/filterRows.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/filter_cat.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/filter_num.html</loc>
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/fitDesign.html</loc>
@@ -127,6 +160,9 @@
     <loc>https://inzightvit.github.io/iNZightTools/reference/is_svyrep.html</loc>
   </url>
   <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/join_data.html</loc>
+  </url>
+  <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/joindata.html</loc>
   </url>
   <url>
@@ -145,7 +181,16 @@
     <loc>https://inzightvit.github.io/iNZightTools/reference/missingToCat.html</loc>
   </url>
   <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/missing_to_cat.html</loc>
+  </url>
+  <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/newdevice.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/operator_not_in.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/operator_or_null.html</loc>
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/pipe.html</loc>
@@ -157,7 +202,13 @@
     <loc>https://inzightvit.github.io/iNZightTools/reference/print_code.html</loc>
   </url>
   <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/random_sample.html</loc>
+  </url>
+  <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/rankVars.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/rank_vars.html</loc>
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/read_meta.html</loc>
@@ -166,13 +217,25 @@
     <loc>https://inzightvit.github.io/iNZightTools/reference/read_text.html</loc>
   </url>
   <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/remove_rows.html</loc>
+  </url>
+  <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/renameLevels.html</loc>
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/renameVars.html</loc>
   </url>
   <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/rename_levels.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/rename_vars.html</loc>
+  </url>
+  <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/reorderLevels.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/reorder_levels.html</loc>
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/reshape_data.html</loc>
@@ -187,7 +250,13 @@
     <loc>https://inzightvit.github.io/iNZightTools/reference/selectVars.html</loc>
   </url>
   <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/select_vars.html</loc>
+  </url>
+  <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/separate.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/separate_var.html</loc>
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/sheets.html</loc>
@@ -199,10 +268,16 @@
     <loc>https://inzightvit.github.io/iNZightTools/reference/sortVars.html</loc>
   </url>
   <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/sort_vars.html</loc>
+  </url>
+  <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/stackVars.html</loc>
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/standardizeVars.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/standardize_vars.html</loc>
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/stringConcatenation.html</loc>
@@ -215,6 +290,9 @@
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/transformVar.html</loc>
+  </url>
+  <url>
+    <loc>https://inzightvit.github.io/iNZightTools/reference/transform_vars.html</loc>
   </url>
   <url>
     <loc>https://inzightvit.github.io/iNZightTools/reference/unite.html</loc>

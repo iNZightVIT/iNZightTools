@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">iNZightTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.13.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -65,12 +65,11 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-
 <div class="section level1">
 <div class="page-header"><h1 id="inzighttools">iNZightTools<a class="anchor" aria-label="anchor" href="#inzighttools"></a>
 </h1></div>
 <p><img src="https://github.com/iNZightVIT/iNZightTools/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"><a href="https://codecov.io/github/iNZightVIT/iNZightTools?branch=dev" class="external-link"><img src="https://codecov.io/gh/iNZightVIT/iNZightTools/branch/dev/graph/badge.svg" alt="Coverage status"></a> <a href="http://www.gnu.org/licenses/gpl-3.0" class="external-link"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" alt="License: GPL v3"></a> <a href="https://CRAN.R-project.org/package=iNZightTools" class="external-link"><img src="https://www.r-pkg.org/badges/version/iNZightTools" alt="CRAN"></a></p>
-<p>Package consisting of a set of helper functions for doing data science with <em>iNZight</em>. These functions are designed to work well with a graphical user interface (GUI), but many<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> are functional for direct use through <em>R</em>.</p>
+<p>Package consisting of a set of helper functions for doing data science with <em>iNZight</em>. These functions are designed to work well with a graphical user interface (GUI), but many[1] are functional for direct use through <em>R</em>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -111,29 +110,29 @@
 <span><span class="co">#&gt;  $ year      : num [1:500] 7 6 6 5 10 7 8 11 8 9 ...</span></span>
 <span><span class="co">#&gt;  $ armspan   : num [1:500] 150 152 132 130 160 50 164 100 152 23 ...</span></span>
 <span><span class="co">#&gt;  $ cellcost  : num [1:500] 30 50 55 60 20 50 10 20 10 0 ...</span></span>
-<span><span class="co">#&gt;  - attr(*, "code")= chr "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %&gt;% dplyr::mutate_at(c"| __truncated__</span></span>
+<span><span class="co">#&gt;  - attr(*, "code")= chr "readxl::read_excel(\"/home/tom/R/x86_64-pc-linux-gnu-library/4.2/iNZightTools/extdata/cas500.xls\") %&gt;% dplyr::"| __truncated__</span></span>
 <span><span class="co">#&gt;  - attr(*, "available.sheets")= chr "Census at School-500"</span></span>
 <span><span class="fu"><a href="reference/tidy_all_code.html">tidy_all_code</a></span><span class="op">(</span><span class="fu"><a href="reference/code.html">code</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required namespace: styler</span></span>
-<span><span class="co">#&gt;  [1] "readxl::read_excel(\"/Users/runner/work/_temp/Library/iNZightTools/extdata/cas500.xls\") %&gt;%"</span></span>
-<span><span class="co">#&gt;  [2] "    dplyr::mutate_at("                                                                       </span></span>
-<span><span class="co">#&gt;  [3] "        c("                                                                                  </span></span>
-<span><span class="co">#&gt;  [4] "            \"cellsource\","                                                                 </span></span>
-<span><span class="co">#&gt;  [5] "            \"travel\","                                                                     </span></span>
-<span><span class="co">#&gt;  [6] "            \"getlunch\","                                                                   </span></span>
-<span><span class="co">#&gt;  [7] "            \"gender\""                                                                      </span></span>
-<span><span class="co">#&gt;  [8] "        ),"                                                                                  </span></span>
-<span><span class="co">#&gt;  [9] "        as.factor"                                                                           </span></span>
-<span><span class="co">#&gt; [10] "    ) %&gt;%"                                                                                   </span></span>
-<span><span class="co">#&gt; [11] "    dplyr::mutate_at("                                                                       </span></span>
-<span><span class="co">#&gt; [12] "        c("                                                                                  </span></span>
-<span><span class="co">#&gt; [13] "            \"rightfoot\","                                                                  </span></span>
-<span><span class="co">#&gt; [14] "            \"height\","                                                                     </span></span>
-<span><span class="co">#&gt; [15] "            \"age\","                                                                        </span></span>
-<span><span class="co">#&gt; [16] "            \"armspan\","                                                                    </span></span>
-<span><span class="co">#&gt; [17] "            \"cellcost\""                                                                    </span></span>
-<span><span class="co">#&gt; [18] "        ),"                                                                                  </span></span>
-<span><span class="co">#&gt; [19] "        as.numeric"                                                                          </span></span>
+<span><span class="co">#&gt;  [1] "readxl::read_excel(\"/home/tom/R/x86_64-pc-linux-gnu-library/4.2/iNZightTools/extdata/cas500.xls\") %&gt;%"</span></span>
+<span><span class="co">#&gt;  [2] "    dplyr::mutate_at("                                                                                  </span></span>
+<span><span class="co">#&gt;  [3] "        c("                                                                                             </span></span>
+<span><span class="co">#&gt;  [4] "            \"cellsource\","                                                                            </span></span>
+<span><span class="co">#&gt;  [5] "            \"travel\","                                                                                </span></span>
+<span><span class="co">#&gt;  [6] "            \"getlunch\","                                                                              </span></span>
+<span><span class="co">#&gt;  [7] "            \"gender\""                                                                                 </span></span>
+<span><span class="co">#&gt;  [8] "        ),"                                                                                             </span></span>
+<span><span class="co">#&gt;  [9] "        as.factor"                                                                                      </span></span>
+<span><span class="co">#&gt; [10] "    ) %&gt;%"                                                                                              </span></span>
+<span><span class="co">#&gt; [11] "    dplyr::mutate_at("                                                                                  </span></span>
+<span><span class="co">#&gt; [12] "        c("                                                                                             </span></span>
+<span><span class="co">#&gt; [13] "            \"rightfoot\","                                                                             </span></span>
+<span><span class="co">#&gt; [14] "            \"height\","                                                                                </span></span>
+<span><span class="co">#&gt; [15] "            \"age\","                                                                                   </span></span>
+<span><span class="co">#&gt; [16] "            \"armspan\","                                                                               </span></span>
+<span><span class="co">#&gt; [17] "            \"cellcost\""                                                                               </span></span>
+<span><span class="co">#&gt; [18] "        ),"                                                                                             </span></span>
+<span><span class="co">#&gt; [19] "        as.numeric"                                                                                     </span></span>
 <span><span class="co">#&gt; [20] "    )"</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -146,29 +145,26 @@
 </h3>
 <p>There are many other data manipulation-focussed functions, such as filter, renaming variables, etc.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/filterNumeric.html">filterNumeric</a></span><span class="op">(</span><span class="va">data</span>, <span class="st">"height"</span>, <span class="st">"&lt;"</span>, <span class="fl">150</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/filter_num.html">filter_num</a></span><span class="op">(</span><span class="va">data</span>, <span class="st">"height"</span>, <span class="st">"&lt;"</span>, <span class="fl">150</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 127 × 10</span></span>
-<span><span class="co">#&gt;    cellsource rightfoot travel getlu…¹ height gender   age  year armspan cellc…²</span></span>
-<span><span class="co">#&gt;    &lt;fct&gt;          &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;    &lt;dbl&gt; &lt;fct&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 parent            21 motor  home       137 male      10     6     132      55</span></span>
-<span><span class="co">#&gt;  2 pocket            20 walk   home       115 male       9     5     130      60</span></span>
-<span><span class="co">#&gt;  3 parent            19 motor  home       137 female    11     7      50      50</span></span>
-<span><span class="co">#&gt;  4 other             30 walk   tucksh…    123 male      14     9      23       0</span></span>
-<span><span class="co">#&gt;  5 parent            11 bike   home       129 male      10     5     165       0</span></span>
-<span><span class="co">#&gt;  6 other             23 motor  home       145 male      10     6     144      25</span></span>
-<span><span class="co">#&gt;  7 parent            19 motor  home       146 female     9     4     140      25</span></span>
-<span><span class="co">#&gt;  8 pocket            22 bus    home       146 female    12     8     136      10</span></span>
-<span><span class="co">#&gt;  9 job               19 motor  home       130 female     9     6     130      45</span></span>
-<span><span class="co">#&gt; 10 parent            21 motor  home       135 female    11     6     137      20</span></span>
-<span><span class="co">#&gt; # … with 117 more rows, and abbreviated variable names ¹​getlunch, ²​cellcost</span></span></code></pre></div>
+<span><span class="co">#&gt;    cellsource rightfoot travel getlunch height gender   age  year armspan</span></span>
+<span><span class="co">#&gt;  * &lt;fct&gt;          &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;     &lt;dbl&gt; &lt;fct&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 parent            21 motor  home        137 male      10     6     132</span></span>
+<span><span class="co">#&gt;  2 pocket            20 walk   home        115 male       9     5     130</span></span>
+<span><span class="co">#&gt;  3 parent            19 motor  home        137 female    11     7      50</span></span>
+<span><span class="co">#&gt;  4 other             30 walk   tuckshop    123 male      14     9      23</span></span>
+<span><span class="co">#&gt;  5 parent            11 bike   home        129 male      10     5     165</span></span>
+<span><span class="co">#&gt;  6 other             23 motor  home        145 male      10     6     144</span></span>
+<span><span class="co">#&gt;  7 parent            19 motor  home        146 female     9     4     140</span></span>
+<span><span class="co">#&gt;  8 pocket            22 bus    home        146 female    12     8     136</span></span>
+<span><span class="co">#&gt;  9 job               19 motor  home        130 female     9     6     130</span></span>
+<span><span class="co">#&gt; 10 parent            21 motor  home        135 female    11     6     137</span></span>
+<span><span class="co">#&gt; # ℹ 117 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 1 more variable: cellcost &lt;dbl&gt;</span></span></code></pre></div>
+<ol style="list-style-type: decimal"><li>with others being modified in time</li></ol>
 </div>
 </div>
 </div>
-<div class="footnotes">
-<hr>
-<ol><li id="fn1"><p>with others being modified in time<a href="#fnref1" class="footnote-back">↩︎</a></p></li></ol>
-</div>
-
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -202,8 +198,8 @@
 <li>
 <a href="https://tomelliott.co.nz" class="external-link">Tom Elliott</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-7815-6318" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Daniel Barnett <br><small class="roles"> Author </small>  </li>
-<li>Owen Jin <br><small class="roles"> Author </small>  </li>
 <li>Yiwen He <br><small class="roles"> Author </small>  </li>
+<li>Zhaoming Su <br><small class="roles"> Author </small>  </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>

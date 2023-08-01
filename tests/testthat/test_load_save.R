@@ -16,7 +16,8 @@ test_that("Load returns list of data frames", {
 test_that("Load has valid code", {
     expect_equal(
         code(load_rda(rda)),
-        sprintf("load('%s')", rda)
+        sprintf("load('%s')", rda),
+        ignore_attr = TRUE
     )
 })
 
@@ -25,7 +26,11 @@ test_that("Save writes file with correct name", {
     on.exit(unlink(fp))
     x <- save_rda(iris, fp, "my_iris")
     expect_true(x)
-    expect_equal(code(x), sprintf("save(my_iris, file = '%s')", fp))
+    expect_equal(
+        code(x),
+        sprintf("save(my_iris, file = '%s')", fp),
+        ignore_attr = TRUE
+    )
     load(fp)
     expect_equal(my_iris, iris)
 })

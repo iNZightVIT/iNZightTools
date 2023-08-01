@@ -3,6 +3,11 @@ test_that("Linear model formula are generated correctly", {
         fitModel("response", "x1", "d"),
         "lm(response ~ x1, data = d)"
     )
+
+    expect_equal(
+        fitModel("response", "x1 + x2", "d", method = "other"),
+        "lm(response ~ x1 + x2, data = d, method = \"other\")"
+    )
 })
 
 test_that("Family and link arguments are included", {

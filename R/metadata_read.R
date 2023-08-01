@@ -45,8 +45,10 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
     mvars <- gsub("_missing", "", sapply(meta$columns, getname))
     dvars <- names(dtop)
     if (any(!mvars %in% dvars)) {
-        stop("Some variables defined in metadata not in dataset: ",
-            paste(mvars[!mvars %in% dvars], collapse = ", "))
+        stop(
+            "Some variables defined in metadata not in dataset: ",
+            paste(mvars[!mvars %in% dvars], collapse = ", ")
+        )
     }
 
     ## use metadata to determine column types
@@ -70,20 +72,24 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
     mutatestr <- c(
         lapply(meta$columns, function(c) {
             fnc <- c$fun(data[[getname(c)]], getname(c))
-            if (!is.null(fnc))
+            if (!is.null(fnc)) {
                 return(sprintf("%s = %s", getname(c, original = FALSE), fnc))
-            if (rename(c))
-                return(sprintf("%s = %s",
+            }
+            if (rename(c)) {
+                return(sprintf(
+                    "%s = %s",
                     getname(c, original = FALSE),
                     getname(c)
                 ))
+            }
             NULL
         }),
         lapply(dvars[!dvars %in% mvars], function(c) {
             if (is.character(data[[c]])) {
                 cesc <- c
-                if (grepl(" ", c))
+                if (grepl(" ", c)) {
                     cesc <- sprintf("`%s`", c)
+                }
                 return(sprintf("%s = as.factor(%s)", cesc, cesc))
             }
             NULL
@@ -113,12 +119,16 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
     ## convert any Lists to binary matrices (within the df)
     if (any(sapply(data, class) == "list")) {
         list_vars <- names(data)[sapply(data, class) == "list"]
-        new_cols <- sapply(list_vars,
+        new_cols <- sapply(
+            list_vars,
             function(v) {
                 lvls <- unique(unlist(data[[v]]))
                 mc <- which(sapply(meta$columns, function(x) x$name == v))
-                lbls <- if (length(mc) && !is.null(meta$columns[[mc]]$labels))
-                    meta$columns[[mc]]$labels else NULL
+                lbls <- if (length(mc) && !is.null(meta$columns[[mc]]$labels)) {
+                    meta$columns[[mc]]$labels
+                } else {
+                    NULL # nocov
+                }
 
                 cnames <- paste(sep = "_", v, lvls)
                 sprintf(
@@ -131,8 +141,11 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
         names_prefix = \"%s_\"
     )",
                     v, "%>%",
-                    if (is.null(lbls$labels)) ""
-                    else sprintf("
+                    if (is.null(lbls$labels)) {
+                        ""
+                    } else {
+                        sprintf(
+                            "
     dplyr::left_join(
         data.frame(
             %s = %s,
@@ -140,25 +153,33 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
         ),
         by = '%s'
     ) %s",
-                        v,
-                        capture.output(dput(lbls$labels)),
-                        capture.output(dput(lbls$levels)),
-                        v,
-                        " %>%"
-                    ),
-                    if (is.null(lbls$labels)) ""
-                    else sprintf(", %s = labels", v),
+                            v,
+                            capture.output(dput(lbls$labels)),
+                            capture.output(dput(lbls$levels)),
+                            v,
+                            " %>%"
+                        )
+                    },
+                    if (is.null(lbls$labels)) {
+                        ""
+                    } else {
+                        sprintf(", %s = labels", v)
+                    },
                     "%>%",
-                    if (is.null(lbls$labels)) ""
-                    else "
-    dplyr::select(-labels) %>%",
+                    if (is.null(lbls$labels)) {
+                        ""
+                    } else {
+                        "
+    dplyr::select(-labels) %>%"
+                    },
                     v, v
                 )
             }
         )
 
         mexp <- eval(parse(
-            text = sprintf("~.dataset %s %s",
+            text = sprintf(
+                "~.dataset %s %s",
                 "%>%", paste(new_cols, collapse = " %>% ")
             )
         ))
@@ -181,13 +202,16 @@ read_meta <- function(file, preview = FALSE, column_types, ...) {
 readMetaComments <- function(file) {
     con <- file(file, open = "r")
     meta <- character()
-    while (grepl("^#", x <- readLines(con, n = 1)))
-        if (grepl("^#'", x))
+    while (grepl("^#", x <- readLines(con, n = 1))) {
+        if (grepl("^#'", x)) {
             meta <- c(meta, trimws(gsub("^#'", "", x)))
+        }
+    }
     close(con)
 
-    if (length(meta) == 0)
+    if (length(meta) == 0) {
         return(NULL)
+    }
 
     md <- list(
         title = tools::file_path_sans_ext(basename(file)),
@@ -197,27 +221,29 @@ readMetaComments <- function(file) {
 
     ## Grab the title, if present - always the first line of metadata
     if (!grepl("^@", meta[1])) {
-        md$title = trimws(gsub("^@", "", meta[1]))
+        md$title <- trimws(gsub("^@", "", meta[1]))
         meta <- meta[-1]
     }
 
     ## Remove any empty lines between title description
-    while (meta[1] == "")
+    while (meta[1] == "") {
         meta <- meta[-1]
+    }
 
     ## Grab the description - all content between the title and first @
     desc.end <- grep("^@", meta)[1] - 1
     if (desc.end > 0) {
         desc <- meta[1:desc.end]
         ## drop off the last empty line
-        if (desc[length(desc)] == "")
+        if (desc[length(desc)] == "") {
             desc <- desc[-length(desc)]
+        }
         ## add paragraph breaks
         desc[desc == ""] <- "\n\n"
         ## add space at END of each line, but collapse with no space
         ## so new lines are flush
         md$desc <- trimws(paste(trimws(desc), " ", collapse = ""))
-        meta <- meta[- (1:desc.end)]
+        meta <- meta[-(1:desc.end)]
     }
 
     ## check remaining lines commence with a @; drop any that don't
@@ -243,11 +269,12 @@ processLine <- function(x) {
     txt <- strsplit(x, " ")[[1]]
 
     ## now x is a vector of components
-    if (length(txt) == 1)
+    if (length(txt) == 1) {
         stop(
             "Invalid metadata: ", x,
             ". Needs at least a type and a column name"
         )
+    }
 
     type <- txt[1]
     txt <- txt[-1]
@@ -264,7 +291,7 @@ cleanstring <- function(x) {
     ## how about dealing with quotes?
 
     ## removing additional spaces around: '=', '@', '+', '-', '\', ','
-    x <- gsub('\\s*([,@\\[\\=\\+\\-\\\\])\\s*','\\1', x, perl = TRUE)
+    x <- gsub("\\s*([,@\\[\\=\\+\\-\\\\])\\s*", "\\1", x, perl = TRUE)
 
     x
 }
@@ -283,8 +310,11 @@ cleanstring <- function(x) {
 
     ## some other calculations? perhaps ...
     na_codes <- x[grepl("^na=", x)]
-    na_codes <- if (length(na_codes) == 0L) NULL
-        else strsplit(gsub("^na=", "", na_codes), ",")[[1]]
+    na_codes <- if (length(na_codes) == 0L) {
+        NULL
+    } else {
+        strsplit(gsub("^na=", "", na_codes), ",")[[1]]
+    }
 
     if (is.null(na_codes) && any(grepl("^na\\[", x))) {
         # alternatively, NA codes can be specifed for an additional column
@@ -344,7 +374,9 @@ cleanstring <- function(x) {
 extract_levels <- function(vname) {
     out <- list(levels = NULL, labels = NULL, vname = vname)
 
-    if (!grepl("\\[", vname)) return(out)
+    if (!grepl("\\[", vname)) {
+        return(out)
+    }
 
     f <- strsplit(vname, "\\[")[[1]]
     vname <- f[1]

@@ -5,51 +5,66 @@
 \title{Form Class Intervals}
 \usage{
 form_class_intervals(
-  .data,
+  data,
   variable,
   method = c("equal", "width", "count", "manual"),
   n_intervals = 4L,
   interval_width,
   format = "(a,b]",
   range = NULL,
-  format.lowest = ifelse(isinteger, "< a", "<= a"),
-  format.highest = "> b",
+  format_lowest = ifelse(isinteger, "< a", "<= a"),
+  format_highest = "> b",
   break_points = NULL,
   name = sprintf("\%s.f", variable)
 )
 }
 \arguments{
-\item{.data}{the data set}
+\item{data}{A dataset or a survey object.}
 
-\item{variable}{name of the variable to convert}
+\item{variable}{The name of the numeric variable to convert into intervals.}
 
-\item{method}{one of 'equal' for equal-width intervals, 'width' for intervals of a specific width, 'count' for equal-count intervals, and 'manual' to specify break points manually}
+\item{method}{The method used to create intervals:
+\itemize{
+\item 'equal' for equal-width intervals,
+\item 'width' for intervals of a specific width,
+\item 'count' for equal-count intervals, and
+\item 'manual' to specify break points manually.
+}}
 
-\item{n_intervals}{for methods 'equal' and 'count', this is the number of intervals to create}
+\item{n_intervals}{For methods 'equal' and 'count', this specifies the
+number of intervals to create.}
 
-\item{interval_width}{for method 'width', this is the width of intervals}
+\item{interval_width}{For method 'width', this sets the width of the
+intervals.}
 
-\item{format}{the format for intervals; use 'a' and 'b' to represent the min/max of each interval, respectively.}
+\item{format}{The format for interval labels; use 'a' and 'b' to represent
+the min/max of each interval, respectively.}
 
-\item{range}{the range of the data; use this to adjust the labels (e.g., for continuous data, set this to floor/ceiling of the min/max of the data to get prettier intervals). If \code{range} does not cover the range of the data, values outside will be placed into 'less than a' and 'greater than b' categories}
+\item{range}{The range of the data; use this to adjust the labels
+(e.g., for continuous data, set this to the floor/ceiling
+of the min/max of the data to get prettier intervals).
+If range does not cover the range of the data, values outside will be
+placed into 'less than a' and 'greater than b' categories.}
 
-\item{format.lowest}{values lower than the min of \code{range} will have this label format}
+\item{format_lowest}{Label format for values lower than the min of range.}
 
-\item{format.highest}{values higher than the max of \code{range} will have this label format}
+\item{format_highest}{Label format for values higher than the max of range.}
 
-\item{break_points}{for \code{method} 'manual', specify breakpoints here (as a numeric vector)}
+\item{break_points}{For method 'manual', specify breakpoints here as a
+numeric vector.}
 
-\item{name}{the name of the new variable in the resulting data set}
+\item{name}{The name of the new variable in the resulting data set.}
 }
 \value{
-a dataframe with an additional column with categorical class intervals
+A dataframe with an additional column containing categorical class
+intervals.
 }
 \description{
-Create categorical intervals from a numeric variable.
+This function creates categorical intervals from a numeric variable in the given dataset.
 }
 \examples{
-form_class_intervals(iris, 'Sepal.Length', 'equal', 5L)
+form_class_intervals(iris, "Sepal.Length", "equal", 5L)
 }
 \author{
-Tom Elliott
+Tom Elliott, Zhaoming Su
 }

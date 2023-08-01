@@ -3,6 +3,8 @@ test_that("Vartype is correct", {
     expect_equal(vartype(as.Date("2018-01-01")), "dt")
     expect_equal(vartype(readr::parse_time("12:00:00")), "dt")
 
+    expect_true(is_dt(as.POSIXct("2018-01-01 12:00:00")))
+
     iris_types <- c(
         Sepal.Length = "num",
         Sepal.Width = "num",
@@ -33,6 +35,8 @@ test_that("Vartype is correct", {
 
     d <- structure(list(), vartypes = c("A", "B"), class = "inzdf_db")
     expect_equal(vartypes(d), c("A", "B"))
+
+    expect_true(is_cat(iris$Species))
 })
 
 test_that("Survey objects identified correctly", {
@@ -92,4 +96,11 @@ test_that("Or null helper", {
     expect_equal(orNULL(x$a), x$a)
     expect_equal(orNULL(x$b), NULL)
     expect_equal(orNULL(x$c), NULL)
+})
+
+test_that("NULL OR operator works", {
+    x <- list(a = 1, b = NULL)
+    expect_equal(x$a %||% 2, 1)
+    expect_equal(x$b %||% 2, 2)
+    expect_equal(x$c %||% 2, 2)
 })

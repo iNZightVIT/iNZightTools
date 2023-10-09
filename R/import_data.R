@@ -271,9 +271,9 @@ read_excel <- function(file,
     } else {
         args <- "file"
     }
-    print(ARGS)
     exp <- ~ readxl::read_excel(ARGS)
     exp <- replaceVars(exp, ARGS = args)
+    print(exp)
 
     res <- interpolate(exp, file = file, sheetname = sheet)
     attr(res, "available.sheets") <- readxl::excel_sheets(file)

@@ -1,5 +1,7 @@
 library(magrittr)
 
+skip_if_not_installed("styler")
+
 test_that("Cody tidying does not break code", {
     x <- readLines("messy_gapminder.txt")
     z <- tidy_all_code(x)

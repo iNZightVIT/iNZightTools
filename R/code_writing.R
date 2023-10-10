@@ -1,4 +1,8 @@
 as_call <- function(x) {
+    if (is.null(x)) {
+        return(x)
+    }
+
     if (inherits(x, "formula")) {
         stopifnot(length(x) == 2)
         x[[2]]
@@ -12,7 +16,6 @@ as_call <- function(x) {
 #' @importFrom methods substituteDirect
 interpolate <- function(code, ..., comment = character(),
                         `_env` = parent.frame(2)) {
-    print(list(...))
     if (length(list(...)) > 0) {
         args <- lapply(list(...), as_call)
         expr <- methods::substituteDirect(as_call(code), args)

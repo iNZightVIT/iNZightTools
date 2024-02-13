@@ -6,7 +6,7 @@ Depends: R (>= 4.0)
 Imports:
     dplyr (>= 1.1.0),
     DBI,
-    forcats,
+    forcats (>= 1.0.0),
     glue,
     grDevices,
     magrittr,

@@ -1,3 +1,7 @@
+# iNZightTools 2.0.1
+
+- Fix issue where NULL values passed to `interpolate()` triggering an error
+
 # iNZightTools 2.0.0
 
 ## Breaking changes

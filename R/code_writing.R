@@ -1,4 +1,8 @@
 as_call <- function(x) {
+    if (is.null(x)) {
+        return(x)
+    }
+
     if (inherits(x, "formula")) {
         stopifnot(length(x) == 2)
         x[[2]]

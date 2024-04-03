@@ -13,7 +13,8 @@ options(
         RSPM = Sys.getenv("RSPM"),
         CRAN = "https://cloud.r-project.org"
     ),
-    install.packages.compile.from.source = "never"
+    install.packages.compile.from.source =
+        ifelse(OS == "macOS", "always", "never")
 )
 
 

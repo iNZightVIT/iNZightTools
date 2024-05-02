@@ -63,3 +63,6 @@ Encoding: UTF-8
 Language: en-GB
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3
+Config/Needs/check:
+    tmelliott/surveyspec@develop,
+    rcmdcheck

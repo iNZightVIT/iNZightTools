@@ -48,20 +48,21 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           cache-version: ${{ matrix.config.cache  }}
-          extra-packages: |
-            tmelliott/surveyspec@develop,
-            any::rcmdcheck
+          # extra-packages: |
+          #   tmelliott/surveyspec@develop,
+          #   any::rcmdcheck
+          needs: |
+            check
           install-pandoc: true
 
-      - name: Check
-        env:
-          _R_CHECK_CRAN_INCOMING_REMOTE_: false
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
-        shell: Rscript {0}
-
-      - name: Upload check results
-        if: failure()
-        uses: actions/upload-artifact@master
+      - uses: r-lib/actions/check-r-package@v2
         with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
-          path: check
+          env:
+            _R_CHECK_CRAN_INCOMING_REMOTE_: false
+
+      # - name: Upload check results
+      #   if: failure()
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     name: ${{ runner.os }}-r${{ matrix.config.r }}-results
+      #     path: check

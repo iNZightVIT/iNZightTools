@@ -48,34 +48,40 @@ jobs:
           r-version: ${{ matrix.config.r }}
 
       - uses: r-lib/actions/setup-pandoc@v2
-
-      - name: Query dependencies
-        run: |
-          install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
-        shell: Rscript {0}
-
-      - name: Cache R packages
-        uses: actions/cache@v4
+      - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ matrix.config.os }}-r-${{ matrix.config.r }}-${{ matrix.config.cache }}-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ matrix.config.os }}-r-${{ matrix.config.r }}-${{ matrix.config.cache }}-
+          cache-version: 1
+          extra-packages: |
+            tmelliott/surveyspec@develop,
+            any::rcmdcheck
 
-      - name: Install system dependencies
-        if: runner.os == 'Linux'
-        env:
-          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
-        run: |
-          Rscript -e "remotes::install_github('r-hub/sysreqs')"
-          sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
-          sudo -s eval "$sysreqs"
+      # - name: Query dependencies
+      #   run: |
+      #     install.packages('remotes')
+      #     saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+      #   shell: Rscript {0}
 
-      - name: Install dependencies
-        env:
-          OS_TYPE: ${{ runner.os }}
-        run: Rscript ./.github/install_deps.R
-        shell: bash
+      # - name: Cache R packages
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ${{ env.R_LIBS_USER }}
+      #     key: ${{ matrix.config.os }}-r-${{ matrix.config.r }}-${{ matrix.config.cache }}-${{ hashFiles('.github/depends.Rds') }}
+      #     restore-keys: ${{ matrix.config.os }}-r-${{ matrix.config.r }}-${{ matrix.config.cache }}-
+
+      # - name: Install system dependencies
+      #   if: runner.os == 'Linux'
+      #   env:
+      #     RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
+      #   run: |
+      #     Rscript -e "remotes::install_github('r-hub/sysreqs')"
+      #     sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
+      #     sudo -s eval "$sysreqs"
+
+      # - name: Install dependencies
+      #   env:
+      #     OS_TYPE: ${{ runner.os }}
+      #   run: Rscript ./.github/install_deps.R
+      #   shell: bash
 
       - name: Check
         env:

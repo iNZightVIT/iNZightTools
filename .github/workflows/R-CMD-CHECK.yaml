@@ -34,6 +34,7 @@ jobs:
       RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       _R_CHECK_FORCE_SUGGESTS_: false
+      _R_CHECK_CRAN_INCOMING_REMOTE_: false
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.config.os }}-${{ matrix.config.r }}
@@ -56,9 +57,6 @@ jobs:
           install-pandoc: true
 
       - uses: r-lib/actions/check-r-package@v2
-        with:
-          env:
-            _R_CHECK_CRAN_INCOMING_REMOTE_: false
 
       # - name: Upload check results
       #   if: failure()

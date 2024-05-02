@@ -36,10 +36,12 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          cache: false
           cache-version: ${{ matrix.config.cache  }}
           extra-packages: any::curl
           needs: |
             check
+            dependencies
           install-pandoc: true
 
       - uses: r-lib/actions/check-r-package@v2

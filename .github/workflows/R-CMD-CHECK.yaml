@@ -49,18 +49,8 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           cache-version: ${{ matrix.config.cache  }}
-          # extra-packages: |
-          #   tmelliott/surveyspec@develop,
-          #   any::rcmdcheck
           needs: |
             check
           install-pandoc: true
 
       - uses: r-lib/actions/check-r-package@v2
-
-      # - name: Upload check results
-      #   if: failure()
-      #   uses: actions/upload-artifact@master
-      #   with:
-      #     name: ${{ runner.os }}-r${{ matrix.config.r }}-results
-      #     path: check

@@ -25,7 +25,6 @@ Imports:
     utils
 Suggests:
     chron,
-    covr,
     dbplyr,
     expss,
     haven,
@@ -66,3 +65,6 @@ Config/testthat/edition: 3
 Config/Needs/check:
     tmelliott/surveyspec@develop,
     rcmdcheck
+Config/Needs/coverage:
+    tmelliott/surveyspec@develop,
+    covr

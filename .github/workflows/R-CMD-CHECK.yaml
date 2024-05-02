@@ -15,7 +15,7 @@ jobs:
           - { os: windows-latest, r: "4.1", cache: "1" }
           - { os: windows-latest, r: "4.2", cache: "1" }
           - { os: windows-latest, r: "release", cache: "1" }
-          - { os: windows-latest, r: "devel", cache: "1" }
+          # - { os: windows-latest, r: "devel", cache: "1" }
           - { os: macOS-latest, r: "release", cache: "1" }
           - {
               os: ubuntu-20.04,

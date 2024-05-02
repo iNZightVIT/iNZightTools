@@ -36,9 +36,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          cache: false
           cache-version: ${{ matrix.config.cache  }}
-          extra-packages: any::curl
           needs: |
             check
             dependencies

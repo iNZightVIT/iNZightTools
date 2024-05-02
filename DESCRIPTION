@@ -25,6 +25,7 @@ Imports:
     utils
 Suggests:
     chron,
+    curl,
     dbplyr,
     expss,
     haven,

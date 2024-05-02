@@ -12,21 +12,21 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: windows-latest, r: "oldrel", cache: "2" }
-          - { os: windows-latest, r: "release", cache: "2" }
-          - { os: windows-latest, r: "devel", cache: "2" }
-          - { os: macOS-latest, r: "4.2", cache: "3" }
-          # - {os: macOS-latest, r: 'devel'}
+          - { os: windows-latest, r: "4.1", cache: "1" }
+          - { os: windows-latest, r: "4.2", cache: "1" }
+          - { os: windows-latest, r: "release", cache: "1" }
+          - { os: windows-latest, r: "devel", cache: "1" }
+          - { os: macOS-latest, r: "release", cache: "1" }
           - {
               os: ubuntu-20.04,
               r: "release",
-              cache: "2",
+              cache: "1",
               rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest",
             }
           - {
               os: ubuntu-20.04,
               r: "devel",
-              cache: "2",
+              cache: "1",
               rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest",
             }
 
@@ -50,7 +50,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          cache-version: 1
+          cache-version: ${{ matrix.config.cache  }}
           extra-packages: |
             tmelliott/surveyspec@develop,
             any::rcmdcheck

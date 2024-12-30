@@ -30,7 +30,7 @@ tidy_all_code <- function(x, width = 80, indent = 4, outfile,
 
 ### tidy a single piece of code
 tidy_code <- function(codeline, width, indent) {
-    if (!requireNamespace("styler")) {
+    if (!requireNamespace("styler", quietly = TRUE)) {
         stop("Please install suggested package: 'styler'") # nocov
     }
 

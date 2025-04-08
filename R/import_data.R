@@ -42,7 +42,10 @@
 #' @export
 smart_read <- function(file, ext = tools::file_ext(file), preview = FALSE,
                        column_types = NULL, ...) {
-    if (grepl("^https?://", file)) file <- url_to_temp(file)
+    if (grepl("^https?://", file)) {
+        file <- url_to_temp(file)
+        on.exit(unlink(file))
+    }
 
     type <- guess_type(ext)
     fun <- eval(parse(text = sprintf("read_%s", type)))
@@ -214,9 +217,22 @@ read_dlm <- function(file,
         COLTYPES = ctypes
     )
 
-    x <- suppressWarnings(
+    x <- try(suppressWarnings(
         interpolate(exp, file = file)
-    )
+    ), silent = TRUE)
+
+    if (inherits(x, "try-error")) {
+        # if CSV, try setting the delimiter to "," explicitly
+        if (ext == "csv" && delimiter == "auto") {
+            exp[[2]]$delim <- ","
+            x <- try(suppressWarnings(
+                interpolate(exp,
+                    file = file
+                )
+            ), silent = TRUE)
+        }
+    }
+
     if (!is.null(attr(x, "problems"))) {
         # logical -> character
         spec <- attr(x, "spec")$cols

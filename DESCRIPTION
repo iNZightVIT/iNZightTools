@@ -1,12 +1,12 @@
 Package: iNZightTools
 Type: Package
 Title: Tools for 'iNZight'
-Version: 2.0.1
+Version: 2.0.2
 Depends: R (>= 4.0)
 Imports:
     dplyr (>= 1.1.0),
     DBI,
-    forcats,
+    forcats (>= 1.0.0),
     glue,
     grDevices,
     magrittr,
@@ -25,7 +25,7 @@ Imports:
     utils
 Suggests:
     chron,
-    covr,
+    curl,
     dbplyr,
     expss,
     haven,
@@ -56,10 +56,17 @@ Authors@R: c(
 Additional_repositories: https://r.docker.stat.auckland.ac.nz
 BugReports: https://github.com/iNZightVIT/iNZightTools/issues
 Contact: inzight_support@stat.auckland.ac.nz
-URL: https://inzight.nz
+URL: https://inzightvit.github.io/iNZightTools
 Description: Provides a collection of wrapper functions for common variable and dataset manipulation workflows primarily used by 'iNZight', a graphical user interface providing easy exploration and visualisation of data for students of statistics, available in both desktop and online versions. Additionally, many of the functions return the 'tidyverse' code used to obtain the result in an effort to bridge the gap between GUI and coding.
 License: GPL-3
 Encoding: UTF-8
 Language: en-GB
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Config/testthat/edition: 3
+Config/Needs/dependencies:
+    tmelliott/surveyspec@develop,
+    rcmdcheck,
+    curl
+Config/Needs/coverage:
+    tmelliott/surveyspec@develop,
+    covr

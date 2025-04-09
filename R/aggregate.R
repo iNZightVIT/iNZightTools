@@ -181,7 +181,7 @@ agg_default_name <- function(x) {
 #'
 #' Calculates the interquartile range from complex survey data.
 #' A wrapper for taking differences of `svyquantile` at 0.25 and 0.75 quantiles,
-#' and meant to be called from within `summarize` (see [srvyr] package).
+#' and meant to be called from within [srvyr::summarise].
 #'
 #' @param x A variable or expression
 #' @param na.rm logical, if `TRUE` missing values are removed

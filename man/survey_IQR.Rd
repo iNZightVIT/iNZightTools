@@ -17,7 +17,7 @@ a vector of interquartile ranges
 \description{
 Calculates the interquartile range from complex survey data.
 A wrapper for taking differences of \code{svyquantile} at 0.25 and 0.75 quantiles,
-and meant to be called from within \code{summarize} (see \link{srvyr} package).
+and meant to be called from within \link[srvyr:summarise]{srvyr::summarise}.
 }
 \examples{
 library(survey)

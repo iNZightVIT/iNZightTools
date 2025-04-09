@@ -280,6 +280,7 @@ test_that("Global comment argument is passed to readr::read_csv", {
     expect_s3_class(smart_read("comments.csv"), "data.frame")
     op <- options(inzighttools.comment = NULL)
     on.exit(options(op))
-    expect_error(smart_read("comments.csv"))
+    x <- smart_read("comments.csv")
+    expect_equal(ncol(x), 1L)
     expect_s3_class(smart_read("comments.csv", comment = "#"), "data.frame")
 })

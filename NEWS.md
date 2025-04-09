@@ -1,3 +1,8 @@
+# iNZightTools 2.0.2
+
+- Fix bugs in import due to changes in underlying packages
+- Clean up temporary file when importing from URL (#217)
+
 # iNZightTools 2.0.1
 
 - Fix issue where NULL values passed to `interpolate()` triggering an error

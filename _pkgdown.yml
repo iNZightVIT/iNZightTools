@@ -2,6 +2,7 @@ url: https://inzightvit.github.io/iNZightTools/
 
 template:
   package: iNZightTools
+  bootstrap: 5
 
 authors:
   Tom Elliott:

@@ -1,3 +1,8 @@
+# iNZightTools 2.0.3
+
+- increase R dependency to 4.1 (for |> usage)
+- update documentation
+
 # iNZightTools 2.0.2
 
 - Fix bugs in import due to changes in underlying packages

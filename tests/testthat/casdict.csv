@@ -8,5 +8,5 @@ gender,Gender,Student's gender,,1|2,female|male
 age,Age,Student's age,years,,
 year,Year,Student's school year,,,
 armspan,Armspan,Student's armspan,cm,,
-cellcost,Cellphone monthly cost,Monthly cellphone cost,dollars,,
+cellcost,Cellphone monthly cost,Monthly cellphone cost,dollars,,,
 other,Another variable,This variable doesn't exist,,

@@ -1,3 +1,8 @@
+# iNZightTools 2.0.4
+
+- Fix R-devel warning from deprecated `structure(..., .Names = ...)` when
+  re-reading columns with many leading NAs via `smart_read()` (CRAN check)
+
 # iNZightTools 2.0.3
 
 - increase R dependency to 4.1 (for |> usage)

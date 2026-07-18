@@ -1,8 +1,7 @@
 ## Test environments
 
-- ubuntu 22.04 (local), R 4.2.3
-- ubuntu 20.04 (github actions), R oldrel, release, and devel
-- macos (github actions), R 4.2
+- ubuntu latest (github actions), release, and devel
+- macos latest (github actions), R release
 - windows (win-builder), R release and devel
 
 ## R CMD check results
@@ -20,4 +19,4 @@ We checked 2 reverse dependencies, comparing R CMD check results across CRAN and
 
 ## Notes
 
-This release fixes a bug in a function triggered by the latest R-devel.
+This release fixes documentation issues picked up by new CRAN checks.

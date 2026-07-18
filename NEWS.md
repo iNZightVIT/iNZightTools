@@ -2,6 +2,11 @@
 
 - Fix R-devel warning from deprecated `structure(..., .Names = ...)` when
   re-reading columns with many leading NAs via `smart_read()` (CRAN check)
+- Replace `case_when()` in `eval_code()` with `if`/`else` to avoid dplyr 1.2
+  deprecation warnings for scalar LHS with vector RHS
+- Replace deprecated `case_match()` with `switch()` in aggregation helpers
+- Use `dplyr::recode_values()` in `missing_to_cat()` when dplyr >= 1.2,
+  falling back to `case_match()` on older versions
 
 # iNZightTools 2.0.3
 

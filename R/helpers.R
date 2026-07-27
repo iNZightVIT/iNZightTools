@@ -215,10 +215,13 @@ orNULL <- function(x, y = x) {
 
 eval_code <- function(expr, env = parent.frame(2)) {
     pipe <- getOption("inzighttools.pipe", "baseR")
-    expr_deparsed <- dplyr::case_when(
-        pipe %in% c("dplyr", "%>%", "magrittr") ~ rlang::expr_deparse(expr),
-        TRUE ~ stringr::str_replace_all(rlang::expr_deparse(expr), "%>%", "|>")
-    )
+    if (pipe %in% c("dplyr", "%>%", "magrittr")) {
+        expr_deparsed <- rlang::expr_deparse(expr)
+    } else {
+        expr_deparsed <- stringr::str_replace_all(
+            rlang::expr_deparse(expr), "%>%", "|>"
+        )
+    }
     try(rlang::eval_tidy(expr, env = env)) |>
         structure(code = expr_deparsed)
 }

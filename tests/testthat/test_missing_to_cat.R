@@ -6,7 +6,37 @@ test_that("Numeric variables converted to missing/not-missing", {
         d$rightfoot.miss,
         factor(ifelse(is.na(d$rightfoot), "(Missing)", "(Observed)"))
     )
+    if (utils::packageVersion("dplyr") >= "1.2.0") {
+        expect_match(paste(code(d), collapse = "\n"), "recode_values")
+    } else {
+        expect_match(paste(code(d), collapse = "\n"), "case_match")
+    }
     check_eval(d)
+})
+
+test_that("Numeric missing_to_cat falls back to case_match on older dplyr", {
+    skip_if_not(utils::packageVersion("dplyr") >= "1.2.0")
+
+    with_mocked_bindings(
+        packageVersion = function(pkg) {
+            if (identical(pkg, "dplyr")) {
+                return(as.package_version("1.1.4"))
+            }
+            utils::packageVersion(pkg)
+        },
+        .package = "utils",
+        {
+            expect_warning(
+                d <- missing_to_cat(cas, "rightfoot"),
+                "case_match"
+            )
+            expect_match(paste(code(d), collapse = "\n"), "case_match")
+            expect_equal(
+                d$rightfoot.miss,
+                factor(ifelse(is.na(d$rightfoot), "(Missing)", "(Observed)"))
+            )
+        }
+    )
 })
 
 test_that("Categorical variables converted to missing", {

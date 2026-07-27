@@ -115,11 +115,11 @@ smry_expr <- function(vars, summaries, names, quantiles, is_svy) {
         qt <- if (x == "quantile") rlang::exprs(c(!!!quantiles)) else NULL
         na <- if (x == "count") NULL else list(na.rm = TRUE)
         svy_fn <- ifelse(is_svy, "srvyr::survey_", "")
-        fn <- dplyr::case_match(x,
-            "count" ~ ifelse(is_svy, "srvyr::survey_total", "dplyr::n"),
-            "iqr" ~ ifelse(is_svy, "iNZightTools::survey_IQR", "IQR"),
-            "sum" ~ ifelse(is_svy, "srvyr::survey_total", "sum"),
-            .default = paste0(svy_fn, x)
+        fn <- switch(x,
+            count = ifelse(is_svy, "srvyr::survey_total", "dplyr::n"),
+            iqr = ifelse(is_svy, "iNZightTools::survey_IQR", "IQR"),
+            sum = ifelse(is_svy, "srvyr::survey_total", "sum"),
+            paste0(svy_fn, x)
         ) |> rlang::parse_expr()
         if (x == "count") {
             return(list(rlang::expr((!!fn)()) |>
@@ -168,11 +168,11 @@ make_varnames <- function(summaries, names) {
 
 
 agg_default_name <- function(x) {
-    dplyr::case_match(x,
-        "count" ~ "count",
-        "quantile" ~ "{var}_q{100*p}",
-        "missing" ~ "{var}_missing",
-        .default = sprintf("{var}_%s", x)
+    switch(x,
+        count = "count",
+        quantile = "{var}_q{100*p}",
+        missing = "{var}_missing",
+        sprintf("{var}_%s", x)
     )
 }
 

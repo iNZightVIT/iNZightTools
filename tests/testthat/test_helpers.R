@@ -104,3 +104,18 @@ test_that("NULL OR operator works", {
     expect_equal(x$b %||% 2, 2)
     expect_equal(x$c %||% 2, 2)
 })
+
+test_that("eval_code respects inzighttools.pipe option", {
+    old_pipe <- getOption("inzighttools.pipe")
+    on.exit(options(inzighttools.pipe = old_pipe), add = TRUE)
+
+    options(inzighttools.pipe = "magrittr")
+    d <- select_vars(iris, "Species")
+    code_txt <- paste(code(d), collapse = "\n")
+    expect_match(code_txt, "%>%")
+    expect_false(grepl("\\|>", code_txt))
+
+    options(inzighttools.pipe = "baseR")
+    d <- select_vars(iris, "Species")
+    expect_match(paste(code(d), collapse = "\n"), "\\|>")
+})

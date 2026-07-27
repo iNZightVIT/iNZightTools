@@ -240,7 +240,7 @@ read_dlm <- function(file,
         if (any(is_bad)) {
             ct <- structure(
                 as.list(rep("c", sum(is_bad))),
-                .Names = names(spec)[is_bad]
+                names = names(spec)[is_bad]
             )
             attr(x, "bad_guess") <- ct
         }
